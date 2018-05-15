@@ -1,0 +1,27 @@
+{
+  "name": "adspeed_page_insights",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "check-types": "tsc -p .",
+    "test": "mocha test/**/*.js"
+  },
+  "precommit": [
+    "check-types",
+    "test"
+  ],
+  "author": "",
+  "dependencies": {
+    "@types/puppeteer": "^1.3.2",
+    "lighthouse": "^2.9.4",
+    "puppeteer": "^1.4.0",
+    "yargs": "^11.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.1.1",
+    "pre-commit": "^1.2.2",
+    "typescript": "^2.8.3"
+  }
+}
