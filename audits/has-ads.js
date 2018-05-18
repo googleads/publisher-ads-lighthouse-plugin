@@ -16,10 +16,12 @@ class HasAds extends Audit {
   }
 
   static audit(artifacts) {
+    const {numRequests, numImpressions} = artifacts.Ads;
     return {
       rawValue: artifacts.Ads.numRequests,
       score: artifacts.Ads.numRequests > 0,
-      displayValue: `${artifacts.Ads.numRequests} ad request(s)`,
+      displayValue:
+          `${numRequests} ad request(s); ${numImpressions} ad impression(s)`,
     }
   }
 }

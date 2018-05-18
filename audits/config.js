@@ -19,13 +19,6 @@ module.exports = {
         'js-usage',
       ],
     },
-    {
-      passName: 'mixedContent',
-      recordTrace: true,
-      gatherers: [
-        'mixed-content',
-      ],
-    }
   ],
 
   audits: [
