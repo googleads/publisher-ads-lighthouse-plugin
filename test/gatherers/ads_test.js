@@ -1,12 +1,35 @@
 const Ads = require('../../gatherers/ads');
-const {expect} = require('chai')
+const chromeDriver = require('chrome-har');
+const sinon = require('sinon');
+const {expect} = require('chai');
+
+/**
+ * @param {!Array<{url: string}>} requests
+ * @return {!Object} An object partly following the HAR spec.
+ */
+function newHar(requests) {
+  const wrappedRequests = requests.map((req) => ({request: req}));
+  return {log: {entries: wrappedRequests}};
+};
 
 describe('Ads', () => {
-  describe('#afterPass', () => {
+  let sandbox;
+
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('numRequests', () => {
     it('should handle empty network logs', async () => {
       const networkRecords = [];
+      sandbox.stub(chromeDriver, 'harFromMessages')
+          .returns(newHar(networkRecords));
       const ads = new Ads();
-      const data = await ads.afterPass({}, {networkRecords});
+      const data = await ads.afterPass({}, networkRecords);
       expect(data).to.have.property('numRequests', 0);
     });
 
@@ -15,8 +38,10 @@ describe('Ads', () => {
         {url: 'http://example.com'},
         {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
       ];
+      sandbox.stub(chromeDriver, 'harFromMessages')
+          .returns(newHar(networkRecords));
       const ads = new Ads();
-      const data = await ads.afterPass({}, {networkRecords});
+      const data = await ads.afterPass({}, networkRecords);
       expect(data).to.have.property('numRequests', 0);
     });
 
@@ -26,6 +51,8 @@ describe('Ads', () => {
         {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
         {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
       ];
+      sandbox.stub(chromeDriver, 'harFromMessages')
+          .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, {networkRecords});
       expect(data).to.have.property('numRequests', 1);
@@ -35,6 +62,8 @@ describe('Ads', () => {
       const networkRecords = [
         {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
       ];
+      sandbox.stub(chromeDriver, 'harFromMessages')
+          .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, {networkRecords});
       expect(data).to.have.property('numRequests', 1);
@@ -49,6 +78,8 @@ describe('Ads', () => {
         {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
         {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
       ];
+      sandbox.stub(chromeDriver, 'harFromMessages')
+          .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, {networkRecords});
       expect(data).to.have.property('numRequests', 3);
