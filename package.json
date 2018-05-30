@@ -13,10 +13,9 @@
   ],
   "author": "",
   "dependencies": {
-    "@types/puppeteer": "^1.3.2",
     "chrome-har": "^0.3.2",
+    "chrome-launcher": "^0.10.2",
     "lighthouse": "^2.9.4",
-    "puppeteer": "^1.4.0",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
