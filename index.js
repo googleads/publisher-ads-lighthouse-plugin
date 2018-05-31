@@ -12,12 +12,16 @@ const auditsConfig = require('./audits/config');
  * https://github.com/GoogleChrome/lighthouse/blob/master/typings/externs.d.ts
  * @type {!LH.Flags}
  */
- const flags = {
+const flags = {
   json: true,
   runs: 1,
 };
 
+/**
+ * Launch chrome instance and run lighthouse with custom config
+ */
 async function main() {
+  /* eslint-disable no-console */
   try {
     const browser = await ChromeLauncher.launch({chromeFlags: ['--headless']});
     console.log('Launched headless chrome');
@@ -37,6 +41,7 @@ async function main() {
     console.error(e.message);
     process.exit(1);
   }
+  /* eslint-enable no-console */
 }
 
 main();
