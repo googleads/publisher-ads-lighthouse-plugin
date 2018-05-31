@@ -10,7 +10,7 @@ const {expect} = require('chai');
 function newHar(requests) {
   const wrappedRequests = requests.map((req) => ({request: req}));
   return {log: {entries: wrappedRequests}};
-};
+}
 
 describe('Ads', () => {
   let sandbox;
@@ -27,7 +27,7 @@ describe('Ads', () => {
     it('should handle empty network logs', async () => {
       const networkRecords = [];
       sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+        .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, networkRecords);
       expect(data).to.have.property('numRequests', 0);
@@ -39,7 +39,7 @@ describe('Ads', () => {
         {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
       ];
       sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+        .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, networkRecords);
       expect(data).to.have.property('numRequests', 0);
@@ -52,7 +52,7 @@ describe('Ads', () => {
         {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
       ];
       sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+        .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, {networkRecords});
       expect(data).to.have.property('numRequests', 1);
@@ -63,7 +63,7 @@ describe('Ads', () => {
         {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
       ];
       sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+        .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, {networkRecords});
       expect(data).to.have.property('numRequests', 1);
@@ -79,7 +79,7 @@ describe('Ads', () => {
         {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
       ];
       sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+        .returns(newHar(networkRecords));
       const ads = new Ads();
       const data = await ads.afterPass({}, {networkRecords});
       expect(data).to.have.property('numRequests', 3);

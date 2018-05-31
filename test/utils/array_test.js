@@ -1,5 +1,5 @@
 const array = require('../../utils/array');
-const {expect} = require('chai')
+const {expect} = require('chai');
 
 describe('array', () => {
   describe('#count', () => {

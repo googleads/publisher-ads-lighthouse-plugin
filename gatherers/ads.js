@@ -21,9 +21,8 @@ const METHODS_TO_OBSERVE = [
  * @typedef {{
  *   message: string,
  *   params: !Object,
- * }}
+ * }} DevToolsEvent
  */
-let DevToolsEvent;
 
 /**
  * Checks if the url is from a Google ads host.
@@ -66,12 +65,17 @@ function logMissingUrls(urls, loadData) {
   const lighthouseUrls = new Set(loadData.networkRecords.map((r) => r.url));
   const missingUrls = urls.filter((url) => !lighthouseUrls.has(url));
   for (const url of missingUrls) {
+    // eslint-disable-next-line no-console
     console.log('[INFO] Missing URL in Lighthouse', url.substr(0, 120));
   }
 }
 
 
+/** @inheritdoc */
 class Ads extends Gatherer {
+  /**
+   * Initialize an Ads Gatherer
+   */
   constructor() {
     super();
 
@@ -84,9 +88,9 @@ class Ads extends Gatherer {
     for (const method of METHODS_TO_OBSERVE) {
       // Add listener for each method.
       await passContext.driver.on(
-          method, (params) => this.events_.push({method, params}));
+        method, (params) => this.events_.push({method, params}));
     }
-  };
+  }
 
   /** @override */
   async afterPass(passContext, loadData) {
