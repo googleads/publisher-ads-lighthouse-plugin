@@ -39,9 +39,16 @@ async function main() {
   } catch (e) {
     console.error('---ERROR---');
     console.error(e.message);
+    console.error(e.stack);
     process.exit(1);
   }
   /* eslint-enable no-console */
 }
 
-main();
+if (require.main == module) {
+  main();
+}
+
+module.exports = {
+  isDebugMode: () => argv.debug,
+}
