@@ -1,8 +1,11 @@
 const array = require('../utils/array.js');
 // @ts-ignore
 const chromeHar = require('chrome-har');
+/* eslint-disable-next-line */
+const {isGoogleAds, hasAdRequestPath, hasImpressionPath} = require('../utils/resource-classification');
 const {Gatherer} = require('lighthouse');
 const {isDebugMode} = require('../index');
+const {URL} = require('url');
 
 const METHODS_TO_OBSERVE = [
   'Page.loadEventFired',
@@ -23,33 +26,6 @@ const METHODS_TO_OBSERVE = [
  * @property {string} method
  * @property {!Object} params
  */
-
-/**
- * Checks if the url is from a Google ads host.
- * @param {string} url
- * @return {boolean}
- */
-function isGoogleAds(url) {
-  return /^https?:\/\/[\w.]+(doubleclick.net|googlesyndication.com)/.test(url);
-}
-
-/**
- * Checks if the url has an ad request path.
- * @param {string} url
- * @return {boolean}
- */
-function hasAdRequestPath(url) {
-  return url.includes('/gampad/ads?');
-}
-
-/**
- * Checks if the url has an impression path.
- * @param {string} url
- * @return {boolean}
- */
-function hasImpressionPath(url) {
-  return url.includes('/pcs/view?') || url.includes('/pagead/adview?');
-}
 
 /**
  * Logs any missing URLs in loadData.
@@ -101,9 +77,10 @@ class Ads extends Gatherer {
     // TODO(warrengm): Investigate why. Lighthouse *should* be correct.
     const har = chromeHar.harFromMessages(this.events_);
     const urls = har.log.entries.map((entry) => entry.request.url);
+    const parsedUrls = urls.map((url) => new URL(url));
     logMissingUrls(urls, loadData);
 
-    const googleAdsEntries = urls.filter(isGoogleAds);
+    const googleAdsEntries = parsedUrls.filter(isGoogleAds);
     const numRequests = array.count(googleAdsEntries, hasAdRequestPath);
     const numImpressions = array.count(googleAdsEntries, hasImpressionPath);
     return {numRequests, numImpressions};
