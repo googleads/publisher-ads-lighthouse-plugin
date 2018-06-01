@@ -2,6 +2,7 @@ const array = require('../utils/array.js');
 // @ts-ignore
 const chromeHar = require('chrome-har');
 const {Gatherer} = require('lighthouse');
+const {isDebugMode} = require('../index');
 
 const METHODS_TO_OBSERVE = [
   'Page.loadEventFired',
@@ -57,7 +58,7 @@ function hasImpressionPath(url) {
  * @param {!LH.Gatherer.LoadData} loadData
  */
 function logMissingUrls(urls, loadData) {
-  if (!loadData.networkRecords) return;
+  if (!isDebugMode() || !loadData.networkRecords) return;
 
   // NOTE: This doesn't handle cases where duplicate URLs appear fewer times in
   // Lighthouse because we dump the data into a Set. This is OK for simple
