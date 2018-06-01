@@ -1,4 +1,5 @@
-// TODO(warrengm): Add types for lighthouse.
+const util = require('util');
+
 // @ts-ignore
 const ChromeLauncher = require('chrome-launcher');
 const lighthouse = require('lighthouse');
@@ -12,10 +13,7 @@ const auditsConfig = require('./audits/config');
  * https://github.com/GoogleChrome/lighthouse/blob/master/typings/externs.d.ts
  * @type {!LH.Flags}
  */
-const flags = {
-  json: true,
-  runs: 1,
-};
+const flags = /** @type {LH.Flags} */ ({});
 
 /**
  * Launch chrome instance and run lighthouse with custom config
@@ -30,10 +28,15 @@ async function main() {
     const results = await lighthouse(argv.url, flags, auditsConfig);
     await browser.kill();
 
-    for (const {name, displayValue} of Object.values(results.audits)) {
-      if (displayValue) {
-        console.log(name, ':', displayValue);
-      }
+    const audits = Object.values(results.lhr.audits)
+      .filter((a) => a.displayValue && a.displayValue.length > 0)
+      .sort((a, b) => (a.id > b.id) ? 1 : -1);
+    for (const {id, displayValue} of audits) {
+      // Note that display value is sometimes a string and sometimes an array
+      // for string formatting, like ['%d ms', 4].
+      const display = typeof displayValue == 'string' ?
+        displayValue : util.format.call(null, ...displayValue);
+      console.log(id, ':', display);
     }
     process.exit(0);
   } catch (e) {
@@ -51,4 +54,4 @@ if (require.main == module) {
 
 module.exports = {
   isDebugMode: () => argv.debug,
-}
+};

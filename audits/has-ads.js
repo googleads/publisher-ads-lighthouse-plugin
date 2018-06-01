@@ -16,12 +16,16 @@ class HasAds extends Audit {
     };
   }
 
-  /** @override */
+  /**
+   * @param {!Artifacts} artifacts
+   * @return {!LH.Audit.Product}
+   */
   static audit(artifacts) {
-    const {numRequests, numImpressions} = artifacts.Ads;
+    const {numRequests, numImpressions} =
+    /** @type {!AdsArtifacts} */ (artifacts.Ads);
     return {
-      rawValue: artifacts.Ads.numRequests,
-      score: artifacts.Ads.numRequests > 0,
+      rawValue: numRequests,
+      score: numRequests > 0 ? 1 : 0,
       displayValue:
           `${numRequests} ad request(s); ${numImpressions} ad impression(s)`,
     };
