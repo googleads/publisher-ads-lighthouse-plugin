@@ -19,10 +19,9 @@ const METHODS_TO_OBSERVE = [
 ];
 
 /**
- * @typedef {{
- *   message: string,
- *   params: !Object,
- * }} DevToolsEvent
+ * @typedef {Object} DevToolsEvent
+ * @property {string} method
+ * @property {!Object} params
  */
 
 /**
@@ -78,9 +77,11 @@ class Ads extends Gatherer {
    * Initialize an Ads Gatherer
    */
   constructor() {
+    // @ts-ignore TypeScript produces an error when calling super()  here since
+    // the compiler infers the type of Gatherer to be "any".
     super();
 
-    /** @private @const {!Array<!DevToolsEvent>} */
+    /** @private @const @type {!Array<!DevToolsEvent>} */
     this.events_ = [];
   }
 
