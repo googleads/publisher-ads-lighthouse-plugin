@@ -41,7 +41,7 @@ describe('resource-classification', () => {
   });
 
   describe('#hasAdRequestPath', () => {
-    it('should return true for /gampad/ads/ in the request path', () => {
+    it('should return true for /gampad/ads in the request path', () => {
       const url = new URL('https://securepubads.g.doubleclick.net/gampad/ads?bar=baz');
       expect(rc.hasAdRequestPath(url)).to.be.true;
     });
@@ -66,6 +66,57 @@ describe('resource-classification', () => {
     it('should return false for any other impression path', () => {
       const url = new URL('https://googlesyndication.com/file/folder/foo?bar=baz');
       expect(rc.hasImpressionPath(url)).to.be.false;
+    });
+  });
+
+  describe('#isGpt', () => {
+    it('should return true for URLs that load gpt.js', () => {
+      const url = new URL('http://www.googletagservices.com/tag/js/gpt.js');
+      expect(rc.isGpt(url)).to.be.true;
+    });
+
+    it('should return true for gpt.js loaded with hash', () => {
+      const url = new URL('https://www.googletagservices.com/tag/js/gpt.js#foo');
+      expect(rc.isGpt(url)).to.be.true;
+    });
+
+    it('should return true for gpt.js loaded with query string', () => {
+      const url = new URL('https://www.googletagservices.com/tag/js/gpt.js?foo=bar');
+      expect(rc.isGpt(url)).to.be.true;
+    });
+
+    it('should return true for gpt.js loaded with query string + hash', () => {
+      const url = new URL('https://www.googletagservices.com/tag/js/gpt.js?foo=bar#baz');
+      expect(rc.isGpt(url)).to.be.true;
+    });
+
+    it('should return false for URLs that don\'t load gpt.js', () => {
+      const url = new URL('https://facebook.com/foo?bar=baz');
+      expect(rc.isGpt(url)).to.be.false;
+    });
+  });
+
+  describe('#isHttp', () => {
+    it('should return true for URLs loaded over HTTP', () => {
+      const url = new URL('http://hello.com/foor?bar=baz');
+      expect(rc.isHttp(url)).to.be.true;
+    });
+
+    it('should return false for URLs loaded over HTTPS', () => {
+      const url = new URL('https://hello.com/foor?bar=baz');
+      expect(rc.isHttp(url)).to.be.false;
+    });
+  });
+
+  describe('#isHttps', () => {
+    it('should return true for URLs loaded over HTTPS', () => {
+      const url = new URL('https://hello.com/foor?bar=baz');
+      expect(rc.isHttps(url)).to.be.true;
+    });
+
+    it('should return false for URLs loaded over HTTP', () => {
+      const url = new URL('http://hello.com/foor?bar=baz');
+      expect(rc.isHttps(url)).to.be.false;
     });
   });
 });
