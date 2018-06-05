@@ -5,8 +5,8 @@
  * @return {boolean}
  */
 function isGoogleAds(url) {
-  return /(^|\.)doubleclick.net$/.test(url.hostname) ||
-      /(^|\.)googlesyndication.com$/.test(url.hostname);
+  return /(^|\.)(doubleclick.net|google(syndication|tagservices).com)$/
+    .test(url.hostname);
 }
 
 /**
@@ -28,8 +28,39 @@ function hasImpressionPath(url) {
       url.pathname ==='/pagead/adview';
 }
 
+/**
+ * Checks if the url is loading a gpt.js script
+ * @param {!URL} url
+ * @return {boolean}
+ */
+function isGpt(url) {
+  return url.host === 'www.googletagservices.com' &&
+      url.pathname === '/tag/js/gpt.js';
+}
+
+/**
+ * Checks if the url is loaded over http
+ * @param {!URL} url
+ * @return {boolean}
+ */
+function isHttp(url) {
+  return url.protocol === 'http:';
+}
+
+/**
+ * Checks if the url is loaded over https
+ * @param {!URL} url
+ * @return {boolean}
+ */
+function isHttps(url) {
+  return url.protocol === 'https:';
+}
+
 module.exports = {
   isGoogleAds,
   hasAdRequestPath,
   hasImpressionPath,
+  isGpt,
+  isHttp,
+  isHttps,
 };

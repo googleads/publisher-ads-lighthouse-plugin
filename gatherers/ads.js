@@ -1,8 +1,7 @@
-const array = require('../utils/array.js');
 // @ts-ignore
 const chromeHar = require('chrome-har');
 /* eslint-disable-next-line */
-const {isGoogleAds, hasAdRequestPath, hasImpressionPath} = require('../utils/resource-classification');
+const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
 const {Gatherer} = require('lighthouse');
 const {isDebugMode} = require('../index');
 const {URL} = require('url');
@@ -81,9 +80,26 @@ class Ads extends Gatherer {
     logMissingUrls(urls, loadData);
 
     const googleAdsEntries = parsedUrls.filter(isGoogleAds);
-    const numRequests = array.count(googleAdsEntries, hasAdRequestPath);
-    const numImpressions = array.count(googleAdsEntries, hasImpressionPath);
-    return {numRequests, numImpressions};
+
+    let numRequests = 0;
+    let numImpressions = 0;
+    let numGptHttpReqs = 0;
+    let numGptHttpsReqs = 0;
+
+    for (const url of googleAdsEntries) {
+      if (hasAdRequestPath(url)) {
+        numRequests++;
+      } else if (hasImpressionPath(url)) {
+        numImpressions++;
+      } else if (isGpt(url)) {
+        if (isHttp(url)) {
+          numGptHttpReqs++;
+        } else if (isHttps(url)) {
+          numGptHttpsReqs++;
+        }
+      }
+    }
+    return {numRequests, numImpressions, numGptHttpReqs, numGptHttpsReqs};
   }
 }
 
