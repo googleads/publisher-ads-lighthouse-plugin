@@ -7,24 +7,24 @@
  * @const {!LH.Config}
  */
 module.exports = {
-  extends: 'lighthouse:default',
+  extends: 'lighthouse:full',
   passes: [
     {
       passName: 'defaultPass',
-      pauseAfterLoadMs: 10000,
-      pauseAfterNetworkQuietMs: 10000,
-      recordTrace: true,
       gatherers: [
         './gatherers/ads',
-        'js-usage',
+      ],
+    },
+    {
+      passName: 'redirectPass',
+      gatherers: [
+        './gatherers/static-ad-tags',
       ],
     },
   ],
 
   audits: [
     './audits/has-ads',
-    'byte-efficiency/unused-javascript',
-    'first-meaningful-paint',
-    'mixed-content',
+    './audits/async-ad-tags',
   ],
 };
