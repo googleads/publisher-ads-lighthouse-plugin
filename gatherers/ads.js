@@ -1,6 +1,5 @@
 // @ts-ignore
 const chromeHar = require('chrome-har');
-/* eslint-disable-next-line */
 const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
 const {Gatherer} = require('lighthouse');
 const {isDebugMode} = require('../index');
