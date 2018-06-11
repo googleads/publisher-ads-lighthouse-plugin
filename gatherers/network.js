@@ -1,6 +1,5 @@
 // @ts-ignore
 const chromeHar = require('chrome-har');
-const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
 const {Gatherer} = require('lighthouse');
 const {isDebugMode} = require('../index');
 const {URL} = require('url');
@@ -46,9 +45,9 @@ function logMissingUrls(urls, loadData) {
 
 
 /** @inheritdoc */
-class Ads extends Gatherer {
+class Network extends Gatherer {
   /**
-   * Initialize an Ads Gatherer
+   * Initialize a Network Gatherer
    */
   constructor() {
     // @ts-ignore TypeScript produces an error when calling super()  here since
@@ -77,29 +76,8 @@ class Ads extends Gatherer {
     const urls = har.log.entries.map((entry) => entry.request.url);
     const parsedUrls = urls.map((url) => new URL(url));
     logMissingUrls(urls, loadData);
-
-    const googleAdsEntries = parsedUrls.filter(isGoogleAds);
-
-    let numRequests = 0;
-    let numImpressions = 0;
-    let numGptHttpReqs = 0;
-    let numGptHttpsReqs = 0;
-
-    for (const url of googleAdsEntries) {
-      if (hasAdRequestPath(url)) {
-        numRequests++;
-      } else if (hasImpressionPath(url)) {
-        numImpressions++;
-      } else if (isGpt(url)) {
-        if (isHttp(url)) {
-          numGptHttpReqs++;
-        } else if (isHttps(url)) {
-          numGptHttpsReqs++;
-        }
-      }
-    }
-    return {numRequests, numImpressions, numGptHttpReqs, numGptHttpsReqs};
+    return {har, parsedUrls};
   }
 }
 
-module.exports = Ads;
+module.exports = Network;
