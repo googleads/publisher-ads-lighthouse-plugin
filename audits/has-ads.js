@@ -1,3 +1,4 @@
+const {isGoogleAds, hasAdRequestPath, hasImpressionPath} = require('../utils/resource-classification');
 const {Audit} = require('lighthouse');
 
 /**
@@ -12,7 +13,7 @@ class HasAds extends Audit {
       description: 'Checks if the page has ads',
       failureDescription: 'something went wrong',
       helpText: 'Checks if the page has ads',
-      requiredArtifacts: ['Ads'],
+      requiredArtifacts: ['Network'],
     };
   }
 
@@ -21,13 +22,31 @@ class HasAds extends Audit {
    * @return {!LH.Audit.Product}
    */
   static audit(artifacts) {
-    const {numRequests, numImpressions} =
-    /** @type {!AdsArtifacts} */ (artifacts.Ads);
+    const {parsedUrls} =
+    /** @type {!NetworkArtifacts} */ (artifacts.Network);
+
+    const googleAdsEntries = parsedUrls.filter(isGoogleAds);
+
+    let numRequests = 0;
+    let numImpressions = 0;
+
+    for (const url of googleAdsEntries) {
+      if (hasAdRequestPath(url)) {
+        numRequests++;
+      } else if (hasImpressionPath(url)) {
+        numImpressions++;
+      }
+    }
+
     return {
       rawValue: numRequests,
       score: numRequests > 0 ? 1 : 0,
       displayValue:
           `${numRequests} ad request(s); ${numImpressions} ad impression(s)`,
+      details: {
+        numRequests,
+        numImpressions,
+      },
     };
   }
 }
