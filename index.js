@@ -29,14 +29,18 @@ async function main() {
     await browser.kill();
 
     const audits = Object.values(results.lhr.audits)
-      .filter((a) => a.displayValue && a.displayValue.length > 0)
       .sort((a, b) => (a.id > b.id) ? 1 : -1);
-    for (const {id, displayValue} of audits) {
+    for (const {id, displayValue, errorMessage} of audits) {
+      if (errorMessage) {
+        console.log('ERROR:', id, errorMessage);
+      }
       // Note that display value is sometimes a string and sometimes an array
       // for string formatting, like ['%d ms', 4].
-      const display = typeof displayValue == 'string' ?
-        displayValue : util.format.call(null, ...displayValue);
-      console.log(id, ':', display);
+      if (displayValue) {
+        const display = typeof displayValue == 'string' ?
+          displayValue : util.format.call(null, ...displayValue);
+        console.log(id, ':', display);
+      }
     }
     process.exit(0);
   } catch (e) {
