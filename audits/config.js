@@ -12,14 +12,13 @@ module.exports = {
     {
       passName: 'defaultPass',
       gatherers: [
-        './gatherers/ads',
+        './gatherers/network',
       ],
     },
     {
-      passName: 'redirectPass',
+      passName: 'javascriptDisabled',
       gatherers: [
         './gatherers/static-ad-tags',
-        './gatherers/network',
       ],
     },
   ],
