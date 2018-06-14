@@ -10,7 +10,7 @@ class LoadsGptOverHttps extends Audit {
   /** @override */
   static get meta() {
     return {
-      name: 'loads-gpt',
+      name: 'loads-gpt-over-https',
       description: 'Checks if the page requests gpt.js over HTTPS',
       helpText: 'Determines if a publisher/page uses HTTPS to requests ads',
       requiredArtifacts: ['Network'],

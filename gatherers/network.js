@@ -1,7 +1,9 @@
+// @ts-ignore
+const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const chromeHar = require('chrome-har');
 const {Gatherer} = require('lighthouse');
-const {isDebugMode} = require('../index');
 const {URL} = require('url');
+const {isDebugMode} = require('../index');
 
 /** @type {Array<CrdpEvents>} */
 const METHODS_TO_OBSERVE = [
@@ -52,7 +54,10 @@ class Network extends Gatherer {
     this.events_ = [];
   }
 
-  /** @override */
+  /**
+   * @param {LH.Gatherer.PassContext} passContext
+   * @override
+   */
   async beforePass(passContext) {
     for (const method of METHODS_TO_OBSERVE) {
       // Add listener for each method.
@@ -62,16 +67,22 @@ class Network extends Gatherer {
     }
   }
 
-  /** @override */
+  /**
+   * @param {LH.Gatherer.PassContext} passContext
+   * @param {LH.Gatherer.LoadData} loadData
+   * @return {Promise<NetworkArtifacts>}
+   * @override
+   */
   async afterPass(passContext, loadData) {
     // Use HAR data instead of Lighthouse load data since the Lighthouse network
     // log is missing some requests.
     // TODO(warrengm): Investigate why. Lighthouse *should* be correct.
     const har = chromeHar.harFromMessages(this.events_);
+    const networkRecords = await NetworkRecorder.recordsFromLogs(this.events_);
     const urls = har.log.entries.map((entry) => entry.request.url);
     const parsedUrls = urls.map((url) => new URL(url));
     logMissingUrls(urls, loadData);
-    return {har, parsedUrls};
+    return {har, networkRecords, parsedUrls};
   }
 }
 
