@@ -13,10 +13,11 @@ module.exports = {
       passName: 'defaultPass',
       gatherers: [
         './gatherers/network',
+        './gatherers/rendered-ad-slots',
       ],
     },
     {
-      passName: 'javascriptDisabled',
+      passName: 'redirectPass',
       gatherers: [
         './gatherers/static-ad-tags',
       ],
@@ -27,5 +28,6 @@ module.exports = {
     './audits/has-ads',
     './audits/async-ad-tags',
     './audits/loads-gpt-over-https',
+    './audits/ads-in-viewport',
   ],
 };
