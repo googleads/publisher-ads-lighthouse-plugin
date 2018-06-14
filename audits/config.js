@@ -19,6 +19,7 @@ module.exports = {
       passName: 'redirectPass',
       gatherers: [
         './gatherers/static-ad-tags',
+        './gatherers/network',
       ],
     },
   ],
@@ -26,5 +27,6 @@ module.exports = {
   audits: [
     './audits/has-ads',
     './audits/async-ad-tags',
+    './audits/loads-gpt-over-https',
   ],
 };

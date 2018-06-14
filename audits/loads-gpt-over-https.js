@@ -41,6 +41,7 @@ class LoadsGptOverHttps extends Audit {
     }
 
     return {
+      rawValue: numGptHttpReqs,
       score: numGptHttpReqs > 0 ? 0 : 1,
       displayValue:
           `${numGptHttpReqs} gpt.js HTTP request(s);
