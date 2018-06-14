@@ -21,6 +21,7 @@ import webInspector = require('lighthouse/typings/web-inspector');
 declare global {
   export interface NetworkArtifacts {
     har: HAR.Har;
+    networkRecords: Array<LH.WebInspector.NetworkRequest>;
     parsedUrls: Array<URL>;
   }
 
