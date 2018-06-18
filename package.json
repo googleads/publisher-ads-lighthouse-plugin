@@ -5,11 +5,11 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "check-types": "tsc -p . || echo 'WARNING: type-checking failed'",
+    "type-check": "tsc -p .",
     "test": "mocha test/**/*.js"
   },
   "precommit": [
-    "check-types",
+    "type-check",
     "lint",
     "test"
   ],
@@ -17,7 +17,7 @@
   "dependencies": {
     "chrome-har": "^0.3.2",
     "chrome-launcher": "^0.10.2",
-    "lighthouse": "3.0.0-beta.0",
+    "lighthouse": "https://github.com/GoogleChrome/lighthouse.git#424c7b8",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
@@ -27,6 +27,7 @@
     "mocha": "^5.1.1",
     "pre-commit": "^1.2.2",
     "sinon": "^5.0.7",
-    "typescript": "^2.8.3"
+    "typescript": "^2.8.3",
+    "vscode-chrome-debug-core": "3.23.8"
   }
 }
