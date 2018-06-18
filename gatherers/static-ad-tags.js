@@ -4,13 +4,18 @@ const AD_TAG_SELECTOR = 'script[src*="gpt.js"]';
 
 /** @inheritdoc */
 class StaticAdTags extends Gatherer {
-  /** @override */
+  /**
+   * @param {!LH.Gatherer.PassContext} passContext
+   */
   beforePass(passContext) {
     // Avoids DOM manipulation to extract tags from original HTML.
     passContext.disableJavaScript = true;
   }
 
-  /** @override */
+  /**
+   * @param {!LH.Gatherer.PassContext} passContext
+   * @return {!Promise<Array<?LH.Crdp.DOM.BoxModel>>}
+   */
   async afterPass(passContext) {
     const driver = passContext.driver;
 
