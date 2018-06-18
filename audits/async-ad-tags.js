@@ -2,11 +2,11 @@ const array = require('../utils/array.js');
 const {Audit} = require('lighthouse');
 
 /**
- * @param {!Crdp.DOM.Node} tag
+ * @param {!LH.Crdp.DOM.Node} tag
  * @return {boolean}
  */
 function hasAsync(tag) {
-  return tag.attributes && tag.attributes.includes('async');
+  return !!tag.attributes && tag.attributes.includes('async');
 }
 
 /** @inheritDoc */

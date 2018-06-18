@@ -4,7 +4,7 @@ const {Audit} = require('lighthouse');
 
 /**
  * @param {!LH.Artifacts.ViewportDimensions} viewport
- * @param {?Crdp.DOM.BoxModel} slot
+ * @param {?LH.Crdp.DOM.BoxModel} slot
  * @return {boolean}
  */
 function isSlotViewable(viewport, slot) {
