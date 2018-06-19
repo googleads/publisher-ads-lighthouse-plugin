@@ -1,9 +1,9 @@
-// @ts-ignore
 const chromeHar = require('chrome-har');
 const {Gatherer} = require('lighthouse');
 const {isDebugMode} = require('../index');
 const {URL} = require('url');
 
+/** @type {Array<CrdpEvents>} */
 const METHODS_TO_OBSERVE = [
   'Page.loadEventFired',
   'Page.domContentEventFired',
@@ -17,12 +17,6 @@ const METHODS_TO_OBSERVE = [
   'Network.loadingFinished',
   'Network.loadingFailed',
 ];
-
-/**
- * @typedef {Object} DevToolsEvent
- * @property {string} method
- * @property {!Object} params
- */
 
 /**
  * Logs any missing URLs in loadData.
@@ -54,7 +48,7 @@ class Network extends Gatherer {
     // the compiler infers the type of Gatherer to be "any".
     super();
 
-    /** @private @const @type {!Array<!DevToolsEvent>} */
+    /** @private @const @type {Array<LH.Protocol.RawEventMessage>} */
     this.events_ = [];
   }
 
@@ -63,7 +57,8 @@ class Network extends Gatherer {
     for (const method of METHODS_TO_OBSERVE) {
       // Add listener for each method.
       await passContext.driver.on(
-        method, (params) => this.events_.push({method, params}));
+        method, (params) => this.events_.push(
+          /** @type {LH.Protocol.RawEventMessage} */ ({method, params})));
     }
   }
 

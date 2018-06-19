@@ -19,14 +19,16 @@ import protocol = require('lighthouse/typings/protocol');
 import webInspector = require('lighthouse/typings/web-inspector');
 
 declare global {
-  export interface AdsArtifacts {
-    numRequests: number;
-    numImpressions: number;
+  export interface NetworkArtifacts {
+    har: HAR.Har;
+    parsedUrls: Array<URL>;
   }
 
   export interface Artifacts extends LH.Artifacts {
     RenderedAdSlots?: Array<LH.Crdp.DOM.BoxModel | null>;
     StaticAdTags?: Array<LH.Crdp.DOM.Node>;
-    Ads?: AdsArtifacts;
+    Network?: NetworkArtifacts;
   }
+
+  export type CrdpEvents = keyof LH.CrdpEvents;
 }

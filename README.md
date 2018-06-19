@@ -17,4 +17,5 @@ Other options include:
 -   Lighthouse Docs: https://github.com/GoogleChrome/lighthouse/tree/master/docs
 -   Puppeteer Docs: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md
 -   Chrome DevTools Protocol: https://chromedevtools.github.io/devtools-protocol/
+-   HAR Spec: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/HAR/Overview.html
 
