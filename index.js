@@ -56,7 +56,7 @@ async function main() {
 
     if (outputPath) {
       console.log(`Writing output to ${outputPath}`);
-      await fs.outputPath(outputPath, results.report);
+      await fs.outputFile(outputPath, results.report);
       if (argv.view) {
         opn(outputPath);
       }
