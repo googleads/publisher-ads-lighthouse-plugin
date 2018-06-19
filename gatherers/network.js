@@ -59,11 +59,16 @@ class Network extends Gatherer {
    * @override
    */
   async beforePass(passContext) {
+    // Listen for certain devtools events to be able to construct a HAR network
+    // log.
     for (const method of METHODS_TO_OBSERVE) {
-      // Add listener for each method.
-      await passContext.driver.on(
-        method, (params) => this.events_.push(
-          /** @type {LH.Protocol.RawEventMessage} */ ({method, params})));
+      /**
+       * @param {string} params
+       * @return {number}
+       */
+      const append = (params) => this.events_.push(
+        /** @type {LH.Protocol.RawEventMessage} */ ({method, params}));
+      await passContext.driver.on(method, append);
     }
   }
 

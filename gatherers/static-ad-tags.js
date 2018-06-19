@@ -22,12 +22,16 @@ class StaticAdTags extends Gatherer {
     // Reset the JS disable.
     passContext.disableJavaScript = false;
 
+    // TODO: Type this correctly. Perhaps using the 'devtools-protocol' NPM
+    // module.
+    // @ts-ignore
     const {root} = await driver.sendCommand('DOM.getDocument');
     const {nodeIds} = await driver.sendCommand('DOM.querySelectorAll', {
       nodeId: root.nodeId,
       selector: AD_TAG_SELECTOR,
     });
 
+    // @ts-ignore
     return Promise.all(nodeIds.map(async (nodeId) =>
       (await driver.sendCommand('DOM.describeNode', {nodeId})).node));
   }

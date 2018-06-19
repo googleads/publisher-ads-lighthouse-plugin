@@ -6,9 +6,7 @@
     "allowJs": true,
     "checkJs": true,
     "strict": true,
-    // TODO: set noImplicitAny to true after errors in lighthouse-core are
-    // resolved. This would require all variables to have known types.
-    "noImplicitAny": false,
+    "skipLibCheck": true,
     "typeRoots": [
       "./node_modules/@types",
       "./typings"

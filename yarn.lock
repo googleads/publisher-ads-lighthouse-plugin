@@ -12,6 +12,12 @@
   version "0.9.46"
   resolved "https://registry.yarnpkg.com/@types/core-js/-/core-js-0.9.46.tgz#ea701ee34cbb6dfe6d100f1530319547c93c8d79"
 
+"@types/fs-extra@^5.0.3":
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-5.0.3.tgz#feb31d55eeae3ccd5f92dbce806344a6c777a713"
+  dependencies:
+    "@types/node" "*"
+
 "@types/mkdirp@^0.3.29":
   version "0.3.29"
   resolved "https://registry.yarnpkg.com/@types/mkdirp/-/mkdirp-0.3.29.tgz#7f2ad7ec55f914482fc9b1ec4bb1ae6028d46066"
@@ -23,6 +29,12 @@
 "@types/node@^9.3.0":
   version "9.6.19"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.19.tgz#696b4f12e60295c55ec8d202a534aef7765434fb"
+
+"@types/opn@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@types/opn/-/opn-5.1.0.tgz#bff7bc371677f4bdbb37884400e03fd81f743927"
+  dependencies:
+    "@types/node" "*"
 
 "@types/rimraf@^0.0.28":
   version "0.0.28"
