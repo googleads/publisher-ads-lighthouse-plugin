@@ -30,6 +30,7 @@ module.exports = {
     './audits/has-ads',
     './audits/loads-gpt-over-https',
     './audits/viewport-ad-density',
+    './audits/ad-request-critical-path',
   ],
 
   groups: {
