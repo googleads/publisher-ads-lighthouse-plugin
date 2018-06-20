@@ -19,7 +19,7 @@ class RenderedAdSlots extends Gatherer {
 
     return Promise.all(nodeIds.map(async (nodeId) => {
       try {
-        return (await driver.sendCommand('DOM.getBoxModel')).model;
+        return (await driver.sendCommand('DOM.getBoxModel', {nodeId})).model;
       } catch (e) {
         // getBoxelModel fails if the element is hidden (e.g. display:none)
         return null;

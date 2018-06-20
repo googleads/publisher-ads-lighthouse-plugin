@@ -43,6 +43,20 @@ describe('StaticAdTags', () => {
   });
 
   describe('gathererData', () => {
+    it('should use the driver API correctly', async () => {
+      sendCommand.withArgs('DOM.querySelectorAll', sinon.match.any)
+        .resolves({nodeIds: [3]});
+
+      await staticAdTags.afterPass({driver: {sendCommand}});
+      const calls = sendCommand.getCalls();
+
+      expect(calls).to.have.lengthOf(3);
+      expect(calls[0].args).to.eql(['DOM.getDocument']);
+      expect(calls[1].args).to.eql(['DOM.querySelectorAll', {
+        nodeId: 1, selector: 'script[src*="gpt.js"]'}]);
+      expect(calls[2].args).to.eql(['DOM.describeNode', {nodeId: 3}]);
+    });
+
     it('should return empty array if no ad tags', async () => {
       sendCommand.withArgs('DOM.querySelectorAll', sinon.match.any)
         .resolves({nodeIds: []});
