@@ -1,22 +1,6 @@
-const array = require('../utils/array.js');
-const assert = require('assert');
+const array = require('../utils/array');
 const {Audit} = require('lighthouse');
-
-/**
- * @param {!LH.Artifacts.ViewportDimensions} viewport
- * @param {?LH.Crdp.DOM.BoxModel} slot
- * @return {boolean}
- */
-function isSlotViewable(viewport, slot) {
-  if (!slot) return false;
-
-  const {innerWidth, innerHeight} = viewport;
-  const [left, top, right, _t, _r, bottom, _l, _b] = slot.content;
-  assert(left == _l && top == _t && right == _r && bottom == _b);
-
-  return left < right && top < bottom && // Non-zero area
-    left < innerWidth && top < innerHeight && 0 < right && 0 < bottom;
-}
+const {isBoxInViewport} = require('../utils/geometry');
 
 /** @inheritDoc */
 class AdsInViewport extends Audit {
@@ -35,8 +19,9 @@ class AdsInViewport extends Audit {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.RenderedAdSlots;
 
-    // TODO(gmatute): account for scrolling, deep links, ads moved by content
-    const viewed = array.count(slots, (slot) => isSlotViewable(viewport, slot));
+    // TODO(gmatute): account for scrolling, deep links, and reflows
+    const viewed = array.count(slots, (slot) =>
+      isBoxInViewport(slot, viewport));
 
     return {
       rawValue: !slots.length || viewed / slots.length,
