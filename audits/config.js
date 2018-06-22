@@ -25,9 +25,10 @@ module.exports = {
   ],
 
   audits: [
-    './audits/has-ads',
-    './audits/async-ad-tags',
-    './audits/loads-gpt-over-https',
     './audits/ads-in-viewport',
+    './audits/async-ad-tags',
+    './audits/has-ads',
+    './audits/loads-gpt-over-https',
+    './audits/viewport-ad-density',
   ],
 };
