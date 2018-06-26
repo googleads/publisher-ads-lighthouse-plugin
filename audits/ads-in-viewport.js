@@ -14,10 +14,14 @@ class AdsInViewport extends Audit {
     };
   }
 
-  /** @override */
+  /**
+   * @override
+   * @param {!Artifacts} artifacts
+   * @return {!LH.Audit.Product}
+   */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.RenderedAdSlots;
+    const slots = artifacts.RenderedAdSlots || [];
 
     // TODO(gmatute): account for scrolling, deep links, and reflows
     const viewed = array.count(slots, (slot) =>
