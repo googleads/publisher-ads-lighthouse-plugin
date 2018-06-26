@@ -6,7 +6,7 @@ const lighthouse = require('lighthouse');
 // @ts-ignore any
 const {argv} = require('yargs');
 
-const auditsConfig = require('./audits/config');
+const config = require('./config');
 
 /**
  * Flags for running lighthouse. See
@@ -25,7 +25,7 @@ async function main() {
     console.log('Launched headless chrome');
     flags.port = browser.port;
 
-    const results = await lighthouse(argv.url, flags, auditsConfig);
+    const results = await lighthouse(argv.url, flags, config);
     await browser.kill();
 
     const audits = Object.values(results.lhr.audits)
