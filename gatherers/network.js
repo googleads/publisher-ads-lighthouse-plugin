@@ -5,7 +5,7 @@ const {Gatherer} = require('lighthouse');
 const {URL} = require('url');
 const {isDebugMode} = require('../index');
 
-/** @type {Array<CrdpEvents>} */
+/** @type {Array<keyof LH.CrdpEvents>} */
 const METHODS_TO_OBSERVE = [
   'Page.loadEventFired',
   'Page.domContentEventFired',
