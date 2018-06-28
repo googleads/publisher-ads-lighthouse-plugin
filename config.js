@@ -31,4 +31,24 @@ module.exports = {
     './audits/loads-gpt-over-https',
     './audits/viewport-ad-density',
   ],
+
+  groups: {
+    'ads-best-practices': {
+      title: 'Best Practices',
+    },
+    'ads-header-bidding': {
+      title: 'Header Bidding',
+    },
+  },
+
+  categories: {
+    'ads-quality': {
+      title: 'Ad Quality',
+      auditRefs: [
+        {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
+        {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
+        {id: 'serial-header-bidding', weight: 1, group: 'ads-header-bidding'},
+      ],
+    },
+  },
 };
