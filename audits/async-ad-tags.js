@@ -2,7 +2,7 @@ const array = require('../utils/array.js');
 const {Audit} = require('lighthouse');
 
 /**
- * @param {!LH.Crdp.DOM.Node} tag
+ * @param {LH.Crdp.DOM.Node} tag
  * @return {boolean}
  */
 function hasAsync(tag) {
@@ -23,8 +23,8 @@ class AsyncAdTags extends Audit {
 
   /**
    * @override
-   * @param {!Artifacts} artifacts
-   * @return {!LH.Audit.Product}
+   * @param {Artifacts} artifacts
+   * @return {LH.Audit.Product}
    */
   static audit(artifacts) {
     const tags = artifacts.StaticAdTags || [];

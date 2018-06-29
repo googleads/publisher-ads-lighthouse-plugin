@@ -22,8 +22,8 @@ const METHODS_TO_OBSERVE = [
 
 /**
  * Logs any missing URLs in loadData.
- * @param {!Array<string>} urls
- * @param {!LH.Gatherer.LoadData} loadData
+ * @param {Array<string>} urls
+ * @param {LH.Gatherer.LoadData} loadData
  */
 function logMissingUrls(urls, loadData) {
   if (!isDebugMode() || !loadData.networkRecords) return;
