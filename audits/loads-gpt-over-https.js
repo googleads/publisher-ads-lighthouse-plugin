@@ -18,12 +18,12 @@ class LoadsGptOverHttps extends Audit {
   }
 
   /**
-   * @param {!Artifacts} artifacts
-   * @return {!LH.Audit.Product}
+   * @param {Artifacts} artifacts
+   * @return {LH.Audit.Product}
    */
   static audit(artifacts) {
     const {parsedUrls} =
-    /** @type {!NetworkArtifacts} */ (artifacts.Network);
+    /** @type {NetworkArtifacts} */ (artifacts.Network);
 
     const googleAdsEntries = parsedUrls.filter(isGoogleAds);
 

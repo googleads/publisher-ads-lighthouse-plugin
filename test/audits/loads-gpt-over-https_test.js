@@ -5,8 +5,8 @@ const {expect} = require('chai');
 const {URL} = require('url');
 
 /**
- * @param {!Array<{url: string}>} requests
- * @return {!Object} An object partly following the HAR spec.
+ * @param {Array<{url: string}>} requests
+ * @return {Object} An object partly following the HAR spec.
  */
 function newHar(requests) {
   const wrappedRequests = requests.map((req) => ({request: req}));

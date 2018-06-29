@@ -15,8 +15,8 @@ class ViewportAdDensity extends Audit {
 
   /**
    * @override
-   * @param {!Artifacts} artifacts
-   * @return {!LH.Audit.Product}
+   * @param {Artifacts} artifacts
+   * @return {LH.Audit.Product}
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
