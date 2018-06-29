@@ -28,6 +28,9 @@ function hasImpressionPath(url) {
       url.pathname ==='/pagead/adview';
 }
 
+/** Checks if the url is for an ad tag. */
+const isAdTag = isGpt;
+
 /**
  * Checks if the url is loading a gpt.js script
  * @param {!URL} url
@@ -60,6 +63,7 @@ module.exports = {
   isGoogleAds,
   hasAdRequestPath,
   hasImpressionPath,
+  isAdTag,
   isGpt,
   isHttp,
   isHttps,

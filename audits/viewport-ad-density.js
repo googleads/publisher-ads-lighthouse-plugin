@@ -23,7 +23,7 @@ class ViewportAdDensity extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.RenderedAdSlots || [];
+    const slots = artifacts.RenderedAdSlots;
 
     const adArea = slots.reduce((sum, slot) =>
       sum + boxViewableArea(slot, viewport), 0);

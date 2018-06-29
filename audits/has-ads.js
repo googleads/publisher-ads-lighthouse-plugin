@@ -22,8 +22,7 @@ class HasAds extends Audit {
    * @return {LH.Audit.Product}
    */
   static audit(artifacts) {
-    const {parsedUrls} =
-    /** @type {NetworkArtifacts} */ (artifacts.Network);
+    const {parsedUrls} = artifacts.Network;
 
     const googleAdsEntries = parsedUrls.filter(isGoogleAds);
 

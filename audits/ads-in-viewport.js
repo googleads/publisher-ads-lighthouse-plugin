@@ -30,7 +30,7 @@ class AdsInViewport extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.RenderedAdSlots || [];
+    const slots = artifacts.RenderedAdSlots;
 
     // TODO(gmatute): account for scrolling, deep links, and reflows
     const viewed = array.count(slots, (slot) =>
