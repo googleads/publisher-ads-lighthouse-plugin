@@ -11,7 +11,10 @@ function hasAsync(tag) {
 
 /** @inheritDoc */
 class AsyncAdTags extends Audit {
-  /** @override */
+  /**
+   * @return {AuditMetadata}
+   * @override
+   */
   static get meta() {
     return {
       name: 'async-ad-tags',

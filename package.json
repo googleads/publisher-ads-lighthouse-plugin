@@ -15,8 +15,6 @@
   ],
   "author": "",
   "dependencies": {
-    "@types/fs-extra": "^5.0.3",
-    "@types/opn": "^5.1.0",
     "chrome-har": "^0.3.2",
     "chrome-launcher": "^0.10.2",
     "fs-extra": "^6.0.1",
@@ -25,6 +23,8 @@
     "yargs": "^11.0.0"
   },
   "devDependencies": {
+    "@types/fs-extra": "^5.0.3",
+    "@types/opn": "^5.1.0",
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",

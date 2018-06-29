@@ -4,7 +4,10 @@ const {isBoxInViewport} = require('../utils/geometry');
 
 /** @inheritDoc */
 class AdsInViewport extends Audit {
-  /** @override */
+  /**
+   * @return {AuditMetadata}
+   * @override
+   */
   static get meta() {
     return {
       name: 'ads-in-viewport',
