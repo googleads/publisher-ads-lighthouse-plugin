@@ -34,7 +34,7 @@ class AsyncAdTags extends Audit {
    * @override
    */
   static audit(artifacts) {
-    const tags = artifacts.StaticAdTags || [];
+    const tags = artifacts.StaticAdTags;
     const numAsync = array.count(tags, hasAsync);
     const numTags = tags.length;
     return {
