@@ -3,7 +3,10 @@ const {boxViewableArea} = require('../utils/geometry');
 
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
-  /** @override */
+  /**
+   * @return {AuditMetadata}
+   * @override
+   */
   static get meta() {
     return {
       name: 'viewport-ad-density',
