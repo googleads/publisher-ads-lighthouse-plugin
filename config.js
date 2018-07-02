@@ -4,7 +4,7 @@
  * https://github.com/GoogleChrome/lighthouse/blob/master/typings/config.d.ts.
  * and
  * https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/config
- * @const {!LH.Config}
+ * @const {LH.Config}
  */
 module.exports = {
   extends: 'lighthouse:full',
