@@ -1,7 +1,7 @@
 
 /**
  * Counts how many elements of the array match the given predicate.
- * @param {!Array<T>} arr
+ * @param {Array<T>} arr
  * @param {function(T): boolean} pred
  * @return {number}
  * @template T

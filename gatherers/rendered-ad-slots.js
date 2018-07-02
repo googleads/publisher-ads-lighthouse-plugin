@@ -6,7 +6,7 @@ const AD_SLOT_SELECTOR = 'iframe[id^=google_ads_iframe_]';
 class RenderedAdSlots extends Gatherer {
   /**
    * @param {LH.Gatherer.PassContext} passContext
-   * @return {!Promise<Array<?LH.Crdp.DOM.BoxModel>>}
+   * @return {Promise<Array<?LH.Crdp.DOM.BoxModel>>}
    * @override
    */
   async afterPass(passContext) {

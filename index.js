@@ -13,7 +13,7 @@ const config = require('./config');
 /**
  * Flags for running lighthouse. See
  * https://github.com/GoogleChrome/lighthouse/blob/master/typings/externs.d.ts
- * @type {!LH.Flags}
+ * @type {LH.Flags}
  */
 const flags = /** @type {LH.Flags} */ ({});
 

@@ -1,7 +1,7 @@
 
 /**
  * Checks if the url is from a Google ads host.
- * @param {!URL} url
+ * @param {URL} url
  * @return {boolean}
  */
 function isGoogleAds(url) {
@@ -11,7 +11,7 @@ function isGoogleAds(url) {
 
 /**
  * Checks if the url has an ad request path.
- * @param {!URL} url
+ * @param {URL} url
  * @return {boolean}
  */
 function hasAdRequestPath(url) {
@@ -20,7 +20,7 @@ function hasAdRequestPath(url) {
 
 /**
  * Checks if the url has an impression path.
- * @param {!URL} url
+ * @param {URL} url
  * @return {boolean}
  */
 function hasImpressionPath(url) {
@@ -33,7 +33,7 @@ const isAdTag = isGpt;
 
 /**
  * Checks if the url is loading a gpt.js script
- * @param {!URL} url
+ * @param {URL} url
  * @return {boolean}
  */
 function isGpt(url) {
@@ -43,7 +43,7 @@ function isGpt(url) {
 
 /**
  * Checks if the url is loaded over http
- * @param {!URL} url
+ * @param {URL} url
  * @return {boolean}
  */
 function isHttp(url) {
@@ -52,7 +52,7 @@ function isHttp(url) {
 
 /**
  * Checks if the url is loaded over https
- * @param {!URL} url
+ * @param {URL} url
  * @return {boolean}
  */
 function isHttps(url) {

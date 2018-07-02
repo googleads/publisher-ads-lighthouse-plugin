@@ -2,7 +2,7 @@ const assert = require('assert');
 
 /**
  * @param {?LH.Crdp.DOM.BoxModel} boxModel
- * @param {!LH.Artifacts.ViewportDimensions} viewport
+ * @param {LH.Artifacts.ViewportDimensions} viewport
  * @return {boolean}
  */
 function isBoxInViewport(boxModel, viewport) {
@@ -18,7 +18,7 @@ function isBoxInViewport(boxModel, viewport) {
 
 /**
  * @param {?LH.Crdp.DOM.BoxModel} box
- * @param {!LH.Artifacts.ViewportDimensions} viewport
+ * @param {LH.Artifacts.ViewportDimensions} viewport
  * @return {number}
  */
 function boxViewableArea(box, viewport) {
