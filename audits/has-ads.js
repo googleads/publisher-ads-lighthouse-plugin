@@ -12,10 +12,10 @@ class HasAds extends Audit {
    */
   static get meta() {
     return {
-      name: 'has-ads',
-      description: 'Checks if the page has ads',
-      failureDescription: 'something went wrong',
-      helpText: 'Checks if the page has ads',
+      id: 'has-ads',
+      title: 'Page has ad requests',
+      failureTitle: 'No ad requests were detected',
+      description: 'Let us know if we miss something. [Feedback](#TODO)',
       requiredArtifacts: ['Network'],
     };
   }

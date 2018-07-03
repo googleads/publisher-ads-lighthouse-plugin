@@ -88,9 +88,11 @@ class AdRequestCriticalPath extends Audit {
    */
   static get meta() {
     return {
-      name: 'requests-blocking-ads',
-      description: 'Determines critical path of resources blocking ads',
-      helpText: 'Determines which resources prevent ads from loading',
+      id: 'requests-blocking-ads',
+      title: 'Ad request critical path',
+      description: 'These are the resources that block the first ad request. ' +
+          'Consider reducing the number of resources or improving their ' +
+          'execution to start loading ads as soon as possible.',
       requiredArtifacts: ['Network'],
     };
   }

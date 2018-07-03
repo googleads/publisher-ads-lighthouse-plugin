@@ -9,9 +9,10 @@ class ViewportAdDensity extends Audit {
    */
   static get meta() {
     return {
-      name: 'viewport-ad-density',
-      description: 'Ad density inside the viewport',
-      helpText: 'Computed as ad total area over viewport area',
+      id: 'viewport-ad-density',
+      title: 'Ad density inside the viewport',
+      description: 'The ads-to-content ratio inside the viewport can have ' +
+          'an impact on user experience and ultimately user retention.',
       requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
     };
   }

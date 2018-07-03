@@ -10,15 +10,11 @@ class AdsInViewport extends Audit {
    */
   static get meta() {
     return {
-      name: 'ads-in-viewport',
-      description: 'Fails iff the page has too many (>3) ads outside the ' +
-          'viewport at load time. For a better user experience and to ' +
-          'improve viewability rates, below the fold ads should be loaded ' +
-          'lazily as the user scrolls down.',
-      helpText: 'Check how many ad slots are inside the viewport after loading',
-      failureDescription: 'Too many ads loaded below the viewport which may' +
-          'lower viewability and increase page load times.',
-      scoreDisplayMode: 'binary',
+      id: 'ads-in-viewport',
+      title: 'Eager ads loaded within viewport',
+      description: 'Too many ads loaded outside the viewport lowers ' +
+          'viewability rates and impact user experience, consider loading ' +
+          'ads below the fold lazily as the user scrolls down.',
       requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
     };
   }
@@ -38,8 +34,6 @@ class AdsInViewport extends Audit {
 
     return {
       rawValue: !slots.length || viewed / slots.length,
-      // Fail if there are 4 or more ads outside the viewport.
-      score: (slots.length - viewed) >= 4 ? 1 : 0,
       displayValue: `${viewed} / ${slots.length} of ads were in the viewport`,
     };
   }
