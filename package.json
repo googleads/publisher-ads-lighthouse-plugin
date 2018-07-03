@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
-    "type-check": "tsc -p .",
-    "test": "mocha test/**/*.js"
+    "precommit": ".git/hooks/pre-commit",
+    "test": "mocha test/**/*.js",
+    "type-check": "tsc -p ."
   },
   "precommit": [
-    "type-check",
     "lint",
-    "test"
+    "test",
+    "type-check"
   ],
   "author": "",
   "dependencies": {
