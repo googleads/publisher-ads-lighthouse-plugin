@@ -6,7 +6,10 @@ const {Audit} = require('lighthouse');
  * logs since it's simple for testing.
  */
 class HasAds extends Audit {
-  /** @override */
+  /**
+   * @return {AuditMetadata}
+   * @override
+   */
   static get meta() {
     return {
       name: 'has-ads',
