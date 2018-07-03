@@ -18,7 +18,7 @@
     "chrome-har": "^0.3.2",
     "chrome-launcher": "^0.10.2",
     "fs-extra": "^6.0.1",
-    "lighthouse": "https://github.com/GoogleChrome/lighthouse.git#424c7b8",
+    "lighthouse": "^3.0.0",
     "opn": "^5.3.0",
     "yargs": "^11.0.0"
   },
@@ -31,7 +31,7 @@
     "mocha": "^5.1.1",
     "pre-commit": "^1.2.2",
     "sinon": "^5.0.7",
-    "typescript": "^2.8.3",
+    "typescript": "^2.9.1",
     "vscode-chrome-debug-core": "3.23.8"
   }
 }
