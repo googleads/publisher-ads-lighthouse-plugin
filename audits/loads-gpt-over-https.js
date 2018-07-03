@@ -7,7 +7,10 @@ const {Audit} = require('lighthouse');
  * loaded scripts from the main page and iframes.
  */
 class LoadsGptOverHttps extends Audit {
-  /** @override */
+  /**
+   * @return {AuditMetadata}
+   * @override
+   */
   static get meta() {
     return {
       name: 'loads-gpt-over-https',
