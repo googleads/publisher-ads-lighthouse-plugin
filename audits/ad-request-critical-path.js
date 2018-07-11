@@ -88,7 +88,7 @@ class AdRequestCriticalPath extends Audit {
    */
   static get meta() {
     return {
-      id: 'requests-blocking-ads',
+      id: 'ad-request-critical-path',
       title: 'Ad request critical path',
       description: 'These are the resources that block the first ad request. ' +
           'Consider reducing the number of resources or improving their ' +
