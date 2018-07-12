@@ -44,6 +44,10 @@
   version "0.1.29"
   resolved "https://registry.yarnpkg.com/@types/source-map/-/source-map-0.1.29.tgz#d7048a60180b09f8aa6d53bda311c6b51cbd7018"
 
+"@types/yargs@^11.1.0":
+  version "11.1.0"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-11.1.0.tgz#923caa0cca53745d83f139eeff4fa7906c52ebce"
+
 acorn-jsx@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/acorn-jsx/-/acorn-jsx-3.0.1.tgz#afdf9488fb1ecefc8348f6fb22f464e32a58b36b"
@@ -982,7 +986,7 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-lighthouse-logger@^1.0.0:
+lighthouse-logger@^1.0.0, lighthouse-logger@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/lighthouse-logger/-/lighthouse-logger-1.0.1.tgz#f073d83f7acbc96729bf100a121c8f006991ae61"
   dependencies:

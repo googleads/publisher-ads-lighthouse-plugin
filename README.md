@@ -13,6 +13,7 @@ Other options include:
 -   `--debug`: Will print additional logging information when running.
 -   `--output-path`: Will output the results to a file, must be either HTML or JSON.
 -   `--view`: Can be used with --output-path above to open the file after it is saved.
+-   `--log-level`: Can be either `info` (default), `verbose`, or `error`.
 
 ## References
 
