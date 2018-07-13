@@ -1,23 +1,21 @@
 # AdSpeed Page Scanning Insights
 
+Ad-aware extension for [lighthouse](https://github.com/GoogleChrome/lighthouse).
+
 ## How to Run
 
-For now, the tool is simply a CLI that prints some data to the console.
+Generate a ad-aware lighthouse report by running:
 
 ```shell
-$ node index.js --url https://www.example.com
+$ node index.js https://www.example.com
 ```
 
-Other options include:
-
--   `--debug`: Will print additional logging information when running.
--   `--output-path`: Will output the results to a file, must be either HTML or JSON.
--   `--view`: Can be used with --output-path above to open the file after it is saved.
--   `--log-level`: Can be either `info` (default), `verbose`, or `error`.
+Available options:
+-   Any of [lighthouse flags](https://github.com/GoogleChrome/lighthouse/#cli-options)
+-   `--debug`: Will print additional debugging information when running.
 
 ## References
 
--   Lighthouse Docs: https://github.com/GoogleChrome/lighthouse/tree/master/docs
--   Puppeteer Docs: https://github.com/GoogleChrome/puppeteer/blob/master/docs/api.md
--   Chrome DevTools Protocol: https://chromedevtools.github.io/devtools-protocol/
+-   Lighthouse Docs: https://github.com/GoogleChrome/lighthouse
+-   DevTools Protocol: https://chromedevtools.github.io/devtools-protocol
 -   HAR Spec: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/HAR/Overview.html
