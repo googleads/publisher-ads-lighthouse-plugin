@@ -1,3 +1,16 @@
 node_modules/
-.vscode
+.vscode/
+
 reports/
+
+# LH output
+*.trace.json
+*.devtoolslog.json
+*.screenshots.html
+*.screenshots.json
+*.report.html
+*.report.dom.html
+*.report.json
+*.report.csv
+*.report.pretty
+*.artifacts.log
