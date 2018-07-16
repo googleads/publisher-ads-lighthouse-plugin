@@ -1,17 +1,21 @@
-declare module NetworkDetails {
-  export enum RequestType {
-    AD = "ad",
-    UNKNOWN = "unknown",
+import './lh-externs';
+
+//TODO: make an Audit namespace and NetworkDetails namespace (and change files)
+// associated with this change, such as audits.
+declare global {
+  export interface AuditMetadata extends LH.Audit.Meta {
+    requiredArtifacts: Array<keyof Artifacts>
   }
-  export interface RequestRecord {
-    startTime: number;
-    endTime: number;
-    url: string;
-  }
-  export interface ShallowRecord {
-    startTime: number;
-    endTime: number;
-    url: string;
-    type: string;
+
+  export namespace NetworkDetails {
+    export enum RequestType {
+      AD = "ad",
+    }
+    export interface RequestRecord {
+      url: string;
+      startTime: number;
+      endTime: number;
+      type: RequestType;
+    }
   }
 }

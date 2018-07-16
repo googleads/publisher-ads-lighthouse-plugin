@@ -17,6 +17,7 @@
     "**/*.d.ts",
   ],
   "exclude": [
-    "test/**/*.js"
+    "test/**/*.js",
+    "visual-report/**",
   ]
 }
