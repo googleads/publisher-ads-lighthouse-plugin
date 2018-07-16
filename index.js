@@ -1,7 +1,7 @@
 const yargs = require('yargs');
 
 /**
- * Runs lighthouse cli with custom config and additional visualizations.
+ * Runs lighthouse cli with custom config.
  */
 async function main() {
   if (!yargs.argv.configPath) {
