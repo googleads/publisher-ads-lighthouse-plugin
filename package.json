@@ -1,7 +1,7 @@
 {
-  "name": "adspeed_page_insights",
-  "version": "0.0.0",
-  "description": "",
+  "name": "adspeed-insights",
+  "version": "0.1.0",
+  "description": "Ad-aware extension for lighthouse.",
   "main": "index.js",
   "scripts": {
     "lint": "eslint .",
