@@ -12,26 +12,26 @@ module.exports = {
     {
       passName: 'defaultPass',
       gatherers: [
-        './gatherers/network',
-        './gatherers/rendered-ad-slots',
+        require.resolve('./gatherers/network'),
+        require.resolve('./gatherers/rendered-ad-slots'),
       ],
     },
     {
       passName: 'redirectPass',
       gatherers: [
-        './gatherers/static-ad-tags',
+        require.resolve('./gatherers/static-ad-tags'),
       ],
     },
   ],
 
   audits: [
-    './audits/ad-blocking-tasks',
-    './audits/ad-request-critical-path',
-    './audits/ads-in-viewport',
-    './audits/async-ad-tags',
-    './audits/has-ads',
-    './audits/loads-gpt-over-https',
-    './audits/viewport-ad-density',
+    require.resolve('./audits/ad-blocking-tasks'),
+    require.resolve('./audits/ad-request-critical-path'),
+    require.resolve('./audits/ads-in-viewport'),
+    require.resolve('./audits/async-ad-tags'),
+    require.resolve('./audits/has-ads'),
+    require.resolve('./audits/loads-gpt-over-https'),
+    require.resolve('./audits/viewport-ad-density'),
   ],
 
   groups: {
