@@ -15,7 +15,7 @@ declare global {
       url: string;
       startTime: number;
       endTime: number;
-      type: RequestType;
+      type: string;
     }
   }
 }
