@@ -71,13 +71,175 @@ describe('AdRequestCriticalPath', () => {
     },
   ];
   for (const {filePath, desc, expectedScore, expectedRawValue} of testCases) {
-    it(`should return ${expectedScore} for ${desc} w/ raw value 
-        ${expectedRawValue}`, () => {
+    it(`should return ${expectedScore} for ${desc} w/ raw value ` +
+        `${expectedRawValue}`, () => {
       const har = require(filePath);
       const results = AdRequestCriticalPath.audit({Network: {har}});
 
       expect(results).to.have.property('score', expectedScore);
       expect(results).to.have.property('rawValue', expectedRawValue);
+    });
+  }
+});
+
+describe('CriticalPathTreeGeneration', () => {
+  const testCases = [
+    {
+      filePath: './har-test-files/multiple-entries',
+      desc: 'multiple entries',
+      expectedTree: {
+        name: 'https://doubleclick.net/gampad/ads',
+        children: [
+          {
+            name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
+            children: [
+              {
+                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                children: [
+                  {
+                    name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      filePath: './har-test-files/diamond-dependency',
+      desc: 'diamond dependency',
+      expectedTree: {
+        name: 'https://doubleclick.net/gampad/ads',
+        children: [
+          {
+            name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
+            children: [
+              {
+                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                children: [
+                  {
+                    name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: 'https://googlesyndication.com/gpt/bar.js',
+            children: [
+              {
+                name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      filePath: './har-test-files/non-ads-entries',
+      desc: 'non ads entries',
+      expectedTree: {},
+    },
+    {
+      filePath: './har-test-files/multiple-pubads-single',
+      desc: ' > 1 children',
+      expectedTree: {
+        name: 'https://doubleclick.net/gampad/ads',
+        children: [
+          {
+            name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
+            children: [
+              {
+                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                children: [
+                  {
+                    name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      filePath: './har-test-files/multiple-pubads-entries',
+      desc: 'duplicate urls',
+      expectedTree: {
+        name: 'https://doubleclick.net/gampad/ads',
+        children: [
+          {
+            name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
+            children: [
+              {
+                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                children: [
+                  {
+                    name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
+                    children: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      filePath: './har-test-files/cycle',
+      desc: 'cycle in tree',
+      expectedTree: {
+        name: 'https://doubleclick.net/gampad/ads',
+        children: [
+          {
+            name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
+            children: [
+              {
+                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                children: [
+                  {
+                    name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
+                    children: [],
+                  },
+                  {
+                    name: 'https://securepubads.g.doubleclick.net/gpt/bar.js',
+                    children: [
+                      {
+                        name: 'https://securepubads.g.doubleclick.net/gpt/bat.js',
+                        children: [
+                          {
+                            name: 'https://securepubads.g.doubleclick.net/gpt/baz.js',
+                            children: [
+                              {
+                                name: 'https://securepubads.g.doubleclick.net/gpt/bat.js',
+                                children: [],
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ];
+  for (const {filePath, desc, expectedTree} of testCases) {
+    it(`should pass for ${desc}`, () => {
+      const har = require(filePath);
+      const results = AdRequestCriticalPath.audit({Network: {har}});
+
+      expect(results).with.property('details')
+        .property('treeRootNode').eql(expectedTree);
     });
   }
 });

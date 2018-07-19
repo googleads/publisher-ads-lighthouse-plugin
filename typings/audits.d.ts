@@ -18,4 +18,10 @@ declare global {
       type: string;
     }
   }
+  export namespace RequestTree {
+    export interface TreeNode {
+      name: string;
+      children: Array<TreeNode>;
+    }
+  }
 }
