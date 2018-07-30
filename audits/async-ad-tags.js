@@ -1,12 +1,17 @@
 const array = require('../utils/array.js');
 const {Audit} = require('lighthouse');
+const {URL} = require('url');
+
+const {isAdTag} = require('../utils/resource-classification');
 
 /**
- * @param {LH.Crdp.DOM.Node} tag
+ * @param {LH.WebInspector.NetworkRequest} tagReq
  * @return {boolean}
  */
-function hasAsync(tag) {
-  return !!tag.attributes && tag.attributes.includes('async');
+function isAsync(tagReq) {
+  // Use request priority as proxy to determine if script tag is asynchronous.
+  // See https://bugs.chromium.org/p/chromium/issues/detail?id=408229.
+  return tagReq.priority() == 'Low';
 }
 
 /** @inheritDoc */
@@ -18,12 +23,12 @@ class AsyncAdTags extends Audit {
   static get meta() {
     return {
       id: 'async-ad-tags',
-      title: 'Static ad tags are loaded asynchronously',
-      failureTitle: 'Some static ad script tags are loaded synchronously',
-      description: 'Static tags loaded synchronously block all content ' +
-          'until they are fetched and evaluated, consider using the async ' +
+      title: 'Ad tags are loaded asynchronously',
+      failureTitle: 'Some ad script tags are loaded synchronously',
+      description: 'Tags loaded synchronously block all content rendering ' +
+          'until they are fetched and evaluated, consider using the `async` ' +
           'attribute for script tags to make them asynchronous.',
-      requiredArtifacts: ['StaticAdTags'],
+      requiredArtifacts: ['Network'],
     };
   }
 
@@ -33,12 +38,13 @@ class AsyncAdTags extends Audit {
    * @override
    */
   static audit(artifacts) {
-    const tags = artifacts.StaticAdTags;
-    const numAsync = array.count(tags, hasAsync);
-    const numTags = tags.length;
+    const {networkRecords} = artifacts.Network;
+    const tagReqs = networkRecords.filter((req) => isAdTag(new URL(req.url)));
+    const numAsync = array.count(tagReqs, isAsync);
+    const numTags = tagReqs.length;
     return {
       rawValue: numAsync === numTags,
-      displayValue: `${numAsync} / ${numTags} static ad tags use async`,
+      displayValue: `${numAsync} / ${numTags} ad tags use async`,
     };
   }
 }
