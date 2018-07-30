@@ -25,6 +25,7 @@ module.exports = {
     require.resolve('./audits/async-ad-tags'),
     require.resolve('./audits/has-ads'),
     require.resolve('./audits/loads-gpt-over-https'),
+    require.resolve('./audits/static-ad-tags'),
     require.resolve('./audits/viewport-ad-density'),
   ],
 
@@ -46,6 +47,7 @@ module.exports = {
         {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
         {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
         {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
+        {id: 'static-ad-tags', weight: 1, group: 'ads-best-practices'},
         {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
       ],
     },
