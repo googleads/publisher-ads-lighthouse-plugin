@@ -16,12 +16,6 @@ module.exports = {
         require.resolve('./gatherers/rendered-ad-slots'),
       ],
     },
-    {
-      passName: 'redirectPass',
-      gatherers: [
-        require.resolve('./gatherers/static-ad-tags'),
-      ],
-    },
   ],
 
   audits: [
