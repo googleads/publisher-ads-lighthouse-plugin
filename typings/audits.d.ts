@@ -12,10 +12,11 @@ declare global {
       AD = "ad",
     }
     export interface RequestRecord {
-      url: string;
       startTime: number;
       endTime: number;
+      url: string;
       type: string;
+      abbreviatedUrl?: string;
     }
   }
   export namespace RequestTree {
