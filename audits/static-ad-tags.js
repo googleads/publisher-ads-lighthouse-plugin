@@ -42,7 +42,8 @@ class StaticAdTags extends Audit {
     const numTags = tagReqs.length;
     return {
       rawValue: numStatic === numTags,
-      displayValue: `${numStatic} / ${numTags} ad tags are static`,
+      displayValue: numStatic < numTags ?
+        `${numTags - numStatic} dynamic ad tags` : '',
     };
   }
 }

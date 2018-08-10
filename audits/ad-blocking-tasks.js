@@ -123,7 +123,7 @@ class AdBlockingTasks extends Audit {
 
     return {
       rawValue: blocking.length == 0,
-      displayValue: `${blocking.length} long task(s) block ads`,
+      displayValue: blocking.length ? `${blocking.length} long task(s)` : '',
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };
   }

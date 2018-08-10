@@ -153,7 +153,7 @@ class AdRequestCriticalPath extends Audit {
     return {
       rawValue: numBlocked,
       score: numBlocked > 2 ? 0 : 1,
-      displayValue: `${numBlocked} resource(s) block ads`,
+      displayValue: numBlocked > 2 ? `${numBlocked} resource(s)` : '',
       details: {
         numBlocked,
         treeRootNode,

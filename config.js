@@ -52,4 +52,10 @@ module.exports = {
       ],
     },
   },
+
+  settings: {
+    onlyCategories: [
+      'ads-quality',
+    ],
+  },
 };
