@@ -1,6 +1,7 @@
 // @ts-ignore
 const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const chromeHar = require('chrome-har');
+const log = require('lighthouse-logger');
 const {Gatherer} = require('lighthouse');
 const {URL} = require('url');
 const {isDebugMode} = require('../index');
@@ -22,21 +23,15 @@ const METHODS_TO_OBSERVE = [
 
 /**
  * Logs any missing URLs in loadData.
- * @param {Array<string>} urls
- * @param {LH.Gatherer.LoadData} loadData
+ * @param {HAR.Entry[]} harEntries
+ * @param {LH.WebInspector.NetworkRequest[]} networkRecords
+ * @return {HAR.Entry[]}
  */
-function logMissingUrls(urls, loadData) {
-  if (!isDebugMode() || !loadData.networkRecords) return;
-
+function findMissingEntries(harEntries, networkRecords) {
   // NOTE: This doesn't handle cases where duplicate URLs appear fewer times in
-  // Lighthouse because we dump the data into a Set. This is OK for simple
-  // logging.
-  const lighthouseUrls = new Set(loadData.networkRecords.map((r) => r.url));
-  const missingUrls = urls.filter((url) => !lighthouseUrls.has(url));
-  for (const url of missingUrls) {
-    // eslint-disable-next-line no-console
-    console.log('[INFO] Missing URL in Lighthouse', url.substr(0, 120));
-  }
+  // Lighthouse because we dump the data into a Set.
+  const lhUrls = new Set(networkRecords.map((r) => r.url));
+  return harEntries.filter((entry) => !lhUrls.has(entry.request.url));
 }
 
 
@@ -79,14 +74,19 @@ class Network extends Gatherer {
    * @override
    */
   async afterPass(passContext, loadData) {
-    // Use HAR data instead of Lighthouse load data since the Lighthouse network
-    // log is missing some requests.
-    // TODO(warrengm): Investigate why. Lighthouse *should* be correct.
-    const har = chromeHar.harFromMessages(this.events_);
-    const networkRecords = await NetworkRecorder.recordsFromLogs(this.events_);
-    const urls = har.log.entries.map((entry) => entry.request.url);
-    const parsedUrls = urls.map((url) => new URL(url));
-    logMissingUrls(urls, loadData);
+    const events = this.events_.slice();
+    log.log('Debug', 'Network: Get trace snapshot');
+
+    const har = chromeHar.harFromMessages(events);
+    const networkRecords = await NetworkRecorder.recordsFromLogs(events);
+    const parsedUrls = har.log.entries.map((e) => new URL(e.request.url));
+
+    if (isDebugMode()) {
+      findMissingEntries(har.log.entries, networkRecords).forEach((entry) => {
+        log.warn('Debug', 'Missing URL', entry.request.url.substr(0, 100));
+      });
+    }
+
     return {har, networkRecords, parsedUrls};
   }
 }
