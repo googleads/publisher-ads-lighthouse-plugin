@@ -31,10 +31,12 @@ class AdsInViewport extends Audit {
     // TODO(gmatute): account for scrolling, deep links, and reflows
     const viewed = array.count(slots, (slot) =>
       isBoxInViewport(slot, viewport));
+    const unviewed = slots.length - viewed;
 
     return {
+      score: unviewed > 3 ? 0 : 1,
       rawValue: !slots.length || viewed / slots.length,
-      displayValue: `${viewed} / ${slots.length} of ads were in the viewport`,
+      displayValue: unviewed ? `${unviewed} ads were out of view` : '',
     };
   }
 }

@@ -36,8 +36,10 @@ class ViewportAdDensity extends Audit {
     }
 
     return {
+      score: adArea / viewArea > 0.25 ? 0 : 1,
       rawValue: Math.min(adArea / viewArea, 1),
-      displayValue: `${Math.floor(100 * adArea / viewArea)}% viewport area`,
+      displayValue: adArea ?
+        `${Math.floor(100 * adArea / viewArea)}% covered by ads` : '',
     };
   }
 }

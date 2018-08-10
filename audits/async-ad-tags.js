@@ -44,7 +44,8 @@ class AsyncAdTags extends Audit {
     const numTags = tagReqs.length;
     return {
       rawValue: numAsync === numTags,
-      displayValue: `${numAsync} / ${numTags} ad tags use async`,
+      displayValue: numAsync < numTags ?
+        `${numTags - numAsync} synchronous ad tags` : '',
     };
   }
 }

@@ -43,12 +43,7 @@ class HasAds extends Audit {
     return {
       rawValue: numRequests,
       score: numRequests > 0 ? 1 : 0,
-      displayValue:
-          `${numRequests} ad request(s); ${numImpressions} ad impression(s)`,
-      details: {
-        numRequests,
-        numImpressions,
-      },
+      details: {numRequests, numImpressions},
     };
   }
 }
