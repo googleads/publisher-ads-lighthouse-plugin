@@ -27,6 +27,9 @@ module.exports = {
     require.resolve('./audits/loads-gpt-over-https'),
     require.resolve('./audits/static-ad-tags'),
     require.resolve('./audits/viewport-ad-density'),
+    require.resolve('./audits/tag-load-time'),
+    require.resolve('./audits/ad-request-from-page-start'),
+    require.resolve('./audits/ad-request-from-tag-load'),
   ],
 
   groups: {
@@ -35,6 +38,9 @@ module.exports = {
     },
     'ads-performance': {
       title: 'Performance',
+    },
+    'measurements': {
+      title: 'Measurements',
     },
   },
 
@@ -49,6 +55,9 @@ module.exports = {
         {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
         {id: 'static-ad-tags', weight: 1, group: 'ads-best-practices'},
         {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
+        {id: 'tag-load-time', weight: 1, group: 'measurements'},
+        {id: 'ad-request-from-page-start', weight: 1, group: 'measurements'},
+        {id: 'ad-request-from-tag-load', weight: 1, group: 'measurements'},
       ],
     },
   },
