@@ -10,6 +10,16 @@ function isGoogleAds(url) {
 }
 
 /**
+ * Checks if the url is for pubads implementation tag.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isImplTag(url) {
+  return /(^\/gpt\/pubads_impl_\d+.js)/
+    .test(url.pathname);
+}
+
+/**
  * Checks if the url has an ad request path.
  * @param {URL} url
  * @return {boolean}
@@ -67,4 +77,5 @@ module.exports = {
   isGpt,
   isHttp,
   isHttps,
+  isImplTag,
 };
