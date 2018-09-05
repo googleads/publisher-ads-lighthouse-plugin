@@ -26,12 +26,13 @@ function getAdStartTime(networkRecords) {
 /**
  * Returns start time of page load (s) relative to system boot.
  * @param {LH.Artifacts.NetworkRequest[]} networkRecords
+ * @param {number=} defaultValue
  * @return {number}
  */
-function getPageStartTime(networkRecords) {
+function getPageStartTime(networkRecords, defaultValue = -1) {
   const fistSuccessRecord = networkRecords.find(
     (record) => record.statusCode == 200);
-  return fistSuccessRecord ? fistSuccessRecord.startTime : -1;
+  return fistSuccessRecord ? fistSuccessRecord.startTime : defaultValue;
 }
 
 module.exports = {
