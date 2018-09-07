@@ -1,5 +1,5 @@
-const LoadsGptOverHttps = require('../../audits/loads-gpt-over-https');
 const chromeDriver = require('chrome-har');
+const LoadsGptOverHttps = require('../../audits/loads-gpt-over-https');
 const sinon = require('sinon');
 const {expect} = require('chai');
 const {URL} = require('url');

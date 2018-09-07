@@ -9,7 +9,7 @@ declare global {
 
   export interface NetworkArtifacts {
     har: HAR.Har;
-    networkRecords: Array<LH.WebInspector.NetworkRequest>;
+    networkEvents: Array<LH.Protocol.RawEventMessage>;
     parsedUrls: Array<URL>;
   }
 }

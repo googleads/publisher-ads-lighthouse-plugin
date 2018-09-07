@@ -1,58 +1,74 @@
+const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const sinon = require('sinon');
 const StaticAdTags = require('../../audits/static-ad-tags');
 const {expect} = require('chai');
 
-describe('StaticAdTags', () => {
-  describe('rawValue', () => {
-    it('should succeed if there are no ad tags', async () => {
-      const networkRecords = [];
+describe('StaticAdTags', async () => {
+  let sandbox;
 
-      const {rawValue} = StaticAdTags.audit({Network: {networkRecords}});
-      expect(rawValue).to.equal(true);
-    });
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
 
-    it('should succeed if all ad tags are static', async () => {
-      const networkRecords = [
-        {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-      ];
+  afterEach(() => {
+    sandbox.restore();
+  });
 
-      const {rawValue} = StaticAdTags.audit({Network: {networkRecords}});
-      expect(rawValue).to.equal(true);
-    });
+  describe('rawValue', async () => {
+    const testCases = [
+      {
+        desc: 'should succeed if there are no ad tags',
+        networkRecords: [],
+        expectedRawVal: true,
+      },
+      {
+        desc: 'should succeed if all ad tags are static',
+        networkRecords: [
+          {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+        ],
+        expectedRawVal: true,
+      },
+      {
+        desc: 'should succeed if all ad tags are preloaded',
+        networkRecords: [
+          {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+        ],
+        expectedRawVal: true,
+      },
+      {
+        desc: 'should succeed if all ad tags are static or preloaded',
+        networkRecords: [
+          {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+        ],
+        expectedRawVal: true,
+      },
+      {
+        desc: 'should fail unless all ad tags are static or preloaded',
+        networkRecords: [
+          {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'script'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+        ],
+        expectedRawVal: false,
+      },
+    ];
 
-    it('should succeed if all ad tags are preloaded', async () => {
-      const networkRecords = [
-        {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-      ];
-
-      const {rawValue} = StaticAdTags.audit({Network: {networkRecords}});
-      expect(rawValue).to.equal(true);
-    });
-
-    it('should succeed if all ad tags are static or preloaded', async () => {
-      const networkRecords = [
-        {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-      ];
-
-      const {rawValue} = StaticAdTags.audit({Network: {networkRecords}});
-      expect(rawValue).to.equal(true);
-    });
-
-    it('should fail unless all ad tags are static or preloaded', async () => {
-      const networkRecords = [
-        {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'script'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-        {_initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-      ];
-
-      const {rawValue} = StaticAdTags.audit({Network: {networkRecords}});
-      expect(rawValue).to.equal(false);
-    });
+    for (const {desc, networkRecords, expectedRawVal}
+      of testCases) {
+      it(`${desc}`, async () => {
+        sandbox.stub(NetworkRecorder, 'recordsFromLogs')
+          .returns(networkRecords);
+        const artifacts = {Network: {networkRecords}};
+        const results = await StaticAdTags.audit(artifacts);
+        expect(results).to.have.property('rawValue', expectedRawVal);
+      });
+    }
   });
 });

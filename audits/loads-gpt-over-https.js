@@ -1,5 +1,5 @@
-const {isGoogleAds, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
 const {Audit} = require('lighthouse');
+const {isGoogleAds, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
 
 /**
  * Simple audit that checks if gpt is loaded over https.
