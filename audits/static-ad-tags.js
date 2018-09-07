@@ -1,8 +1,8 @@
 const array = require('../utils/array.js');
+const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {Audit} = require('lighthouse');
-const {URL} = require('url');
-
 const {isAdTag} = require('../utils/resource-classification');
+const {URL} = require('url');
 
 /**
  * @param {LH.WebInspector.NetworkRequest} tagReq
@@ -32,11 +32,13 @@ class StaticAdTags extends Audit {
 
   /**
    * @param {Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @return {Promise<LH.Audit.Product>}
    * @override
    */
-  static audit(artifacts) {
-    const {networkRecords} = artifacts.Network;
+  static async audit(artifacts) {
+    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    const networkRecords =
+        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
     const tagReqs = networkRecords.filter((req) => isAdTag(new URL(req.url)));
     const numStatic = array.count(tagReqs, isStatic);
     const numTags = tagReqs.length;

@@ -1,3 +1,4 @@
+const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {Audit} = require('lighthouse');
 const {getAdStartTime, getTagEndTime} = require('../utils/network-timing');
 
@@ -27,10 +28,12 @@ class AdRequestFromTagLoad extends Audit {
 
   /**
    * @param {Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @return {Promise<LH.Audit.Product>}
    */
-  static audit(artifacts) {
-    const networkRecords = artifacts.Network.networkRecords;
+  static async audit(artifacts) {
+    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    const networkRecords =
+        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
 
     const adStartTime = getAdStartTime(networkRecords);
     const tagEndTime = getTagEndTime(networkRecords);

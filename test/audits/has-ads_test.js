@@ -1,5 +1,5 @@
-const HasAds = require('../../audits/has-ads');
 const chromeDriver = require('chrome-har');
+const HasAds = require('../../audits/has-ads');
 const sinon = require('sinon');
 const {expect} = require('chai');
 const {URL} = require('url');

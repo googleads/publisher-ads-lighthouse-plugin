@@ -1,5 +1,5 @@
-const {isGoogleAds, hasAdRequestPath, hasImpressionPath} = require('../utils/resource-classification');
 const {Audit} = require('lighthouse');
+const {isGoogleAds, hasAdRequestPath, hasImpressionPath} = require('../utils/resource-classification');
 
 /**
  * Simple audit that checks for the presence of ads. Currently based on network

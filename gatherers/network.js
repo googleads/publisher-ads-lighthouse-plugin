@@ -1,10 +1,8 @@
-// @ts-ignore
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const chromeHar = require('chrome-har');
 const log = require('lighthouse-logger');
 const {Gatherer} = require('lighthouse');
-const {URL} = require('url');
 const {isDebugMode} = require('../index');
+const {URL} = require('url');
 
 /** @type {Array<keyof LH.CrdpEvents>} */
 const METHODS_TO_OBSERVE = [
@@ -72,11 +70,11 @@ class Network extends Gatherer {
    * @override
    */
   async afterPass(passContext, loadData) {
-    const events = this.devtoolsEvents_.slice();
+    /** @type {Array<LH.Protocol.RawEventMessage>} */
+    const networkEvents = this.devtoolsEvents_.slice();
     log.log('Debug', 'Network: Get trace snapshot');
 
-    const har = chromeHar.harFromMessages(events);
-    const networkRecords = await NetworkRecorder.recordsFromLogs(events);
+    const har = chromeHar.harFromMessages(networkEvents);
     const parsedUrls = har.log.entries.map((e) => new URL(e.request.url));
 
     if (isDebugMode()) {
@@ -88,8 +86,7 @@ class Network extends Gatherer {
         log.warn('Debug', 'Missing URL', entry.request.url.substr(0, 100));
       });
     }
-
-    return {har, networkRecords, parsedUrls};
+    return {har, networkEvents, parsedUrls};
   }
 }
 

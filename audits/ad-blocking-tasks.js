@@ -1,7 +1,7 @@
-const {isGoogleAds} = require('../utils/resource-classification');
+const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {Audit} = require('lighthouse');
+const {isGoogleAds} = require('../utils/resource-classification');
 const {URL} = require('url');
-
 /**
  * Threshold for long task duration (ms), from http://go/w3c-github/longtasks.
  */
@@ -82,7 +82,9 @@ class AdBlockingTasks extends Audit {
    * @override
    */
   static async audit(artifacts) {
-    const {networkRecords} = artifacts.Network;
+    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    const networkRecords =
+        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
     const trace = artifacts.traces[AdBlockingTasks.DEFAULT_PASS];
     const tasks = await artifacts.requestMainThreadTasks(trace);
 

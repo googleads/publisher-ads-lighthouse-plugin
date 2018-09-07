@@ -1,5 +1,5 @@
-const {isGoogleAds, hasAdRequestPath} = require('../utils/resource-classification');
 const {Audit} = require('lighthouse');
+const {isGoogleAds, hasAdRequestPath} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
