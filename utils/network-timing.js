@@ -1,5 +1,5 @@
-const {URL} = require('url');
 const {hasAdRequestPath, isImplTag} = require('./resource-classification');
+const {URL} = require('url');
 
 /**
  * Returns end time of tag load (s) relative to system boot.

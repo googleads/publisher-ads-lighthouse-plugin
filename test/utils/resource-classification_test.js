@@ -1,5 +1,5 @@
-const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt, isHttp, isHttps} = require('../../utils/resource-classification');
 const {expect} = require('chai');
+const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt, isHttp, isHttps} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {

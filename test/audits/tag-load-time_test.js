@@ -1,7 +1,10 @@
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const TagLoadTime = require('../../audits/tag-load-time');
-const chromeDriver = require('chrome-har');
-const {expect} = require('chai');
+const expect = chai.expect;
 const sinon = require('sinon');
+chai.use(chaiAsPromised);
 
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
 
@@ -14,7 +17,7 @@ function newHar(requests) {
   return {log: {entries: wrappedRequests}};
 }
 
-describe('TagLoadTime', () => {
+describe('TagLoadTime', async () => {
   let sandbox;
 
   beforeEach(() => {
@@ -25,7 +28,7 @@ describe('TagLoadTime', () => {
     sandbox.restore();
   });
 
-  describe('tagLoadTimeTest', () => {
+  describe('tagLoadTimeTest', async () => {
     const testCases = [
       {
         desc: 'should pass for records containing successful page and tag load',
@@ -54,17 +57,17 @@ describe('TagLoadTime', () => {
     ];
     for (const {desc, networkRecords, expectedLoadTime, expectedError}
       of testCases) {
-      it(`${desc} with a load time of ${expectedLoadTime}`, () => {
-        sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+      it(`${desc} with a load time of ${expectedLoadTime}`, async () => {
+        sandbox.stub(NetworkRecorder, 'recordsFromLogs')
+          .returns(networkRecords);
         const artifacts =
             {Network: {har: newHar(networkRecords), networkRecords}};
 
         if (!expectedError) {
-          const results = TagLoadTime.audit(artifacts);
+          const results = await TagLoadTime.audit(artifacts);
           expect(results).to.have.property('rawValue', expectedLoadTime);
         } else {
-          expect(() => TagLoadTime.audit(artifacts)).to.throw();
+          await expect(TagLoadTime.audit(artifacts)).to.be.rejectedWith(Error);
         }
       });
     }

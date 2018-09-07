@@ -1,7 +1,10 @@
 const AdRequestFromTagLoad = require('../../audits/ad-request-from-tag-load');
-const chromeDriver = require('chrome-har');
-const {expect} = require('chai');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
+const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const expect = chai.expect;
 const sinon = require('sinon');
+chai.use(chaiAsPromised);
 
 const AD_REQUEST_URL = 'https://securepubads.g.doubleclick.net/gampad/ads?foo';
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
@@ -15,7 +18,7 @@ function newHar(requests) {
   return {log: {entries: wrappedRequests}};
 }
 
-describe('AdRequestFromTagLoad', () => {
+describe('AdRequestFromTagLoad', async () => {
   let sandbox;
 
   beforeEach(() => {
@@ -26,7 +29,7 @@ describe('AdRequestFromTagLoad', () => {
     sandbox.restore();
   });
 
-  describe('adRequestFromTagLoadTest', () => {
+  describe('adRequestFromTagLoadTest', async () => {
     const testCases = [
       {
         desc: 'should pass for records containing successful page and tag load',
@@ -57,17 +60,18 @@ describe('AdRequestFromTagLoad', () => {
     ];
     for (const {desc, networkRecords, expectedTime, expectedError}
       of testCases) {
-      it(`${desc} with a load time of ${expectedTime}`, () => {
-        sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+      it(`${desc} with a load time of ${expectedTime}`, async () => {
+        sandbox.stub(NetworkRecorder, 'recordsFromLogs')
+          .returns(networkRecords);
         const artifacts =
-            {Network: {har: newHar(networkRecords), networkRecords}};
+              {Network: {har: newHar(networkRecords), networkRecords}};
 
         if (!expectedError) {
-          const results = AdRequestFromTagLoad.audit(artifacts);
+          const results = await AdRequestFromTagLoad.audit(artifacts);
           expect(results).to.have.property('rawValue', expectedTime);
         } else {
-          expect(() => AdRequestFromTagLoad.audit(artifacts)).to.throw();
+          await expect(AdRequestFromTagLoad.audit(artifacts))
+            .to.be.rejectedWith(Error);
         }
       });
     }
