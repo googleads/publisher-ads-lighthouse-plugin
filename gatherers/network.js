@@ -46,7 +46,7 @@ class Network extends Gatherer {
     super();
 
     /** @private @const @type {Array<LH.Protocol.RawEventMessage>} */
-    this.events_ = [];
+    this.devtoolsEvents_ = [];
   }
 
   /**
@@ -54,17 +54,15 @@ class Network extends Gatherer {
    * @override
    */
   async beforePass(passContext) {
-    // Listen for certain devtools events to be able to construct a HAR network
-    // log.
-    for (const method of METHODS_TO_OBSERVE) {
-      /**
-       * @param {string} params
-       * @return {number}
-       */
-      const append = (params) => this.events_.push(
-        /** @type {LH.Protocol.RawEventMessage} */ ({method, params}));
-      await passContext.driver.on(method, append);
-    }
+    await Promise.all(METHODS_TO_OBSERVE.map(async (method) => {
+      /** @param {string} params */
+      const queueEvent = (params) => {
+        const typedMessage =
+          /** @type {LH.Protocol.RawEventMessage} */ ({method, params});
+        this.devtoolsEvents_.push(typedMessage);
+      };
+      await passContext.driver.on(method, queueEvent);
+    }));
   }
 
   /**
@@ -74,7 +72,7 @@ class Network extends Gatherer {
    * @override
    */
   async afterPass(passContext, loadData) {
-    const events = this.events_.slice();
+    const events = this.devtoolsEvents_.slice();
     log.log('Debug', 'Network: Get trace snapshot');
 
     const har = chromeHar.harFromMessages(events);
@@ -82,7 +80,11 @@ class Network extends Gatherer {
     const parsedUrls = har.log.entries.map((e) => new URL(e.request.url));
 
     if (isDebugMode()) {
-      findMissingEntries(har.log.entries, networkRecords).forEach((entry) => {
+      // These entries are present in our network artifacts, but are missing in
+      // the builtin loadData network records.
+      const missingEntries =
+          findMissingEntries(har.log.entries, loadData.networkRecords);
+      missingEntries.forEach((entry) => {
         log.warn('Debug', 'Missing URL', entry.request.url.substr(0, 100));
       });
     }
