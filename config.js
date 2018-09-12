@@ -30,6 +30,7 @@ module.exports = {
     require.resolve('./audits/tag-load-time'),
     require.resolve('./audits/ad-request-from-page-start'),
     require.resolve('./audits/ad-request-from-tag-load'),
+    require.resolve('./audits/full-width-slots'),
   ],
 
   groups: {
@@ -58,6 +59,7 @@ module.exports = {
         {id: 'tag-load-time', weight: 1, group: 'measurements'},
         {id: 'ad-request-from-page-start', weight: 1, group: 'measurements'},
         {id: 'ad-request-from-tag-load', weight: 1, group: 'measurements'},
+        {id: 'full-width-slots', weight: 1, group: 'ads-best-practices'},
       ],
     },
   },
