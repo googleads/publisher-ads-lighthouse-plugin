@@ -13,7 +13,7 @@ class FullWidthSlots extends Audit {
     return {
       id: 'full-width-slots',
       title: 'Full Width Slots',
-      description: 'Have ad slot sizes that utilize the viewport\'s full width'+
+      description: 'Have ad slot sizes that utilize the viewport\'s full width' +
           ' to increase CTR.',
       requiredArtifacts: ['ViewportDimensions', 'Network'],
     };
@@ -33,8 +33,8 @@ class FullWidthSlots extends Audit {
 
     /** @type {Array<URL>} */
     const adRequestUrls = networkRecords
-      .map((record) => new URL(record.url))
-      .filter(hasAdRequestPath);
+        .map((record) => new URL(record.url))
+        .filter(hasAdRequestPath);
 
     if (!adRequestUrls.length) {
       return {
@@ -52,7 +52,7 @@ class FullWidthSlots extends Audit {
     const sizes = sizeArrs.join('|').split(/[|,]/);
 
     const widths = sizes.map((size) => parseInt(size.split('x')[0]))
-      .filter((w) => w <= vpWidth && w > 1);
+        .filter((w) => w <= vpWidth && w > 1);
 
     if (!widths.length) {
       return {

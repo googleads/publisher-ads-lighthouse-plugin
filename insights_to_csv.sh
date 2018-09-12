@@ -48,7 +48,9 @@ headString='
   viewport-ad-density_score,
   viewport-ad-density_raw,
   full-width-slots_score,
-  full-width-slots_raw'
+  full-width-slots_raw,
+  ad-top-of-viewport_score,
+  ad-top-of-viewport_raw'
 
 jqScript='
   .outputs[] as $o | $o.audits |
@@ -64,6 +66,7 @@ jqScript='
   .["tag-load-time"] as $tlt |
   .["viewport-ad-density"] as $vad |
   .["full-width-slots"] as $fws |
+  .["ad-top-of-viewport"] as $atvp |
   [$o.finalUrl,
   $abt.score, $abt.rawValue,
   $arcp.score, $arcp.rawValue,
@@ -76,7 +79,8 @@ jqScript='
   $sat.score, $sat.rawValue,
   $tlt.score, $tlt.rawValue,
   $vad.score, $vad.rawValue,
-  $fws.score, $fws.rawValue] |
+  $fws.score, $fws.rawValue,
+  $atvp.score, $atvp.rawValue] |
   @csv'
 
 echo $headString > $1
