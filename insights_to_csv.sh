@@ -11,7 +11,7 @@ runsPath=~/'DriveFileStream/Team Drives/AdSpeed/Insights   Lampad/runs';
 
 tempOutPath='temp-out-'$(date +%F_%H-%M-%S)'.json';
 echo '{ "outputs": [' > $tempOutPath
-find "$runsPath" -mindepth 1 -maxdepth 1 -type d |head -n 50| while read line; do
+find "$runsPath" -mindepth 1 -maxdepth 1 -type d | while read line; do
   if [[ $2 == -r ]]; then
     $(node index.js -A "$line" --output json --quiet >> $tempOutPath) &&\
       $(echo -n , >> $tempOutPath)
