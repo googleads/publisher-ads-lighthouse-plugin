@@ -17,7 +17,7 @@ describe('FullWidthSlots', async () => {
   const NON_SRA_PARAM = 'sz=';
 
   const genUrl = (sizeString, param) =>
-    AD_REQUEST_URL+param+encodeURIComponent(sizeString);
+    AD_REQUEST_URL + param + encodeURIComponent(sizeString);
 
   let sandbox;
 
@@ -101,7 +101,7 @@ describe('FullWidthSlots', async () => {
       of testCases) {
       it(`${desc} with a value of ${expectedValue}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-          .returns(networkRecords);
+            .returns(networkRecords);
         const artifacts =
             {Network: {networkRecords}, ViewportDimensions};
 
