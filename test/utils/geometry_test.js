@@ -4,7 +4,7 @@ const {expect} = require('chai');
 describe('geometry', () => {
   // From top left corner & dimensions
   const generateSlot = ({x, y, w, h}) =>
-    ({content: [x, y, x+w, y, x+w, y+h, x, y+h]});
+    ({content: [x, y, x + w, y, x + w, y + h, x, y + h]});
 
   const viewport = {
     innerHeight: 200,

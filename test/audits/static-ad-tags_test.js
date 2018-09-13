@@ -64,7 +64,7 @@ describe('StaticAdTags', async () => {
       of testCases) {
       it(`${desc}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-          .returns(networkRecords);
+            .returns(networkRecords);
         const artifacts = {Network: {networkRecords}};
         const results = await StaticAdTags.audit(artifacts);
         expect(results).to.have.property('rawValue', expectedRawVal);

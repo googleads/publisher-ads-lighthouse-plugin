@@ -239,7 +239,7 @@ describe('CriticalPathTreeGeneration', () => {
       const results = AdRequestCriticalPath.audit({Network: {har}});
 
       expect(results).with.property('details')
-        .property('treeRootNode').eql(expectedTree);
+          .property('treeRootNode').eql(expectedTree);
     });
   }
 });

@@ -6,7 +6,7 @@
  */
 function isGoogleAds(url) {
   return /(^|\.)(doubleclick.net|google(syndication|tagservices).com)$/
-    .test(url.hostname);
+      .test(url.hostname);
 }
 
 /**
@@ -16,7 +16,7 @@ function isGoogleAds(url) {
  */
 function isImplTag(url) {
   return /(^\/gpt\/pubads_impl_\d+.js)/
-    .test(url.pathname);
+      .test(url.pathname);
 }
 
 /**
@@ -25,7 +25,7 @@ function isImplTag(url) {
  * @return {boolean}
  */
 function hasAdRequestPath(url) {
-  return url.pathname ==='/gampad/ads';
+  return url.pathname === '/gampad/ads';
 }
 
 /**
@@ -34,8 +34,8 @@ function hasAdRequestPath(url) {
  * @return {boolean}
  */
 function hasImpressionPath(url) {
-  return url.pathname ==='/pcs/view' ||
-      url.pathname ==='/pagead/adview';
+  return url.pathname === '/pcs/view' ||
+      url.pathname === '/pagead/adview';
 }
 
 /** Checks if the url is for an ad tag. */

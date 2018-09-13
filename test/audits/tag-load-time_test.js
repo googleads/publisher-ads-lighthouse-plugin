@@ -59,7 +59,7 @@ describe('TagLoadTime', async () => {
       of testCases) {
       it(`${desc} with a load time of ${expectedLoadTime}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-          .returns(networkRecords);
+            .returns(networkRecords);
         const artifacts =
             {Network: {har: newHar(networkRecords), networkRecords}};
 
