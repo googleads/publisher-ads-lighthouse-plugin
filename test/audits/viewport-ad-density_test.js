@@ -4,7 +4,7 @@ const {expect} = require('chai');
 describe('ViewportAdDensity', () => {
   // From top left corner & dimensions
   const generateSlot = ({x, y, w, h}) =>
-    ({content: [x, y, x+w, y, x+w, y+h, x, y+h]});
+    ({content: [x, y, x + w, y, x + w, y + h, x, y + h]});
 
   const ViewportDimensions = {
     innerHeight: 200,
@@ -30,7 +30,7 @@ describe('ViewportAdDensity', () => {
 
       const artifacts = {RenderedAdSlots, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('rawValue', 50/600);
+      expect(result).to.have.property('rawValue', 50 / 600);
     });
 
     it('should handle overlapping ads without exceeding one', async () => {
@@ -69,7 +69,7 @@ describe('ViewportAdDensity', () => {
         const RenderedAdSlots = [generateSlot(test)];
         const artifacts = {RenderedAdSlots, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
-        expect(result).to.have.property('rawValue', test.overlap/60000);
+        expect(result).to.have.property('rawValue', test.overlap / 60000);
       })
     );
 

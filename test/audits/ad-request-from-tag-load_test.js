@@ -62,7 +62,7 @@ describe('AdRequestFromTagLoad', async () => {
       of testCases) {
       it(`${desc} with a load time of ${expectedTime}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-          .returns(networkRecords);
+            .returns(networkRecords);
         const artifacts =
               {Network: {har: newHar(networkRecords), networkRecords}};
 
@@ -71,7 +71,7 @@ describe('AdRequestFromTagLoad', async () => {
           expect(results).to.have.property('rawValue', expectedTime);
         } else {
           await expect(AdRequestFromTagLoad.audit(artifacts))
-            .to.be.rejectedWith(Error);
+              .to.be.rejectedWith(Error);
         }
       });
     }

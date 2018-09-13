@@ -60,7 +60,7 @@ describe('AdRequestFromPageStart', async () => {
       of testCases) {
       it(`${desc} with a load time of ${expectedTime}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-          .returns(networkRecords);
+            .returns(networkRecords);
         const artifacts =
               {Network: {har: newHar(networkRecords), networkRecords}};
 
@@ -69,7 +69,7 @@ describe('AdRequestFromPageStart', async () => {
           expect(results).to.have.property('rawValue', expectedTime);
         } else {
           await expect(AdRequestFromPageStart.audit(artifacts))
-            .to.be.rejectedWith(Error);
+              .to.be.rejectedWith(Error);
         }
       });
     }

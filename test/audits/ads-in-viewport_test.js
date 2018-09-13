@@ -4,7 +4,7 @@ const {expect} = require('chai');
 describe('AdsInViewport', () => {
   // From top left corner & dimensions
   const generateSlot = ({x, y, w, h}) =>
-    ({content: [x, y, x+w, y, x+w, y+h, x, y+h]});
+    ({content: [x, y, x + w, y, x + w, y + h, x, y + h]});
 
   const ViewportDimensions = {
     innerHeight: 200,
@@ -28,7 +28,7 @@ describe('AdsInViewport', () => {
       ];
 
       const artifacts = {RenderedAdSlots, ViewportDimensions};
-      expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1/5);
+      expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1 / 5);
     });
 
     const positiveTests = [

@@ -46,7 +46,7 @@ describe('AsyncAdTags', async () => {
       of testCases) {
       it(`${desc}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-          .returns(networkRecords);
+            .returns(networkRecords);
         const artifacts = {Network: {networkRecords}};
         const results = await AsyncAdTags.audit(artifacts);
         expect(results).to.have.property('rawValue', expectedRawVal);
