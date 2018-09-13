@@ -4,7 +4,7 @@ const sinon = require('sinon');
 const {expect} = require('chai');
 
 const generateTask = ([start, end], groupLabel, eventName) => ({
-  event: {eventName, ts: start*1000},
+  event: {eventName, ts: start * 1000},
   group: {label: groupLabel},
   duration: end - start,
   startTime: start,
@@ -152,7 +152,7 @@ describe('AdBlockingTasks', async () => {
         const artifacts = makeArtifacts(requests, tasks, offset);
 
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-          .returns(artifacts.Network.networkRecords);
+            .returns(artifacts.Network.networkRecords);
 
         const result = await AdBlockingTasks.audit(artifacts);
 

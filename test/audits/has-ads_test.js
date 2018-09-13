@@ -78,7 +78,7 @@ describe('HasAds', () => {
       it(`should have score of ${expectedScore} for ${description} with` +
         ` ${expectedNumRequests} requests`, () => {
         sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+            .returns(newHar(networkRecords));
 
         const parsedUrls = networkRecords.map((request) =>
           new URL(request.url));
@@ -87,7 +87,7 @@ describe('HasAds', () => {
 
         expect(results).with.property('score', expectedScore);
         expect(results).with.property('details').property('numRequests')
-          .equal(expectedNumRequests);
+            .equal(expectedNumRequests);
       });
     }
   });
@@ -138,7 +138,7 @@ describe('HasAds', () => {
       it(`should have score of ${expectedScore} for ${description} with` +
         ` ${expectedImpressions} impressions`, () => {
         sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+            .returns(newHar(networkRecords));
 
         const parsedUrls = networkRecords.map((request) =>
           new URL(request.url));
@@ -147,7 +147,7 @@ describe('HasAds', () => {
 
         expect(results).with.property('score', expectedScore);
         expect(results).with.property('details').property('numImpressions')
-          .equal(expectedImpressions);
+            .equal(expectedImpressions);
       });
     }
   });

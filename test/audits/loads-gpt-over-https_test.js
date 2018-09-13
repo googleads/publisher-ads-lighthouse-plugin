@@ -98,7 +98,7 @@ describe('LoadsGptOverHttps', () => {
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
         ` ${expectedNumGptHttpsReqs} HTTPS requests`, () => {
         sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+            .returns(newHar(networkRecords));
 
         const parsedUrls = networkRecords.map((request) =>
           new URL(request.url));
@@ -107,9 +107,9 @@ describe('LoadsGptOverHttps', () => {
 
         expect(results).to.have.property('score', expectedScore);
         expect(results).with.property('details')
-          .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
+            .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
         expect(results).with.property('details')
-          .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
+            .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
       });
     }
   });
@@ -189,7 +189,7 @@ describe('LoadsGptOverHttps', () => {
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
         ` ${expectedNumGptHttpsReqs} HTTPS requests`, () => {
         sandbox.stub(chromeDriver, 'harFromMessages')
-          .returns(newHar(networkRecords));
+            .returns(newHar(networkRecords));
 
         const parsedUrls = networkRecords.map((request) =>
           new URL(request.url));
@@ -198,9 +198,9 @@ describe('LoadsGptOverHttps', () => {
 
         expect(results).to.have.property('score', expectedScore);
         expect(results).with.property('details')
-          .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
+            .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
         expect(results).with.property('details')
-          .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
+            .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
       });
     }
   });

@@ -11,15 +11,15 @@ describe('RenderedAdSlots', () => {
     sendCommand = sinon.stub();
 
     sendCommand.withArgs('DOM.getDocument')
-      .resolves({root: {nodeId: 1}});
+        .resolves({root: {nodeId: 1}});
     sendCommand.withArgs('DOM.getBoxModel', sinon.match.any)
-      .resolves({model: {}});
+        .resolves({model: {}});
   });
 
   describe('gathererData', () => {
     it('should use the driver API correctly', async () => {
       sendCommand.withArgs('DOM.querySelectorAll', sinon.match.any)
-        .resolves({nodeIds: [3]});
+          .resolves({nodeIds: [3]});
 
       await renderedAdSlots.afterPass({driver: {sendCommand}});
       const calls = sendCommand.getCalls();
@@ -33,7 +33,7 @@ describe('RenderedAdSlots', () => {
 
     it('should return empty array if no ad slots', async () => {
       sendCommand.withArgs('DOM.querySelectorAll', sinon.match.any)
-        .resolves({nodeIds: []});
+          .resolves({nodeIds: []});
 
       const passContext = {driver: {sendCommand}};
       const data = await renderedAdSlots.afterPass(passContext);
@@ -42,7 +42,7 @@ describe('RenderedAdSlots', () => {
 
     it('should return array with one tag', async () => {
       sendCommand.withArgs('DOM.querySelectorAll', sinon.match.any)
-        .resolves({nodeIds: [1]});
+          .resolves({nodeIds: [1]});
 
       const passContext = {driver: {sendCommand}};
       const data = await renderedAdSlots.afterPass(passContext);
@@ -51,7 +51,7 @@ describe('RenderedAdSlots', () => {
 
     it('should return array with many slots', async () => {
       sendCommand.withArgs('DOM.querySelectorAll', sinon.match.any)
-        .resolves({nodeIds: [1, 4, 7]});
+          .resolves({nodeIds: [1, 4, 7]});
 
       const passContext = {driver: {sendCommand}};
       const data = await renderedAdSlots.afterPass(passContext);
