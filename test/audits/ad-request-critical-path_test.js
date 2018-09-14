@@ -6,14 +6,14 @@ describe('AdRequestCriticalPath', () => {
     {
       filePath: './har-test-files/non-ads-entries',
       desc: 'non-ads entries',
-      expectedScore: 1,
-      expectedRawValue: 0,
+      expectedRawValue: true,
+      expectedNotAppl: true,
     },
     {
       filePath: './har-test-files/non-script-entries',
       desc: 'non-script entries',
-      expectedScore: 1,
-      expectedRawValue: 0,
+      expectedRawValue: true,
+      expectedNotAppl: true,
     },
     {
       filePath: './har-test-files/ads-related-entry',
@@ -70,13 +70,18 @@ describe('AdRequestCriticalPath', () => {
       expectedRawValue: 4,
     },
   ];
-  for (const {filePath, desc, expectedScore, expectedRawValue} of testCases) {
+  for (const {filePath, desc, expectedScore, expectedRawValue,
+    expectedNotAppl} of testCases) {
     it(`should return ${expectedScore} for ${desc} w/ raw value ` +
         `${expectedRawValue}`, () => {
       const har = require(filePath);
       const results = AdRequestCriticalPath.audit({Network: {har}});
 
-      expect(results).to.have.property('score', expectedScore);
+      if (expectedNotAppl) {
+        expect(results).to.have.property('notApplicable', true);
+      } else {
+        expect(results).to.have.property('score', expectedScore);
+      }
       expect(results).to.have.property('rawValue', expectedRawValue);
     });
   }
@@ -142,7 +147,7 @@ describe('CriticalPathTreeGeneration', () => {
     {
       filePath: './har-test-files/non-ads-entries',
       desc: 'non ads entries',
-      expectedTree: {},
+      expectedNotAppl: true,
     },
     {
       filePath: './har-test-files/multiple-pubads-single',
@@ -233,13 +238,17 @@ describe('CriticalPathTreeGeneration', () => {
       },
     },
   ];
-  for (const {filePath, desc, expectedTree} of testCases) {
+  for (const {filePath, desc, expectedTree, expectedNotAppl} of testCases) {
     it(`should pass for ${desc}`, () => {
       const har = require(filePath);
       const results = AdRequestCriticalPath.audit({Network: {har}});
 
-      expect(results).with.property('details')
-          .property('treeRootNode').eql(expectedTree);
+      if (expectedNotAppl) {
+        expect(results).to.have.property('notApplicable', true);
+      } else {
+        expect(results).with.property('details')
+            .property('treeRootNode').eql(expectedTree);
+      }
     });
   }
 });

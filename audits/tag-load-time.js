@@ -1,4 +1,5 @@
 const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 
@@ -38,10 +39,11 @@ class TagLoadTime extends Audit {
     const tagEndTime = getTagEndTime(networkRecords);
 
     if (pageStartTime < 0) {
-      throw new Error('No successful nework records.');
+      return auditNotApplicable('No successful network records.');
     }
+
     if (tagEndTime < 0) {
-      throw new Error('No tag loaded.');
+      return auditNotApplicable('No tag loaded.');
     }
 
     const tagLoadTime = (tagEndTime - pageStartTime) * 1000;

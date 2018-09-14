@@ -1,4 +1,5 @@
 const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -35,12 +36,9 @@ function isLong(task) {
  * @param {LH.Trace} trace
  * @param {LH.Artifacts.TaskNode[]} tasks
  * @param {LH.WebInspector.NetworkRequest[]} networkRecords
- * @return {number} offset (ms)
+ * @return {number|null} offset (ms) or null if error
  */
 function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
-  if (!networkRecords.length) throw new Error('No network records to compare');
-  if (!tasks.length) throw new Error('No tasks to compare');
-
   // Select reference points in both timelines
   const network = networkRecords[0];
   const task = tasks[0];
@@ -50,8 +48,10 @@ function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
     e.name == 'ResourceSendRequest' && !!e.args.data &&
       e.args.data.requestId == network.requestId);
 
+  // Checks for case where no events match network records
+  if (!event) return null;
+
   // Compute equivalent task time (µs) from event (ms)
-  if (!event) throw new Error('No event matches network records');
   const taskTime = (event.ts - task.event.ts) / 1000 + task.startTime;
 
   // Compute offset (ms) between network and task time
@@ -88,7 +88,17 @@ class AdBlockingTasks extends Audit {
     const trace = artifacts.traces[AdBlockingTasks.DEFAULT_PASS];
     const tasks = await artifacts.requestMainThreadTasks(trace);
 
+    if (!networkRecords.length) {
+      return auditNotApplicable('No network records to compare.');
+    }
+    if (!tasks.length) {
+      return auditNotApplicable('No tasks to compare.');
+    }
+
     const offset = computeNetworkTimelineOffset(trace, tasks, networkRecords);
+    if (offset == null) {
+      return auditNotApplicable('No event matches network records');
+    }
     const fixTime = (/** @type {number} */ networkTime) =>
       networkTime * 1000 + offset;
 
@@ -96,6 +106,9 @@ class AdBlockingTasks extends Audit {
     const adNetworkReqs = networkRecords.filter((req) =>
       isGoogleAds(new URL(req.url)));
 
+    if (!adNetworkReqs.length) {
+      return auditNotApplicable('No ad-related requests.');
+    }
     // Pre-sort tasks and requests for performance.
     adNetworkReqs.sort((l, r) => l.startTime - r.startTime);
 

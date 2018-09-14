@@ -12,12 +12,12 @@ describe('ViewportAdDensity', () => {
   };
 
   describe('rawValue', () => {
-    it('should return zero if there are no ad slots', async () => {
+    it('should not be applicable if there are no ad slots', async () => {
       const RenderedAdSlots = [];
 
       const artifacts = {RenderedAdSlots, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('rawValue', 0);
+      expect(result).to.have.property('notApplicable', true);
     });
 
     it('should return ad density inside viewport', async () => {
@@ -45,8 +45,11 @@ describe('ViewportAdDensity', () => {
     });
 
     it('should throw error if viewport area is zero', async () => {
+      const RenderedAdSlots = [
+        generateSlot({x: 0, y: 0, w: 1000, h: 400}),
+      ];
       const ViewportDimensions = {innerHeight: 0, innerWidth: 0};
-      const artifacts = {RenderedAdSlots: [], ViewportDimensions};
+      const artifacts = {RenderedAdSlots, ViewportDimensions};
       expect(() => ViewportAdDensity.audit(artifacts)).to.throw();
     });
 
@@ -102,11 +105,11 @@ describe('ViewportAdDensity', () => {
       expect(result).to.have.property('rawValue', 0);
     });
 
-    it('should return zero if slot is hidden', async () => {
-      const RenderedAdSlots = [null]; // no box model if slot is hidden
+    it('should not be applicable if all slots are hidden', async () => {
+      const RenderedAdSlots = [null, null]; // no box model if slot is hidden
       const artifacts = {RenderedAdSlots, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('rawValue', 0);
+      expect(result).to.have.property('notApplicable', true);
     });
   });
 });

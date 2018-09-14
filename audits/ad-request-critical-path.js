@@ -1,3 +1,4 @@
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds, hasAdRequestPath} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -143,6 +144,10 @@ class AdRequestCriticalPath extends Audit {
       const parsedUrl = new URL(entry.request.url);
       return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl);
     });
+
+    if (!adsEntries.length) {
+      return auditNotApplicable('No ads requested.');
+    }
 
     // We assume that the first entry in adsEntries will be the first ad
     // request. When testing, the numbers match using adsEntries[0].
