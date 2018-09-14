@@ -80,10 +80,11 @@ describe('AdsInViewport', () => {
       expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 0);
     });
 
-    it('should handle slots that are hidden', async () => {
-      const RenderedAdSlots = [null]; // no box model if slot is hidden
+    it('should not be applicable if all slots are hidden', async () => {
+      const RenderedAdSlots = [null, null]; // no box model if slot is hidden
       const artifacts = {RenderedAdSlots, ViewportDimensions};
-      expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 0);
+      expect(AdsInViewport.audit(artifacts))
+          .to.have.property('notApplicable', true);
     });
   });
 });

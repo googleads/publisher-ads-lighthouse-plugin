@@ -1,3 +1,4 @@
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
 
@@ -25,6 +26,14 @@ class ViewportAdDensity extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.RenderedAdSlots;
+
+    if (!slots.length) {
+      return auditNotApplicable('No slots on page.');
+    }
+    // Checks that non-null (visible) slots exist in array.
+    if (!slots.find((s) => s != null)) {
+      return auditNotApplicable('No visible slots on page.');
+    }
 
     const adArea = slots.reduce((sum, slot) =>
       sum + boxViewableArea(slot, viewport), 0);

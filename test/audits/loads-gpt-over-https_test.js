@@ -28,9 +28,9 @@ describe('LoadsGptOverHttps', () => {
     const testCases = [
       {
         networkRecords: [],
-        expectedScore: 1,
         expectedNumGptHttpReqs: 0,
         expectedNumGptHttpsReqs: 0,
+        expectedNotAppl: true,
       },
       {
         networkRecords: [
@@ -92,7 +92,7 @@ describe('LoadsGptOverHttps', () => {
         expectedNumGptHttpsReqs: 0,
       },
     ];
-    for (const {networkRecords, expectedScore,
+    for (const {networkRecords, expectedScore, expectedNotAppl,
       expectedNumGptHttpReqs, expectedNumGptHttpsReqs} of testCases) {
       it(`should have a score of ${expectedScore} with` +
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
@@ -105,7 +105,11 @@ describe('LoadsGptOverHttps', () => {
         const results = LoadsGptOverHttps.audit(
           {Network: {har: newHar(networkRecords), parsedUrls}});
 
-        expect(results).to.have.property('score', expectedScore);
+        if (expectedNotAppl) {
+          expect(results).to.have.property('notApplicable', true);
+        } else {
+          expect(results).to.have.property('score', expectedScore);
+        }
         expect(results).with.property('details')
             .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
         expect(results).with.property('details')
@@ -118,9 +122,9 @@ describe('LoadsGptOverHttps', () => {
     const testCases = [
       {
         networkRecords: [],
-        expectedScore: 1,
         expectedNumGptHttpReqs: 0,
         expectedNumGptHttpsReqs: 0,
+        expectedNotAppl: true,
       },
       {
         networkRecords: [
@@ -183,7 +187,7 @@ describe('LoadsGptOverHttps', () => {
         expectedNumGptHttpsReqs: 3,
       },
     ];
-    for (const {networkRecords, expectedScore,
+    for (const {networkRecords, expectedScore, expectedNotAppl,
       expectedNumGptHttpReqs, expectedNumGptHttpsReqs} of testCases) {
       it(`should have a score of ${expectedScore} with` +
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
@@ -195,8 +199,11 @@ describe('LoadsGptOverHttps', () => {
           new URL(request.url));
         const results = LoadsGptOverHttps.audit(
           {Network: {har: newHar(networkRecords), parsedUrls}});
-
-        expect(results).to.have.property('score', expectedScore);
+        if (expectedNotAppl) {
+          expect(results).to.have.property('notApplicable', true);
+        } else {
+          expect(results).to.have.property('score', expectedScore);
+        }
         expect(results).with.property('details')
             .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
         expect(results).with.property('details')

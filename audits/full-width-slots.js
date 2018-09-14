@@ -1,4 +1,5 @@
 const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {hasAdRequestPath} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -37,11 +38,7 @@ class FullWidthSlots extends Audit {
         .filter(hasAdRequestPath);
 
     if (!adRequestUrls.length) {
-      return {
-        notApplicable: true,
-        rawValue: true,
-        displayValue: 'No ads requested.',
-      };
+      return auditNotApplicable('No ads requested.');
     }
 
     const sizeArrs = adRequestUrls.map((url) =>
@@ -55,11 +52,7 @@ class FullWidthSlots extends Audit {
         .filter((w) => w <= vpWidth && w > 1);
 
     if (!widths.length) {
-      return {
-        notApplicable: true,
-        rawValue: true,
-        displayValue: 'No requested ads contain ads of valid width.',
-      };
+      return auditNotApplicable('No requested ads contain ads of valid width.');
     }
 
     const maxWidth = Math.max(...widths);
