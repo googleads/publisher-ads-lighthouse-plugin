@@ -1,10 +1,8 @@
 const AdRequestFromPageStart = require('../../audits/ad-request-from-page-start');
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const expect = chai.expect;
 const sinon = require('sinon');
-chai.use(chaiAsPromised);
 
 const AD_REQUEST_URL = 'https://securepubads.g.doubleclick.net/gampad/ads?foo';
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
@@ -38,25 +36,22 @@ describe('AdRequestFromPageStart', async () => {
           {url: AD_REQUEST_URL, startTime: .5},
         ],
         expectedTime: 250,
-        expectedError: false,
       },
       {
-        desc: 'should throw error if ad is never requested',
+        desc: 'should not be applicable if ad is never requested',
         networkRecords: [
           {url: TAG_URL, startTime: .5},
         ],
-        expectedTime: -1,
-        expectedError: true,
+        expectedNotAppl: true,
       },
       {
-        desc: 'should throw error if no successful requests',
+        desc: 'should not be applicable if no successful requests',
         networkRecords: [],
-        expectedTime: -1,
-        expectedError: true,
+        expectedNotAppl: true,
       },
 
     ];
-    for (const {desc, networkRecords, expectedTime, expectedError}
+    for (const {desc, networkRecords, expectedTime, expectedNotAppl}
       of testCases) {
       it(`${desc} with a load time of ${expectedTime}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
@@ -64,12 +59,11 @@ describe('AdRequestFromPageStart', async () => {
         const artifacts =
               {Network: {har: newHar(networkRecords), networkRecords}};
 
-        if (!expectedError) {
-          const results = await AdRequestFromPageStart.audit(artifacts);
-          expect(results).to.have.property('rawValue', expectedTime);
+        const results = await AdRequestFromPageStart.audit(artifacts);
+        if (expectedNotAppl) {
+          expect(results).to.have.property('notApplicable', true);
         } else {
-          await expect(AdRequestFromPageStart.audit(artifacts))
-              .to.be.rejectedWith(Error);
+          expect(results).to.have.property('rawValue', expectedTime);
         }
       });
     }

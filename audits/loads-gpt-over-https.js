@@ -1,3 +1,4 @@
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
 
@@ -42,14 +43,19 @@ class LoadsGptOverHttps extends Audit {
       }
     }
 
+    const details = {numGptHttpReqs, numGptHttpsReqs};
+
+    if (numGptHttpReqs + numGptHttpsReqs == 0) {
+      const returnVal = auditNotApplicable('GPT not requested.');
+      returnVal.details = details;
+      return returnVal;
+    }
+
     return {
       rawValue: numGptHttpReqs,
       score: numGptHttpReqs > 0 ? 0 : 1,
       displayValue: numGptHttpReqs ? `${numGptHttpReqs} unsafe request(s)` : '',
-      details: {
-        numGptHttpReqs,
-        numGptHttpsReqs,
-      },
+      details,
     };
   }
 }

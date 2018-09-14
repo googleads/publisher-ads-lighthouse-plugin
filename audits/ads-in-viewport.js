@@ -1,4 +1,5 @@
 const array = require('../utils/array');
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
 
@@ -27,6 +28,14 @@ class AdsInViewport extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.RenderedAdSlots;
+
+    if (!slots.length) {
+      return auditNotApplicable('No slots on page.');
+    }
+    // Checks that non-null (visible) slots exist in array.
+    if (!slots.find((s) => s != null)) {
+      return auditNotApplicable('No visible slots on page.');
+    }
 
     // TODO(gmatute): account for scrolling, deep links, and reflows
     const viewed = array.count(slots, (slot) =>

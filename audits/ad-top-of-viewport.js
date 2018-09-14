@@ -1,3 +1,4 @@
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 
 /** @inheritDoc */
@@ -34,11 +35,7 @@ class AdTopOfViewport extends Audit {
     const inViewport = topSlotMidpoint < viewport.innerHeight;
 
     if (!inViewport) {
-      return {
-        notApplicable: true,
-        rawValue: true,
-        displayValue: 'No ads in viewport.',
-      };
+      return auditNotApplicable('No ads in viewport.');
     }
 
     return {

@@ -37,25 +37,22 @@ describe('TagLoadTime', async () => {
           {url: TAG_URL, endTime: .25},
         ],
         expectedLoadTime: 150,
-        expectedError: false,
       },
       {
-        desc: 'should throw error if tag is never loaded',
+        desc: 'should not be applicable if tag is never loaded',
         networkRecords: [
           {url: 'https://example.com', statusCode: 200, startTime: .1},
         ],
-        expectedLoadTime: -1,
-        expectedError: true,
+        expectedNotAppl: true,
       },
       {
-        desc: 'should throw error if no successful requests',
+        desc: 'should not be applicable if no successful requests',
         networkRecords: [],
-        expectedLoadTime: -1,
-        expectedError: true,
+        expectedNotAppl: true,
       },
 
     ];
-    for (const {desc, networkRecords, expectedLoadTime, expectedError}
+    for (const {desc, networkRecords, expectedLoadTime, expectedNotAppl}
       of testCases) {
       it(`${desc} with a load time of ${expectedLoadTime}`, async () => {
         sandbox.stub(NetworkRecorder, 'recordsFromLogs')
@@ -63,11 +60,11 @@ describe('TagLoadTime', async () => {
         const artifacts =
             {Network: {har: newHar(networkRecords), networkRecords}};
 
-        if (!expectedError) {
-          const results = await TagLoadTime.audit(artifacts);
-          expect(results).to.have.property('rawValue', expectedLoadTime);
+        const results = await TagLoadTime.audit(artifacts);
+        if (expectedNotAppl) {
+          expect(results).to.have.property('notApplicable', true);
         } else {
-          await expect(TagLoadTime.audit(artifacts)).to.be.rejectedWith(Error);
+          expect(results).to.have.property('rawValue', expectedLoadTime);
         }
       });
     }

@@ -1,4 +1,5 @@
 const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getAdStartTime, getPageStartTime} = require('../utils/network-timing');
 
@@ -40,10 +41,10 @@ class AdRequestFromPageStart extends Audit {
 
 
     if (pageStartTime < 0) {
-      throw new Error('No successful nework records.');
+      return auditNotApplicable('No successful network records.');
     }
     if (adStartTime < 0) {
-      throw new Error('No ads requested.');
+      return auditNotApplicable('No ads requested.');
     }
 
     const adReqTime = (adStartTime - pageStartTime) * 1000;

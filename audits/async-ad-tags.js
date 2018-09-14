@@ -1,9 +1,9 @@
 const array = require('../utils/array.js');
 const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {URL} = require('url');
-
 const {isAdTag} = require('../utils/resource-classification');
+const {URL} = require('url');
 
 /**
  * @param {LH.WebInspector.NetworkRequest} tagReq
@@ -43,6 +43,11 @@ class AsyncAdTags extends Audit {
     const networkRecords =
         await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
     const tagReqs = networkRecords.filter((req) => isAdTag(new URL(req.url)));
+
+    if (!tagReqs.length) {
+      return auditNotApplicable('No ad tags requested.');
+    }
+
     const numAsync = array.count(tagReqs, isAsync);
     const numTags = tagReqs.length;
     return {
