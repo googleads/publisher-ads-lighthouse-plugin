@@ -3,7 +3,7 @@ const {URL} = require('url');
 
 /**
  * Returns end time of tag load (s) relative to system boot.
- * @param {LH.WebInspector.NetworkRequest[]} networkRecords
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {number}
  */
 function getTagEndTime(networkRecords) {
@@ -14,7 +14,7 @@ function getTagEndTime(networkRecords) {
 
 /**
  * Returns start time of first ad request (s) relative to system boot.
- * @param {LH.WebInspector.NetworkRequest[]} networkRecords
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {number}
  */
 function getAdStartTime(networkRecords) {
@@ -25,7 +25,7 @@ function getAdStartTime(networkRecords) {
 
 /**
  * Returns start time of page load (s) relative to system boot.
- * @param {LH.WebInspector.NetworkRequest[]} networkRecords
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {number}
  */
 function getPageStartTime(networkRecords) {

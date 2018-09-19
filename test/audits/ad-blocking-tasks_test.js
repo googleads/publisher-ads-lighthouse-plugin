@@ -13,7 +13,7 @@ const generateTask = ([start, end], groupLabel, eventName) => ({
 });
 
 const generateReq = ([start, response, end], id, url) => ({
-  _responseReceivedTime: response / 1000,
+  responseReceivedTime: response / 1000,
   startTime: start / 1000,
   endTime: end / 1000,
   requestId: id,
