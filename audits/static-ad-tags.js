@@ -6,12 +6,12 @@ const {isAdTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
- * @param {LH.WebInspector.NetworkRequest} tagReq
+ * @param {LH.Artifacts.NetworkRequest} tagReq
  * @return {boolean}
  */
 function isStatic(tagReq) {
   // Use initiator type to determine if tag was loaded statically.
-  return ['parser', 'preload'].includes(tagReq._initiator.type);
+  return ['parser', 'preload'].includes(tagReq.initiator.type);
 }
 
 /** @inheritDoc */
@@ -37,7 +37,7 @@ class StaticAdTags extends Audit {
    * @override
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    /** @type {Array<LH.Artifacts.NetworkRequest>} */
     const networkRecords =
         await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
     const tagReqs = networkRecords.filter((req) => isAdTag(new URL(req.url)));

@@ -22,7 +22,7 @@ const METHODS_TO_OBSERVE = [
 /**
  * Logs any missing URLs in loadData.
  * @param {HAR.Entry[]} harEntries
- * @param {LH.WebInspector.NetworkRequest[]} networkRecords
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {HAR.Entry[]}
  */
 function findMissingEntries(harEntries, networkRecords) {

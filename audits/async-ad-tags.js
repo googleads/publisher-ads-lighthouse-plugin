@@ -6,13 +6,13 @@ const {isAdTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
- * @param {LH.WebInspector.NetworkRequest} tagReq
+ * @param {LH.Artifacts.NetworkRequest} tagReq
  * @return {boolean}
  */
 function isAsync(tagReq) {
   // Use request priority as proxy to determine if script tag is asynchronous.
   // See https://bugs.chromium.org/p/chromium/issues/detail?id=408229.
-  return tagReq.priority() == 'Low';
+  return tagReq.priority == 'Low';
 }
 
 /** @inheritDoc */
@@ -39,7 +39,7 @@ class AsyncAdTags extends Audit {
    * @override
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    /** @type {Array<LH.Artifacts.NetworkRequest>} */
     const networkRecords =
         await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
     const tagReqs = networkRecords.filter((req) => isAdTag(new URL(req.url)));

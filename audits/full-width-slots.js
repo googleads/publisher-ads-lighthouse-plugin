@@ -28,7 +28,7 @@ class FullWidthSlots extends Audit {
     const viewport = artifacts.ViewportDimensions;
     const vpWidth = viewport.innerWidth;
 
-    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    /** @type {Array<LH.Artifacts.NetworkRequest>} */
     const networkRecords =
         await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
 
