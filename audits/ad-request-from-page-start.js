@@ -32,7 +32,7 @@ class AdRequestFromPageStart extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    /** @type {Array<LH.Artifacts.NetworkRequest>} */
     const networkRecords =
         await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
 

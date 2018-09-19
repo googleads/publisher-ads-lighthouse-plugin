@@ -8,11 +8,11 @@
 import 'lighthouse/typings/artifacts';
 import 'lighthouse/typings/audit';
 import 'lighthouse/typings/config';
-import 'lighthouse/typings/crdp-mapping';
 import 'lighthouse/typings/externs';
 import 'lighthouse/typings/gatherer';
 import 'lighthouse/typings/html-renderer';
 import 'lighthouse/typings/lhr';
 import 'lighthouse/typings/lhr-lite';
+import 'lighthouse/typings/node';
 import 'lighthouse/typings/protocol';
-import 'lighthouse/typings/web-inspector';
+

@@ -35,7 +35,7 @@ function isLong(task) {
  *
  * @param {LH.Trace} trace
  * @param {LH.Artifacts.TaskNode[]} tasks
- * @param {LH.WebInspector.NetworkRequest[]} networkRecords
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {number|null} offset (ms) or null if error
  */
 function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
@@ -82,7 +82,7 @@ class AdBlockingTasks extends Audit {
    * @override
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.WebInspector.NetworkRequest>} */
+    /** @type {Array<LH.Artifacts.NetworkRequest>} */
     const networkRecords =
         await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
     const trace = artifacts.traces[AdBlockingTasks.DEFAULT_PASS];
@@ -119,13 +119,12 @@ class AdBlockingTasks extends Audit {
     for (const adNetworkReq of adNetworkReqs) {
       for (; longTaskIndex < longTasks.length; longTaskIndex++) {
         const longTask = longTasks[longTaskIndex];
-
         // Handle cases without any overlap.
         if (longTask.endTime < fixTime(adNetworkReq.startTime)) continue;
         if (fixTime(adNetworkReq.endTime) < longTask.startTime) break;
 
         // Check if longTask delayed NetworkRecord.
-        if (fixTime(adNetworkReq._responseReceivedTime) < longTask.endTime) {
+        if (fixTime(adNetworkReq.responseReceivedTime) < longTask.endTime) {
           blocking.push({
             name: longTask.event.name || '',
             group: longTask.group.label,

@@ -19,9 +19,9 @@ describe('AsyncAdTags', async () => {
       {
         desc: 'should succeed if there are no ad tags',
         networkRecords: [
-          {priority: () => 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: () => 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: () => 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
         ],
         expectedRawVal: true,
       },
@@ -33,10 +33,10 @@ describe('AsyncAdTags', async () => {
       {
         desc: 'should fail unless all ad tags are async',
         networkRecords: [
-          {priority: () => 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: () => 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: () => 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: () => 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
         ],
         expectedRawVal: false,
       },
