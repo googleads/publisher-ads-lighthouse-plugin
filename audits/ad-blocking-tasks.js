@@ -1,4 +1,3 @@
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds} = require('../utils/resource-classification');
@@ -61,7 +60,7 @@ function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
 /** @inheritDoc */
 class AdBlockingTasks extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
@@ -72,20 +71,19 @@ class AdBlockingTasks extends Audit {
       description: 'Tasks blocking the main thread can delay the ad related ' +
           'resources, consider removing long blocking tasks or moving them ' +
           'off the main thread with web workers.',
-      requiredArtifacts: ['traces', 'Network'],
+      requiredArtifacts: ['traces'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
+   * @param {LH.Artifacts} artifacts
    * @return {Promise<LH.Audit.Product>}
    * @override
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.Artifacts.NetworkRequest>} */
-    const networkRecords =
-        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
     const trace = artifacts.traces[AdBlockingTasks.DEFAULT_PASS];
+    const devtoolsLogs = artifacts.devtoolsLogs[AdBlockingTasks.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
     const tasks = await artifacts.requestMainThreadTasks(trace);
 
     if (!networkRecords.length) {

@@ -1,5 +1,6 @@
 const {Audit} = require('lighthouse');
 const {isGoogleAds, hasAdRequestPath, hasImpressionPath} = require('../utils/resource-classification');
+const {URL} = require('url');
 
 /**
  * Simple audit that checks for the presence of ads. Currently based on network
@@ -7,7 +8,7 @@ const {isGoogleAds, hasAdRequestPath, hasImpressionPath} = require('../utils/res
  */
 class HasAds extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
@@ -16,17 +17,19 @@ class HasAds extends Audit {
       title: 'Page has ad requests',
       failureTitle: 'No ad requests were detected',
       description: 'Let us know if we miss something. [Feedback](#TODO)',
-      requiredArtifacts: ['Network'],
+      requiredArtifacts: ['devtoolsLogs'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @param {LH.Artifacts} artifacts
+   * @return {Promise<LH.Audit.Product>}
    */
-  static audit(artifacts) {
-    const {parsedUrls} = artifacts.Network;
-
+  static async audit(artifacts) {
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const parsedUrls = networkRecords
+        .map((record) => new URL(record.url));
     const googleAdsEntries = parsedUrls.filter(isGoogleAds);
 
     let numRequests = 0;

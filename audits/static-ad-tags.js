@@ -1,5 +1,4 @@
 const array = require('../utils/array.js');
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isAdTag} = require('../utils/resource-classification');
@@ -17,7 +16,7 @@ function isStatic(tagReq) {
 /** @inheritDoc */
 class StaticAdTags extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
@@ -27,20 +26,19 @@ class StaticAdTags extends Audit {
       failureTitle: 'Some ad script tags are loaded dynamically',
       description: 'Tags loaded dynamically are not visible to the browser ' +
         'preloader, consider using a static tag or `<link rel="preload">`.',
-      requiredArtifacts: ['Network'],
+      requiredArtifacts: ['devtoolsLogs'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
+   * @param {LH.Artifacts} artifacts
    * @return {Promise<LH.Audit.Product>}
-   * @override
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.Artifacts.NetworkRequest>} */
-    const networkRecords =
-        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
-    const tagReqs = networkRecords.filter((req) => isAdTag(new URL(req.url)));
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const tagReqs = networkRecords
+        .filter((req) => isAdTag(new URL(req.url)));
 
     if (!tagReqs.length) {
       return auditNotApplicable('No ad tags requested.');

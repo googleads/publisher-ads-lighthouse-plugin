@@ -1,30 +1,9 @@
-const chromeDriver = require('chrome-har');
 const LoadsGptOverHttps = require('../../audits/loads-gpt-over-https');
-const sinon = require('sinon');
+const {Audit} = require('lighthouse');
 const {expect} = require('chai');
-const {URL} = require('url');
 
-/**
- * @param {Array<{url: string}>} requests
- * @return {Object} An object partly following the HAR spec.
- */
-function newHar(requests) {
-  const wrappedRequests = requests.map((req) => ({request: req}));
-  return {log: {entries: wrappedRequests}};
-}
-
-describe('LoadsGptOverHttps', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  describe('numGptHttpReqs', () => {
+describe('LoadsGptOverHttps', async () => {
+  describe('numGptHttpReqs', async () => {
     const testCases = [
       {
         networkRecords: [],
@@ -96,15 +75,11 @@ describe('LoadsGptOverHttps', () => {
       expectedNumGptHttpReqs, expectedNumGptHttpsReqs} of testCases) {
       it(`should have a score of ${expectedScore} with` +
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
-        ` ${expectedNumGptHttpsReqs} HTTPS requests`, () => {
-        sandbox.stub(chromeDriver, 'harFromMessages')
-            .returns(newHar(networkRecords));
-
-        const parsedUrls = networkRecords.map((request) =>
-          new URL(request.url));
-        const results = LoadsGptOverHttps.audit(
-          {Network: {har: newHar(networkRecords), parsedUrls}});
-
+        ` ${expectedNumGptHttpsReqs} HTTPS requests`, async () => {
+        const results = await LoadsGptOverHttps.audit({
+          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          requestNetworkRecords: () => Promise.resolve(networkRecords),
+        });
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
@@ -191,14 +166,11 @@ describe('LoadsGptOverHttps', () => {
       expectedNumGptHttpReqs, expectedNumGptHttpsReqs} of testCases) {
       it(`should have a score of ${expectedScore} with` +
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
-        ` ${expectedNumGptHttpsReqs} HTTPS requests`, () => {
-        sandbox.stub(chromeDriver, 'harFromMessages')
-            .returns(newHar(networkRecords));
-
-        const parsedUrls = networkRecords.map((request) =>
-          new URL(request.url));
-        const results = LoadsGptOverHttps.audit(
-          {Network: {har: newHar(networkRecords), parsedUrls}});
+        ` ${expectedNumGptHttpsReqs} HTTPS requests`, async () => {
+        const results = await LoadsGptOverHttps.audit({
+          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          requestNetworkRecords: () => Promise.resolve(networkRecords),
+        });
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {

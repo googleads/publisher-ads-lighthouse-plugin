@@ -1,32 +1,12 @@
 const AdRequestFromPageStart = require('../../audits/ad-request-from-page-start');
 const chai = require('chai');
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const {Audit} = require('lighthouse');
 const expect = chai.expect;
-const sinon = require('sinon');
 
 const AD_REQUEST_URL = 'https://securepubads.g.doubleclick.net/gampad/ads?foo';
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
 
-/**
- * @param {Array<{url: string}>} requests
- * @return {Object} An object partly following the HAR spec.
- */
-function newHar(requests) {
-  const wrappedRequests = requests.map((req) => ({request: req}));
-  return {log: {entries: wrappedRequests}};
-}
-
 describe('AdRequestFromPageStart', async () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('adRequestFromPageStartTest', async () => {
     const testCases = [
       {
@@ -54,12 +34,10 @@ describe('AdRequestFromPageStart', async () => {
     for (const {desc, networkRecords, expectedTime, expectedNotAppl}
       of testCases) {
       it(`${desc} with a load time of ${expectedTime}`, async () => {
-        sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-            .returns(networkRecords);
-        const artifacts =
-              {Network: {har: newHar(networkRecords), networkRecords}};
-
-        const results = await AdRequestFromPageStart.audit(artifacts);
+        const results = await AdRequestFromPageStart.audit({
+          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          requestNetworkRecords: () => Promise.resolve(networkRecords),
+        });
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
