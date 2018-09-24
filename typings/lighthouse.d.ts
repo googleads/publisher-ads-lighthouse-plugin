@@ -31,9 +31,15 @@ declare module 'lighthouse' {
         headings: LH.Audit.Heading[],
         results: { [x: string]: LH.Audit.DetailsItem }[],
         summary?: LH.Audit.DetailsRendererDetailsSummary
-      ): LH.Audit.DetailsRendererDetailsJSON
+      ): LH.Audit.DetailsRendererDetailsJSON;
 
       static get DEFAULT_PASS(): string;
+
+      static computeLogNormalScore(
+        measuredValue : number,
+        diminishingReturnsValue: number,
+        medianValue: number
+      ): number;
     }
 
     export class Gatherer {

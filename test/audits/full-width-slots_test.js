@@ -1,10 +1,7 @@
 const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
 const FullWidthSlots = require('../../audits/full-width-slots');
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
+const {Audit} = require('lighthouse');
 const expect = chai.expect;
-const sinon = require('sinon');
-chai.use(chaiAsPromised);
 
 describe('FullWidthSlots', async () => {
   const ViewportDimensions = {
@@ -18,16 +15,6 @@ describe('FullWidthSlots', async () => {
 
   const genUrl = (sizeString, param) =>
     AD_REQUEST_URL + param + encodeURIComponent(sizeString);
-
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
 
   describe('fullWidthSlotsTest', async () => {
     const testCases = [
@@ -100,12 +87,11 @@ describe('FullWidthSlots', async () => {
     for (const {desc, networkRecords, expectedValue, expectedNotApplicable}
       of testCases) {
       it(`${desc} with a value of ${expectedValue}`, async () => {
-        sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-            .returns(networkRecords);
-        const artifacts =
-            {Network: {networkRecords}, ViewportDimensions};
-
-        const results = await FullWidthSlots.audit(artifacts);
+        const results = await FullWidthSlots.audit({
+          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          ViewportDimensions,
+          requestNetworkRecords: () => Promise.resolve(networkRecords),
+        });
         if (expectedNotApplicable) {
           expect(results).to.have.property('notApplicable', true);
         }

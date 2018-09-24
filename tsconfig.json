@@ -19,5 +19,6 @@
   "exclude": [
     "test/**/*.js",
     "visual-report/**",
+    "./node_modules/ws/**",
   ]
 }

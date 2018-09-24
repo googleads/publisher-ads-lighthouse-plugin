@@ -1,5 +1,4 @@
 const array = require('../utils/array.js');
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isAdTag} = require('../utils/resource-classification');
@@ -18,7 +17,7 @@ function isAsync(tagReq) {
 /** @inheritDoc */
 class AsyncAdTags extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
@@ -29,20 +28,19 @@ class AsyncAdTags extends Audit {
       description: 'Tags loaded synchronously block all content rendering ' +
           'until they are fetched and evaluated, consider using the `async` ' +
           'attribute for script tags to make them asynchronous.',
-      requiredArtifacts: ['Network'],
+      requiredArtifacts: ['devtoolsLogs'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
+   * @param {LH.Artifacts} artifacts
    * @return {Promise<LH.Audit.Product>}
-   * @override
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.Artifacts.NetworkRequest>} */
-    const networkRecords =
-        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
-    const tagReqs = networkRecords.filter((req) => isAdTag(new URL(req.url)));
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const tagReqs = networkRecords
+        .filter((req) => isAdTag(new URL(req.url)));
 
     if (!tagReqs.length) {
       return auditNotApplicable('No ad tags requested.');

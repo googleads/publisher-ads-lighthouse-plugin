@@ -1,19 +1,8 @@
 const AsyncAdTags = require('../../audits/async-ad-tags');
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
-const sinon = require('sinon');
+const {Audit} = require('lighthouse');
 const {expect} = require('chai');
 
 describe('AsyncAdTags', async () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
   describe('rawValue', async () => {
     const testCases = [
       {
@@ -45,10 +34,10 @@ describe('AsyncAdTags', async () => {
     for (const {desc, networkRecords, expectedRawVal}
       of testCases) {
       it(`${desc}`, async () => {
-        sandbox.stub(NetworkRecorder, 'recordsFromLogs')
-            .returns(networkRecords);
-        const artifacts = {Network: {networkRecords}};
-        const results = await AsyncAdTags.audit(artifacts);
+        const results = await AsyncAdTags.audit({
+          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          requestNetworkRecords: () => Promise.resolve(networkRecords),
+        });
         expect(results).to.have.property('rawValue', expectedRawVal);
       });
     }

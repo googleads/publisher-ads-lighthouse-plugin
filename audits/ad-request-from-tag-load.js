@@ -1,4 +1,3 @@
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getAdStartTime, getTagEndTime} = require('../utils/network-timing');
@@ -12,7 +11,7 @@ const MEDIAN = 497;
  */
 class AdRequestFromTagLoad extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
@@ -23,19 +22,17 @@ class AdRequestFromTagLoad extends Audit {
           ' made relative to the tag loading',
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['Network'],
+      requiredArtifacts: ['devtoolsLogs'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
+   * @param {LH.Artifacts} artifacts
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts) {
-    /** @type {Array<LH.Artifacts.NetworkRequest>} */
-    const networkRecords =
-        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
-
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
     const adStartTime = getAdStartTime(networkRecords);
     const tagEndTime = getTagEndTime(networkRecords);
 
@@ -48,8 +45,8 @@ class AdRequestFromTagLoad extends Audit {
 
     const adReqTime = (adStartTime - tagEndTime) * 1000;
 
-    // @ts-ignore
-    const normalScore = Audit.computeLogNormalScore(adReqTime, PODR, MEDIAN);
+    const normalScore = Audit
+        .computeLogNormalScore(adReqTime, PODR, MEDIAN);
 
     return {
       rawValue: adReqTime,

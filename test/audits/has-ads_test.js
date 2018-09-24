@@ -1,30 +1,9 @@
-const chromeDriver = require('chrome-har');
 const HasAds = require('../../audits/has-ads');
-const sinon = require('sinon');
+const {Audit} = require('lighthouse');
 const {expect} = require('chai');
-const {URL} = require('url');
 
-/**
- * @param {Array<{url: string}>} requests
- * @return {Object} An object partly following the HAR spec.
- */
-function newHar(requests) {
-  const wrappedRequests = requests.map((req) => ({request: req}));
-  return {log: {entries: wrappedRequests}};
-}
-
-describe('HasAds', () => {
-  let sandbox;
-
-  beforeEach(() => {
-    sandbox = sinon.createSandbox();
-  });
-
-  afterEach(() => {
-    sandbox.restore();
-  });
-
-  describe('numRequests', () => {
+describe('HasAds', async () => {
+  describe('numRequests', async () => {
     const testCases = [
       {
         description: 'empty logs',
@@ -76,15 +55,11 @@ describe('HasAds', () => {
     for (const {description, networkRecords,
       expectedScore, expectedNumRequests} of testCases) {
       it(`should have score of ${expectedScore} for ${description} with` +
-        ` ${expectedNumRequests} requests`, () => {
-        sandbox.stub(chromeDriver, 'harFromMessages')
-            .returns(newHar(networkRecords));
-
-        const parsedUrls = networkRecords.map((request) =>
-          new URL(request.url));
-        const results = HasAds.audit(
-          {Network: {har: newHar(networkRecords), parsedUrls}});
-
+        ` ${expectedNumRequests} requests`, async () => {
+        const results = await HasAds.audit({
+          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          requestNetworkRecords: () => Promise.resolve(networkRecords),
+        });
         expect(results).with.property('score', expectedScore);
         expect(results).with.property('details').property('numRequests')
             .equal(expectedNumRequests);
@@ -92,7 +67,7 @@ describe('HasAds', () => {
     }
   });
 
-  describe('numImpressions', () => {
+  describe('numImpressions', async () => {
     const testCases = [
       {
         description: 'empty logs',
@@ -136,15 +111,11 @@ describe('HasAds', () => {
     for (const {description, networkRecords,
       expectedScore, expectedImpressions} of testCases) {
       it(`should have score of ${expectedScore} for ${description} with` +
-        ` ${expectedImpressions} impressions`, () => {
-        sandbox.stub(chromeDriver, 'harFromMessages')
-            .returns(newHar(networkRecords));
-
-        const parsedUrls = networkRecords.map((request) =>
-          new URL(request.url));
-        const results = HasAds.audit(
-          {Network: {har: newHar(networkRecords), parsedUrls}});
-
+        ` ${expectedImpressions} impressions`, async () => {
+        const results = await HasAds.audit({
+          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          requestNetworkRecords: () => Promise.resolve(networkRecords),
+        });
         expect(results).with.property('score', expectedScore);
         expect(results).with.property('details').property('numImpressions')
             .equal(expectedImpressions);
