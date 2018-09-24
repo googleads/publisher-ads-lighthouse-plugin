@@ -1,4 +1,3 @@
-const NetworkRecorder = require('lighthouse/lighthouse-core/lib/network-recorder');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {hasAdRequestPath} = require('../utils/resource-classification');
@@ -7,7 +6,7 @@ const {URL} = require('url');
 /** @inheritDoc */
 class FullWidthSlots extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
@@ -16,21 +15,19 @@ class FullWidthSlots extends Audit {
       title: 'Full Width Slots',
       description: 'Have ad slot sizes that utilize the viewport\'s full width' +
           ' to increase CTR.',
-      requiredArtifacts: ['ViewportDimensions', 'Network'],
+      requiredArtifacts: ['ViewportDimensions', 'devtoolsLogs'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
+   * @param {LH.Artifacts} artifacts
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts) {
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
     const viewport = artifacts.ViewportDimensions;
     const vpWidth = viewport.innerWidth;
-
-    /** @type {Array<LH.Artifacts.NetworkRequest>} */
-    const networkRecords =
-        await NetworkRecorder.recordsFromLogs(artifacts.Network.networkEvents);
 
     /** @type {Array<URL>} */
     const adRequestUrls = networkRecords
@@ -64,7 +61,7 @@ class FullWidthSlots extends Audit {
       score: pctUnoccupied > .2 ? 0 : 1,
       rawValue: pctUnoccupied,
       displayValue:
-          Math.round(pctUnoccupied * 100) + '% of viewport width is unused.',
+            Math.round(pctUnoccupied * 100) + '% of viewport width is unused.',
     };
   }
 }

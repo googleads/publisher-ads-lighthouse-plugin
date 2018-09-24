@@ -1,6 +1,7 @@
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
+const {URL} = require('url');
 
 /**
  * Simple audit that checks if gpt is loaded over https.
@@ -9,7 +10,7 @@ const {isGoogleAds, isGpt, isHttp, isHttps} = require('../utils/resource-classif
  */
 class LoadsGptOverHttps extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
@@ -17,16 +18,19 @@ class LoadsGptOverHttps extends Audit {
       id: 'loads-gpt-over-https',
       title: 'Uses HTTPS to load GPT',
       description: 'For privacy and security always load GPT over HTTPS.',
-      requiredArtifacts: ['Network'],
+      requiredArtifacts: ['devtoolsLogs'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @param {LH.Artifacts} artifacts
+   * @return {Promise<LH.Audit.Product>}
    */
-  static audit(artifacts) {
-    const {parsedUrls} = artifacts.Network;
+  static async audit(artifacts) {
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const parsedUrls = networkRecords
+        .map((record) => new URL(record.url));
 
     const googleAdsEntries = parsedUrls.filter(isGoogleAds);
 

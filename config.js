@@ -12,7 +12,6 @@ module.exports = {
     {
       passName: 'defaultPass',
       gatherers: [
-        require.resolve('./gatherers/network'),
         require.resolve('./gatherers/rendered-ad-slots'),
       ],
     },

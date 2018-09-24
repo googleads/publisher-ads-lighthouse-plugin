@@ -13,20 +13,21 @@ const {URL} = require('url');
  * To illustrate with an example, if Node A and Node B both depend on Node C,
  * Node A would point to an instance of Node C, and Node B would point to an
  * instance of Node C, rather than A and B pointing to one copy of C.
- * @param {HAR.Entry} startingEntry
- * @param {HAR.Har} har
+ * @param {LH.Artifacts.NetworkRequest} startingEntry
+ * @param {Array<LH.Artifacts.NetworkRequest>} networkRecords
  * @return {{blockedRequests: Set<string>, treeRootNode: RequestTree.TreeNode}}
  */
-function findCriticalPath(startingEntry, har) {
+function findCriticalPath(startingEntry, networkRecords) {
   // TODO(bencatarevas): Find a data structure that can contain the DAG for the
   // stack. Also, determine a way to find the height of the DAG.
 
   /** @type {Set<string>} */ const blockedRequests = new Set();
-  const treeRootNode = createNode(startingEntry.request.url);
+  const treeRootNode = createNode(startingEntry.url);
 
   /** @type {Array<{name: string, children: Array<RequestTree.TreeNode>}>} */
   const stack = [treeRootNode];
-  /** @type {Map<string, HAR.Entry>} */ const harMap = new Map();
+  /** @type {Map<string, LH.Artifacts.NetworkRequest>} */
+  const recordMap = new Map();
 
   /** @type {Set<string>} */
   // Container to hold all visited edges of the dependency tree. This is to
@@ -34,8 +35,8 @@ function findCriticalPath(startingEntry, har) {
   // unwanted repeated value to the tree.
   const visitedEdges = new Set();
 
-  for (const entry of har.log.entries) {
-    harMap.set(entry.request.url, entry);
+  for (const entry of networkRecords) {
+    recordMap.set(entry.url, entry);
   }
 
   while (stack.length) {
@@ -45,10 +46,10 @@ function findCriticalPath(startingEntry, har) {
     // Something to note here is that the check below serves two purposes.
     // The first is for checking if the URLs match. The second is for checking
     // whether we've reached the root domain. We don't actually add the root
-    // domain to harMap. Thus, we need to check if, when accessing the
-    // harMap, it returns undefined to see if we've reached the root domain.
+    // domain to recordMap. Thus, we need to check if, when accessing the
+    // recordMap, it returns undefined to see if we've reached the root domain.
 
-    const currentEntry = harMap.get(parentNode.name);
+    const currentEntry = recordMap.get(parentNode.name);
     if (!currentEntry) {
       continue;
     }
@@ -74,8 +75,8 @@ function findCriticalPath(startingEntry, har) {
 /**
  * Returns the entry's callstack. Default to empty if array not applicable
  * (i.e. initiator type is not "script").
- * @param {HAR.Entry} entry
- * @return {Array<HAR.CallFrame>}
+ * @param {LH.Artifacts.NetworkRequest} entry
+ * @return {LH.Crdp.Network.stack.callFrames}
  */
 function getCallFrames(entry) {
   const initiatorDetails = getInitiatorDetails(entry);
@@ -89,16 +90,16 @@ function getCallFrames(entry) {
  * Returns the entry's initiator details. Defaults to empty object with type
  * field if it has empty _initiator_detail, to keep in line with the structure
  * of _initiator_detail.
- * @param {HAR.Entry} entry
- * @return {HAR.Initiator}
+ * @param {LH.Artifacts.NetworkRequest} entry
+ * @return {LH.Crdp.Network.Initiator}
  */
 function getInitiatorDetails(entry) {
-  if (!entry._initiator_detail) {
+  if (!entry.initiator) {
     return {
       type: '',
     };
   }
-  return /** @type {HAR.Initiator} */ (JSON.parse(entry._initiator_detail));
+  return /** @type {LH.Crdp.Network.Initiator} */ (entry.initiator);
 }
 
 /**
@@ -119,8 +120,8 @@ function createNode(url) {
  */
 class AdRequestCriticalPath extends Audit {
   /**
+   * @return {LH.Audit.Meta}
    * @override
-   * @return {AuditMetadata}
    */
   static get meta() {
     return {
@@ -129,19 +130,19 @@ class AdRequestCriticalPath extends Audit {
       description: 'These are the resources that block the first ad request. ' +
           'Consider reducing the number of resources or improving their ' +
           'execution to start loading ads as soon as possible.',
-      requiredArtifacts: ['Network'],
+      requiredArtifacts: ['devtoolsLogs'],
     };
   }
 
   /**
-   * @param {Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @param {LH.Artifacts} artifacts
+   * @return {Promise<LH.Audit.Product>}
    */
-  static audit(artifacts) {
-    const {har} = artifacts.Network;
-
-    const adsEntries = har.log.entries.filter((entry) => {
-      const parsedUrl = new URL(entry.request.url);
+  static async audit(artifacts) {
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const adsEntries = networkRecords.filter((entry) => {
+      const parsedUrl = new URL(entry.url);
       return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl);
     });
 
@@ -152,7 +153,7 @@ class AdRequestCriticalPath extends Audit {
     // We assume that the first entry in adsEntries will be the first ad
     // request. When testing, the numbers match using adsEntries[0].
     const {blockedRequests, treeRootNode} = adsEntries.length ?
-      findCriticalPath(adsEntries[0], har)
+      findCriticalPath(adsEntries[0], networkRecords)
       : {blockedRequests: new Set(), treeRootNode: {}};
     const numBlocked = blockedRequests.size;
     return {

@@ -21,7 +21,6 @@ class AdsInViewport extends Audit {
   }
 
   /**
-   * @override
    * @param {Artifacts} artifacts
    * @return {LH.Audit.Product}
    */
@@ -43,8 +42,8 @@ class AdsInViewport extends Audit {
     const unviewed = slots.length - viewed;
 
     return {
+      rawValue: viewed / slots.length,
       score: unviewed > 3 ? 0 : 1,
-      rawValue: !slots.length || viewed / slots.length,
       displayValue: unviewed ? `${unviewed} ads were out of view` : '',
     };
   }

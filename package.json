@@ -16,7 +16,6 @@
   ],
   "author": "",
   "dependencies": {
-    "chrome-har": "^0.3.2",
     "fs-extra": "^6.0.1",
     "lighthouse": "^3.0.0",
     "lighthouse-logger": "^1.0.1",
