@@ -13,8 +13,9 @@ const LONG_TASK_DUR_MS = 50;
  */
 const HEADINGS = [
   {key: 'name', itemType: 'text', text: 'Name'},
+  {key: 'script', itemType: 'url', text: 'Attributable Script'},
   {key: 'group', itemType: 'text', text: 'Category'},
-  {key: 'duration', itemType: 'ms', text: 'Duration'},
+  {key: 'duration', itemType: 'ms', text: 'Duration', granularity: 1},
   {key: 'adReqBlocked', itemType: 'url', text: 'Ad Request Blocked'},
 ];
 
@@ -23,9 +24,8 @@ const HEADINGS = [
  * @return {boolean}
  */
 function isLong(task) {
-  return task.duration >= LONG_TASK_DUR_MS &&
-      task.children.every((/** @type {LH.Artifacts.TaskNode} */ child) =>
-        child.duration < LONG_TASK_DUR_MS);
+  // selfTime is duration minus all child durations.
+  return task.selfTime >= LONG_TASK_DUR_MS;
 }
 
 /**
@@ -84,7 +84,13 @@ class AdBlockingTasks extends Audit {
     const trace = artifacts.traces[AdBlockingTasks.DEFAULT_PASS];
     const devtoolsLogs = artifacts.devtoolsLogs[AdBlockingTasks.DEFAULT_PASS];
     const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
-    const tasks = await artifacts.requestMainThreadTasks(trace);
+    let tasks = [];
+    try {
+      tasks = await artifacts.requestMainThreadTasks(trace);
+    } catch (e) {
+      return auditNotApplicable('Invalid timing task data');
+    }
+
 
     if (!networkRecords.length) {
       return auditNotApplicable('No network records to compare.');
@@ -101,8 +107,9 @@ class AdBlockingTasks extends Audit {
       networkTime * 1000 + offset;
 
     const longTasks = tasks.filter(isLong);
-    const adNetworkReqs = networkRecords.filter((req) =>
-      isGoogleAds(new URL(req.url)));
+    const adNetworkReqs = networkRecords
+        .filter((req) => isGoogleAds(new URL(req.url)))
+        .filter((req) => req.resourceType == 'Script' || req.resourceType == 'XHR');
 
     if (!adNetworkReqs.length) {
       return auditNotApplicable('No ad-related requests.');
@@ -110,9 +117,12 @@ class AdBlockingTasks extends Audit {
     // Pre-sort tasks and requests for performance.
     adNetworkReqs.sort((l, r) => l.startTime - r.startTime);
 
+    const /** @type {Array<string>} */ scriptUrls = networkRecords
+        .filter((record) => record.resourceType === 'Script')
+        .map((record) => record.url);
+
     /** @type {{[x: string]: LH.Audit.DetailsItem}[]} */
     const blocking = [];
-
     let longTaskIndex = 0;
     for (const adNetworkReq of adNetworkReqs) {
       for (; longTaskIndex < longTasks.length; longTaskIndex++) {
@@ -123,10 +133,23 @@ class AdBlockingTasks extends Audit {
 
         // Check if longTask delayed NetworkRecord.
         if (fixTime(adNetworkReq.responseReceivedTime) < longTask.endTime) {
+          let scriptUrl = longTask.event.args.data ?
+            longTask.event.args.data.url :
+            // @ts-ignore
+            longTask.attributableURLs.find((url) => scriptUrls.includes(url));
+          if (!scriptUrl) {
+            if (longTask.attributableURLs.length) {
+              scriptUrl = longTask.attributableURLs[0];
+            } else {
+              continue;
+            }
+          }
+
           blocking.push({
             name: longTask.event.name || '',
+            script: scriptUrl,
             group: longTask.group.label,
-            duration: longTask.duration,
+            duration: longTask.selfTime,
             adReqBlocked: adNetworkReq.url,
           });
         }
