@@ -56,10 +56,6 @@ declare module 'lighthouse' {
   }
 }
 
-declare module 'lighthouse/lighthouse-core/lib/network-recorder' {
-  export function recordsFromLogs(networkEvents: Array<LH.Protocol.RawEventMessage>);
-}
-
 declare module 'lighthouse-logger' {
   export function setLevel(level: string): void;
   export function log(title: string, ...args: StringFormat): void;

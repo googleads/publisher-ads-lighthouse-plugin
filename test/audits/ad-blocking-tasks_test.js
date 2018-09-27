@@ -2,12 +2,13 @@ const AdBlockingTasks = require('../../audits/ad-blocking-tasks');
 const {expect} = require('chai');
 
 const generateTask = ([start, end], groupLabel, eventName) => ({
-  event: {eventName, ts: start * 1000},
+  event: {eventName, ts: start * 1000, args: {data: {url: 'script.js'}}},
   group: {label: groupLabel},
-  duration: end - start,
+  selfTime: end - start,
   startTime: start,
   endTime: end,
   children: [],
+  attributableURLs: [],
 });
 
 const generateReq = ([start, response, end], id, url) => ({
@@ -16,6 +17,7 @@ const generateReq = ([start, response, end], id, url) => ({
   endTime: end / 1000,
   requestId: id,
   url,
+  resourceType: 'Script',
 });
 
 const makeArtifacts = (requests, tasks, offset = 0) => {
@@ -100,6 +102,21 @@ describe('AdBlockingTasks', async () => {
 
       },
       {
+        desc: 'should skip long tasks without any script url',
+        tasks: [
+          generateTask([0, 40], 'Parse HTML'),
+          generateTask([140, 160], 'Script Evaluation'),
+          generateTask([300, 360], 'Script Evaluation').event.args = {}, // Long Task
+          generateTask([500, 520], 'Script Evaluation'),
+        ],
+        requests: [
+          generateReq([110, 150, 160], 1, 'https://googletagservices.com'),
+          generateReq([210, 300, 360], 2, 'https://doubleclick.net'), // Block
+          generateReq([410, 500, 510], 3, 'https://googlesyndication.com'),
+        ],
+        expectedValue: true,
+      },
+      {
         desc: 'should handle offsets in the network timeline',
         tasks: [
           generateTask([0, 40], 'Parse HTML'),
@@ -131,7 +148,6 @@ describe('AdBlockingTasks', async () => {
         ],
         offset: -1000,
         expectedValue: false,
-
       },
     ];
 
