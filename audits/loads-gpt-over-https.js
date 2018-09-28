@@ -50,15 +50,18 @@ class LoadsGptOverHttps extends Audit {
     const details = {numGptHttpReqs, numGptHttpsReqs};
 
     if (numGptHttpReqs + numGptHttpsReqs == 0) {
-      const returnVal = auditNotApplicable('GPT not requested.');
+      const returnVal = auditNotApplicable('GPT not requested');
       returnVal.details = details;
       return returnVal;
     }
 
+    const pluralEnding = numGptHttpReqs == 1 ? '' : 's';
+
     return {
       rawValue: numGptHttpReqs,
       score: numGptHttpReqs > 0 ? 0 : 1,
-      displayValue: numGptHttpReqs ? `${numGptHttpReqs} unsafe request(s)` : '',
+      displayValue: numGptHttpReqs ?
+        `${numGptHttpReqs} unsafe request${pluralEnding}` : '',
       details,
     };
   }

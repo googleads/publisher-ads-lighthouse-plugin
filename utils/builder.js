@@ -3,7 +3,7 @@
  * @param {string} message
  * @return {Object}
  */
-function auditNotApplicable(message = 'Audit not applicable.') {
+function auditNotApplicable(message = 'Audit not applicable') {
   return {
     notApplicable: true,
     rawValue: true,

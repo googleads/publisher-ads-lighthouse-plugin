@@ -12,7 +12,7 @@ class FullWidthSlots extends Audit {
   static get meta() {
     return {
       id: 'full-width-slots',
-      title: 'Full Width Slots',
+      title: 'Full width slots',
       description: 'Have ad slot sizes that utilize the viewport\'s full width' +
           ' to increase CTR.',
       requiredArtifacts: ['ViewportDimensions', 'devtoolsLogs'],
@@ -35,7 +35,7 @@ class FullWidthSlots extends Audit {
         .filter(hasAdRequestPath);
 
     if (!adRequestUrls.length) {
-      return auditNotApplicable('No ads requested.');
+      return auditNotApplicable('No ads requested');
     }
 
     const sizeArrs = adRequestUrls.map((url) =>
@@ -49,7 +49,7 @@ class FullWidthSlots extends Audit {
         .filter((w) => w <= vpWidth && w > 1);
 
     if (!widths.length) {
-      return auditNotApplicable('No requested ads contain ads of valid width.');
+      return auditNotApplicable('No requested ads contain ads of valid width');
     }
 
     const maxWidth = Math.max(...widths);
@@ -61,7 +61,7 @@ class FullWidthSlots extends Audit {
       score: pctUnoccupied > .2 ? 0 : 1,
       rawValue: pctUnoccupied,
       displayValue:
-            Math.round(pctUnoccupied * 100) + '% of viewport width is unused.',
+            Math.round(pctUnoccupied * 100) + '% of viewport width is unused',
     };
   }
 }
