@@ -10,7 +10,8 @@ class AdTopOfViewport extends Audit {
   static get meta() {
     return {
       id: 'ad-top-of-viewport',
-      title: 'Ads Too High on Page',
+      title: 'Ads are below top of viewport',
+      failureTitle: 'Top ad is too high in viewport',
       description: 'Over 10% of ads are never viewed due to the user scrolling' +
         ' past before the ad is visible. By moving ads away from the very top' +
         ' of the viewport, the likelihood of the ad being scrolled past prior' +
@@ -41,8 +42,8 @@ class AdTopOfViewport extends Audit {
     return {
       score: inViewport && topSlotMidpoint < 200 ? 0 : 1,
       rawValue: topSlotMidpoint,
-      displayValue: 'A scroll of ' +
-          topSlotMidpoint + ' px would hide half of your topmost ad.',
+      displayValue: 'A scroll of ' + Math.round(topSlotMidpoint)
+        + ' px would hide half of your topmost ad',
     };
   }
 }

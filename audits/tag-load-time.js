@@ -2,8 +2,8 @@ const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 // Point of diminishing returns.
-const PODR = 300;
-const MEDIAN = 998;
+const PODR = 500;
+const MEDIAN = 1000;
 /**
  * Audit to determine time for tag to load relative to page start.
  */
@@ -15,9 +15,10 @@ class TagLoadTime extends Audit {
   static get meta() {
     return {
       id: 'tag-load-time',
-      title: 'Tag Load Time',
-      description: 'Tag Load Time measures the time for the implementation' +
-          ' tag to load after the page loads.',
+      title: 'Tag load time',
+      failureTitle: 'Reduce tag load time',
+      description: 'This measures the time for the Google Publisher' +
+          ' Tag\'s implementation script (pubads_impl.js) to load after the page loads.',
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],
@@ -33,15 +34,20 @@ class TagLoadTime extends Audit {
     const pageStartTime = getPageStartTime(networkRecords);
     const tagEndTime = getTagEndTime(networkRecords);
     if (pageStartTime < 0) {
-      return auditNotApplicable('No successful network records.');
+      return auditNotApplicable('No successful network records');
     }
     if (tagEndTime < 0) {
-      return auditNotApplicable('No tag loaded.');
+      return auditNotApplicable('No tag loaded');
     }
     const tagLoadTime = (tagEndTime - pageStartTime) * 1000;
-    // @ts-ignore
-    const normalScore = Audit
-        .computeLogNormalScore(tagLoadTime, PODR, MEDIAN);
+
+    let normalScore = Audit.computeLogNormalScore(tagLoadTime, PODR, MEDIAN);
+
+    // Results that have green text should be under passing category.
+    if (normalScore >= .9) {
+      normalScore = 1;
+    }
+
     return {
       rawValue: tagLoadTime,
       score: normalScore,

@@ -147,7 +147,7 @@ class AdRequestCriticalPath extends Audit {
     });
 
     if (!adsEntries.length) {
-      return auditNotApplicable('No ads requested.');
+      return auditNotApplicable('No ads requested');
     }
 
     // We assume that the first entry in adsEntries will be the first ad
@@ -156,10 +156,14 @@ class AdRequestCriticalPath extends Audit {
       findCriticalPath(adsEntries[0], networkRecords)
       : {blockedRequests: new Set(), treeRootNode: {}};
     const numBlocked = blockedRequests.size;
+
+    const pluralEnding = numBlocked == 1 ? '' : 's';
+
     return {
       rawValue: numBlocked,
       score: numBlocked > 2 ? 0 : 1,
-      displayValue: numBlocked > 2 ? `${numBlocked} resource(s)` : '',
+      displayValue: numBlocked > 2 ?
+        `${numBlocked} resource${pluralEnding}` : '',
       details: {
         numBlocked,
         treeRootNode,
