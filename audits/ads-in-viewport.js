@@ -15,7 +15,10 @@ class AdsInViewport extends Audit {
       title: 'Eager ads loaded within viewport',
       description: 'Too many ads loaded outside the viewport lowers ' +
           'viewability rates and impact user experience, consider loading ' +
-          'ads below the fold lazily as the user scrolls down.',
+          'ads below the fold lazily as the user scrolls down. Consider ' +
+          'using GPT\'s [Lazy Loading API]' +
+          '(https://developers.google.com/doubleclick-gpt/reference' +
+          '#googletag.PubAdsService_enableLazyLoad).',
       requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
     };
   }

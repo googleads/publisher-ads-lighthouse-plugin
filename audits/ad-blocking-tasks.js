@@ -93,10 +93,10 @@ class AdBlockingTasks extends Audit {
 
 
     if (!networkRecords.length) {
-      return auditNotApplicable('No network records to compare.');
+      return auditNotApplicable('No network records to compare');
     }
     if (!tasks.length) {
-      return auditNotApplicable('No tasks to compare.');
+      return auditNotApplicable('No tasks to compare');
     }
 
     const offset = computeNetworkTimelineOffset(trace, tasks, networkRecords);
@@ -112,7 +112,7 @@ class AdBlockingTasks extends Audit {
         .filter((req) => req.resourceType == 'Script' || req.resourceType == 'XHR');
 
     if (!adNetworkReqs.length) {
-      return auditNotApplicable('No ad-related requests.');
+      return auditNotApplicable('No ad-related requests');
     }
     // Pre-sort tasks and requests for performance.
     adNetworkReqs.sort((l, r) => l.startTime - r.startTime);
@@ -156,9 +156,12 @@ class AdBlockingTasks extends Audit {
       }
     }
 
+    const pluralEnding = blocking.length == 1 ? '' : 's';
+
     return {
       rawValue: blocking.length == 0,
-      displayValue: blocking.length ? `${blocking.length} long task(s)` : '',
+      displayValue: blocking.length ?
+        `${blocking.length} long task${pluralEnding}` : '',
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };
   }

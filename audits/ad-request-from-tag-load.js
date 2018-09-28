@@ -4,7 +4,7 @@ const {getAdStartTime, getTagEndTime} = require('../utils/network-timing');
 
 // Point of diminishing returns.
 const PODR = 300;
-const MEDIAN = 497;
+const MEDIAN = 600;
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -17,9 +17,10 @@ class AdRequestFromTagLoad extends Audit {
   static get meta() {
     return {
       id: 'ad-request-from-tag-load',
-      title: 'Latency of First Ad Request (From Tag Load)',
+      title: 'Latency of first ad request (from tag load)',
+      failureTitle: 'Reduce latency of first ad request (from tag load)',
       description: 'This measures the time for the first ad request to be' +
-          ' made relative to the tag loading',
+          ' made relative to the Google Publisher Tag loading.',
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],
@@ -37,16 +38,20 @@ class AdRequestFromTagLoad extends Audit {
     const tagEndTime = getTagEndTime(networkRecords);
 
     if (tagEndTime < 0) {
-      return auditNotApplicable('No tag loaded.');
+      return auditNotApplicable('No tag loaded');
     }
     if (adStartTime < 0) {
-      return auditNotApplicable('No ads requested.');
+      return auditNotApplicable('No ads requested');
     }
 
     const adReqTime = (adStartTime - tagEndTime) * 1000;
 
-    const normalScore = Audit
-        .computeLogNormalScore(adReqTime, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(adReqTime, PODR, MEDIAN);
+
+    // Results that have green text should be under passing category.
+    if (normalScore >= .9) {
+      normalScore = 1;
+    }
 
     return {
       rawValue: adReqTime,

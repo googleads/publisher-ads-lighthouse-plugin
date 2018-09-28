@@ -3,8 +3,8 @@ const {Audit} = require('lighthouse');
 const {getAdStartTime, getPageStartTime} = require('../utils/network-timing');
 
 // Point of diminishing returns.
-const PODR = 600;
-const MEDIAN = 1495;
+const PODR = 2000;
+const MEDIAN = 2500;
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -17,9 +17,10 @@ class AdRequestFromPageStart extends Audit {
   static get meta() {
     return {
       id: 'ad-request-from-page-start',
-      title: 'Latency of First Ad Request (From Page Start)',
+      title: 'Latency of first ad request (from page start)',
+      failureTitle: 'Reduce latency of first ad request (from page start)',
       description: 'This measures the time for the first ad request to be' +
-          ' made relative to the page load starting',
+          ' made relative to the page load starting.',
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],
@@ -38,16 +39,20 @@ class AdRequestFromPageStart extends Audit {
 
 
     if (pageStartTime < 0) {
-      return auditNotApplicable('No successful network records.');
+      return auditNotApplicable('No successful network records');
     }
     if (adStartTime < 0) {
-      return auditNotApplicable('No ads requested.');
+      return auditNotApplicable('No ads requested');
     }
 
     const adReqTime = (adStartTime - pageStartTime) * 1000;
 
-    const normalScore = Audit
-        .computeLogNormalScore(adReqTime, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(adReqTime, PODR, MEDIAN);
+
+    // Results that have green text should be under passing category.
+    if (normalScore >= .9) {
+      normalScore = 1;
+    }
 
     return {
       rawValue: adReqTime,

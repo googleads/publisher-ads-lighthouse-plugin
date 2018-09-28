@@ -46,10 +46,13 @@ class StaticAdTags extends Audit {
 
     const numStatic = array.count(tagReqs, isStatic);
     const numTags = tagReqs.length;
+    const numDynamic = numTags - numStatic;
+
+    const pluralEnding = numDynamic == 1 ? '' : 's';
     return {
       rawValue: numStatic === numTags,
       displayValue: numStatic < numTags ?
-        `${numTags - numStatic} dynamic ad tags` : '',
+        `${numDynamic} dynamic ad tag${pluralEnding}` : '',
     };
   }
 }

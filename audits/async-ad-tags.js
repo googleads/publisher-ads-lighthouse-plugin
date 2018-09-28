@@ -43,7 +43,7 @@ class AsyncAdTags extends Audit {
         .filter((req) => isAdTag(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No ad tags requested.');
+      return auditNotApplicable('No ad tags requested');
     }
 
     const numAsync = array.count(tagReqs, isAsync);
