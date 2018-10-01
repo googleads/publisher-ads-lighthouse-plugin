@@ -1,6 +1,13 @@
 const networkRecords = [
   {
+    url: 'https://example.com',
+    statusCode: 200,
+    startTime: 0,
+  },
+  // Filtered out ad request.
+  {
     url: 'https://doubleclick.net/gampad/ads',
+    startTime: 3,
     initiator: {
       type: 'script',
       stack: {
@@ -23,8 +30,11 @@ const networkRecords = [
       },
     },
   },
+  // Filtered out GPT implementation script.
   {
     url: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
+    startTime: 1,
+    endTime: 2,
     initiator: {
       type: 'script',
       stack: {
@@ -32,7 +42,7 @@ const networkRecords = [
           {
             functionName: 'us',
             scriptId: '56',
-            url: 'https://doubleclick.net/gampad/ads/gpt.js',
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
             lineNumber: '0',
             columnNumber: '126445',
           },
@@ -42,6 +52,8 @@ const networkRecords = [
   },
   {
     url: 'https://googlesyndication.com/gpt/bar.js',
+    startTime: 1,
+    endTime: 2,
     initiator: {
       type: 'script',
       stack: {
@@ -57,8 +69,11 @@ const networkRecords = [
       },
     },
   },
+  // Filtered out GPT loader script.
   {
-    url: 'https://doubleclick.net/gampad/ads/gpt.js',
+    url: 'https://www.googletagservices.com/tag/js/gpt.js',
+    startTime: 1,
+    endTime: 2,
     initiator: {
       type: 'script',
       stack: {
@@ -76,6 +91,8 @@ const networkRecords = [
   },
   {
     url: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
+    startTime: 1,
+    endTime: 2,
     initiator: {
       type: 'parser',
     },
