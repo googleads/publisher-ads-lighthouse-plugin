@@ -20,55 +20,55 @@ describe('AdRequestCriticalPath', async () => {
       filePath: './network-records-test-files/ads-related-entry',
       desc: 'ads-related entry',
       expectedScore: 1,
-      expectedRawValue: 2,
+      expectedRawValue: 0,
     },
     {
       filePath: './network-records-test-files/multiple-entries',
       desc: 'multiple blocking entries',
       expectedScore: 0,
-      expectedRawValue: 4,
+      expectedRawValue: 1,
     },
     {
       filePath: './network-records-test-files/multiple-dependencies',
       desc: 'multiple dependencies',
       expectedScore: 0,
-      expectedRawValue: 5,
+      expectedRawValue: 2,
     },
     {
       filePath: './network-records-test-files/blank-initiator-details',
       desc: 'blank initiator details entry',
       expectedScore: 1,
-      expectedRawValue: 1,
+      expectedRawValue: 0,
     },
     {
       filePath: './network-records-test-files/diamond-dependency',
       desc: 'diamond dependency structure',
       expectedScore: 0,
-      expectedRawValue: 5,
+      expectedRawValue: 2,
     },
     {
       filePath: './network-records-test-files/multiple-pubads-single',
       desc: 'multiple pubads function calls on stack',
       expectedScore: 0,
-      expectedRawValue: 4,
+      expectedRawValue: 1,
     },
     {
       filePath: './network-records-test-files/cycle',
       desc: 'a cycle in the stack',
       expectedScore: 0,
-      expectedRawValue: 7,
+      expectedRawValue: 4,
     },
     {
       filePath: './network-records-test-files/not-in-graph',
       desc: 'an entry but has a call frame that is not in the dependency graph',
       expectedScore: 1,
-      expectedRawValue: 2,
+      expectedRawValue: 0,
     },
     {
       filePath: './network-records-test-files/multiple-pubads-entries',
       desc: 'multiple pubads function calls in callFrames array',
       expectedScore: 0,
-      expectedRawValue: 4,
+      expectedRawValue: 1,
     },
   ];
   for (const {filePath, desc, expectedScore, expectedRawValue,
@@ -102,7 +102,7 @@ describe('CriticalPathTreeGeneration', async () => {
             name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
             children: [
               {
-                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                name: 'https://www.googletagservices.com/tag/js/gpt.js',
                 children: [
                   {
                     name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
@@ -125,7 +125,7 @@ describe('CriticalPathTreeGeneration', async () => {
             name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
             children: [
               {
-                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                name: 'https://www.googletagservices.com/tag/js/gpt.js',
                 children: [
                   {
                     name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
@@ -162,7 +162,7 @@ describe('CriticalPathTreeGeneration', async () => {
             name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
             children: [
               {
-                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                name: 'https://www.googletagservices.com/tag/js/gpt.js',
                 children: [
                   {
                     name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
@@ -185,7 +185,7 @@ describe('CriticalPathTreeGeneration', async () => {
             name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
             children: [
               {
-                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                name: 'https://www.googletagservices.com/tag/js/gpt.js',
                 children: [
                   {
                     name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
@@ -208,7 +208,7 @@ describe('CriticalPathTreeGeneration', async () => {
             name: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
             children: [
               {
-                name: 'https://doubleclick.net/gampad/ads/gpt.js',
+                name: 'https://www.googletagservices.com/tag/js/gpt.js',
                 children: [
                   {
                     name: 'https://securepubads.g.doubleclick.net/gpt/foo.js',
@@ -252,7 +252,7 @@ describe('CriticalPathTreeGeneration', async () => {
       if (expectedNotAppl) {
         expect(results).to.have.property('notApplicable', true);
       } else {
-        expect(results).with.property('details')
+        expect(results).with.property('extendedInfo')
             .property('treeRootNode').eql(expectedTree);
       }
     });

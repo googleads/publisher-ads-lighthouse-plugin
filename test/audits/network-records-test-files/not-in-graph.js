@@ -1,6 +1,13 @@
 const networkRecords = [
   {
+    url: 'https://example.com',
+    statusCode: 200,
+    startTime: 0,
+  },
+  // Filtered out ad request.
+  {
     url: 'https://doubleclick.net/gampad/ads',
+    startTime: 3,
     initiator: {
       type: 'script',
       stack: {
@@ -18,6 +25,8 @@ const networkRecords = [
   },
   {
     url: 'https://example.com/foo.js',
+    startTime: 1,
+    endTime: 2,
     initiator: {
       type: 'script',
       stack: {
@@ -35,6 +44,8 @@ const networkRecords = [
   },
   {
     url: 'https://example.com/bar.js',
+    startTime: 1,
+    endTime: 2,
     initiator: {
       type: 'script',
       stack: {
@@ -50,8 +61,11 @@ const networkRecords = [
       },
     },
   },
+  // Filtered out GPT implementation script.
   {
     url: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_216.js',
+    startTime: 1,
+    endTime: 2,
     initiator: {
       type: 'parser',
     },
