@@ -1,7 +1,18 @@
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isGoogleAds, hasAdRequestPath} = require('../utils/resource-classification');
+const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
+const {isGoogleAds, hasAdRequestPath, isImplTag, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+/**
+ * Table headings for audits details sections.
+ * @type {LH.Audit.Heading[]}
+ */
+const HEADINGS = [
+  {key: 'resource', itemType: 'url', text: 'Resource'},
+  {key: 'requestTime', itemType: 'ms', text: 'Request Time', granularity: 1},
+  {key: 'duration', itemType: 'ms', text: 'Duration', granularity: 1},
+];
 
 /**
  * Finds the critical path and the number of items blocking gpt by using
@@ -126,7 +137,8 @@ class AdRequestCriticalPath extends Audit {
   static get meta() {
     return {
       id: 'ad-request-critical-path',
-      title: 'Ad request critical path',
+      title: 'No resources blocking first ad request',
+      failureTitle: 'There are resources blocking the first ad request',
       description: 'These are the resources that block the first ad request. ' +
           'Consider reducing the number of resources or improving their ' +
           'execution to start loading ads as soon as possible.',
@@ -155,16 +167,41 @@ class AdRequestCriticalPath extends Audit {
     const {blockedRequests, treeRootNode} = adsEntries.length ?
       findCriticalPath(adsEntries[0], networkRecords)
       : {blockedRequests: new Set(), treeRootNode: {}};
-    const numBlocked = blockedRequests.size;
 
+    const tableView = [];
+    const pageStartTime = getPageStartTime(networkRecords);
+    const adStartTime = getAdStartTime(networkRecords);
+    for (const req of blockedRequests) {
+      if (!req.length) {
+        continue;
+      }
+      const reqUrl = new URL(req);
+      if (!isGpt(reqUrl) && !isImplTag(reqUrl) && !hasAdRequestPath(reqUrl)) {
+        const record =
+          networkRecords.find((record) => record.url == req);
+        if (record && record.startTime > pageStartTime &&
+          record.startTime < adStartTime) {
+          tableView.push(
+            {
+              resource: req,
+              requestTime: (record.startTime - pageStartTime) * 1000,
+              duration: (record.endTime - record.startTime) * 1000,
+            }
+          );
+        }
+      }
+    }
+    tableView.sort((a, b) => a.requestTime - b.requestTime);
+
+    const numBlocked = tableView.length;
     const pluralEnding = numBlocked == 1 ? '' : 's';
 
     return {
       rawValue: numBlocked,
-      score: numBlocked > 2 ? 0 : 1,
-      displayValue: numBlocked > 2 ?
-        `${numBlocked} resource${pluralEnding}` : '',
-      details: {
+      score: numBlocked ? 0 : 1,
+      displayValue: numBlocked ? `${numBlocked} resource${pluralEnding}` : '',
+      details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
+      extendedInfo: {
         numBlocked,
         treeRootNode,
       },
