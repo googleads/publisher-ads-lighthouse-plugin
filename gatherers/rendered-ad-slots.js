@@ -12,6 +12,11 @@ class RenderedAdSlots extends Gatherer {
   async afterPass(passContext) {
     const driver = passContext.driver;
 
+    // This ensures that any page or container scrolls caused by user or prior
+    // gatherer are reset.
+    await driver.evaluateAsync(
+      'document.querySelectorAll(\'*\').forEach(el => el.scrollTop = 0)');
+
     // TODO: Type this correctly. Perhaps using the 'devtools-protocol' NPM
     // module.
     // @ts-ignore
