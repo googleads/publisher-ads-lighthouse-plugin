@@ -1,6 +1,6 @@
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isGoogleAds, isGpt, isHttp, isHttps} = require('../utils/resource-classification');
+const {isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -17,7 +17,12 @@ class LoadsGptOverHttps extends Audit {
     return {
       id: 'loads-gpt-over-https',
       title: 'Uses HTTPS to load GPT',
-      description: 'For privacy and security always load GPT over HTTPS.',
+      failureTitle: 'GPT is loaded insecurely',
+      description: 'For privacy and security always load GPT over HTTPS. With' +
+        ' insecure pages explicitly request the GPT script securely. Example:' +
+        '`<script async="async" ' +
+        'src="https://www.googletagservices.com/tag/js/gpt.js">`. [Learn More]' +
+        '(https://support.google.com/admanager/answer/1638622?hl=en).',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -29,39 +34,34 @@ class LoadsGptOverHttps extends Audit {
   static async audit(artifacts) {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
-    const parsedUrls = networkRecords
-        .map((record) => new URL(record.url));
 
-    const googleAdsEntries = parsedUrls.filter(isGoogleAds);
-
-    let numGptHttpReqs = 0;
-    let numGptHttpsReqs = 0;
-
-    for (const url of googleAdsEntries) {
-      if (isGpt(url)) {
-        if (isHttp(url)) {
-          numGptHttpReqs++;
-        } else if (isHttps(url)) {
-          numGptHttpsReqs++;
-        }
-      }
+    const pageReq = networkRecords.find((record) => record.statusCode == 200);
+    if (!pageReq) {
+      return auditNotApplicable('No successful network records');
     }
 
-    const details = {numGptHttpReqs, numGptHttpsReqs};
+    const gptRequests = networkRecords
+        .filter((record) => isGpt(new URL(record.url)));
 
-    if (numGptHttpReqs + numGptHttpsReqs == 0) {
+    const secureGptRequests = gptRequests.filter((request) => request.isSecure);
+
+    const details = {
+      numGptHttpReqs: gptRequests.length - secureGptRequests.length,
+      numGptHttpsReqs: secureGptRequests.length,
+    };
+
+    if (!gptRequests.length) {
       const returnVal = auditNotApplicable('GPT not requested');
       returnVal.details = details;
       return returnVal;
     }
 
-    const pluralEnding = numGptHttpReqs == 1 ? '' : 's';
-
+    const pluralEnding = details.numGptHttpReqs == 1 ? '' : 's';
     return {
-      rawValue: numGptHttpReqs,
-      score: numGptHttpReqs > 0 ? 0 : 1,
-      displayValue: numGptHttpReqs ?
-        `${numGptHttpReqs} unsafe request${pluralEnding}` : '',
+      rawValue: details.numGptHttpReqs,
+      score: details.numGptHttpReqs ? 0 : 1,
+      displayValue: details.numGptHttpReqs ?
+        `${details.numGptHttpReqs} unsafe request${pluralEnding}` : '',
       details,
     };
   }

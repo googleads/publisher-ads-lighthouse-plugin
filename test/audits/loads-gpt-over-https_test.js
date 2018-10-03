@@ -7,15 +7,39 @@ describe('LoadsGptOverHttps', async () => {
     const testCases = [
       {
         networkRecords: [],
-        expectedNumGptHttpReqs: 0,
-        expectedNumGptHttpsReqs: 0,
         expectedNotAppl: true,
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js'},
+          {
+            url: 'https://example.com',
+            isSecure: true,
+            statusCode: 200,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: true,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            isSecure: false,
+          },
+        ],
+        expectedScore: 0,
+        expectedNumGptHttpReqs: 1,
+        expectedNumGptHttpsReqs: 1,
+      },
+      {
+        networkRecords: [
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: true,
+          },
         ],
         expectedScore: 1,
         expectedNumGptHttpReqs: 0,
@@ -23,10 +47,19 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js#foo'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: true,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            isSecure: false,
+          },
         ],
         expectedScore: 0,
         expectedNumGptHttpReqs: 1,
@@ -34,10 +67,15 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: false,
+          },
         ],
         expectedScore: 0,
         expectedNumGptHttpReqs: 1,
@@ -45,12 +83,23 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js#foo'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: false,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            isSecure: false,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: true,
+          },
         ],
         expectedScore: 0,
         expectedNumGptHttpReqs: 2,
@@ -58,13 +107,23 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://facebook.com/foo?bar=baz'},
-          {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
-          {url: 'http://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js?foo=bar'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js?cb=true'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js?foo=bar#baz'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js?foo=bar',
+            isSecure: false,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js?cb=true',
+            isSecure: false,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js?foo=bar#baz',
+            isSecure: false,
+          },
         ],
         expectedScore: 0,
         expectedNumGptHttpReqs: 3,
@@ -84,11 +143,11 @@ describe('LoadsGptOverHttps', async () => {
           expect(results).to.have.property('notApplicable', true);
         } else {
           expect(results).to.have.property('score', expectedScore);
+          expect(results).with.property('details')
+              .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
+          expect(results).with.property('details')
+              .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
         }
-        expect(results).with.property('details')
-            .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
-        expect(results).with.property('details')
-            .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
       });
     }
   });
@@ -103,10 +162,15 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: false,
+          },
         ],
         expectedScore: 0,
         expectedNumGptHttpReqs: 1,
@@ -114,11 +178,23 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js?foo=bar'},
-          {url: 'http://www.googletagservices.com/tag/js/gpt.js#foo'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: true,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js?foo=bar',
+            isSecure: true,
+          },
+          {
+            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            isSecure: false,
+          },
         ],
         expectedScore: 0,
         expectedNumGptHttpReqs: 1,
@@ -126,10 +202,15 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: true,
+          },
         ],
         expectedScore: 1,
         expectedNumGptHttpReqs: 0,
@@ -137,11 +218,19 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js#foo'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            isSecure: true,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js#foo',
+            isSecure: true,
+          },
         ],
         expectedScore: 1,
         expectedNumGptHttpReqs: 0,
@@ -149,13 +238,23 @@ describe('LoadsGptOverHttps', async () => {
       },
       {
         networkRecords: [
-          {url: 'http://example.com'},
-          {url: 'https://facebook.com/foo?bar=baz'},
-          {url: 'https://securepubads.g.doubleclick.net/gpt/js/pubads.js'},
-          {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js?foo=bar'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js?cb=true'},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js?foo=bar#baz'},
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js?foo=bar',
+            isSecure: true,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js?cb=true',
+            isSecure: true,
+          },
+          {
+            url: 'https://www.googletagservices.com/tag/js/gpt.js?foo=bar#baz',
+            isSecure: true,
+          },
         ],
         expectedScore: 1,
         expectedNumGptHttpReqs: 0,
@@ -175,11 +274,11 @@ describe('LoadsGptOverHttps', async () => {
           expect(results).to.have.property('notApplicable', true);
         } else {
           expect(results).to.have.property('score', expectedScore);
+          expect(results).with.property('details')
+              .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
+          expect(results).with.property('details')
+              .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
         }
-        expect(results).with.property('details')
-            .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
-        expect(results).with.property('details')
-            .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
       });
     }
   });

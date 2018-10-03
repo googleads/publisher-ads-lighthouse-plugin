@@ -1,7 +1,7 @@
 const array = require('../utils/array.js');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isAdTag} = require('../utils/resource-classification');
+const {isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -38,7 +38,7 @@ class StaticAdTags extends Audit {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
     const tagReqs = networkRecords
-        .filter((req) => isAdTag(new URL(req.url)));
+        .filter((req) => isGpt(new URL(req.url)));
 
     if (!tagReqs.length) {
       return auditNotApplicable('No ad tags requested.');
