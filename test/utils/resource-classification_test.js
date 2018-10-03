@@ -1,5 +1,5 @@
 const {expect} = require('chai');
-const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt, isHttp, isHttps} = require('../../utils/resource-classification');
+const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {
@@ -112,29 +112,5 @@ describe('resource-classification', () => {
         expect(results).to.equal(expectation);
       });
     }
-  });
-
-  describe('#isHttp', () => {
-    it('should return true for URLs loaded over HTTP', () => {
-      const url = new URL('http://hello.com/foor?bar=baz');
-      expect(isHttp(url)).to.be.true;
-    });
-
-    it('should return false for URLs loaded over HTTPS', () => {
-      const url = new URL('https://hello.com/foor?bar=baz');
-      expect(isHttp(url)).to.be.false;
-    });
-  });
-
-  describe('#isHttps', () => {
-    it('should return true for URLs loaded over HTTPS', () => {
-      const url = new URL('https://hello.com/foor?bar=baz');
-      expect(isHttps(url)).to.be.true;
-    });
-
-    it('should return false for URLs loaded over HTTP', () => {
-      const url = new URL('http://hello.com/foor?bar=baz');
-      expect(isHttps(url)).to.be.false;
-    });
   });
 });

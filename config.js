@@ -31,6 +31,7 @@ module.exports = {
     require.resolve('./audits/ad-request-from-tag-load'),
     require.resolve('./audits/full-width-slots'),
     require.resolve('./audits/ad-top-of-viewport'),
+    require.resolve('./audits/duplicate-tags'),
   ],
 
   groups: {
@@ -61,6 +62,7 @@ module.exports = {
         {id: 'ad-request-from-page-start', weight: 1, group: 'measurements'},
         {id: 'full-width-slots', weight: 1, group: 'ads-best-practices'},
         {id: 'ad-top-of-viewport', weight: 1, group: 'ads-best-practices'},
+        {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
       ],
     },
   },
