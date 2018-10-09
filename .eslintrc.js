@@ -24,7 +24,8 @@ module.exports = {
     // TODO: enable once go/github-eslint/issues/9949 is fixed
     'valid-jsdoc': 'off',
     'sort-requires/sort-requires': 2,
-    "space-infix-ops": ["error", {"int32Hint": false}],
+    'space-infix-ops': ['error', {'int32Hint': false}],
+    'no-trailing-spaces': 'error',
   },
   plugins: [
     'sort-requires'
