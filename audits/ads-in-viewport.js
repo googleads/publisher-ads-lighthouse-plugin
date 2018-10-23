@@ -12,7 +12,8 @@ class AdsInViewport extends Audit {
   static get meta() {
     return {
       id: 'ads-in-viewport',
-      title: 'Eager ads loaded within viewport',
+      title: 'Most ads loaded are within viewport',
+      failureTitle: 'There are eager ads loaded outside viewport',
       description: 'Too many ads loaded outside the viewport lowers ' +
           'viewability rates and impact user experience, consider loading ' +
           'ads below the fold lazily as the user scrolls down. Consider ' +

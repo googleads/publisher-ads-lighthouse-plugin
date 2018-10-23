@@ -23,11 +23,12 @@ class AsyncAdTags extends Audit {
   static get meta() {
     return {
       id: 'async-ad-tags',
-      title: 'Ad tags are loaded asynchronously',
-      failureTitle: 'Some ad script tags are loaded synchronously',
-      description: 'Tags loaded synchronously block all content rendering ' +
-          'until they are fetched and evaluated, consider using the `async` ' +
-          'attribute for script tags to make them asynchronous.',
+      title: 'GPT tag is loaded asynchronously',
+      failureTitle: 'GPT tag is loaded synchronously',
+      description: 'Loading the GPT tag synchronously blocks all content ' +
+          'rendering until the tag is fetched and evaluated, consider using ' +
+          'the `async` attribute for the GPT tag to ensure it is loaded ' +
+          'asynchronously.',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -43,15 +44,13 @@ class AsyncAdTags extends Audit {
         .filter((req) => isGpt(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No ad tags requested');
+      return auditNotApplicable('No tag requested');
     }
 
     const numAsync = array.count(tagReqs, isAsync);
     const numTags = tagReqs.length;
     return {
       rawValue: numAsync === numTags,
-      displayValue: numAsync < numTags ?
-        `${numTags - numAsync} synchronous ad tags` : '',
     };
   }
 }

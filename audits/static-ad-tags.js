@@ -22,8 +22,8 @@ class StaticAdTags extends Audit {
   static get meta() {
     return {
       id: 'static-ad-tags',
-      title: 'Ad tags are loaded statically',
-      failureTitle: 'Some ad script tags are loaded dynamically',
+      title: 'GPT tag is loaded statically',
+      failureTitle: 'GPT tag is loaded dynamically',
       description: 'Tags loaded dynamically are not visible to the browser ' +
         'preloader, consider using a static tag or `<link rel="preload">`.',
       requiredArtifacts: ['devtoolsLogs'],
@@ -41,18 +41,14 @@ class StaticAdTags extends Audit {
         .filter((req) => isGpt(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No ad tags requested.');
+      return auditNotApplicable('No tag requested.');
     }
 
     const numStatic = array.count(tagReqs, isStatic);
     const numTags = tagReqs.length;
-    const numDynamic = numTags - numStatic;
 
-    const pluralEnding = numDynamic == 1 ? '' : 's';
     return {
       rawValue: numStatic === numTags,
-      displayValue: numStatic < numTags ?
-        `${numDynamic} dynamic ad tag${pluralEnding}` : '',
     };
   }
 }
