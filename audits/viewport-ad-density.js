@@ -11,7 +11,8 @@ class ViewportAdDensity extends Audit {
   static get meta() {
     return {
       id: 'viewport-ad-density',
-      title: 'Ad density inside the viewport',
+      title: 'Ad density inside viewport is within recommended range',
+      failureTitle: 'Ad density inside viewport is higher than recommended',
       description: 'The ads-to-content ratio inside the viewport can have ' +
           'an impact on user experience and ultimately user retention.',
       requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
