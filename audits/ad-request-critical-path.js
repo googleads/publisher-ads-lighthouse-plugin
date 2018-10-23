@@ -9,9 +9,23 @@ const {URL} = require('url');
  * @type {LH.Audit.Heading[]}
  */
 const HEADINGS = [
-  {key: 'resource', itemType: 'url', text: 'Resource'},
-  {key: 'requestTime', itemType: 'ms', text: 'Request Time', granularity: 1},
-  {key: 'duration', itemType: 'ms', text: 'Duration', granularity: 1},
+  {
+    key: 'resource',
+    itemType: 'url',
+    text: 'Resource',
+  },
+  {
+    key: 'requestTime',
+    itemType: 'ms',
+    text: 'Request Start Time',
+    granularity: 1,
+  },
+  {
+    key: 'duration',
+    itemType: 'ms',
+    text: 'Duration',
+    granularity: 1,
+  },
 ];
 
 /**
@@ -153,6 +167,7 @@ class AdRequestCriticalPath extends Audit {
   static async audit(artifacts) {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const baseUrl = networkRecords.find((rec) => rec.statusCode == 200).url;
     const adsEntries = networkRecords.filter((entry) => {
       const parsedUrl = new URL(entry.url);
       return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl);
@@ -175,7 +190,7 @@ class AdRequestCriticalPath extends Audit {
       if (!req.length) {
         continue;
       }
-      const reqUrl = new URL(req);
+      const reqUrl = new URL(req, baseUrl);
       if (!isGpt(reqUrl) && !isImplTag(reqUrl) && !hasAdRequestPath(reqUrl)) {
         const record =
           networkRecords.find((record) => record.url == req);
