@@ -36,7 +36,6 @@ module.exports = {
     require.resolve('./audits/ad-request-critical-path'),
     require.resolve('./audits/ads-in-viewport'),
     require.resolve('./audits/async-ad-tags'),
-    require.resolve('./audits/has-ads'),
     require.resolve('./audits/loads-gpt-over-https'),
     require.resolve('./audits/static-ad-tags'),
     require.resolve('./audits/viewport-ad-density'),

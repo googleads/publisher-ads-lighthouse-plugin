@@ -14,13 +14,21 @@
 
 const AdRequestFromPageStart = require('../../audits/ad-request-from-page-start');
 const chai = require('chai');
-const {Audit} = require('lighthouse');
 const expect = chai.expect;
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const sinon = require('sinon');
 
 const AD_REQUEST_URL = 'https://securepubads.g.doubleclick.net/gampad/ads?foo';
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
 
 describe('AdRequestFromPageStart', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   describe('adRequestFromPageStartTest', async () => {
     const testCases = [
       {
@@ -48,10 +56,9 @@ describe('AdRequestFromPageStart', async () => {
     for (const {desc, networkRecords, expectedTime, expectedNotAppl}
       of testCases) {
       it(`${desc} with a load time of ${expectedTime}`, async () => {
-        const results = await AdRequestFromPageStart.audit({
-          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-          requestNetworkRecords: () => Promise.resolve(networkRecords),
-        });
+        sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+        const results =
+        await AdRequestFromPageStart.audit({devtoolsLogs: {}}, {});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {

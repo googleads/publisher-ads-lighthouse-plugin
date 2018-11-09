@@ -14,13 +14,21 @@
 
 const AdRequestFromTagLoad = require('../../audits/ad-request-from-tag-load');
 const chai = require('chai');
-const {Audit} = require('lighthouse');
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const sinon = require('sinon');
 const expect = chai.expect;
 
 const AD_REQUEST_URL = 'https://securepubads.g.doubleclick.net/gampad/ads?foo';
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
 
 describe('AdRequestFromTagLoad', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   describe('adRequestFromTagLoadTest', async () => {
     const testCases = [
       {
@@ -50,10 +58,9 @@ describe('AdRequestFromTagLoad', async () => {
     for (const {desc, networkRecords, expectedTime, expectedNotAppl}
       of testCases) {
       it(`${desc} with a load time of ${expectedTime}`, async () => {
-        const results = await AdRequestFromTagLoad.audit({
-          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-          requestNetworkRecords: () => Promise.resolve(networkRecords),
-        });
+        sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+        const results =
+        await AdRequestFromTagLoad.audit({devtoolsLogs: {}}, {});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {

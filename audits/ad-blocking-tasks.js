@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const MainThreadTasks = require('lighthouse/lighthouse-core/gather/computed/main-thread-tasks');
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds} = require('../utils/resource-classification');
@@ -91,16 +93,17 @@ class AdBlockingTasks extends Audit {
 
   /**
    * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    * @override
    */
-  static async audit(artifacts) {
+  static async audit(artifacts, context) {
     const trace = artifacts.traces[AdBlockingTasks.DEFAULT_PASS];
     const devtoolsLogs = artifacts.devtoolsLogs[AdBlockingTasks.DEFAULT_PASS];
-    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     let tasks = [];
     try {
-      tasks = await artifacts.requestMainThreadTasks(trace);
+      tasks = await MainThreadTasks.request(trace, context);
     } catch (e) {
       return auditNotApplicable('Invalid timing task data');
     }
