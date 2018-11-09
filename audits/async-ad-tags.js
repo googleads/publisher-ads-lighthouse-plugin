@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGpt} = require('../utils/resource-classification');
@@ -49,11 +50,12 @@ class AsyncAdTags extends Audit {
 
   /**
    * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    */
-  static async audit(artifacts) {
+  static async audit(artifacts, context) {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     const tagReqs = networkRecords
         .filter((req) => isGpt(new URL(req.url)));
 

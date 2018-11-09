@@ -12,11 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const sinon = require('sinon');
 const StaticAdTags = require('../../audits/static-ad-tags');
-const {Audit} = require('lighthouse');
 const {expect} = require('chai');
 
 describe('StaticAdTags', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   describe('rawValue', async () => {
     const testCases = [
       {
@@ -66,10 +74,8 @@ describe('StaticAdTags', async () => {
     for (const {desc, networkRecords, expectedRawVal}
       of testCases) {
       it(`${desc}`, async () => {
-        const results = await StaticAdTags.audit({
-          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-          requestNetworkRecords: () => Promise.resolve(networkRecords),
-        });
+        sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+        const results = await StaticAdTags.audit({devtoolsLogs: {}}, {});
         expect(results).to.have.property('rawValue', expectedRawVal);
       });
     }

@@ -13,10 +13,18 @@
 // limitations under the License.
 
 const AdRequestCriticalPath = require('../../audits/ad-request-critical-path');
-const {Audit} = require('lighthouse');
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const sinon = require('sinon');
 const {expect} = require('chai');
 
 describe('AdRequestCriticalPath', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   const testCases = [
     {
       filePath: './network-records-test-files/non-ads-entries',
@@ -90,10 +98,8 @@ describe('AdRequestCriticalPath', async () => {
     it(`should return ${expectedScore} for ${desc} w/ raw value ` +
         `${expectedRawValue}`, async () => {
       const networkRecords = require(filePath);
-      const results = await AdRequestCriticalPath.audit({
-        devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-        requestNetworkRecords: () => Promise.resolve(networkRecords),
-      });
+      sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+      const results = await AdRequestCriticalPath.audit({devtoolsLogs: {}}, {});
       if (expectedNotAppl) {
         expect(results).to.have.property('notApplicable', true);
       } else {
@@ -105,6 +111,13 @@ describe('AdRequestCriticalPath', async () => {
 });
 
 describe('CriticalPathTreeGeneration', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   const testCases = [
     {
       filePath: './network-records-test-files/multiple-entries',
@@ -258,10 +271,8 @@ describe('CriticalPathTreeGeneration', async () => {
   for (const {filePath, desc, expectedTree, expectedNotAppl} of testCases) {
     it(`should pass for ${desc}`, async () => {
       const networkRecords = require(filePath);
-      const results = await AdRequestCriticalPath.audit({
-        devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-        requestNetworkRecords: () => Promise.resolve(networkRecords),
-      });
+      sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+      const results = await AdRequestCriticalPath.audit({devtoolsLogs: {}}, {});
 
       if (expectedNotAppl) {
         expect(results).to.have.property('notApplicable', true);

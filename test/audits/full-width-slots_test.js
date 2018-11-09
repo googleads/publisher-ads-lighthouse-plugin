@@ -14,8 +14,9 @@
 
 const chai = require('chai');
 const FullWidthSlots = require('../../audits/full-width-slots');
-const {Audit} = require('lighthouse');
 const expect = chai.expect;
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const sinon = require('sinon');
 
 describe('FullWidthSlots', async () => {
   const ViewportDimensions = {
@@ -31,6 +32,13 @@ describe('FullWidthSlots', async () => {
     AD_REQUEST_URL + param + encodeURIComponent(sizeString);
 
   describe('fullWidthSlotsTest', async () => {
+    let sandbox;
+    beforeEach(() => {
+      sandbox = sinon.createSandbox();
+    });
+    afterEach(() => {
+      sandbox.restore();
+    });
     const testCases = [
       {
         desc: 'should give min margin percentage for multiple sra requests',
@@ -101,10 +109,10 @@ describe('FullWidthSlots', async () => {
     for (const {desc, networkRecords, expectedValue, expectedNotApplicable}
       of testCases) {
       it(`${desc} with a value of ${expectedValue}`, async () => {
+        sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await FullWidthSlots.audit({
-          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
+          devtoolsLogs: {},
           ViewportDimensions,
-          requestNetworkRecords: () => Promise.resolve(networkRecords),
         });
         if (expectedNotApplicable) {
           expect(results).to.have.property('notApplicable', true);
