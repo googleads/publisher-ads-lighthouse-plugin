@@ -16,24 +16,17 @@
   ],
   "author": "",
   "dependencies": {
-    "fs-extra": "^6.0.1",
     "lighthouse": "^3.0.0",
-    "lighthouse-logger": "^1.0.1",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
-    "@types/d3": "^5.0.0",
-    "@types/fs-extra": "^5.0.3",
-    "@types/yargs": "^11.1.0",
+    "@types/yargs": "^12.0.1",
     "chai": "^4.1.2",
-    "chai-as-promised": "^7.1.1",
     "eslint": "^4.19.1",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-sort-requires": "^2.1.0",
     "mocha": "^5.1.1",
-    "pre-commit": "^1.2.2",
     "sinon": "^5.0.7",
-    "typescript": "^2.9.1",
-    "vscode-chrome-debug-core": "3.23.8"
+    "typescript": "^2.9.1"
   }
 }
