@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
@@ -176,11 +177,12 @@ class AdRequestCriticalPath extends Audit {
 
   /**
    * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    */
-  static async audit(artifacts) {
+  static async audit(artifacts, context) {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     const baseUrl = networkRecords.find((rec) => rec.statusCode == 200).url;
     const adsEntries = networkRecords.filter((entry) => {
       const parsedUrl = new URL(entry.url);

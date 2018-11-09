@@ -13,6 +13,9 @@
 // limitations under the License.
 
 const AdBlockingTasks = require('../../audits/ad-blocking-tasks');
+const MainThreadTasks = require('lighthouse/lighthouse-core/gather/computed/main-thread-tasks');
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const sinon = require('sinon');
 const {expect} = require('chai');
 
 const generateTask = ([start, end], groupLabel, eventName) => ({
@@ -43,13 +46,18 @@ const makeArtifacts = (requests, tasks, offset = 0) => {
 
   return {
     devtoolsLogs: {[AdBlockingTasks.DEFAULT_PASS]: []},
-    requestNetworkRecords: () => Promise.resolve(requests),
-    requestMainThreadTasks: async () => tasks,
     traces: {defaultPass: {traceEvents}},
   };
 };
 
 describe('AdBlockingTasks', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   describe('rawValue', async () => {
     const testCases = [
       {
@@ -169,7 +177,8 @@ describe('AdBlockingTasks', async () => {
       of testCases) {
       it(`${desc}`, async () => {
         const artifacts = makeArtifacts(requests, tasks, offset);
-
+        sandbox.stub(NetworkRecords, 'request').returns(requests);
+        sandbox.stub(MainThreadTasks, 'request').returns(tasks);
         const result = await AdBlockingTasks.audit(artifacts);
 
         expect(result).to.have.property('rawValue', expectedValue);

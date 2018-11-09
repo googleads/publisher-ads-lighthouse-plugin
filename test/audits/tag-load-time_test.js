@@ -13,13 +13,21 @@
 // limitations under the License.
 
 const chai = require('chai');
+const sinon = require('sinon');
 const TagLoadTime = require('../../audits/tag-load-time');
 const expect = chai.expect;
-const {Audit} = require('lighthouse');
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
 
 describe('TagLoadTime', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   describe('tagLoadTimeTest', async () => {
     const testCases = [
       {
@@ -47,10 +55,8 @@ describe('TagLoadTime', async () => {
     for (const {desc, networkRecords, expectedLoadTime, expectedNotAppl}
       of testCases) {
       it(`${desc} with a load time of ${expectedLoadTime}`, async () => {
-        const results = await TagLoadTime.audit({
-          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-          requestNetworkRecords: () => Promise.resolve(networkRecords),
-        });
+        sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+        const results = await TagLoadTime.audit({devtoolsLogs: {}}, {});
         if (!expectedNotAppl) {
           expect(results).to.have.property('rawValue', expectedLoadTime);
         } else {

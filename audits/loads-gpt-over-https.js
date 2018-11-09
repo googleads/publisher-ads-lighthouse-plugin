@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGpt} = require('../utils/resource-classification');
@@ -31,7 +32,7 @@ class LoadsGptOverHttps extends Audit {
     return {
       id: 'loads-gpt-over-https',
       title: 'Uses HTTPS to load GPT',
-      failureTitle: 'GPT is loaded insecurely',
+      failureTitle: 'GPT tag is loaded insecurely',
       description: 'For privacy and security always load GPT over HTTPS. With' +
         ' insecure pages explicitly request the GPT script securely. Example:' +
         '`<script async="async" ' +
@@ -43,11 +44,12 @@ class LoadsGptOverHttps extends Audit {
 
   /**
    * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    */
-  static async audit(artifacts) {
+  static async audit(artifacts, context) {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await artifacts.requestNetworkRecords(devtoolsLogs);
+    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
 
     const pageReq = networkRecords.find((record) => record.statusCode == 200);
     if (!pageReq) {

@@ -13,10 +13,18 @@
 // limitations under the License.
 
 const LoadsGptOverHttps = require('../../audits/loads-gpt-over-https');
-const {Audit} = require('lighthouse');
+const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const sinon = require('sinon');
 const {expect} = require('chai');
 
 describe('LoadsGptOverHttps', async () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
   describe('numGptHttpReqs', async () => {
     const testCases = [
       {
@@ -149,10 +157,8 @@ describe('LoadsGptOverHttps', async () => {
       it(`should have a score of ${expectedScore} with` +
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
         ` ${expectedNumGptHttpsReqs} HTTPS requests`, async () => {
-        const results = await LoadsGptOverHttps.audit({
-          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-          requestNetworkRecords: () => Promise.resolve(networkRecords),
-        });
+        sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+        const results = await LoadsGptOverHttps.audit({devtoolsLogs: {}}, {});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
@@ -280,10 +286,8 @@ describe('LoadsGptOverHttps', async () => {
       it(`should have a score of ${expectedScore} with` +
         ` ${expectedNumGptHttpReqs} HTTP requests and` +
         ` ${expectedNumGptHttpsReqs} HTTPS requests`, async () => {
-        const results = await LoadsGptOverHttps.audit({
-          devtoolsLogs: {[Audit.DEFAULT_PASS]: []},
-          requestNetworkRecords: () => Promise.resolve(networkRecords),
-        });
+        sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
+        const results = await LoadsGptOverHttps.audit({devtoolsLogs: {}}, {});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
