@@ -45,6 +45,7 @@ module.exports = {
     require.resolve('./audits/full-width-slots'),
     require.resolve('./audits/ad-top-of-viewport'),
     require.resolve('./audits/duplicate-tags'),
+    require.resolve('./audits/serial-header-bidding'),
   ],
 
   groups: {
@@ -65,6 +66,7 @@ module.exports = {
       auditRefs: [
         {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
         {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
+        {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
         {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
         {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
         {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},

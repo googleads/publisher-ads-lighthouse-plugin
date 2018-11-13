@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const bidderPatterns = require('./bidder-patterns');
 
 /**
  * Checks if the url is from a Google ads host.
@@ -72,6 +73,22 @@ function isGpt(url) {
       url.pathname === '/tag/js/gpt.js';
 }
 
+/**
+ * Returns header bidder or false if not a bid.
+ * @param {string} url
+ * @return {string | boolean}
+ */
+function getHeaderBidder(url) {
+  for (const def of bidderPatterns) {
+    for (const pattern of def.patterns) {
+      if (new RegExp(pattern).test(url)) {
+        return def.label;
+      }
+    }
+  }
+  return false;
+}
+
 module.exports = {
   isGoogleAds,
   hasAdRequestPath,
@@ -79,4 +96,5 @@ module.exports = {
   isGpt,
   isImplTag,
   containsAnySubstring,
+  getHeaderBidder,
 };
