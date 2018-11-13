@@ -40,6 +40,7 @@ module.exports = {
     'sort-requires/sort-requires': 2,
     'space-infix-ops': ['error', {'int32Hint': false}],
     'no-trailing-spaces': 'error',
+    'no-useless-escape' : 'off',
   },
   plugins: [
     'sort-requires'
