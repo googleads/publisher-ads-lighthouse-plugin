@@ -30,6 +30,8 @@ describe('RenderedAdSlots', () => {
         .resolves({root: {nodeId: 1}});
     sendCommand.withArgs('DOM.getBoxModel', sinon.match.any)
         .resolves({model: {}});
+    sendCommand.withArgs('DOM.getAttributes', sinon.match.any)
+        .resolves({attributes: ['id', 'slot-id']});
   });
 
   describe('gathererData', () => {
@@ -39,12 +41,12 @@ describe('RenderedAdSlots', () => {
 
       await renderedAdSlots.afterPass({driver: {sendCommand, evaluateAsync}});
       const calls = sendCommand.getCalls();
-
-      expect(calls).to.have.lengthOf(3);
+      expect(calls).to.have.lengthOf(4);
       expect(calls[0].args).to.eql(['DOM.getDocument']);
       expect(calls[1].args).to.eql(['DOM.querySelectorAll', {
         nodeId: 1, selector: 'iframe[id^=google_ads_iframe_]'}]);
-      expect(calls[2].args).to.eql(['DOM.getBoxModel', {nodeId: 3}]);
+      expect(calls[2].args).to.eql(['DOM.getAttributes', {nodeId: 3}]);
+      expect(calls[3].args).to.eql(['DOM.getBoxModel', {nodeId: 3}]);
     });
 
     it('should return empty array if no ad slots', async () => {

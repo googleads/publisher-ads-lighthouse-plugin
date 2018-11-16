@@ -42,7 +42,7 @@ describe('AdsInViewport', () => {
       ];
 
       const artifacts = {RenderedAdSlots, ViewportDimensions};
-      expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1 / 5);
+      expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1 / 3);
     });
 
     const positiveTests = [
