@@ -12,10 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const array = require('../utils/array');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
+
+/**
+ * Table headings for audits details sections.
+ * @type {LH.Audit.Heading[]}
+ */
+const HEADINGS = [
+  {key: 'slot', itemType: 'text', text: 'Slots Outside Viewport'},
+];
 
 /** @inheritDoc */
 class AdsInViewport extends Audit {
@@ -44,7 +51,7 @@ class AdsInViewport extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.RenderedAdSlots;
+    const slots = artifacts.RenderedAdSlots.filter((slot) => slot);
 
     if (!slots.length) {
       return auditNotApplicable('No slots on page.');
@@ -54,15 +61,20 @@ class AdsInViewport extends Audit {
       return auditNotApplicable('No visible slots on page.');
     }
 
-    // TODO(gmatute): account for scrolling, deep links, and reflows
-    const viewed = array.count(slots, (slot) =>
-      isBoxInViewport(slot, viewport));
-    const unviewed = slots.length - viewed;
+    /** @type {Array<{slot: string}>} */
+    const nonvisible = slots
+        .filter((slot) => slot && !isBoxInViewport(slot, viewport))
+        .map((slot) => ({slot: slot.id}));
+    const visibleCount = slots.length - nonvisible.length;
+
+    const pluralEnding = nonvisible.length == 1 ? '' : 's';
 
     return {
-      rawValue: viewed / slots.length,
-      score: unviewed > 3 ? 0 : 1,
-      displayValue: unviewed ? `${unviewed} ads were out of view` : '',
+      rawValue: visibleCount / slots.length,
+      score: nonvisible.length > 3 ? 0 : 1,
+      displayValue: nonvisible.length ?
+        `${nonvisible.length} ad${pluralEnding} out of view` : '',
+      details: AdsInViewport.makeTableDetails(HEADINGS, nonvisible),
     };
   }
 }

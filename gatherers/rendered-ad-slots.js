@@ -44,9 +44,16 @@ class RenderedAdSlots extends Gatherer {
     // @ts-ignore
     return Promise.all(nodeIds.map(async (nodeId) => {
       try {
-        return (await driver.sendCommand('DOM.getBoxModel', {nodeId})).model;
+        const [{attributes}, {model}] = await Promise.all([
+          driver.sendCommand('DOM.getAttributes', {nodeId}),
+          driver.sendCommand('DOM.getBoxModel', {nodeId}),
+        ]);
+        const idIndex = attributes.indexOf('id') + 1;
+        const id = attributes[idIndex].split('/').slice(3).join('/');
+        model.id = id;
+        return model;
       } catch (e) {
-        // getBoxelModel fails if the element is hidden (e.g. display:none)
+        // getBoxModel fails if the element is hidden (e.g. display:none)
         return null;
       }
     }));
