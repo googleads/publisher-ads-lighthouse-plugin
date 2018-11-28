@@ -28,7 +28,9 @@ class ViewportAdDensity extends Audit {
       title: 'Ad density inside viewport is within recommended range',
       failureTitle: 'Ad density inside viewport is higher than recommended',
       description: 'The ads-to-content ratio inside the viewport can have ' +
-          'an impact on user experience and ultimately user retention.',
+          'an impact on user experience and ultimately user retention. The ' +
+          'Better Ads Standard [recommends having an ad density below 30%]' +
+          '(https://www.betterads.org/mobile-ad-density-higher-than-30/)',
       requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
     };
   }
@@ -56,14 +58,18 @@ class ViewportAdDensity extends Audit {
     const viewArea = viewport.innerWidth * viewport.innerHeight;
 
     if (viewArea <= 0) {
-      throw new Error('viewport area is zero');
+      throw new Error('Viewport area is zero');
     }
-
+    if (adArea > viewArea) {
+      throw new Error('Calculated ad area is larger than viewport');
+    }
+    const score = adArea / viewArea > 0.3 ? 0 : 1;
     return {
-      score: adArea / viewArea > 0.25 ? 0 : 1,
-      rawValue: Math.min(adArea / viewArea, 1),
-      displayValue: adArea ?
-        `${Math.floor(100 * adArea / viewArea)}% covered by ads` : '',
+      score,
+      rawValue: adArea / viewArea,
+      // No displayValue if passing, no changes to be made.
+      displayValue: score ? ''
+        : `${Math.floor(100 * adArea / viewArea)}% covered by ads`,
     };
   }
 }
