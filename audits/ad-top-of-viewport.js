@@ -58,10 +58,13 @@ class AdTopOfViewport extends Audit {
       return auditNotApplicable('No ads in viewport.');
     }
 
+    const score = inViewport && topSlot.midpoint < 200 ? 0 : 1;
+
     return {
-      score: inViewport && topSlot.midpoint < 200 ? 0 : 1,
+      score,
       rawValue: topSlot.midpoint,
-      displayValue: 'A scroll of ' + Math.round(topSlot.midpoint)
+      // No displayValue if passing, no changes to be made.
+      displayValue: score ? '' : 'A scroll of ' + Math.round(topSlot.midpoint)
         + ' px would hide half of your topmost ad (slot: ' + topSlot.id + ')',
     };
   }

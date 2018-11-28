@@ -47,15 +47,14 @@ describe('ViewportAdDensity', () => {
       expect(result).to.have.property('rawValue', 50 / 600);
     });
 
-    it('should handle overlapping ads without exceeding one', async () => {
+    it('should throw error if ad area exceeds viewport area', async () => {
       const RenderedAdSlots = [
         generateSlot({x: 0, y: 0, w: 1000, h: 400}),
         generateSlot({x: 0, y: 0, w: 600, h: 700}),
       ];
 
       const artifacts = {RenderedAdSlots, ViewportDimensions};
-      const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('rawValue', 1);
+      expect(() => ViewportAdDensity.audit(artifacts)).to.throw();
     });
 
     it('should throw error if viewport area is zero', async () => {

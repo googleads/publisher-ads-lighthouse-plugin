@@ -33,7 +33,7 @@ class AdsInViewport extends Audit {
   static get meta() {
     return {
       id: 'ads-in-viewport',
-      title: 'Most ads loaded are within viewport',
+      title: 'Few or no ads loaded outside viewport',
       failureTitle: 'There are eager ads loaded outside viewport',
       description: 'Too many ads loaded outside the viewport lowers ' +
           'viewability rates and impact user experience, consider loading ' +
@@ -64,7 +64,8 @@ class AdsInViewport extends Audit {
     /** @type {Array<{slot: string}>} */
     const nonvisible = slots
         .filter((slot) => slot && !isBoxInViewport(slot, viewport))
-        .map((slot) => ({slot: slot.id}));
+        .map((slot) => ({slot: slot.id}))
+        .sort((a, b) => a.slot.localeCompare(b.slot));
     const visibleCount = slots.length - nonvisible.length;
 
     const pluralEnding = nonvisible.length == 1 ? '' : 's';

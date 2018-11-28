@@ -27,9 +27,11 @@ class FullWidthSlots extends Audit {
   static get meta() {
     return {
       id: 'full-width-slots',
-      title: 'Full width slots',
-      description: 'Have ad slot sizes that utilize the viewport\'s full width' +
-          ' to increase CTR.',
+      title: 'Slots are utilizing most of the viewport width',
+      failureTitle: 'Slots are not utilizing the full viewport width',
+      description: 'Have ad slot sizes that utilize most of the viewport\'s ' +
+      'width to increase CTR. We recommend leaving no more than 20% of the ' +
+      'viewport\'s width unutilized.',
       requiredArtifacts: ['ViewportDimensions', 'devtoolsLogs'],
     };
   }
@@ -72,12 +74,15 @@ class FullWidthSlots extends Audit {
 
     const pctUnoccupied = 1 - (maxWidth / vpWidth);
 
+    const score = pctUnoccupied > .2 ? 0 : 1;
+
+
     return {
-      // TODO(jburger): Determine score cutoff based on results.
-      score: pctUnoccupied > .2 ? 0 : 1,
+      score,
       rawValue: pctUnoccupied,
-      displayValue:
-            Math.round(pctUnoccupied * 100) + '% of viewport width is unused',
+      // No displayValue if passing, no changes to be made.
+      displayValue: score ? ''
+        : Math.round(pctUnoccupied * 100) + '% of viewport width is unused',
     };
   }
 }
