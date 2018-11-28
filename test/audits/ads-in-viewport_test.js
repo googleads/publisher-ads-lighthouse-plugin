@@ -18,7 +18,7 @@ const {expect} = require('chai');
 describe('AdsInViewport', () => {
   // From top left corner & dimensions
   const generateSlot = ({x, y, w, h}) =>
-    ({content: [x, y, x + w, y, x + w, y + h, x, y + h]});
+    ({content: [x, y, x + w, y, x + w, y + h, x, y + h], id: 'slot'});
 
   const ViewportDimensions = {
     innerHeight: 200,

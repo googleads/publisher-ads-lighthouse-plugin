@@ -113,7 +113,7 @@ function findCriticalPath(startingEntry, networkRecords) {
 }
 
 /**
- * Returns the entry's callstack. Default to empty if array not applicable
+ * Returns the entry's call stack. Default to empty if array not applicable
  * (i.e. initiator type is not "script").
  * @param {LH.Artifacts.NetworkRequest} entry
  * @return {LH.Crdp.Network.stack.callFrames}

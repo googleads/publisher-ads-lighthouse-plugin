@@ -32,8 +32,17 @@ const HEADINGS = [
   {key: 'script', itemType: 'url', text: 'Attributable Script'},
   {key: 'group', itemType: 'text', text: 'Category'},
   {key: 'duration', itemType: 'ms', text: 'Duration', granularity: 1},
-  {key: 'adReqBlocked', itemType: 'url', text: 'Ad Request Blocked'},
+  {key: 'adReqBlocked', itemType: 'url', text: 'Request Blocked'},
 ];
+
+/**
+ * Maps original task names to readable names.
+ * @type {Object<string, string>}
+ */
+const TASK_NAMES = {
+  'V8.Execute': 'JS Execution',
+  'V8.ScriptCompiler': 'JS Compilation',
+};
 
 /**
  * @param {LH.Artifacts.TaskNode} task
@@ -86,7 +95,8 @@ class AdBlockingTasks extends Audit {
       failureTitle: 'Long tasks are blocking ad-related network requests',
       description: 'Tasks blocking the main thread can delay the ad related ' +
           'resources, consider removing long blocking tasks or moving them ' +
-          'off the main thread with web workers.',
+          'off the main thread with web workers. These tasks can be ' +
+          'especially detrimental to performance on less powerful devices.',
       requiredArtifacts: ['traces'],
     };
   }
@@ -162,8 +172,11 @@ class AdBlockingTasks extends Audit {
             }
           }
 
+          const taskName = longTask.event.name || '';
+          const name = TASK_NAMES[taskName] ? TASK_NAMES[taskName] : taskName;
+
           blocking.push({
-            name: longTask.event.name || '',
+            name,
             script: scriptUrl,
             group: longTask.group.label,
             duration: longTask.selfTime,

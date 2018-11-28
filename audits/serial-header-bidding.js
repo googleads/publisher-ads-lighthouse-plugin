@@ -164,6 +164,7 @@ class SerialHeaderBidding extends Audit {
         const endTime = record.endTime * 1000;
         const duration = endTime - startTime;
         const url = new URL(record.url);
+        const protocol = url.protocol;
         const host = url.host;
         const path = url.pathname;
 
@@ -173,7 +174,7 @@ class SerialHeaderBidding extends Audit {
         if (!bidRequests[host] && isSerialRequest) {
           bidRequests[host] = {
             bidder: getHeaderBidder(record.url),
-            url: host + path,
+            url: protocol + '//' + host + path,
             startTime,
             endTime,
             duration,
@@ -191,7 +192,6 @@ class SerialHeaderBidding extends Audit {
     return {
       rawValue: hasSerialHeaderBidding,
       score: hasSerialHeaderBidding ? 0 : 1,
-      displayValue: hasSerialHeaderBidding ? `Has serial header bidding` : '',
       details: SerialHeaderBidding.makeTableDetails(
         HEADINGS, Object.values(bidRequests)),
       extendedInfo: {

@@ -67,7 +67,7 @@ class DuplicateTags extends Audit {
     if (!tagReqs.length) {
       return auditNotApplicable('No tags requested.');
     }
-
+    /** @type {Object<string, Object<string, number>>} */
     const tagsByFrame = {};
     tagReqs.forEach((record) => {
       const frameId = record.frameId;

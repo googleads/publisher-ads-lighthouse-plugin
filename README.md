@@ -1,4 +1,4 @@
-# AdSpeed Page Scanning Insights
+# Ad Speed Insights
 
 Ad-aware extension for [lighthouse](https://github.com/GoogleChrome/lighthouse).
 
@@ -7,12 +7,11 @@ Ad-aware extension for [lighthouse](https://github.com/GoogleChrome/lighthouse).
 Generate a ad-aware lighthouse report by running:
 
 ```shell
-$ node index.js https://www.example.com
+$ node index.js <url>
 ```
 
 Available options:
 -   Any of [lighthouse flags](https://github.com/GoogleChrome/lighthouse/#cli-options)
--   `--visuals-path`: Produces an HTML file with dynamically generated visuals.
 -   `--debug`: Will print additional debugging information when running.
 
 ## References

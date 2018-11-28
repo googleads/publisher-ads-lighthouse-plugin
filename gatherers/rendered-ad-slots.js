@@ -49,11 +49,11 @@ class RenderedAdSlots extends Gatherer {
           driver.sendCommand('DOM.getBoxModel', {nodeId}),
         ]);
         const idIndex = attributes.indexOf('id') + 1;
-        const id = attributes[idIndex].split('/').slice(3).join('/');
+        const id = attributes[idIndex].replace('google_ads_iframe_', '');
         model.id = id;
         return model;
       } catch (e) {
-        // getBoxModel fails if the element is hidden (e.g. display:none)
+        // getBoxModel fails if the element is hidden (e.g. display:none).
         return null;
       }
     }));
