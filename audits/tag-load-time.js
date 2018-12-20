@@ -34,7 +34,9 @@ class TagLoadTime extends Audit {
       title: 'Tag load time',
       failureTitle: 'Reduce tag load time',
       description: 'This measures the time for the Google Publisher' +
-          ' Tag\'s implementation script (pubads_impl.js) to load after the page loads.',
+          ' Tag\'s implementation script (pubads_impl.js) to load after the ' +
+          'page loads. [Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#measurements)',
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],

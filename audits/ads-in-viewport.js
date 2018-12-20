@@ -40,7 +40,8 @@ class AdsInViewport extends Audit {
           'ads below the fold lazily as the user scrolls down. Consider ' +
           'using GPT\'s [Lazy Loading API]' +
           '(https://developers.google.com/doubleclick-gpt/reference' +
-          '#googletag.PubAdsService_enableLazyLoad).',
+          '#googletag.PubAdsService_enableLazyLoad). [Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#eager-ads)',
       requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
     };
   }
