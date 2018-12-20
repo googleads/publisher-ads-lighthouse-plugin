@@ -48,7 +48,8 @@ class DuplicateTags extends Audit {
       title: 'No duplicate tags are loaded in any frame',
       failureTitle: 'There are duplicate tags loaded in the same frame',
       description: 'Loading a tag more than once in the same frame is ' +
-        'redundant and adds overhead without benefit.',
+        'redundant and adds overhead without benefit. [Learn more.]' +
+        '(https://ad-speed-insights.appspot.com/#duplicate-tags)',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }

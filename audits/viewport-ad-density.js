@@ -30,7 +30,9 @@ class ViewportAdDensity extends Audit {
       description: 'The ads-to-content ratio inside the viewport can have ' +
           'an impact on user experience and ultimately user retention. The ' +
           'Better Ads Standard [recommends having an ad density below 30%]' +
-          '(https://www.betterads.org/mobile-ad-density-higher-than-30/)',
+          '(https://www.betterads.org/mobile-ad-density-higher-than-30/). ' +
+          '[Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#ad-density)',
       requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
     };
   }

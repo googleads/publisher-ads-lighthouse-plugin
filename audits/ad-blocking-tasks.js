@@ -96,7 +96,9 @@ class AdBlockingTasks extends Audit {
       description: 'Tasks blocking the main thread can delay the ad related ' +
           'resources, consider removing long blocking tasks or moving them ' +
           'off the main thread with web workers. These tasks can be ' +
-          'especially detrimental to performance on less powerful devices.',
+          'especially detrimental to performance on less powerful devices. ' +
+          '[Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#long-tasks)',
       requiredArtifacts: ['traces'],
     };
   }

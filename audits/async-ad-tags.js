@@ -43,7 +43,8 @@ class AsyncAdTags extends Audit {
       description: 'Loading the GPT tag synchronously blocks all content ' +
           'rendering until the tag is fetched and evaluated, consider using ' +
           'the `async` attribute for the GPT tag to ensure it is loaded ' +
-          'asynchronously.',
+          'asynchronously. [Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#async-tags)',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }

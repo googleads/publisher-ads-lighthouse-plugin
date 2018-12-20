@@ -35,7 +35,9 @@ class AdRequestFromPageStart extends Audit {
       title: 'Latency of first ad request (from page start)',
       failureTitle: 'Reduce latency of first ad request (from page start)',
       description: 'This measures the time for the first ad request to be' +
-          ' made relative to the page load starting.',
+          ' made relative to the page load starting. ' +
+          '[Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#measurements)',
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],
