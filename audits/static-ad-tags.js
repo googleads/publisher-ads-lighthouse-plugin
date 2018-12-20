@@ -40,7 +40,9 @@ class StaticAdTags extends Audit {
       title: 'GPT tag is loaded statically',
       failureTitle: 'GPT tag is loaded dynamically',
       description: 'Tags loaded dynamically are not visible to the browser ' +
-        'preloader, consider using a static tag or `<link rel="preload">`.',
+        'preloader, consider using a static tag or `<link rel="preload">`. ' +
+        '[Learn more.]' +
+        '(https://ad-speed-insights.appspot.com/#dynamic-tag)',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }

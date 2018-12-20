@@ -36,8 +36,9 @@ class LoadsGptOverHttps extends Audit {
       description: 'For privacy and security always load GPT over HTTPS. With' +
         ' insecure pages explicitly request the GPT script securely. Example:' +
         '`<script async="async" ' +
-        'src="https://www.googletagservices.com/tag/js/gpt.js">`. [Learn More]' +
-        '(https://support.google.com/admanager/answer/1638622?hl=en).',
+        'src="https://www.googletagservices.com/tag/js/gpt.js">`. ' +
+        '[Learn more.]' +
+        '(https://ad-speed-insights.appspot.com/#https)',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }

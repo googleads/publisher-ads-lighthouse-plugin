@@ -35,7 +35,9 @@ class AdRequestFromTagLoad extends Audit {
       title: 'Latency of first ad request (from tag load)',
       failureTitle: 'Reduce latency of first ad request (from tag load)',
       description: 'This measures the time for the first ad request to be' +
-          ' made relative to the Google Publisher Tag loading.',
+          ' made relative to the Google Publisher Tag loading. ' +
+          '[Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#measurements)',
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],

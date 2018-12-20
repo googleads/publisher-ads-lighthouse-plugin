@@ -113,7 +113,9 @@ class SerialHeaderBidding extends Audit {
       title: 'No serial header bidding detected',
       failureTitle: 'There are serial header bidding requests',
       description: 'Running header bidding serially make ads load slower, ' +
-          'which has an impact on impressions. Consider running in parallel.',
+          'which has an impact on impressions. Consider running in parallel. ' +
+          '[Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#serial-header-bidding)',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }

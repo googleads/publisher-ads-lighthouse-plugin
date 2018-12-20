@@ -170,7 +170,9 @@ class AdRequestCriticalPath extends Audit {
       failureTitle: 'There are resources blocking the first ad request',
       description: 'These are the resources that block the first ad request. ' +
           'Consider reducing the number of resources or improving their ' +
-          'execution to start loading ads as soon as possible.',
+          'execution to start loading ads as soon as possible. ' +
+          '[Learn more.]' +
+          '(https://ad-speed-insights.appspot.com/#blocking-resouces)',
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
