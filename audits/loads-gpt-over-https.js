@@ -15,7 +15,7 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isGpt} = require('../utils/resource-classification');
+const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -58,7 +58,7 @@ class LoadsGptOverHttps extends Audit {
     }
 
     const gptRequests = networkRecords
-        .filter((record) => isGpt(new URL(record.url)));
+        .filter((record) => isGptTag(new URL(record.url)));
 
     const secureGptRequests = gptRequests.filter((request) => request.isSecure);
 
