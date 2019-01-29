@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const {expect} = require('chai');
-const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGpt} = require('../../utils/resource-classification');
+const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGptTag} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {
@@ -92,7 +92,7 @@ describe('resource-classification', () => {
     });
   });
 
-  describe('#isGpt', () => {
+  describe('#isGptTag', () => {
     const testCases = [
       {
         description: 'URLs that load gpt.js',
@@ -122,7 +122,7 @@ describe('resource-classification', () => {
     ];
     for (const {description, url, expectation} of testCases) {
       it(`should return ${expectation} for ${description}`, () => {
-        const results = isGpt(url);
+        const results = isGptTag(url);
         expect(results).to.equal(expectation);
       });
     }

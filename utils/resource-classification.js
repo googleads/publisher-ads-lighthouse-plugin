@@ -35,6 +35,26 @@ function isImplTag(url) {
 }
 
 /**
+ * Checks if the url is loading a gpt.js script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isGptTag(url) {
+  return url.host === 'www.googletagservices.com' &&
+      (url.pathname === '/tag/js/gpt.js' ||
+      url.pathname === '/tag/js/gpt_mobile.js');
+}
+
+/**
+ * Checks if the url is loading a gpt.js or pubads_impl_*.js script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isGpt(url) {
+  return isGptTag(url) || isImplTag(url);
+}
+
+/**
  * Checks if str contains at least one provided substring.
  * @param {string} str
  * @param {Array<string>} substrings
@@ -64,16 +84,6 @@ function hasImpressionPath(url) {
 }
 
 /**
- * Checks if the url is loading a gpt.js script.
- * @param {URL} url
- * @return {boolean}
- */
-function isGpt(url) {
-  return url.host === 'www.googletagservices.com' &&
-      url.pathname === '/tag/js/gpt.js';
-}
-
-/**
  * Returns header bidder or false if not a bid.
  * @param {string} url
  * @return {string | boolean}
@@ -94,6 +104,7 @@ module.exports = {
   hasAdRequestPath,
   hasImpressionPath,
   isGpt,
+  isGptTag,
   isImplTag,
   containsAnySubstring,
   getHeaderBidder,
