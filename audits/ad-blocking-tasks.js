@@ -16,7 +16,7 @@ const MainThreadTasks = require('lighthouse/lighthouse-core/gather/computed/main
 const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isGoogleAds} = require('../utils/resource-classification');
+const {isGoogleAds, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
@@ -172,6 +172,10 @@ class AdBlockingTasks extends Audit {
             } else {
               continue;
             }
+          }
+
+          if (isGpt(new URL(scriptUrl))) {
+            continue;
           }
 
           const taskName = longTask.event.name || '';

@@ -16,7 +16,7 @@ const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isGpt} = require('../utils/resource-classification');
+const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -56,7 +56,7 @@ class StaticAdTags extends Audit {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     const tagReqs = networkRecords
-        .filter((req) => isGpt(new URL(req.url)));
+        .filter((req) => isGptTag(new URL(req.url)));
 
     if (!tagReqs.length) {
       return auditNotApplicable('No tag requested.');

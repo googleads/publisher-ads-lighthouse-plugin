@@ -19,7 +19,11 @@ const sinon = require('sinon');
 const {expect} = require('chai');
 
 const generateTask = ([start, end], groupLabel, eventName) => ({
-  event: {eventName, ts: start * 1000, args: {data: {url: 'script.js'}}},
+  event: {
+    eventName,
+    ts: start * 1000,
+    args: {data: {url: 'https://example.com/script.js'}},
+  },
   group: {label: groupLabel},
   selfTime: end - start,
   startTime: start,

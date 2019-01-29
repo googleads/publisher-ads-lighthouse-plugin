@@ -16,7 +16,7 @@ const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/netwo
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
-const {isGoogleAds, hasAdRequestPath, isImplTag, isGpt} = require('../utils/resource-classification');
+const {isGoogleAds, hasAdRequestPath, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -209,7 +209,7 @@ class AdRequestCriticalPath extends Audit {
         continue;
       }
       const reqUrl = new URL(req, baseUrl);
-      if (!isGpt(reqUrl) && !isImplTag(reqUrl) && !hasAdRequestPath(reqUrl)) {
+      if (!isGpt(reqUrl) && !hasAdRequestPath(reqUrl)) {
         const record =
           networkRecords.find((record) => record.url == req);
         if (record && record.startTime > pageStartTime &&
