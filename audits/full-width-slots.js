@@ -30,7 +30,7 @@ class FullWidthSlots extends Audit {
       title: 'Slots are utilizing most of the viewport width',
       failureTitle: 'Slots are not utilizing the full viewport width',
       description: 'Have ad slot sizes that utilize most of the viewport\'s ' +
-      'width to increase CTR. We recommend leaving no more than 20% of the ' +
+      'width to increase CTR. We recommend leaving no more than 25% of the ' +
       'viewport\'s width unutilized. [Learn more.]' +
       '(https://ad-speed-insights.appspot.com/#full-width-slots)',
       requiredArtifacts: ['ViewportDimensions', 'devtoolsLogs'],
@@ -75,7 +75,7 @@ class FullWidthSlots extends Audit {
 
     const pctUnoccupied = 1 - (maxWidth / vpWidth);
 
-    const score = pctUnoccupied > .2 ? 0 : 1;
+    const score = pctUnoccupied > .25 ? 0 : 1;
 
 
     return {

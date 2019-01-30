@@ -49,32 +49,35 @@ module.exports = {
   ],
 
   groups: {
-    'ads-best-practices': {
-      title: 'Best Practices',
+    'measurements': {
+      title: 'Measurements',
     },
     'ads-performance': {
       title: 'Performance',
     },
-    'measurements': {
-      title: 'Measurements',
+    'ads-best-practices': {
+      title: 'Best Practices',
     },
   },
 
   categories: {
     'ads-quality': {
-      title: 'Ad Quality',
+      title: 'Ad Quality [Alpha]',
       auditRefs: [
+        // Measurements group.
+        {id: 'tag-load-time', weight: 1, group: 'measurements'},
+        {id: 'ad-request-from-tag-load', weight: 1, group: 'measurements'},
+        {id: 'ad-request-from-page-start', weight: 1, group: 'measurements'},
+        // Performance group.
         {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
         {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
         {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
+        // Best Practices group.
         {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
         {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
         {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
         {id: 'static-ad-tags', weight: 1, group: 'ads-best-practices'},
         {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
-        {id: 'tag-load-time', weight: 1, group: 'measurements'},
-        {id: 'ad-request-from-tag-load', weight: 1, group: 'measurements'},
-        {id: 'ad-request-from-page-start', weight: 1, group: 'measurements'},
         {id: 'full-width-slots', weight: 1, group: 'ads-best-practices'},
         {id: 'ad-top-of-viewport', weight: 1, group: 'ads-best-practices'},
         {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},

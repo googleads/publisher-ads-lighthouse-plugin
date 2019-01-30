@@ -15,6 +15,16 @@
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 
+
+/**
+ * Table headings for audits details sections.
+ * @type {LH.Audit.Heading[]}
+ */
+const HEADINGS = [
+  {key: 'slot', itemType: 'text', text: 'Top Slot ID'},
+];
+
+
 /** @inheritDoc */
 class AdTopOfViewport extends Audit {
   /**
@@ -67,7 +77,11 @@ class AdTopOfViewport extends Audit {
       rawValue: topSlot.midpoint,
       // No displayValue if passing, no changes to be made.
       displayValue: score ? '' : 'A scroll of ' + Math.round(topSlot.midpoint)
-        + ' px would hide half of your topmost ad (slot: ' + topSlot.id + ')',
+        + ' px would hide half of your topmost ad.',
+      details: AdTopOfViewport.makeTableDetails(
+        HEADINGS,
+        score ? [] : [{slot: topSlot.id}]
+      ),
     };
   }
 }
