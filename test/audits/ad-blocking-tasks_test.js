@@ -13,8 +13,8 @@
 // limitations under the License.
 
 const AdBlockingTasks = require('../../audits/ad-blocking-tasks');
-const MainThreadTasks = require('lighthouse/lighthouse-core/gather/computed/main-thread-tasks');
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const sinon = require('sinon');
 const {expect} = require('chai');
 

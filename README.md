@@ -18,4 +18,3 @@ Available options:
 
 -   Lighthouse Docs: https://github.com/GoogleChrome/lighthouse
 -   DevTools Protocol: https://chromedevtools.github.io/devtools-protocol
--   HAR Spec: https://dvcs.w3.org/hg/webperf/raw-file/tip/specs/HAR/Overview.html
