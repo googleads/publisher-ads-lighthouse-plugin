@@ -345,7 +345,7 @@ module.exports = [
     ],
   },
   {
-    label: 'Quantacast',
+    label: 'Quantcast',
     patterns: [
       '^http[s]?:\/\/global\.qc\.rtb\.quantserve\.com:8080\/qchb.*',
     ],
