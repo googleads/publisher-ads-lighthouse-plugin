@@ -15,7 +15,7 @@
 const AdRequestFromPageStart = require('../../audits/ad-request-from-page-start');
 const chai = require('chai');
 const expect = chai.expect;
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const sinon = require('sinon');
 
 const AD_REQUEST_URL = 'https://securepubads.g.doubleclick.net/gampad/ads?foo';

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const MainThreadTasks = require('lighthouse/lighthouse-core/gather/computed/main-thread-tasks');
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');

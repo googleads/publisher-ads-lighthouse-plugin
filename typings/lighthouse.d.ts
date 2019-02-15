@@ -81,10 +81,10 @@ declare module 'lighthouse-logger' {
   }
 }
 
-declare module 'lighthouse/lighthouse-core/gather/computed/network-records' {
+declare module 'lighthouse/lighthouse-core/computed/network-records' {
   export function request(devToolsLog: LH.DevtoolsLog, context: LH.Audit.Context): Promise<Array<LH.Artifacts.NetworkRequest>>;
 }
 
-declare module 'lighthouse/lighthouse-core/gather/computed/main-thread-tasks' {
+declare module 'lighthouse/lighthouse-core/computed/main-thread-tasks' {
   export function request(trace: LH.Trace, context: LH.Audit.Context): Promise<Array<TaskNode>>;
 }

@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');

@@ -16,7 +16,7 @@
   ],
   "author": "",
   "dependencies": {
-    "lighthouse": "^4.0.0-alpha.0",
+    "lighthouse": "^4.1.0",
     "yargs": "^11.0.0"
   },
   "devDependencies": {

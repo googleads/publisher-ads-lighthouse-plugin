@@ -14,7 +14,7 @@
 
 const AdRequestFromTagLoad = require('../../audits/ad-request-from-tag-load');
 const chai = require('chai');
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const sinon = require('sinon');
 const expect = chai.expect;
 

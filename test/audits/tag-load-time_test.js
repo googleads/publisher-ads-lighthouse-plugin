@@ -16,7 +16,7 @@ const chai = require('chai');
 const sinon = require('sinon');
 const TagLoadTime = require('../../audits/tag-load-time');
 const expect = chai.expect;
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 
 const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
 
