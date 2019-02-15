@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const sinon = require('sinon');
 const StaticAdTags = require('../../audits/static-ad-tags');
 const {expect} = require('chai');

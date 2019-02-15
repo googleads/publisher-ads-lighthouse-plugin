@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const AdRequestCriticalPath = require('../../audits/ad-request-critical-path');
-const NetworkRecords = require('lighthouse/lighthouse-core/gather/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const sinon = require('sinon');
 const {expect} = require('chai');
 
