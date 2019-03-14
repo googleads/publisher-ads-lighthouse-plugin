@@ -22,72 +22,19 @@
  */
 module.exports = {
   extends: 'lighthouse:full',
+  plugins: ['lighthouse-plugin-ad-speed-insights'],
   passes: [
     {
       passName: 'defaultPass',
       gatherers: [
-        require.resolve('./gatherers/rendered-ad-slots'),
+        require.resolve(
+          './lighthouse-plugin-ad-speed-insights/gatherers/rendered-ad-slots'),
       ],
     },
   ],
-
-  audits: [
-    require.resolve('./audits/ad-blocking-tasks'),
-    require.resolve('./audits/ad-request-critical-path'),
-    require.resolve('./audits/ads-in-viewport'),
-    require.resolve('./audits/async-ad-tags'),
-    require.resolve('./audits/loads-gpt-over-https'),
-    require.resolve('./audits/static-ad-tags'),
-    require.resolve('./audits/viewport-ad-density'),
-    require.resolve('./audits/tag-load-time'),
-    require.resolve('./audits/ad-request-from-page-start'),
-    require.resolve('./audits/ad-request-from-tag-load'),
-    require.resolve('./audits/full-width-slots'),
-    require.resolve('./audits/ad-top-of-viewport'),
-    require.resolve('./audits/duplicate-tags'),
-    require.resolve('./audits/serial-header-bidding'),
-  ],
-
-  groups: {
-    'measurements': {
-      title: 'Measurements',
-    },
-    'ads-performance': {
-      title: 'Performance',
-    },
-    'ads-best-practices': {
-      title: 'Best Practices',
-    },
-  },
-
-  categories: {
-    'ads-quality': {
-      title: 'Ad Quality [Alpha]',
-      auditRefs: [
-        // Measurements group.
-        {id: 'tag-load-time', weight: 1, group: 'measurements'},
-        {id: 'ad-request-from-tag-load', weight: 1, group: 'measurements'},
-        {id: 'ad-request-from-page-start', weight: 1, group: 'measurements'},
-        // Performance group.
-        {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
-        {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
-        {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
-        // Best Practices group.
-        {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
-        {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
-        {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
-        {id: 'static-ad-tags', weight: 1, group: 'ads-best-practices'},
-        {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
-        {id: 'full-width-slots', weight: 1, group: 'ads-best-practices'},
-        {id: 'ad-top-of-viewport', weight: 1, group: 'ads-best-practices'},
-        {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
-      ],
-    },
-  },
-
   settings: {
     onlyCategories: [
-      'ads-quality',
+      'lighthouse-plugin-ad-speed-insights'
     ],
   },
 };
