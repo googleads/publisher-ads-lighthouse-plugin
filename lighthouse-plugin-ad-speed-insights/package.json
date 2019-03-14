@@ -1,8 +1,8 @@
 {
-  "name": "adspeed-insights",
-  "version": "0.1.0",
+  "name": "lighthouse-plugin-ad-speed-insights",
+  "version": "0.0.3.5",
   "description": "Ad-aware extension for lighthouse.",
-  "main": "index.js",
+  "main": "plugin.js",
   "scripts": {
     "lint": "eslint .",
     "precommit": ".git/hooks/pre-commit",
