@@ -1,7 +1,7 @@
-node_modules/
+*node_modules/
 .vscode/
 
-reports/
+*reports/
 
 # LH output
 *.trace.json
@@ -14,4 +14,4 @@ reports/
 *.report.csv
 *.report.pretty
 *.artifacts.log
-output/
+*output/

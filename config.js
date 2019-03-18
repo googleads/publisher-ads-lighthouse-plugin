@@ -33,8 +33,6 @@ module.exports = {
     },
   ],
   settings: {
-    onlyCategories: [
-      'lighthouse-plugin-ad-speed-insights'
-    ],
+    onlyCategories: ['lighthouse-plugin-ad-speed-insights'],
   },
 };

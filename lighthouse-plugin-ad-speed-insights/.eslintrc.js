@@ -35,7 +35,6 @@ module.exports = {
     'prefer-const': 'error',
     'prefer-arrow-callback': 'error',
     'arrow-body-style': ['error', 'as-needed'],
-    // TODO: enable once go/github-eslint/issues/9949 is fixed
     'valid-jsdoc': 'off',
     'sort-requires/sort-requires': 2,
     'space-infix-ops': ['error', {'int32Hint': false}],

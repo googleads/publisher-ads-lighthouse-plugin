@@ -25,7 +25,7 @@ const LONG_TASK_DUR_MS = 50;
 
 /**
  * Table headings for audits details sections.
- * @type {LH.Audit.Heading[]}
+ * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
   {key: 'name', itemType: 'text', text: 'Name'},
@@ -150,7 +150,7 @@ class AdBlockingTasks extends Audit {
         .filter((record) => record.resourceType === 'Script')
         .map((record) => record.url);
 
-    /** @type {{[x: string]: LH.Audit.DetailsItem}[]} */
+    /** @type {LH.Audit.Details.Table['items']} */
     const blocking = [];
     let longTaskIndex = 0;
     for (const adNetworkReq of adNetworkReqs) {

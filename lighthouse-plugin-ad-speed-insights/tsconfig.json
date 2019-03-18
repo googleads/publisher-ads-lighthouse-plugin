@@ -10,11 +10,11 @@
     "typeRoots": [
       "./node_modules/@types",
       "./typings"
-    ]
+    ],
   },
+  // TODO(jburger): Include type-checking for parent files.
   "include": [
     "**/*.js",
-    "**/config.js",
     "**/*.d.ts",
   ],
   "exclude": [
