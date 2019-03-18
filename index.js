@@ -20,7 +20,7 @@ const yargs = require('yargs');
 async function main() {
   if (!yargs.argv.configPath) {
     // Avoid duplicating the option
-    const configPath = require.resolve('../config');
+    const configPath = require.resolve('./config');
     process.argv.push(`--config-path=${configPath}`);
   }
 

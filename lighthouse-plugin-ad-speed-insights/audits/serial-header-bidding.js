@@ -33,7 +33,7 @@ const MIN_BID_DURATION = .05;
 
 /**
  * Table headings for audits details sections.
- * @type {LH.Audit.Heading[]}
+ * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
   {key: 'bidder', itemType: 'text', text: 'Bidder'},

@@ -20,6 +20,7 @@
  *   find node_modules/lighthouse/types/**.d.ts | sed -E "s#node_modules/(.*).d.ts#import '\1';#g"
  */
 import 'lighthouse/types/artifacts';
+import 'lighthouse/types/audit-details';
 import 'lighthouse/types/audit';
 import 'lighthouse/types/config';
 import 'lighthouse/types/externs';
@@ -29,3 +30,4 @@ import 'lighthouse/types/lhr';
 import 'lighthouse/types/lhr-lite';
 import 'lighthouse/types/node';
 import 'lighthouse/types/protocol';
+import 'lighthouse/types/smokehouse';

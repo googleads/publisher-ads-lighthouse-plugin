@@ -18,7 +18,7 @@ const {Audit} = require('lighthouse');
 
 /**
  * Table headings for audits details sections.
- * @type {LH.Audit.Heading[]}
+ * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
   {key: 'slot', itemType: 'text', text: 'Top Slot ID'},

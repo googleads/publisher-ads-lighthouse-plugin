@@ -10,7 +10,7 @@ We are currently in alpha and still in the development process. In order to help
 
 ```sh
 git clone git@github.com:googleads/ad-speed-insights.git
-cd ad-speed-insights/lighthouse-plugin-ad-speed-insights
+cd ad-speed-insights
 yarn
 ```
 

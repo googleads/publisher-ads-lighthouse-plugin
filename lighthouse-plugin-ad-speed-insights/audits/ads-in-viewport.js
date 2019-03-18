@@ -18,7 +18,7 @@ const {isBoxInViewport} = require('../utils/geometry');
 
 /**
  * Table headings for audits details sections.
- * @type {LH.Audit.Heading[]}
+ * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
   {key: 'slot', itemType: 'text', text: 'Slots Outside Viewport'},
