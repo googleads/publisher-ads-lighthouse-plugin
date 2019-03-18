@@ -99,6 +99,16 @@ function getHeaderBidder(url) {
   return false;
 }
 
+
+/**
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isStaticRequest(request) {
+  // Use initiator type to determine if tag was loaded statically.
+  return ['parser', 'preload'].includes(request.initiator.type);
+}
+
 module.exports = {
   isGoogleAds,
   hasAdRequestPath,
@@ -108,4 +118,5 @@ module.exports = {
   isImplTag,
   containsAnySubstring,
   getHeaderBidder,
+  isStaticRequest,
 };

@@ -44,12 +44,19 @@ describe('AsyncAdTags', async () => {
       {
         desc: 'should fail unless all ad tags are async',
         networkRecords: [
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}},
+          {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}},
+          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}},
         ],
         expectedRawVal: false,
+      },
+      {
+        desc: 'should assume async if loaded statically',
+        networkRecords: [
+          {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'preload'}},
+        ],
+        expectedRawVal: true,
       },
     ];
 
