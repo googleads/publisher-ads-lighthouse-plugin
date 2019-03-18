@@ -16,7 +16,7 @@ const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isGptTag} = require('../utils/resource-classification');
+const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -26,7 +26,9 @@ const {URL} = require('url');
 function isAsync(tagReq) {
   // Use request priority as proxy to determine if script tag is asynchronous.
   // See https://bugs.chromium.org/p/chromium/issues/detail?id=408229.
-  return tagReq.priority == 'Low';
+  // If preload, priority will be `High`, assume async in that case.
+  // TODO(jburger): Properly handle preload && !async case.
+  return tagReq.priority == 'Low' || isStaticRequest(tagReq);
 }
 
 /** @inheritDoc */

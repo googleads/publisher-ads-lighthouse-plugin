@@ -16,17 +16,8 @@ const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {isGptTag} = require('../utils/resource-classification');
+const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
-
-/**
- * @param {LH.Artifacts.NetworkRequest} tagReq
- * @return {boolean}
- */
-function isStatic(tagReq) {
-  // Use initiator type to determine if tag was loaded statically.
-  return ['parser', 'preload'].includes(tagReq.initiator.type);
-}
 
 /** @inheritDoc */
 class StaticAdTags extends Audit {
@@ -62,7 +53,7 @@ class StaticAdTags extends Audit {
       return auditNotApplicable('No tag requested.');
     }
 
-    const numStatic = array.count(tagReqs, isStatic);
+    const numStatic = array.count(tagReqs, isStaticRequest);
     const numTags = tagReqs.length;
 
     return {
