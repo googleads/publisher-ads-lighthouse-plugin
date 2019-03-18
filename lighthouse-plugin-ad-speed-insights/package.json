@@ -1,19 +1,20 @@
 {
-  "name": "ad-speed-insights-wrapper",
+  "name": "lighthouse-plugin-ad-speed-insights",
   "version": "0.0.3.5",
-  "description": "Wrapper for Ad Speed Insights lighthouse plugin.",
+  "description": "Ad-aware plugin for lighthouse.",
   "license": "Apache-2.0",
-  "main": "index.js",
+  "main": "plugin.js",
   "scripts": {
-    "lint": "eslint -c lighthouse-plugin-ad-speed-insights/.eslintrc.js .",
-    "test": "mocha lighthouse-plugin-ad-speed-insights/test/**/*.js",
-    "type-check": "tsc -p lighthouse-plugin-ad-speed-insights/tsconfig.json"
+    "lint": "eslint .",
+    "test": "mocha test/**/*.js",
+    "type-check": "tsc -p ."
   },
   "husky": {
     "hooks": {
       "pre-commit": "yarn lint && yarn test && yarn type-check"
     }
   },
+  "author": "",
   "dependencies": {
     "lighthouse": "^4.2.0",
     "yargs": "^11.0.0"

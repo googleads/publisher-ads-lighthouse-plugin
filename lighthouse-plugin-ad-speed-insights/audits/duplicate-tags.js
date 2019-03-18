@@ -26,7 +26,7 @@ const tags = [
 
 /**
  * Table headings for audits details sections.
- * @type {LH.Audit.Heading[]}
+ * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
   {key: 'url', itemType: 'url', text: 'Script'},
@@ -81,7 +81,7 @@ class DuplicateTags extends Audit {
           tagsByFrame[frameId][url] ? tagsByFrame[frameId][url] + 1 : 1;
     });
 
-    /** @type {{[x: string]: LH.Audit.DetailsItem}[]} */
+    /** @type {LH.Audit.Details.Table['items']} */
     const dups = [];
     for (const frameId of Object.keys(tagsByFrame)) {
       for (const url of Object.keys(tagsByFrame[frameId])) {
