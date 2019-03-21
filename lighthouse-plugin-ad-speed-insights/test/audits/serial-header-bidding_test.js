@@ -28,18 +28,18 @@ describe('SerialHeaderBidding', async () => {
   describe('hasSerialHeaderBidding', async () => {
     const testCases = [
       {
-        desc: 'should pass for empty records',
+        desc: 'should be non applicable for empty records',
         networkRecords: [],
-        expectedScore: 1,
+        expectedNotAppl: true,
       },
       {
-        desc: 'should pass for records with non-header bidding domains',
+        desc: 'should be non applicable for records with non-header bidding domains',
         networkRecords: [
           {url: 'https://example.com', startTime: 5, endTime: 10, statusCode: 200},
           {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo', startTime: 10, endTime: 15},
           {url: 'https://www.googletagservices.com/tag/js/gpt.js', startTime: 15, endTime: 20},
         ],
-        expectedScore: 1,
+        expectedNotAppl: true,
       },
       {
         desc: 'should fail for records with header bidding domains',
@@ -100,11 +100,16 @@ describe('SerialHeaderBidding', async () => {
         expectedScore: 1,
       },
     ];
-    for (const {desc, networkRecords, expectedScore} of testCases) {
+    for (const {
+      desc, networkRecords, expectedScore, expectedNotAppl} of testCases) {
       it(`${desc} with score of ${expectedScore}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await SerialHeaderBidding.audit({devtoolsLogs: {}}, {});
-        expect(results).to.have.property('score', expectedScore);
+        if (expectedNotAppl) {
+          expect(results).to.have.property('notApplicable', true);
+        } else {
+          expect(results).to.have.property('score', expectedScore);
+        }
       });
     }
   });
@@ -112,13 +117,12 @@ describe('SerialHeaderBidding', async () => {
   describe('checkFilteredRecords', async () => {
     const testCases = [
       {
-        desc: '0 ads and bidding records for empty network records',
+        desc: 'not applicable for empty network records',
         networkRecords: [],
-        expectedAdsRecords: [],
-        expectedHeaderBiddingRecords: [],
+        expectedNotAppl: true,
       },
       {
-        desc: '0 ads and 0 bidding records for non-ads/non-bidding records',
+        desc: 'not applicable for non-ads/non-bidding records',
         networkRecords: [
           {
             startTime: 10,
@@ -132,11 +136,10 @@ describe('SerialHeaderBidding', async () => {
             url: 'https://foo.com',
           },
         ],
-        expectedAdsRecords: [],
-        expectedHeaderBiddingRecords: [],
+        expectedNotAppl: true,
       },
       {
-        desc: '1 ads and 0 bidding records',
+        desc: 'not applicable for no bidding records',
         networkRecords: [
           {
             startTime: 0,
@@ -150,15 +153,7 @@ describe('SerialHeaderBidding', async () => {
             url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo',
           },
         ],
-        expectedAdsRecords: [
-          {
-            startTime: 10,
-            endTime: 20,
-            url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo',
-            type: 'ad',
-          },
-        ],
-        expectedHeaderBiddingRecords: [],
+        expectedNotAppl: true,
       },
       {
         desc: '0 ads and 2 bidding records',
@@ -252,7 +247,7 @@ describe('SerialHeaderBidding', async () => {
         ],
       },
       {
-        desc: '1 ads and 1 bidding records with 0 resource size',
+        desc: 'not applicable with 0 resource size bid record',
         networkRecords: [
 
           {
@@ -268,8 +263,7 @@ describe('SerialHeaderBidding', async () => {
             resourceSize: 0,
           },
         ],
-        expectedAdsRecords: [],
-        expectedHeaderBiddingRecords: [],
+        expectedNotAppl: true,
       },
       {
         desc: '1 ads and 2 bidding records with positive resource size',
@@ -383,14 +377,18 @@ describe('SerialHeaderBidding', async () => {
     ];
 
     for (const {desc, networkRecords, expectedAdsRecords,
-      expectedHeaderBiddingRecords} of testCases) {
+      expectedHeaderBiddingRecords, expectedNotAppl} of testCases) {
       it(`should have ${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await SerialHeaderBidding.audit({devtoolsLogs: {}}, {});
-        expect(results).with.property('extendedInfo')
-            .property('adsRecords').eql(expectedAdsRecords);
-        expect(results).with.property('extendedInfo')
-            .property('headerBiddingRecords').eql(expectedHeaderBiddingRecords);
+        if (expectedNotAppl) {
+          expect(results).to.have.property('notApplicable', true);
+        } else {
+          expect(results).with.property('extendedInfo')
+              .property('adsRecords').eql(expectedAdsRecords);
+          expect(results).with.property('extendedInfo')
+              .property('headerBiddingRecords').eql(expectedHeaderBiddingRecords);
+        }
       });
     }
   });

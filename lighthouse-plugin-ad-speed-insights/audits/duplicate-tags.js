@@ -66,7 +66,7 @@ class DuplicateTags extends Audit {
         .filter((record) => containsAnySubstring(record.url, tags));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No tags requested.');
+      return auditNotApplicable('No tags requested');
     }
     /** @type {Object<string, Object<string, number>>} */
     const tagsByFrame = {};
