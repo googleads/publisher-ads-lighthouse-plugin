@@ -55,11 +55,11 @@ class AdsInViewport extends Audit {
     const slots = artifacts.RenderedAdSlots.filter((slot) => slot);
 
     if (!slots.length) {
-      return auditNotApplicable('No slots on page.');
+      return auditNotApplicable('No slots on page');
     }
     // Checks that non-null (visible) slots exist in array.
     if (!slots.find((s) => s != null)) {
-      return auditNotApplicable('No visible slots on page.');
+      return auditNotApplicable('No visible slots on page');
     }
 
     /** @type {Array<{slot: string}>} */

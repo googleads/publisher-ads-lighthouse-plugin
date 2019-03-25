@@ -50,7 +50,7 @@ class StaticAdTags extends Audit {
         .filter((req) => isGptTag(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No tag requested.');
+      return auditNotApplicable('No tag requested');
     }
 
     const numStatic = array.count(tagReqs, isStaticRequest);

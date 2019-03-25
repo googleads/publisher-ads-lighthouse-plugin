@@ -59,7 +59,7 @@ class AdTopOfViewport extends Audit {
           ({midpoint: slot.content[1] + slot.height / 2, id: slot.id}));
 
     if (!slots.length) {
-      return auditNotApplicable('No visible slots.');
+      return auditNotApplicable('No visible slots');
     }
 
     const topSlot = slots.reduce((a, b) => (a.midpoint < b.midpoint) ? a : b);
@@ -67,7 +67,7 @@ class AdTopOfViewport extends Audit {
     const inViewport = topSlot.midpoint < viewport.innerHeight;
 
     if (!inViewport) {
-      return auditNotApplicable('No ads in viewport.');
+      return auditNotApplicable('No ads in viewport');
     }
 
     const score = inViewport && topSlot.midpoint < 200 ? 0 : 1;

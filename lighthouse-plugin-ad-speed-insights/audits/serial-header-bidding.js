@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getPageStartTime} = require('../utils/network-timing');
@@ -142,6 +143,10 @@ class SerialHeaderBidding extends Audit {
     // So, we create objects that only have the relevant information, and return
     // in the details field.
     const recordsByType = bucket(networkRecords, checkRecordType);
+
+    if (!recordsByType[RequestType.BID]) {
+      return auditNotApplicable('No bids detected');
+    }
 
     // networkRecords are sorted by start time. We use this to offset
     // the visualized records.
