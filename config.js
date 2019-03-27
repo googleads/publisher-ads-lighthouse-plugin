@@ -28,7 +28,7 @@ module.exports = {
       passName: 'defaultPass',
       gatherers: [
         require.resolve(
-          './lighthouse-plugin-ad-speed-insights/gatherers/rendered-ad-slots'),
+          './lighthouse-plugin-ad-speed-insights/gatherers/iframe-elements'),
       ],
     },
   ],

@@ -17,11 +17,20 @@ const {expect} = require('chai');
 
 describe('AdTopOfViewport', () => {
   // From top left corner & dimensions
-  const generateSlot = ({x = 0, y, w = 200, h}) =>
-    ({content: [x, y, x + w, y, x + w, y + h, x, y + h],
-      height: h,
+  const generateSlot = ({x = 0, y, w = 200, h}) => ({
+    boxModel: {
+      x,
+      y,
       width: w,
-    });
+      height: h,
+      top: y,
+      bottom: y + h,
+      left: x,
+      right: x + w,
+    },
+    id: 'google_ads_iframe_test',
+    isVisible: w > 0 && h > 0,
+  });
 
   const ViewportDimensions = {
     innerHeight: 500,
@@ -30,49 +39,52 @@ describe('AdTopOfViewport', () => {
 
   describe('rawValue', () => {
     it('should succeed if there are no ad slots', async () => {
-      const RenderedAdSlots = [];
+      const IframeElements = [];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IframeElements, ViewportDimensions};
       expect(AdTopOfViewport.audit(artifacts)).to.have.property('rawValue', true);
     });
 
     it('should return midpoint of top ad within viewport', async () => {
-      const RenderedAdSlots = [
+      const IframeElements = [
         generateSlot({y: 100, h: 50}), // in
         generateSlot({y: 200, h: 50}), // out
         generateSlot({y: 800, h: 50}), // out
-        null, null, // hidden
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
       ];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IframeElements, ViewportDimensions};
       expect(AdTopOfViewport.audit(artifacts)).to.have.property('rawValue', 125);
     });
 
     it('should not be applicable if no ads in viewport', async () => {
-      const RenderedAdSlots = [
+      const IframeElements = [
         generateSlot({y: 505, h: 50}), // out
         generateSlot({y: 600, h: 50}), // out
         generateSlot({y: 800, h: 50}), // out
-        null, null, // hidden
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
       ];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IframeElements, ViewportDimensions};
       expect(AdTopOfViewport.audit(artifacts))
           .to.have.property('notApplicable', true);
     });
 
     it('should not be applicable if no slots are rendered', async () => {
-      const RenderedAdSlots = [];
+      const IframeElements = [];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IframeElements, ViewportDimensions};
       expect(AdTopOfViewport.audit(artifacts))
           .to.have.property('notApplicable', true);
     });
 
     it('should not be applicable if no slots are visible', async () => {
-      const RenderedAdSlots = [null, null];
+      const IframeElements = [
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+      ];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IframeElements, ViewportDimensions};
       expect(AdTopOfViewport.audit(artifacts))
           .to.have.property('notApplicable', true);
     });

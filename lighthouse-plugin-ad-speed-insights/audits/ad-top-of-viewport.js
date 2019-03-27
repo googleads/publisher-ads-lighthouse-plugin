@@ -14,6 +14,7 @@
 
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
+const {isGoogleAdsIframe} = require('../utils/resource-classification');
 
 
 /**
@@ -42,7 +43,7 @@ class AdTopOfViewport extends Audit {
         ' to load is decreased  and the ad is more likely to be viewed. ' +
         '[Learn more.]' +
         '(https://ad-speed-insights.appspot.com/#top-of-viewport)',
-      requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
+      requiredArtifacts: ['ViewportDimensions', 'IframeElements'],
     };
   }
 
@@ -53,10 +54,13 @@ class AdTopOfViewport extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.RenderedAdSlots
-        .filter((slot) => slot && slot.width > 1 && slot.height > 1)
-        .map((slot) =>
-          ({midpoint: slot.content[1] + slot.height / 2, id: slot.id}));
+    const slots = artifacts.IframeElements
+        .filter((slot) => slot.boxModel.width > 1 && slot.boxModel.height > 1
+          && isGoogleAdsIframe(slot))
+        .map((slot) => ({
+          midpoint: slot.boxModel.top + slot.boxModel.height / 2,
+          id: slot.id,
+        }));
 
     if (!slots.length) {
       return auditNotApplicable('No visible slots');
