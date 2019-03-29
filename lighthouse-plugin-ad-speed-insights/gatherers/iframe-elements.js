@@ -24,36 +24,34 @@ const pageFunctions = require('lighthouse/lighthouse-core/lib/page-functions.js'
  * @param {HTMLIFrameElement} element
  * @return {DOMRect | ClientRect}
  */
-function getBoxModel(element) {
+function getClientRect(element) {
   return element.getBoundingClientRect();
 }
 /**
- * @return {Array<LH.Crdp.DOM.BoxModel>}
+ * @return {Artifacts['IFrameElements']}
  */
-function collectIframeElements() {
+function collectIFrameElements() {
   // @ts-ignore - put into scope via stringification
-  const iframeElements = getElementsInDocument('iframe'); // eslint-disable-line no-undef
-  return iframeElements.map(/** @param {HTMLIFrameElement} node */ (node) => {
-    // @ts-ignore - put into scope via stringification
-    const outerHTML = getOuterHTMLSnippet(node); // eslint-disable-line no-undef
+  const iFrameElements = getElementsInDocument('iframe'); // eslint-disable-line no-undef
+  return iFrameElements.map(/** @param {HTMLIFrameElement} node */ (node) => {
     // @ts-ignore
-    const boxModel = getBoxModel(node).toJSON();
-    const isVisible = (boxModel.width > 0 && boxModel.height > 0);
+    const clientRect = getClientRect(node).toJSON();
+    // Marking 1x1 as non-visible to ignore tracking pixels.
+    const isVisible = (clientRect.width > 1 && clientRect.height > 1);
     return {
       id: node.id,
       src: node.src,
-      outerHTML,
-      boxModel,
+      clientRect,
       isVisible,
     };
   });
 }
 
 /** @inheritdoc */
-class IframeElements extends Gatherer {
+class IFrameElements extends Gatherer {
   /**
    * @param {LH.Gatherer.PassContext} passContext
-   * @return {Promise<Array<?LH.Crdp.DOM.BoxModel>>}
+   * @return {Promise<Artifacts['IFrameElements']>}
    * @override
    */
   async afterPass(passContext) {
@@ -62,13 +60,13 @@ class IframeElements extends Gatherer {
     const expression = `(() => {
       ${pageFunctions.getOuterHTMLSnippetString};
       ${pageFunctions.getElementsInDocumentString};
-      ${getBoxModel};
-      return (${collectIframeElements})();
+      ${getClientRect};
+      return (${collectIFrameElements})();
     })()`;
 
-    /** @type {Array<LH.Artifacts.AnchorElement>} */
+    /** @type {Artifacts.IFrameElements} */
     return driver.evaluateAsync(expression, {useIsolation: true});
   }
 }
 
-module.exports = IframeElements;
+module.exports = IFrameElements;

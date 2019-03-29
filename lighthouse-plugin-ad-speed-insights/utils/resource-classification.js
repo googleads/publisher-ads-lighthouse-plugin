@@ -110,11 +110,11 @@ function isStaticRequest(request) {
 }
 
 /**
- * @param {LH.Crdp.DOM.BoxModel} iframe
+ * @param {Artifacts['IFrameElement']} iframe
  * @param {?boolean} excludeNonVisible
  * @return {boolean}
  */
-function isGoogleAdsIframe(iframe, excludeNonVisible = true) {
+function isGPTIFrame(iframe, excludeNonVisible = true) {
   return /(^google_ads_iframe_)/.test(iframe.id) &&
     (!excludeNonVisible || iframe.isVisible);
 }
@@ -129,5 +129,5 @@ module.exports = {
   containsAnySubstring,
   getHeaderBidder,
   isStaticRequest,
-  isGoogleAdsIframe,
+  isGPTIFrame,
 };

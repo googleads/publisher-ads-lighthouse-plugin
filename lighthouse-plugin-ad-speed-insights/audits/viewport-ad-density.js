@@ -15,7 +15,7 @@
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
-const {isGoogleAdsIframe} = require('../utils/resource-classification');
+const {isGPTIFrame} = require('../utils/resource-classification');
 
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
@@ -34,7 +34,7 @@ class ViewportAdDensity extends Audit {
           '(https://www.betterads.org/mobile-ad-density-higher-than-30/). ' +
           '[Learn more.]' +
           '(https://ad-speed-insights.appspot.com/#ad-density)',
-      requiredArtifacts: ['ViewportDimensions', 'IframeElements'],
+      requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
 
@@ -45,15 +45,15 @@ class ViewportAdDensity extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.IframeElements.filter(
-      (slot) => isGoogleAdsIframe(slot));
+    const slots = artifacts.IFrameElements.filter(
+      (slot) => isGPTIFrame(slot));
 
     if (!slots.length) {
       return auditNotApplicable('No visible slots on page');
     }
 
     const adArea = slots.reduce((sum, slot) =>
-      sum + boxViewableArea(slot.boxModel, viewport), 0);
+      sum + boxViewableArea(slot.clientRect, viewport), 0);
 
     const viewArea = viewport.innerWidth * viewport.innerHeight;
 

@@ -18,7 +18,7 @@ const {expect} = require('chai');
 describe('geometry', () => {
   // From top left corner & dimensions
   const generateSlot = ({x, y, w, h}) => ({
-    boxModel: {
+    clientRect: {
       x,
       y,
       width: w,
@@ -57,7 +57,7 @@ describe('geometry', () => {
 
       tests.forEach(async (test) =>
         it(`should handle slots on the ${test.pos} as seen`, () => {
-          expect(isBoxInViewport(generateSlot(test).boxModel, viewport))
+          expect(isBoxInViewport(generateSlot(test).clientRect, viewport))
               .to.equal(true);
         })
       );
@@ -79,19 +79,19 @@ describe('geometry', () => {
 
       tests.forEach(async (test) =>
         it(`should handle slots outside the ${test.pos} as not seen`, () => {
-          expect(isBoxInViewport(generateSlot(test).boxModel, viewport))
+          expect(isBoxInViewport(generateSlot(test).clientRect, viewport))
               .to.equal(false);
         })
       );
 
       it('should return false if slot has no area', async () => {
         const slot = generateSlot({x: 10, y: 10, w: 0, h: 0});
-        expect(isBoxInViewport(slot.boxModel, viewport)).to.equal(false);
+        expect(isBoxInViewport(slot.clientRect, viewport)).to.equal(false);
       });
 
       it('should return false if slot is hidden', async () => {
         const slot = generateSlot({x: 0, y: 0, w: 0, h: 0}); // hidden
-        expect(isBoxInViewport(slot.boxModel, viewport)).to.equal(false);
+        expect(isBoxInViewport(slot.clientRect, viewport)).to.equal(false);
       });
     });
   });
@@ -116,7 +116,7 @@ describe('geometry', () => {
 
       tests.forEach(async (test) =>
         it(`should handle slots on the ${test.pos} properly`, () => {
-          const result = boxViewableArea(generateSlot(test).boxModel, viewport);
+          const result = boxViewableArea(generateSlot(test).clientRect, viewport);
           expect(result).to.equal(test.overlap);
         })
       );
@@ -138,19 +138,19 @@ describe('geometry', () => {
 
       tests.forEach(async (test) =>
         it(`should return zero for slots outside the ${test.pos}`, () => {
-          expect(boxViewableArea(generateSlot(test).boxModel, viewport))
+          expect(boxViewableArea(generateSlot(test).clientRect, viewport))
               .to.equal(0);
         })
       );
 
       it('should return zero if slot has no area', async () => {
         const slot = generateSlot({x: 10, y: 10, w: 0, h: 0});
-        expect(boxViewableArea(slot.boxModel, viewport)).to.equal(0);
+        expect(boxViewableArea(slot.clientRect, viewport)).to.equal(0);
       });
 
       it('should return zero if slot is hidden', async () => {
         const slot = generateSlot({x: 0, y: 0, w: 0, h: 0}); // hidden
-        expect(boxViewableArea(slot.boxModel, viewport)).to.equal(0);
+        expect(boxViewableArea(slot.clientRect, viewport)).to.equal(0);
       });
     });
   });

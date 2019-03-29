@@ -16,7 +16,13 @@ import './lh-externs';
 
 declare global {
   export interface Artifacts extends LH.Artifacts {
-    IframeElements: Array<LH.Crdp.DOM.BoxModel | null>;
+    IFrameElement: {
+      id: string,
+      src: string,
+      clientRect: ClientRect,
+      isVisible: boolean,
+    };
+    IFrameElements: Array<Artifacts.IFrameElement>;
     StaticAdTags: Array<LH.Crdp.DOM.Node>;
   }
 }

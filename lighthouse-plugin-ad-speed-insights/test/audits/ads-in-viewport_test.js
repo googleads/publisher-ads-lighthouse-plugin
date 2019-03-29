@@ -18,7 +18,7 @@ const {expect} = require('chai');
 describe('AdsInViewport', () => {
   // From top left corner & dimensions
   const generateSlot = ({x, y, w, h}) => ({
-    boxModel: {
+    clientRect: {
       x,
       y,
       width: w,
@@ -39,21 +39,21 @@ describe('AdsInViewport', () => {
 
   describe('rawValue', () => {
     it('should succeed if there are no ad slots', async () => {
-      const IframeElements = [];
+      const IFrameElements = [];
 
-      const artifacts = {IframeElements, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', true);
     });
 
     it('should return fraction of ad slots inside viewport', async () => {
-      const IframeElements = [
+      const IFrameElements = [
         generateSlot({x: 0, y: 100, w: 50, h: 50}), // in
         generateSlot({x: 0, y: 700, w: 50, h: 50}), // out
         generateSlot({x: 0, y: 800, w: 50, h: 50}), // out
         generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
       ];
 
-      const artifacts = {IframeElements, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1 / 3);
     });
 
@@ -73,8 +73,8 @@ describe('AdsInViewport', () => {
 
     positiveTests.forEach(async (test) =>
       it(`should handle slots on the ${test.pos} properly`, () => {
-        const IframeElements = [generateSlot(test)];
-        const artifacts = {IframeElements, ViewportDimensions};
+        const IFrameElements = [generateSlot(test)];
+        const artifacts = {IFrameElements, ViewportDimensions};
         expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1);
       })
     );
@@ -94,28 +94,28 @@ describe('AdsInViewport', () => {
 
     negativeTests.forEach(async (test) =>
       it(`should handle slots outside the ${test.pos}`, () => {
-        const IframeElements = [generateSlot(test)];
-        const artifacts = {IframeElements, ViewportDimensions};
+        const IFrameElements = [generateSlot(test)];
+        const artifacts = {IFrameElements, ViewportDimensions};
         expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 0);
       })
     );
 
     it('should be not applicable if no slots have area', async () => {
-      const IframeElements = [
+      const IFrameElements = [
         generateSlot({x: 10, y: 10, w: 0, h: 0}),
         generateSlot({x: 100, y: 10, w: 100, h: 0}),
       ];
-      const artifacts = {IframeElements, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       expect(AdsInViewport.audit(artifacts))
           .to.have.property('notApplicable', true);
     });
 
     it('should be not applicable if all slots are hidden', async () => {
-      const IframeElements = [
+      const IFrameElements = [
         generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
         generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
       ];
-      const artifacts = {IframeElements, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       expect(AdsInViewport.audit(artifacts))
           .to.have.property('notApplicable', true);
     });

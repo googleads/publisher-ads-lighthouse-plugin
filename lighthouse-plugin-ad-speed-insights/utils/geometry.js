@@ -13,28 +13,28 @@
 // limitations under the License.
 
 /**
- * @param {?LH.Crdp.DOM.BoxModel} boxModel
+ * @param {ClientRect} clientRect
  * @param {LH.Artifacts.ViewportDimensions} viewport
  * @return {boolean}
  */
-function isBoxInViewport(boxModel, viewport) {
+function isBoxInViewport(clientRect, viewport) {
   const {innerWidth, innerHeight} = viewport;
-  const {left, top, right, bottom} = boxModel;
+  const {left, top, right, bottom} = clientRect;
 
   return left < right && top < bottom && // Non-zero area
     left < innerWidth && top < innerHeight && 0 < right && 0 < bottom;
 }
 
 /**
- * @param {?LH.Crdp.DOM.BoxModel} boxModel
+ * @param {ClientRect} clientRect
  * @param {LH.Artifacts.ViewportDimensions} viewport
  * @return {number}
  */
-function boxViewableArea(boxModel, viewport) {
-  if (!isBoxInViewport(boxModel, viewport)) return 0;
+function boxViewableArea(clientRect, viewport) {
+  if (!isBoxInViewport(clientRect, viewport)) return 0;
 
   const {innerWidth, innerHeight} = viewport;
-  const {left, top, right, bottom} = boxModel;
+  const {left, top, right, bottom} = clientRect;
 
   return (Math.min(right, innerWidth) - Math.max(left, 0)) *
     (Math.min(bottom, innerHeight) - Math.max(top, 0));

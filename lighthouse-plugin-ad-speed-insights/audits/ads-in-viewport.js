@@ -15,7 +15,7 @@
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
-const {isGoogleAdsIframe} = require('../utils/resource-classification');
+const {isGPTIFrame} = require('../utils/resource-classification');
 
 /**
  * Table headings for audits details sections.
@@ -43,7 +43,7 @@ class AdsInViewport extends Audit {
           '(https://developers.google.com/doubleclick-gpt/reference' +
           '#googletag.PubAdsService_enableLazyLoad). [Learn more.]' +
           '(https://ad-speed-insights.appspot.com/#eager-ads)',
-      requiredArtifacts: ['ViewportDimensions', 'IframeElements'],
+      requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
 
@@ -53,8 +53,8 @@ class AdsInViewport extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.IframeElements
-        .filter((iframe) => isGoogleAdsIframe(iframe));
+    const slots = artifacts.IFrameElements
+        .filter((iframe) => isGPTIFrame(iframe));
 
     if (!slots.length) {
       return auditNotApplicable('No visible slots on page');
@@ -62,7 +62,7 @@ class AdsInViewport extends Audit {
 
     /** @type {Array<{slot: string}>} */
     const nonvisible = slots
-        .filter((slot) => !isBoxInViewport(slot.boxModel, viewport))
+        .filter((slot) => !isBoxInViewport(slot.clientRect, viewport))
         .map((slot) => ({slot: slot.id}))
         .sort((a, b) => a.slot.localeCompare(b.slot));
 
