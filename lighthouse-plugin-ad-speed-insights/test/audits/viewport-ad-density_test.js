@@ -17,8 +17,20 @@ const {expect} = require('chai');
 
 describe('ViewportAdDensity', () => {
   // From top left corner & dimensions
-  const generateSlot = ({x, y, w, h}) =>
-    ({content: [x, y, x + w, y, x + w, y + h, x, y + h]});
+  const generateSlot = ({x, y, w, h}) => ({
+    clientRect: {
+      x,
+      y,
+      width: w,
+      height: h,
+      top: y,
+      bottom: y + h,
+      left: x,
+      right: x + w,
+    },
+    id: 'google_ads_iframe_test',
+    isVisible: w > 0 && h > 0,
+  });
 
   const ViewportDimensions = {
     innerHeight: 200,
@@ -27,42 +39,43 @@ describe('ViewportAdDensity', () => {
 
   describe('rawValue', () => {
     it('should not be applicable if there are no ad slots', async () => {
-      const RenderedAdSlots = [];
+      const IFrameElements = [];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
       expect(result).to.have.property('notApplicable', true);
     });
 
     it('should return ad density inside viewport', async () => {
-      const RenderedAdSlots = [
+      const IFrameElements = [
         generateSlot({x: 0, y: 100, w: 50, h: 50}), // in
         generateSlot({x: 100, y: 0, w: 50, h: 50}), // in
         generateSlot({x: 0, y: 200, w: 50, h: 50}), // out
-        null, null, // hidden
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
       ];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
       expect(result).to.have.property('rawValue', 50 / 600);
     });
 
     it('should throw error if ad area exceeds viewport area', async () => {
-      const RenderedAdSlots = [
+      const IFrameElements = [
         generateSlot({x: 0, y: 0, w: 1000, h: 400}),
         generateSlot({x: 0, y: 0, w: 600, h: 700}),
       ];
 
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       expect(() => ViewportAdDensity.audit(artifacts)).to.throw();
     });
 
     it('should throw error if viewport area is zero', async () => {
-      const RenderedAdSlots = [
+      const IFrameElements = [
         generateSlot({x: 0, y: 0, w: 1000, h: 400}),
       ];
       const ViewportDimensions = {innerHeight: 0, innerWidth: 0};
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const artifacts = {IFrameElements, ViewportDimensions};
       expect(() => ViewportAdDensity.audit(artifacts)).to.throw();
     });
 
@@ -82,8 +95,8 @@ describe('ViewportAdDensity', () => {
 
     positiveTests.forEach(async (test) =>
       it(`should handle slots on the ${test.pos} properly`, () => {
-        const RenderedAdSlots = [generateSlot(test)];
-        const artifacts = {RenderedAdSlots, ViewportDimensions};
+        const IFrameElements = [generateSlot(test)];
+        const artifacts = {IFrameElements, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
         expect(result).to.have.property('rawValue', test.overlap / 60000);
       })
@@ -104,23 +117,26 @@ describe('ViewportAdDensity', () => {
 
     negativeTests.forEach(async (test) =>
       it(`should return zero for slots outside the ${test.pos}`, () => {
-        const RenderedAdSlots = [generateSlot(test)];
-        const artifacts = {RenderedAdSlots, ViewportDimensions};
+        const IFrameElements = [generateSlot(test)];
+        const artifacts = {IFrameElements, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
         expect(result).to.have.property('rawValue', 0);
       })
     );
 
-    it('should return zero if slot has no area', async () => {
-      const RenderedAdSlots = [generateSlot({x: 10, y: 10, w: 0, h: 0})];
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+    it('should be not applicable if no slot has area', async () => {
+      const IFrameElements = [generateSlot({x: 10, y: 10, w: 0, h: 0})];
+      const artifacts = {IFrameElements, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('rawValue', 0);
+      expect(result).to.have.property('notApplicable', true);
     });
 
     it('should not be applicable if all slots are hidden', async () => {
-      const RenderedAdSlots = [null, null]; // no box model if slot is hidden
-      const artifacts = {RenderedAdSlots, ViewportDimensions};
+      const IFrameElements = [
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+      ];
+      const artifacts = {IFrameElements, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
       expect(result).to.have.property('notApplicable', true);
     });

@@ -109,6 +109,16 @@ function isStaticRequest(request) {
   return ['parser', 'preload'].includes(request.initiator.type);
 }
 
+/**
+ * @param {Artifacts['IFrameElement']} iframe
+ * @param {?boolean} excludeNonVisible
+ * @return {boolean}
+ */
+function isGPTIFrame(iframe, excludeNonVisible = true) {
+  return /(^google_ads_iframe_)/.test(iframe.id) &&
+    (!excludeNonVisible || iframe.isVisible);
+}
+
 module.exports = {
   isGoogleAds,
   hasAdRequestPath,
@@ -119,4 +129,5 @@ module.exports = {
   containsAnySubstring,
   getHeaderBidder,
   isStaticRequest,
+  isGPTIFrame,
 };

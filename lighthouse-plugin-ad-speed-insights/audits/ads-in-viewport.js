@@ -15,6 +15,7 @@
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
+const {isGPTIFrame} = require('../utils/resource-classification');
 
 /**
  * Table headings for audits details sections.
@@ -42,7 +43,7 @@ class AdsInViewport extends Audit {
           '(https://developers.google.com/doubleclick-gpt/reference' +
           '#googletag.PubAdsService_enableLazyLoad). [Learn more.]' +
           '(https://ad-speed-insights.appspot.com/#eager-ads)',
-      requiredArtifacts: ['ViewportDimensions', 'RenderedAdSlots'],
+      requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
 
@@ -52,23 +53,20 @@ class AdsInViewport extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.RenderedAdSlots.filter((slot) => slot);
+    const slots = artifacts.IFrameElements
+        .filter((iframe) => isGPTIFrame(iframe));
 
     if (!slots.length) {
-      return auditNotApplicable('No slots on page');
-    }
-    // Checks that non-null (visible) slots exist in array.
-    if (!slots.find((s) => s != null)) {
       return auditNotApplicable('No visible slots on page');
     }
 
     /** @type {Array<{slot: string}>} */
     const nonvisible = slots
-        .filter((slot) => slot && !isBoxInViewport(slot, viewport))
+        .filter((slot) => !isBoxInViewport(slot.clientRect, viewport))
         .map((slot) => ({slot: slot.id}))
         .sort((a, b) => a.slot.localeCompare(b.slot));
-    const visibleCount = slots.length - nonvisible.length;
 
+    const visibleCount = slots.length - nonvisible.length;
     const pluralEnding = nonvisible.length == 1 ? '' : 's';
 
     return {
