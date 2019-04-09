@@ -28,6 +28,8 @@ module.exports = {
       passName: 'defaultPass',
       gatherers: [
         require.resolve(
+          './node_modules/lighthouse/lighthouse-core/gather/gatherers/scripts'),
+        require.resolve(
           './lighthouse-plugin-ad-speed-insights/gatherers/iframe-elements'),
       ],
     },
