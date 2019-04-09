@@ -33,7 +33,8 @@ function getTagEndTime(networkRecords) {
  */
 function getAdStartTime(networkRecords) {
   const firstAdRecord = networkRecords.find(
-    (record) => hasAdRequestPath(new URL(record.url)));
+    (record) => hasAdRequestPath(new URL(record.url)) &&
+       record.url.includes('vrg'));
   return firstAdRecord ? firstAdRecord.startTime : -1;
 }
 
