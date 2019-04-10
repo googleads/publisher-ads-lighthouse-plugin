@@ -13,12 +13,19 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const parseDomain = require('parse-domain');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
-const {isGoogleAds, hasAdRequestPath, isGpt} = require('../utils/resource-classification');
+const {isGoogleAds, hasAdRequestPath} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+/**
+ * @typedef {Object} SimpleRequest
+ * @property {string} request
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ */
 
 /**
  * Table headings for audits details sections.
@@ -26,9 +33,9 @@ const {URL} = require('url');
  */
 const HEADINGS = [
   {
-    key: 'domain',
+    key: 'request',
     itemType: 'url',
-    text: 'domain',
+    text: 'Request',
   },
   {
     key: 'startTime',
@@ -50,22 +57,30 @@ const HEADINGS = [
   },
 ];
 
-function isJsonp(request) {
-  return request.requestType == 'Script' && new URL(request.url).search;
-}
-
 /**
  * @param {Array<LH.Artifacts.NetworkRequest>} networkRequests
- * @param {Array<LH.Artifacts.Script>} scriptElements
+ * @param {Array<{content: string, requestId?: string}>} scriptElements
+ * @return {?Set<LH.Artifacts.NetworkRequest>}
  */
 function findLoadingGraph(networkRequests, scriptElements) {
   const pageStartTime = getPageStartTime(networkRequests);
   const adStartTime = getAdStartTime(networkRequests);
 
+  /** @type {Array<string>} */
   const requestStack = [];
 
+  const adRequests = networkRequests.filter((r) => {
+    const parsedUrl = new URL(r.url);
+    return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl);
+  });
+  if (!adRequests.length) {
+    return null;
+  }
+
+  requestStack.push(...adRequests.map((r) => r.url));
+
   const adTags = scriptElements.filter(
-      (script) => script.content.match(/googletag[.](cmd|display|pubads)/));
+    (script) => script.content.match(/googletag[.](cmd|display|pubads)/));
   for (const {requestId} of adTags) {
     const tagReq = networkRequests.find((r) => r.requestId === requestId);
     if (!tagReq) {
@@ -73,12 +88,6 @@ function findLoadingGraph(networkRequests, scriptElements) {
     }
     requestStack.push(tagReq.url);
   }
-
-  const adRequests = networkRequests.filter((r) => {
-    const parsedUrl = new URL(r.url);
-    return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl);
-  });
-  requestStack.push(...adRequests.map((r) => r.url));
 
   const result = new Set();
   const visited = new Set();
@@ -95,21 +104,22 @@ function findLoadingGraph(networkRequests, scriptElements) {
     }
     result.add(request);
 
-    console.log(getCallerScripts(request));
     requestStack.push(...getCallerScripts(request));
     requestStack.push(request.initiatorRequest && request.initiatorRequest.url);
 
     if (request.resourceType == 'Script') {
+      /** @type {Array<LH.Artifacts.NetworkRequest>} */
       const initiatedRequests = networkRequests
-          .filter((r) => ['Script', 'Fetch', 'XHR'].includes(r.resourceType))
+          .filter((r) =>
+            ['Script', 'Fetch', 'XHR', 'EventSTream'].includes(r.resourceType))
           .filter((r) => (/\b((pre)?bid|ad|exchange|rtb)/).test(r.url))
           .filter((r) =>
-              r.initiatorRequest && r.initiatorRequest.url === url ||
+            r.initiatorRequest && r.initiatorRequest.url === url ||
               getCallerScripts(r).find((u) => u === url));
       requestStack.push(...initiatedRequests.map((r) => r.url));
     }
   }
-  return result
+  return result;
 }
 
 /**
@@ -123,6 +133,7 @@ function getCallerScripts(entry) {
   if (!initiatorDetails.stack || initiatorDetails.type !== 'script') {
     return [];
   }
+  // @ts-ignore
   return initiatorDetails.stack.callFrames.map((f) => f.url);
 }
 
@@ -142,12 +153,16 @@ function getInitiatorDetails(entry) {
   return /** @type {LH.Crdp.Network.Initiator} */ (entry.initiator);
 }
 
-/** Computes summaries in place */
-function computeSummaries(intervals) {
-  if (!intervals.length) return;
-  intervals.sort((a, b) => {
-    if (a.domain != b.domain) {
-      return a.domain < b.domain ? -1 : 1;
+/**
+ * Computes summaries in place by merging overlapping requests with the same
+ * host and path.
+ * @param {Array<SimpleRequest>} requests
+ */
+function computeSummaries(requests) {
+  if (!requests.length) return;
+  requests.sort((a, b) => {
+    if (a.request != b.request) {
+      return a.request < b.request ? -1 : 1;
     }
     if (a.startTime != b.startTime) {
       return a.startTime < b.startTime ? -1 : 1;
@@ -155,22 +170,23 @@ function computeSummaries(intervals) {
     return a.endTime - b.endTime;
   });
   let tail = 0;
-  let last = intervals[0];
-  last.count = 1;
-  for (let i = 1; i < intervals.length; i++) {
-    const current = intervals[i];
-    if (last.domain != current.domain || last.endTime < current.startTime) {
-      intervals[tail++] = last;
+  let last = requests[0];
+  for (let i = 1; i < requests.length; i++) {
+    const current = requests[i];
+    if (last.request != current.request || last.endTime < current.startTime) {
+      requests[tail++] = last;
       last = current;
-      last.count = 1;
       continue;
     }
     last.endTime = Math.max(last.endTime, current.endTime);
-    last.count++;
   }
-  intervals.length = tail;
+  requests.length = tail;
 }
 
+/**
+ * Comptues the depth of the loading graph by comparing timings.
+ * @param {Array<SimpleRequest>} requests
+ */
 function computeDepth(requests) {
   let prevEnd = 0;
   let hops = 0;
@@ -184,14 +200,14 @@ function computeDepth(requests) {
 }
 
 /**
- * Extracts the domain from a URL.
+ * Extracts the request from a URL.
  * @param {string} url
  * @return {string}
  */
-function domainOf(url) {
+function requestName(url) {
   const {host, pathname} = new URL(url);
   const parts = pathname.split('/');
-  const path = parts.length < 5 : pathname : parts.splice(0, 3).join('/') + '/...';
+  const path = parts.length < 5 ? pathname : parts.splice(0, 3).join('/') + '/...';
   return host + path;
 }
 
@@ -226,25 +242,17 @@ class AdRequestCriticalPath extends Audit {
   static async audit(artifacts, context) {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
-    const baseUrl = networkRecords.find((rec) => rec.statusCode == 200).url;
-    const adsEntries = networkRecords.filter((entry) => {
-      const parsedUrl = new URL(entry.url);
-      return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl) &&
-          parsedUrl.search.includes('vrg');
-    });
-
-    if (!adsEntries.length) {
-      return auditNotApplicable('No ads requested');
-    }
-
 
     const pageStartTime = getPageStartTime(networkRecords);
-    const blockingRequests = findLoadingGraph(networkRecords, artifacts.Scripts);
-    console.log(Array.from(blockingRequests).map(r => r.url));
+    const blockingRequests =
+        findLoadingGraph(networkRecords, artifacts.Scripts);
+    if (!blockingRequests) {
+      return auditNotApplicable('No ads requested');
+    }
     const tableView = Array.from(blockingRequests)
         .map((req) =>
           ({
-            domain: domainOf(req.url),
+            request: requestName(req.url),
             startTime: (req.startTime - pageStartTime) * 1000,
             endTime: (req.endTime - pageStartTime) * 1000,
             duration: (req.endTime - req.startTime) * 1000,
@@ -257,8 +265,9 @@ class AdRequestCriticalPath extends Audit {
 
     return {
       rawValue: depth,
-      score: failed? 0 : 1,
-      displayValue: failed ? `${depth} serial resources, ${tableView.length} total resources` : '',
+      score: failed ? 0 : 1,
+      displayValue:
+          `${depth} serial resources, ${tableView.length} total resources`,
       details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
     };
   }
