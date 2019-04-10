@@ -66,7 +66,7 @@ function findLoadingGraph(networkRequests, scriptElements) {
   const pageStartTime = getPageStartTime(networkRequests);
   const adStartTime = getAdStartTime(networkRequests);
 
-  /** @type {Array<string>} */
+  /** @type {string[][]} */
   const requestStack = [];
 
   const adRequests = networkRequests.filter((r) => {
@@ -77,7 +77,7 @@ function findLoadingGraph(networkRequests, scriptElements) {
     return null;
   }
 
-  requestStack.push(...adRequests.map((r) => r.url));
+  requestStack.push(...adRequests.map((r) => [r.url]));
 
   const adTags = scriptElements.filter(
     (script) => script.content.match(/googletag[.](cmd|display|pubads)/));
@@ -86,17 +86,17 @@ function findLoadingGraph(networkRequests, scriptElements) {
     if (!tagReq) {
       continue;
     }
-    requestStack.push(tagReq.url);
+    requestStack.push([tagReq.url]);
   }
 
   const result = new Set();
   const visited = new Set();
   while (requestStack.length) {
-    const url = requestStack.pop();
-    if (!url || visited.has(url)) {
+    const [url, parentUrl] = requestStack.pop();
+    if (!url || visited.has(url + parentUrl)) {
       continue;
     }
-    visited.add(url);
+    visited.add(url + parentUrl);
     const request = networkRequests.find((r) => r.url === url);
     if (!request || request.startTime <= pageStartTime ||
         request.endTime > adStartTime) {
@@ -104,19 +104,25 @@ function findLoadingGraph(networkRequests, scriptElements) {
     }
     result.add(request);
 
-    requestStack.push(...getCallerScripts(request));
-    requestStack.push(request.initiatorRequest && request.initiatorRequest.url);
+    for (const caller of getCallerScripts(request)) {
+      requestStack.push([caller, url]);
+    }
+    requestStack.push(
+        [request.initiatorRequest && request.initiatorRequest.url, url]);
 
     if (request.resourceType == 'Script') {
       /** @type {Array<LH.Artifacts.NetworkRequest>} */
       const initiatedRequests = networkRequests
           .filter((r) =>
             ['Script', 'Fetch', 'XHR', 'EventSTream'].includes(r.resourceType))
-          .filter((r) => (/\b((pre)?bid|ad|exchange|rtb)/).test(r.url))
+          .filter((r) =>
+              (/\b((pre)?bid|ad|exchange|rtb)/).test(url + r.url))
           .filter((r) =>
             r.initiatorRequest && r.initiatorRequest.url === url ||
               getCallerScripts(r).find((u) => u === url));
-      requestStack.push(...initiatedRequests.map((r) => r.url));
+      for (const {url: initiatedUrl} of initiatedRequests) {
+        requestStack.push([initiatedUrl, url]);
+      }
     }
   }
   return result;
@@ -207,7 +213,7 @@ function computeDepth(requests) {
 function requestName(url) {
   const {host, pathname} = new URL(url);
   const parts = pathname.split('/');
-  const path = parts.length < 5 ? pathname : parts.splice(0, 3).join('/') + '/...';
+  const path = parts.length < 4 ? pathname : parts.splice(0, 2).join('/') + '/...';
   return host + path;
 }
 
