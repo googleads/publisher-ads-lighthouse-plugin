@@ -82,6 +82,27 @@ function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
   return taskTime - 1000 * network.startTime;
 }
 
+/**
+ * Returns the attributable script for this long task.
+ * @param {LH.Artifacts.TaskNode} longTask
+ * @return {string}
+ */
+function attributableUrl(longTask) {
+  if (longTask.event.args.data && longTask.event.args.data.url) {
+    return longTask.event.args.data.url;
+  }
+  if (longTask.attributableURLs.length) {
+    return longTask.attributableURLs[0];
+  }
+  for (const child of longTask.children) {
+    const url = attributableUrl(child);
+    if (url) {
+      return url;
+    }
+  }
+  return '';
+}
+
 /** @inheritDoc */
 class AdBlockingTasks extends Audit {
   /**
@@ -143,53 +164,38 @@ class AdBlockingTasks extends Audit {
     if (!adNetworkReqs.length) {
       return auditNotApplicable('No ad-related requests');
     }
-    // Pre-sort tasks and requests for performance.
-    adNetworkReqs.sort((l, r) => l.startTime - r.startTime);
 
-    const /** @type {Array<string>} */ scriptUrls = networkRecords
-        .filter((record) => record.resourceType === 'Script')
-        .map((record) => record.url);
+    adNetworkReqs.sort((l, r) => r.startTime - l.startTime);
+
+    // TODO(warrengm): End on ad load rather than ad request end.
+    const endTime = fixTime(adNetworkReqs[0].endTime);
 
     /** @type {LH.Audit.Details.Table['items']} */
     const blocking = [];
-    let longTaskIndex = 0;
-    for (const adNetworkReq of adNetworkReqs) {
-      for (; longTaskIndex < longTasks.length; longTaskIndex++) {
-        const longTask = longTasks[longTaskIndex];
-        // Handle cases without any overlap.
-        if (longTask.endTime < fixTime(adNetworkReq.startTime)) continue;
-        if (fixTime(adNetworkReq.endTime) < longTask.startTime) break;
-
-        // Check if longTask delayed NetworkRecord.
-        if (fixTime(adNetworkReq.responseReceivedTime) < longTask.endTime) {
-          let scriptUrl = longTask.event.args.data ?
-            longTask.event.args.data.url :
-            // @ts-ignore
-            longTask.attributableURLs.find((url) => scriptUrls.includes(url));
-          if (!scriptUrl) {
-            if (longTask.attributableURLs.length) {
-              scriptUrl = longTask.attributableURLs[0];
-            } else {
-              continue;
-            }
-          }
-
-          if (isGpt(new URL(scriptUrl))) {
-            continue;
-          }
-
-          const taskName = longTask.event.name || '';
-          const name = TASK_NAMES[taskName] ? TASK_NAMES[taskName] : taskName;
-
-          blocking.push({
-            name,
-            script: scriptUrl,
-            group: longTask.group.label,
-            duration: longTask.selfTime,
-            adReqBlocked: adNetworkReq.url,
-          });
-        }
+    for (const longTask of longTasks) {
+      // Handle cases without any overlap.
+      if (longTask.startTime > endTime) {
+        continue;
       }
+      const scriptUrl = attributableUrl(longTask);
+
+      if (scriptUrl && isGpt(new URL(scriptUrl))) {
+        continue;
+      }
+
+      const taskName = longTask.event.name || '';
+      const name = TASK_NAMES[taskName] ? TASK_NAMES[taskName] : taskName;
+
+      const adReqBlocked =
+          adNetworkReqs.find((req) => req.endTime > longTask.startTime);
+
+      blocking.push({
+        name,
+        script: scriptUrl,
+        group: longTask.group.label,
+        duration: longTask.selfTime,
+        adReqBlocked: adReqBlocked.url,
+      });
     }
 
     const pluralEnding = blocking.length == 1 ? '' : 's';
