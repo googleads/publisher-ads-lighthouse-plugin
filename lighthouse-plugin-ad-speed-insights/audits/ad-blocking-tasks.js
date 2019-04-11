@@ -21,18 +21,18 @@ const {URL} = require('url');
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
  */
-const LONG_TASK_DUR_MS = 50;
+const LONG_TASK_DUR_MS = 100;
 
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'name', itemType: 'text', text: 'Name'},
+  {key: 'name', itemType: 'text', text: 'Type'},
   {key: 'script', itemType: 'url', text: 'Attributable Script'},
-  {key: 'group', itemType: 'text', text: 'Category'},
+  {key: 'startTime', itemType: 'ms', text: 'Start', granularity: 1},
+  {key: 'endTime', itemType: 'ms', text: 'End', granularity: 1},
   {key: 'duration', itemType: 'ms', text: 'Duration', granularity: 1},
-  {key: 'adReqBlocked', itemType: 'url', text: 'Request Blocked'},
 ];
 
 /**
@@ -49,8 +49,18 @@ const TASK_NAMES = {
  * @return {boolean}
  */
 function isLong(task) {
-  // selfTime is duration minus all child durations.
-  return task.selfTime >= LONG_TASK_DUR_MS;
+  if (task.duration < LONG_TASK_DUR_MS) {
+    return false;  // Short task
+  }
+  if (task.parent) {
+    // Only show this long task if doing so adds more information for debugging.
+    // So we hide it if we can't find a URL or if it's attributed to the same
+    // script as the parent task.
+    const script = attributableUrl(task);
+    const parentScript = attributableUrl(task.parent);
+    return !!(script && script != parentScript);
+  }
+  return true;
 }
 
 /**
@@ -165,10 +175,8 @@ class AdBlockingTasks extends Audit {
       return auditNotApplicable('No ad-related requests');
     }
 
-    adNetworkReqs.sort((l, r) => r.startTime - l.startTime);
-
     // TODO(warrengm): End on ad load rather than ad request end.
-    const endTime = fixTime(adNetworkReqs[0].endTime);
+    const endTime = fixTime(Math.max(...adNetworkReqs.map((r) => r.endTime)));
 
     /** @type {LH.Audit.Details.Table['items']} */
     const blocking = [];
@@ -184,17 +192,20 @@ class AdBlockingTasks extends Audit {
       }
 
       const taskName = longTask.event.name || '';
-      const name = TASK_NAMES[taskName] ? TASK_NAMES[taskName] : taskName;
+      const name = TASK_NAMES[taskName] || taskName;
 
       const adReqBlocked =
           adNetworkReqs.find((req) => req.endTime > longTask.startTime);
 
+      const url = scriptUrl && new URL(scriptUrl);
+      const displayUrl = url && (url.host + url.pathname);
+
       blocking.push({
         name,
-        script: scriptUrl,
-        group: longTask.group.label,
-        duration: longTask.selfTime,
-        adReqBlocked: adReqBlocked.url,
+        script: displayUrl,
+        startTime: longTask.startTime,
+        endTime: longTask.endTime,
+        duration: longTask.duration,
       });
     }
 
