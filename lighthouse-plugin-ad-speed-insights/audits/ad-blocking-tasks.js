@@ -40,17 +40,18 @@ const HEADINGS = [
  * @type {Object<string, string>}
  */
 const TASK_NAMES = {
-  'V8.Execute': 'JS Execution',
-  'RunTask': 'JS Execution',
-  'RunMicrotasks': 'JS Execution',
+  'V8.Execute': 'JavaScript',
+  'RunTask': 'JavaScript',
+  'RunMicrotasks': 'JavaScript',
   'V8.ScriptCompiler': 'JS Compilation',
 };
 
 /**
  * @param {LH.Artifacts.TaskNode} task
+ * @param {Set<string>} knownScripts
  * @return {boolean}
  */
-function isLong(task) {
+function isLong(task, knownScripts) {
   if (task.duration < LONG_TASK_DUR_MS) {
     return false; // Short task
   }
@@ -58,8 +59,8 @@ function isLong(task) {
     // Only show this long task if doing so adds more information for debugging.
     // So we hide it if we can't find a URL or if it's attributed to the same
     // script as the parent task.
-    const script = attributableUrl(task);
-    const parentScript = attributableUrl(task.parent);
+    const script = attributableUrl(task, knownScripts);
+    const parentScript = attributableUrl(task.parent, knownScripts);
     return !!(script && script != parentScript);
   }
   return true;
@@ -97,20 +98,30 @@ function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
 /**
  * Returns the attributable script for this long task.
  * @param {LH.Artifacts.TaskNode} longTask
+ * @param {?Set<string>} knownScripts
  * @return {string}
  */
-function attributableUrl(longTask) {
+function attributableUrl(longTask, knownScripts) {
   if (longTask.event.args.data && longTask.event.args.data.url) {
-    return longTask.event.args.data.url;
+    if (!knownScripts || knownScripts.has(longTask.event.args.data.url)) {
+      return longTask.event.args.data.url;
+    }
   }
   if (longTask.attributableURLs.length) {
-    return longTask.attributableURLs[0];
+    return longTask.attributableURLs
+        .find((/** @type {string} */url) =>
+            !knownScripts || knownScripts.has(url));
   }
   for (const child of longTask.children) {
-    const url = attributableUrl(child);
+    const url = attributableUrl(child, knownScripts);
     if (url) {
       return url;
     }
+  }
+  if (knownScripts) {
+    // We've searched all records but haven't found a URL. Try again while
+    // permitting non-script URLs.
+   return attributableUrl(longTask, null);
   }
   return '';
 }
@@ -168,7 +179,6 @@ class AdBlockingTasks extends Audit {
     const fixTime = (/** @type {number} */ networkTime) =>
       networkTime * 1000 + offset;
 
-    const longTasks = tasks.filter(isLong);
     const adNetworkReqs = networkRecords
         .filter((req) => isGoogleAds(new URL(req.url)))
         .filter((req) => req.resourceType == 'XHR');
@@ -176,6 +186,11 @@ class AdBlockingTasks extends Audit {
     if (!adNetworkReqs.length) {
       return auditNotApplicable('No ad-related requests');
     }
+
+    const /** @type {Set<string>} */ knownScripts = new Set(networkRecords
+        .filter((record) => record.resourceType === 'Script')
+        .map((record) => record.url));
+    const longTasks = tasks.filter((t) => isLong(t, knownScripts));
 
     // TODO(warrengm): End on ad load rather than ad request end.
     const endTime = fixTime(Math.min(...adNetworkReqs.map((r) => r.endTime)));
@@ -186,7 +201,7 @@ class AdBlockingTasks extends Audit {
       if (longTask.startTime > endTime) {
         continue;
       }
-      const scriptUrl = attributableUrl(longTask);
+      const scriptUrl = attributableUrl(longTask, knownScripts);
 
       if (scriptUrl && isGpt(new URL(scriptUrl))) {
         continue;
@@ -213,7 +228,7 @@ class AdBlockingTasks extends Audit {
       // For the sake of brevity, we show at most 5 long tasks. If needed we
       // will filter tasks that are less actionable (child tasks or ones missing
       // attributable URLs).
-      blocking = blocking.filter((b) => b.script || b.isTopLevel)
+      blocking = blocking.filter((b) => b.script && b.isTopLevel)
           // Only show the longest tasks.
           .sort((a, b) => b.duration - a.duration)
           .splice(0, taskLimit)
