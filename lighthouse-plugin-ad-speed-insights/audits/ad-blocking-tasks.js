@@ -50,7 +50,7 @@ const TASK_NAMES = {
  */
 function isLong(task) {
   if (task.duration < LONG_TASK_DUR_MS) {
-    return false;  // Short task
+    return false; // Short task
   }
   if (task.parent) {
     // Only show this long task if doing so adds more information for debugging.
@@ -178,8 +178,7 @@ class AdBlockingTasks extends Audit {
     // TODO(warrengm): End on ad load rather than ad request end.
     const endTime = fixTime(Math.max(...adNetworkReqs.map((r) => r.endTime)));
 
-    /** @type {LH.Audit.Details.Table['items']} */
-    const blocking = [];
+    let blocking = [];
     for (const longTask of longTasks) {
       // Handle cases without any overlap.
       if (longTask.startTime > endTime) {
@@ -194,9 +193,6 @@ class AdBlockingTasks extends Audit {
       const taskName = longTask.event.name || '';
       const name = TASK_NAMES[taskName] || taskName;
 
-      const adReqBlocked =
-          adNetworkReqs.find((req) => req.endTime > longTask.startTime);
-
       const url = scriptUrl && new URL(scriptUrl);
       const displayUrl = url && (url.host + url.pathname);
 
@@ -206,7 +202,20 @@ class AdBlockingTasks extends Audit {
         startTime: longTask.startTime,
         endTime: longTask.endTime,
         duration: longTask.duration,
+        isTopLevel: !longTask.parent,
       });
+    }
+
+    const taskLimit = 5;
+    if (blocking.length > taskLimit) {
+      // For the sake of brevity, we show at most 5 long tasks. If needed we
+      // will filter tasks that are less actionable (child tasks or ones missing
+      // attributable URLs).
+      blocking = blocking.filter((b) => b.script && b.isTopLevel)
+          // Only show the longest tasks.
+          .sort((a, b) => b.duration - a.duration)
+          .splice(0, taskLimit)
+          .sort((a, b) => a.startTime - b.startTime);
     }
 
     const pluralEnding = blocking.length == 1 ? '' : 's';
