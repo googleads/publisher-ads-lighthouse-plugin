@@ -21,7 +21,7 @@ const {URL} = require('url');
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
  */
-const LONG_TASK_DUR_MS = 100;
+const LONG_TASK_DUR_MS = 50;
 
 /**
  * Table headings for audits details sections.
@@ -41,6 +41,8 @@ const HEADINGS = [
  */
 const TASK_NAMES = {
   'V8.Execute': 'JS Execution',
+  'RunTask': 'JS Execution',
+  'RunMicrotasks': 'JS Execution',
   'V8.ScriptCompiler': 'JS Compilation',
 };
 
@@ -169,14 +171,14 @@ class AdBlockingTasks extends Audit {
     const longTasks = tasks.filter(isLong);
     const adNetworkReqs = networkRecords
         .filter((req) => isGoogleAds(new URL(req.url)))
-        .filter((req) => req.resourceType == 'Script' || req.resourceType == 'XHR');
+        .filter((req) => req.resourceType == 'XHR');
 
     if (!adNetworkReqs.length) {
       return auditNotApplicable('No ad-related requests');
     }
 
     // TODO(warrengm): End on ad load rather than ad request end.
-    const endTime = fixTime(Math.max(...adNetworkReqs.map((r) => r.endTime)));
+    const endTime = fixTime(Math.min(...adNetworkReqs.map((r) => r.endTime)));
 
     let blocking = [];
     for (const longTask of longTasks) {
@@ -206,12 +208,12 @@ class AdBlockingTasks extends Audit {
       });
     }
 
-    const taskLimit = 5;
+    const taskLimit = 6;
     if (blocking.length > taskLimit) {
       // For the sake of brevity, we show at most 5 long tasks. If needed we
       // will filter tasks that are less actionable (child tasks or ones missing
       // attributable URLs).
-      blocking = blocking.filter((b) => b.script && b.isTopLevel)
+      blocking = blocking.filter((b) => b.script || b.isTopLevel)
           // Only show the longest tasks.
           .sort((a, b) => b.duration - a.duration)
           .splice(0, taskLimit)
