@@ -25,6 +25,7 @@ const generateTask = ([start, end], groupLabel, eventName) => ({
     args: {data: {url: 'https://example.com/script.js'}},
   },
   group: {label: groupLabel},
+  duration: end - start,
   selfTime: end - start,
   startTime: start,
   endTime: end,
@@ -32,13 +33,20 @@ const generateTask = ([start, end], groupLabel, eventName) => ({
   attributableURLs: [],
 });
 
-const generateReq = ([start, response, end], id, url) => ({
+const removeAttributableUrl = (task) => {
+  task.event.args.data = {};
+  task.attributableURLs = [];
+  return task;
+};
+
+const generateReq = ([start, response, end], id, url,
+  resourceType = 'Script') => ({
   responseReceivedTime: response / 1000,
   startTime: start / 1000,
   endTime: end / 1000,
   requestId: id,
   url,
-  resourceType: 'Script',
+  resourceType,
 });
 
 const makeArtifacts = (requests, tasks, offset = 0) => {
@@ -116,12 +124,12 @@ describe('AdBlockingTasks', async () => {
         tasks: [
           generateTask([0, 40], 'Parse HTML'),
           generateTask([140, 160], 'Script Evaluation'),
-          generateTask([300, 360], 'Script Evaluation'), // Long Task
+          generateTask([260, 360], 'Script Evaluation'), // Long Task
           generateTask([500, 520], 'Script Evaluation'),
         ],
         requests: [
           generateReq([110, 150, 160], 1, 'https://googletagservices.com'),
-          generateReq([210, 300, 360], 2, 'https://doubleclick.net'), // Block
+          generateReq([210, 300, 360], 2, 'https://doubleclick.net', 'XHR'), // Block
           generateReq([410, 500, 510], 3, 'https://googlesyndication.com'),
         ],
         expectedValue: false,
@@ -132,12 +140,12 @@ describe('AdBlockingTasks', async () => {
         tasks: [
           generateTask([0, 40], 'Parse HTML'),
           generateTask([140, 160], 'Script Evaluation'),
-          generateTask([300, 360], 'Script Evaluation').event.args = {}, // Long Task
+          removeAttributableUrl(generateTask([300, 360], 'Script Evaluation')), // Long Task
           generateTask([500, 520], 'Script Evaluation'),
         ],
         requests: [
           generateReq([110, 150, 160], 1, 'https://googletagservices.com'),
-          generateReq([210, 300, 360], 2, 'https://doubleclick.net'), // Block
+          generateReq([210, 300, 360], 2, 'https://doubleclick.net', 'XHR'), // Block
           generateReq([410, 500, 510], 3, 'https://googlesyndication.com'),
         ],
         expectedValue: true,
@@ -147,12 +155,12 @@ describe('AdBlockingTasks', async () => {
         tasks: [
           generateTask([0, 40], 'Parse HTML'),
           generateTask([140, 160], 'Script Evaluation'),
-          generateTask([300, 360], 'Script Evaluation'), // Long Task
+          generateTask([260, 360], 'Script Evaluation'), // Long Task
           generateTask([500, 520], 'Script Evaluation'),
         ],
         requests: [
           generateReq([1110, 1150, 1160], 1, 'https://googletagservices.com'),
-          generateReq([1210, 1300, 1360], 2, 'https://doubleclick.net'), // Block
+          generateReq([1210, 1300, 1360], 2, 'https://doubleclick.net', 'XHR'), // Block
           generateReq([1410, 1500, 1510], 3, 'https://googlesyndication.com'),
         ],
         offset: -1000,
@@ -164,13 +172,13 @@ describe('AdBlockingTasks', async () => {
         tasks: [
           generateTask([0, 40], 'Parse HTML'),
           generateTask([140, 160], 'Script Evaluation'),
-          generateTask([300, 360], 'Script Evaluation'), // Long Task
+          generateTask([260, 360], 'Script Evaluation'), // Long Task
           generateTask([500, 520], 'Script Evaluation'),
         ],
         requests: [
           generateReq([1410, 1500, 1510], 3, 'https://googlesyndication.com'),
           generateReq([1110, 1150, 1160], 1, 'https://googletagservices.com'),
-          generateReq([1210, 1300, 1360], 2, 'https://doubleclick.net'), // Block
+          generateReq([1210, 1300, 1360], 2, 'https://doubleclick.net', 'XHR'), // Block
         ],
         offset: -1000,
         expectedValue: false,
@@ -188,5 +196,34 @@ describe('AdBlockingTasks', async () => {
         expect(result).to.have.property('rawValue', expectedValue);
       });
     }
+
+    it('should include child long tasks with distinct URLs', async () => {
+      const tasks = [
+        generateTask([150, 360], 'Script Evaluation'),
+        generateTask([150, 250], 'Script Evaluation'),
+        generateTask([255, 355], 'Script Evaluation'),
+      ];
+
+      tasks[0].event.args.data.url = 'http://example.com/foo.js';
+      tasks[1].event.args.data.url = 'http://example.com/foo.js';
+      tasks[2].event.args.data.url = 'http://example.com/bar.js';
+
+      tasks[1].parent = tasks[0];
+      tasks[2].parent = tasks[0];
+      tasks[0].children = [tasks[1], tasks[2]];
+      tasks[0].selfTime -= tasks[1].duration + tasks[2].duration;
+
+      const requests = [
+        generateReq([500, 750, 800], 2, 'https://doubleclick.net', 'XHR'),
+      ];
+
+      const artifacts = makeArtifacts(requests, tasks, 0 /* offset */);
+      sandbox.stub(NetworkRecords, 'request').returns(requests);
+      sandbox.stub(MainThreadTasks, 'request').returns(tasks);
+      const {rawValue, displayValue} = await AdBlockingTasks.audit(artifacts);
+
+      expect(rawValue).to.equal(false);
+      expect(displayValue).to.match(/2 long tasks/);
+    });
   });
 });
