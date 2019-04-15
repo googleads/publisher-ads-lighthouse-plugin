@@ -21,7 +21,7 @@ const {URL} = require('url');
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
  */
-const LONG_TASK_DUR_MS = 100;
+const LONG_TASK_DUR_MS = 50;
 
 /**
  * Table headings for audits details sections.
