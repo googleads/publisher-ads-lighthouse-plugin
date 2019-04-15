@@ -21,7 +21,7 @@ const {URL} = require('url');
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
  */
-const LONG_TASK_DUR_MS = 50;
+const LONG_TASK_DUR_MS = 100;
 
 /**
  * Table headings for audits details sections.
@@ -55,13 +55,15 @@ function isLong(task, knownScripts) {
   if (task.duration < LONG_TASK_DUR_MS) {
     return false; // Short task
   }
+  const script = attributableUrl(task, knownScripts);
+  if (!script) {
+    return false;
+  }
   if (task.parent) {
     // Only show this long task if doing so adds more information for debugging.
-    // So we hide it if we can't find a URL or if it's attributed to the same
-    // script as the parent task.
-    const script = attributableUrl(task, knownScripts);
+    // So we hide it if it's attributed to the same script as the parent task.
     const parentScript = attributableUrl(task.parent, knownScripts);
-    return !!(script && script != parentScript);
+    return script != parentScript;
   }
   return true;
 }
@@ -102,7 +104,8 @@ function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
  * @return {string}
  */
 function attributableUrl(longTask, knownScripts) {
-  if (longTask.event.args.data && longTask.event.args.data.url) {
+  if (longTask.event && longTask.event.args.data &&
+      longTask.event.args.data.url) {
     if (!knownScripts || knownScripts.has(longTask.event.args.data.url)) {
       return longTask.event.args.data.url;
     }
@@ -110,7 +113,7 @@ function attributableUrl(longTask, knownScripts) {
   if (longTask.attributableURLs.length) {
     return longTask.attributableURLs
         .find((/** @type {string} */url) =>
-            !knownScripts || knownScripts.has(url));
+          !knownScripts || knownScripts.has(url));
   }
   for (const child of longTask.children) {
     const url = attributableUrl(child, knownScripts);
@@ -121,7 +124,7 @@ function attributableUrl(longTask, knownScripts) {
   if (knownScripts) {
     // We've searched all records but haven't found a URL. Try again while
     // permitting non-script URLs.
-   return attributableUrl(longTask, null);
+    return attributableUrl(longTask, null);
   }
   return '';
 }
@@ -164,7 +167,6 @@ class AdBlockingTasks extends Audit {
       return auditNotApplicable('Invalid timing task data');
     }
 
-
     if (!networkRecords.length) {
       return auditNotApplicable('No network records to compare');
     }
@@ -202,7 +204,6 @@ class AdBlockingTasks extends Audit {
         continue;
       }
       const scriptUrl = attributableUrl(longTask, knownScripts);
-
       if (scriptUrl && isGpt(new URL(scriptUrl))) {
         continue;
       }
@@ -223,7 +224,7 @@ class AdBlockingTasks extends Audit {
       });
     }
 
-    const taskLimit = 6;
+    const taskLimit = 10;
     if (blocking.length > taskLimit) {
       // For the sake of brevity, we show at most 5 long tasks. If needed we
       // will filter tasks that are less actionable (child tasks or ones missing
