@@ -15,7 +15,7 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
+const {getAdLoadingGraph, getPageStartTime, getAdStartTime} = require('../utils/network-timing');
 const {isGoogleAds, hasAdRequestPath} = require('../utils/resource-classification');
 const {URL} = require('url');
 
@@ -56,108 +56,6 @@ const HEADINGS = [
     granularity: 1,
   },
 ];
-
-/**
- * @param {Array<LH.Artifacts.NetworkRequest>} networkRequests
- * @param {Array<{content: string, requestId?: string}>} scriptElements
- * @return {?Set<LH.Artifacts.NetworkRequest>}
- */
-function findLoadingGraph(networkRequests, scriptElements) {
-  const pageStartTime = getPageStartTime(networkRequests);
-  const adStartTime = getAdStartTime(networkRequests);
-
-  /** @type {string[][]} */
-  const requestStack = [];
-
-  const adRequests = networkRequests.filter((r) => {
-    const parsedUrl = new URL(r.url);
-    return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl);
-  });
-  if (!adRequests.length) {
-    return null;
-  }
-
-  requestStack.push(...adRequests.map((r) => [r.url]));
-
-  const adTags = scriptElements.filter(
-    (script) => script.content.match(/googletag[.](cmd|display|pubads)/));
-  for (const {requestId} of adTags) {
-    const tagReq = networkRequests.find((r) => r.requestId === requestId);
-    if (!tagReq) {
-      continue;
-    }
-    requestStack.push([tagReq.url]);
-  }
-
-  const result = new Set();
-  const visited = new Set();
-  while (requestStack.length) {
-    const [url, parentUrl] = requestStack.pop();
-    if (!url || visited.has(url + parentUrl)) {
-      continue;
-    }
-    visited.add(url + parentUrl);
-    const request = networkRequests.find((r) => r.url === url);
-    if (!request || request.startTime <= pageStartTime ||
-        request.endTime > adStartTime) {
-      continue;
-    }
-    result.add(request);
-
-    for (const caller of getCallerScripts(request)) {
-      requestStack.push([caller, url]);
-    }
-    requestStack.push(
-        [request.initiatorRequest && request.initiatorRequest.url, url]);
-
-    if (request.resourceType == 'Script') {
-      /** @type {Array<LH.Artifacts.NetworkRequest>} */
-      const initiatedRequests = networkRequests
-          .filter((r) =>
-            ['Script', 'Fetch', 'XHR', 'EventSTream'].includes(r.resourceType))
-          .filter((r) =>
-              (/\b((pre)?bid|ad|exchange|rtb)/).test(url + r.url))
-          .filter((r) =>
-            r.initiatorRequest && r.initiatorRequest.url === url ||
-              getCallerScripts(r).find((u) => u === url));
-      for (const {url: initiatedUrl} of initiatedRequests) {
-        requestStack.push([initiatedUrl, url]);
-      }
-    }
-  }
-  return result;
-}
-
-/**
- * Returns the entry's call stack. Default to empty if array not applicable
- * (i.e. initiator type is not "script").
- * @param {LH.Artifacts.NetworkRequest} entry
- * @return {Array<string>}
- */
-function getCallerScripts(entry) {
-  const initiatorDetails = getInitiatorDetails(entry);
-  if (!initiatorDetails.stack || initiatorDetails.type !== 'script') {
-    return [];
-  }
-  // @ts-ignore
-  return initiatorDetails.stack.callFrames.map((f) => f.url);
-}
-
-/**
- * Returns the entry's initiator details. Defaults to empty object with type
- * field if it has empty _initiator_detail, to keep in line with the structure
- * of _initiator_detail.
- * @param {LH.Artifacts.NetworkRequest} entry
- * @return {LH.Crdp.Network.Initiator}
- */
-function getInitiatorDetails(entry) {
-  if (!entry.initiator) {
-    return {
-      type: '',
-    };
-  }
-  return /** @type {LH.Crdp.Network.Initiator} */ (entry.initiator);
-}
 
 /**
  * Computes summaries in place by merging overlapping requests with the same
@@ -251,7 +149,7 @@ class AdRequestCriticalPath extends Audit {
 
     const pageStartTime = getPageStartTime(networkRecords);
     const blockingRequests =
-        findLoadingGraph(networkRecords, artifacts.Scripts);
+        getAdLoadingGraph(networkRecords, artifacts.Scripts);
     if (!blockingRequests) {
       return auditNotApplicable('No ads requested');
     }
