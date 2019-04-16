@@ -15,8 +15,7 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {getAdLoadingGraph, getPageStartTime, getAdStartTime} = require('../utils/network-timing');
-const {isGoogleAds, hasAdRequestPath} = require('../utils/resource-classification');
+const {getAdLoadingGraph, getPageStartTime} = require('../utils/network-timing');
 const {URL} = require('url');
 
 /**
@@ -78,13 +77,13 @@ function computeSummaries(requests) {
   for (let i = 1; i < requests.length; i++) {
     const current = requests[i];
     if (last.request != current.request || last.endTime < current.startTime) {
-      requests[tail++] = last;
+      requests[++tail] = last;
       last = current;
       continue;
     }
     last.endTime = Math.max(last.endTime, current.endTime);
   }
-  requests.length = tail;
+  requests.length = tail + 1;
 }
 
 /**
@@ -100,7 +99,7 @@ function computeDepth(requests) {
       prevEnd = endTime;
     }
   }
-  return hops;
+  return requests.length;
 }
 
 /**
