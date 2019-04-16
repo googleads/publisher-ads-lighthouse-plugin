@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint -c lighthouse-plugin-ad-speed-insights/.eslintrc.js .",
+    "debug": "mocha debug lighthouse-plugin-ad-speed-insights/test/**/*.js",
     "test": "mocha lighthouse-plugin-ad-speed-insights/test/**/*.js",
     "type-check": "tsc -p lighthouse-plugin-ad-speed-insights/tsconfig.json"
   },
