@@ -33,8 +33,7 @@ function getTagEndTime(networkRecords) {
  */
 function getAdStartTime(networkRecords) {
   const firstAdRecord = networkRecords.find(
-    (record) => hasAdRequestPath(new URL(record.url)) &&
-       record.url.includes('vrg'));
+    (record) => hasAdRequestPath(new URL(record.url)))
   return firstAdRecord ? firstAdRecord.startTime : -1;
 }
 
@@ -90,6 +89,8 @@ function getAdLoadingGraph(networkRequests, scriptElements) {
   const pageStartTime = getPageStartTime(networkRequests);
   const adStartTime = getAdStartTime(networkRequests);
 
+  const networkRequestsByUrl = new Map(networkRequests.map((r) => [r.url, r]));
+
   /** @type {string[]} */
   const requestStack = [];
 
@@ -121,18 +122,19 @@ function getAdLoadingGraph(networkRequests, scriptElements) {
       continue;
     }
     visited.add(url);
-    const request = networkRequests.find((r) => r.url === url);
+    const request = networkRequestsByUrl.get(url);
+    console.log(request);
+    console.log(pageStartTime, adStartTime);
     if (!request || request.startTime <= pageStartTime ||
         request.endTime > adStartTime) {
       continue;
     }
     result.add(request);
 
-    for (const caller of getCallerScripts(request)) {
-      requestStack.push(caller);
-    }
+    console.log(getCallerScripts(request));
+    requestStack.push(...getCallerScripts(request));
     requestStack.push(
-        request.initiatorRequest && request.initiatorRequest.url);
+      request.initiatorRequest && request.initiatorRequest.url);
 
     if (request.resourceType == 'Script') {
       /** @type {Array<LH.Artifacts.NetworkRequest>} */
@@ -140,10 +142,10 @@ function getAdLoadingGraph(networkRequests, scriptElements) {
           .filter((r) =>
             ['Script', 'Fetch', 'XHR', 'EventStream'].includes(r.resourceType))
           .filter((r) =>
-              // TODO(warrengm): Refine the classification logic here. We don't
-              // want to include all initiated requests in case this request is
-              // do-all script, but this set is too restrictive currently.
-              (/\b((pre)?bid|ad|exchange|rtb)/).test(url + r.url))
+          // TODO(warrengm): Refine the classification logic here. We don't
+          // want to include all initiated requests in case this request is
+          // do-all script, but this set is too restrictive currently.
+            (/\b((pre)?bid|ad|exchange|rtb)/).test(url + r.url))
           .filter((r) =>
             r.initiatorRequest && r.initiatorRequest.url === url ||
               getCallerScripts(r).find((u) => u === url));
@@ -159,4 +161,5 @@ module.exports = {
   getTagEndTime,
   getAdStartTime,
   getPageStartTime,
+  getAdLoadingGraph,
 };
