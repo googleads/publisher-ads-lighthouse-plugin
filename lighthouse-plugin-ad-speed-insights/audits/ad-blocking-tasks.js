@@ -18,10 +18,11 @@ const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
+
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
  */
-const LONG_TASK_DUR_MS = 50;
+const LONG_TASK_DUR_MS = 100;
 
 /**
  * Table headings for audits details sections.
@@ -29,7 +30,7 @@ const LONG_TASK_DUR_MS = 50;
  */
 const HEADINGS = [
   {key: 'name', itemType: 'text', text: 'Type'},
-  {key: 'script', itemType: 'url', text: 'Attributable Script'},
+  {key: 'script', itemType: 'url', text: 'Attributable URL'},
   {key: 'startTime', itemType: 'ms', text: 'Start', granularity: 1},
   {key: 'endTime', itemType: 'ms', text: 'End', granularity: 1},
   {key: 'duration', itemType: 'ms', text: 'Duration', granularity: 1},
@@ -126,6 +127,8 @@ function attributableUrl(longTask, knownScripts) {
     // permitting non-script URLs.
     return attributableUrl(longTask, null);
   }
+  // TODO(warrengm): Investigate which we return empty strings or non-script
+  // URLs.
   return '';
 }
 
@@ -216,6 +219,7 @@ class AdBlockingTasks extends Audit {
 
       blocking.push({
         name,
+        // TODO(warrengm): Format the display URL so it fits on one line
         script: displayUrl,
         startTime: longTask.startTime,
         endTime: longTask.endTime,
