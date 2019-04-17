@@ -81,13 +81,13 @@ function computeSummaries(requests) {
   for (let i = 1; i < requests.length; i++) {
     const current = requests[i];
     if (last.request != current.request || last.endTime < current.startTime) {
-      requests[++tail] = last;
+      requests[tail++] = last;
       last = current;
       continue;
     }
     last.endTime = Math.max(last.endTime, current.endTime);
   }
-  requests.length = tail + 1;
+  requests.length = tail;
 }
 
 /**
