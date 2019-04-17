@@ -27,30 +27,43 @@ const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-n
  * @return {{requests: NetworkRequest[], traceEvents: TraceEvent[]}}
  */
 function getTransitiveClosure(root, isTargetRequest) {
-  const visited = new Set();
   const closure = new Set();
-  const stack = root.getDependents();
   /** @type {LH.Artifacts.NetworkRequest} */
   let firstTarget = null;
+  root.traverse((node) => {
+    if (!node.record || !isTargetRequest(node.record)) return;
+    if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
+      return;
+    }
+    firstTarget = node;
+  });
+
+  // Search target -> root
+  const stack = [firstTarget];
   while (stack.length) {
     const node = stack.pop();
+    if (closure.has(node)) {
+      continue;
+    }
+    closure.add(node);
+    stack.push(...node.getDependencies());
+  }
 
-    const isTarget = node.record && isTargetRequest(node.record);
-    if (isTarget || closure.has(node)) {
+  // Search root -> target
+  const visited = new Set();
+  stack.push(...root.getDependents());
+  while (stack.length) {
+    const node = stack.pop();
+    if (visited.has(node)) {
+      continue;
+    }
+    visited.add(node);
+    if (closure.has(node)) {
       for (const n of stack) {
         closure.add(n);
       }
-      if (isTarget) {
-        firstTarget =
-            !firstTarget || node.record.startTime < firstTarget.startTime ?
-              node.record : firstTarget;
-      }
     }
-
-    if (!visited.has(node)) {
-      visited.add(node);
-      stack.push(...node.getDependents());
-    }
+    stack.push(...node.getDependents());
   }
 
   const requests = Array.from(closure).map((n) => n.record)

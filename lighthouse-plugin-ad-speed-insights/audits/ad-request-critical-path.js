@@ -174,7 +174,7 @@ class AdRequestCriticalPath extends Audit {
         endTime: (req.endTime - pageStartTime) * 1000,
         duration: (req.endTime - req.startTime) * 1000,
       }))
-        .filter((t) => t.duration > 100 /* ms */);
+        .filter((t) => t.duration > 50);
     computeSummaries(tableView);
     tableView.sort((a, b) => a.startTime - b.startTime);
 
