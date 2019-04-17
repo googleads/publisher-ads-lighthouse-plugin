@@ -31,15 +31,21 @@ const HEADINGS = [
     text: 'Request',
   },
   {
+    key: 'lineNumber',
+    itemType: 'numeric',
+    text: 'HTML Line Number',
+    granularity: 1,
+  },
+  {
     key: 'startTime',
     itemType: 'ms',
     text: 'Request Start Time',
     granularity: 1,
   },
   {
-    key: 'lineNumber',
-    itemType: 'numeric',
-    text: 'HTML Line Number',
+    key: 'duration',
+    itemType: 'ms',
+    text: 'Request Duration',
     granularity: 1,
   },
 ];
