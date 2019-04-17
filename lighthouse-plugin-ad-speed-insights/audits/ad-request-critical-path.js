@@ -137,7 +137,7 @@ class AdRequestCriticalPath extends Audit {
           'execution to start loading ads as soon as possible. ' +
           '[Learn more.]' +
           '(https://ad-speed-insights.appspot.com/#blocking-resouces)',
-      requiredArtifacts: ['devtoolsLogs', 'Scripts', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
@@ -174,7 +174,7 @@ class AdRequestCriticalPath extends Audit {
         endTime: (req.endTime - pageStartTime) * 1000,
         duration: (req.endTime - req.startTime) * 1000,
       }))
-        .filter((t) => t.duration > 50);
+        .filter((t) => t.duration > 100 /* ms */);
     computeSummaries(tableView);
     tableView.sort((a, b) => a.startTime - b.startTime);
 
