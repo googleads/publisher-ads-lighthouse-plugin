@@ -15,7 +15,7 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {hasAdRequestPath} = require('../utils/resource-classification');
+const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @inheritDoc */
@@ -50,8 +50,8 @@ class FullWidthSlots extends Audit {
 
     /** @type {Array<URL>} */
     const adRequestUrls = networkRecords
-        .map((record) => new URL(record.url))
-        .filter(hasAdRequestPath);
+        .filter(isGptAdRequest)
+        .map((record) => new URL(record.url));
 
     if (!adRequestUrls.length) {
       return auditNotApplicable('No ads requested');

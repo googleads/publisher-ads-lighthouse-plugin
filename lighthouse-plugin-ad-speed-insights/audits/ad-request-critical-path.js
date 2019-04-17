@@ -16,7 +16,7 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
-const {isGoogleAds, hasAdRequestPath, isGpt} = require('../utils/resource-classification');
+const {isGptAdRequest, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -186,10 +186,7 @@ class AdRequestCriticalPath extends Audit {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     const baseUrl = networkRecords.find((rec) => rec.statusCode == 200).url;
-    const adsEntries = networkRecords.filter((entry) => {
-      const parsedUrl = new URL(entry.url);
-      return isGoogleAds(parsedUrl) && hasAdRequestPath(parsedUrl);
-    });
+    const adsEntries = networkRecords.filter(isGptAdRequest);
 
     if (!adsEntries.length) {
       return auditNotApplicable('No ads requested');
@@ -209,9 +206,9 @@ class AdRequestCriticalPath extends Audit {
         continue;
       }
       const reqUrl = new URL(req, baseUrl);
-      if (!isGpt(reqUrl) && !hasAdRequestPath(reqUrl)) {
-        const record =
-          networkRecords.find((record) => record.url == req);
+      const record =
+        networkRecords.find((record) => record.url == req);
+      if (!isGpt(reqUrl) && !isGptAdRequest(record)) {
         if (record && record.startTime > pageStartTime &&
           record.startTime < adStartTime) {
           tableView.push(
