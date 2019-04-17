@@ -13,12 +13,16 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+// @ts-ignore Could not find module lighthouse
+const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
-const {getAdLoadingGraph, getPageStartTime} = require('../utils/network-timing');
+const {getPageStartTime} = require('../utils/network-timing');
+const {getTransitiveClosure} = require('../utils/graph');
 const {URL} = require('url');
 
 /**
+ *
  * @typedef {Object} SimpleRequest
  * @property {string} request
  * @property {number} startTime
@@ -99,7 +103,7 @@ function computeDepth(requests) {
       prevEnd = endTime;
     }
   }
-  return requests.length;
+  return hops;
 }
 
 /**
@@ -110,7 +114,7 @@ function computeDepth(requests) {
 function requestName(url) {
   const {host, pathname} = new URL(url);
   const parts = pathname.split('/');
-  const path = parts.length < 4 ? pathname : parts.splice(0, 2).join('/') + '/...';
+  const path = parts.length < 4 ? pathname : parts.splice(0, 3).join('/') + '/...';
   return host + path;
 }
 
@@ -133,7 +137,7 @@ class AdRequestCriticalPath extends Audit {
           'execution to start loading ads as soon as possible. ' +
           '[Learn more.]' +
           '(https://ad-speed-insights.appspot.com/#blocking-resouces)',
-      requiredArtifacts: ['devtoolsLogs', 'Scripts'],
+      requiredArtifacts: ['devtoolsLogs', 'Scripts', 'traces'],
     };
   }
 
@@ -143,23 +147,34 @@ class AdRequestCriticalPath extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    // @ts-ignore
+    const mainDocumentNode = await PageDependencyGraph.request(
+      {trace, devtoolsLog}, context);
 
-    const pageStartTime = getPageStartTime(networkRecords);
-    const blockingRequests =
-        getAdLoadingGraph(networkRecords, artifacts.Scripts);
+    /** @type {(req: LH.Artifacts.NetworkRequest) => boolean} */
+    const isGptAdRequest = (req) => req.url.includes('/gampad/ads?') &&
+        PageDependencyGraph.getNetworkInitiators(req).find(
+          (/** @type {string} */ i) => i.includes('pubads_impl'));
+    const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
+    const blockingRequests = closure.requests
+        .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream'].includes(r.resourceType))
+        .filter((r) => r.mimeType != 'text/css');
+
     if (!blockingRequests) {
       return auditNotApplicable('No ads requested');
     }
-    const tableView = Array.from(blockingRequests)
-        .map((req) =>
-          ({
-            request: requestName(req.url),
-            startTime: (req.startTime - pageStartTime) * 1000,
-            endTime: (req.endTime - pageStartTime) * 1000,
-            duration: (req.endTime - req.startTime) * 1000,
-          }));
+    const pageStartTime = getPageStartTime(networkRecords);
+    const tableView = blockingRequests.map((req) =>
+      ({
+        request: requestName(req.url),
+        startTime: (req.startTime - pageStartTime) * 1000,
+        endTime: (req.endTime - pageStartTime) * 1000,
+        duration: (req.endTime - req.startTime) * 1000,
+      }))
+        .filter((t) => t.duration > 50);
     computeSummaries(tableView);
     tableView.sort((a, b) => a.startTime - b.startTime);
 

@@ -193,7 +193,7 @@ describe('CriticalPathTreeGeneration', async () => {
             children: [
               {
                 name: 'https://www.googletagservices.com/tag/js/gpt.js',
-                children: [ { name: 'https://securepubads.g.doubleclick.net/gpt/foo.js', children: [], }, ], }, ],
+                children: [{name: 'https://securepubads.g.doubleclick.net/gpt/foo.js', children: []}]}],
           },
         ],
       },
@@ -276,7 +276,7 @@ describe('CriticalPathTreeGeneration', async () => {
       if (expectedNotAppl) {
         expect(results).to.have.property('notApplicable', true);
       } else {
-        //expect(results);
+        // expect(results);
       }
     });
   }
