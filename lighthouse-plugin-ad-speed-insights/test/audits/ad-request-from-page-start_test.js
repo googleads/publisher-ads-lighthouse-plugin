@@ -35,7 +35,17 @@ describe('AdRequestFromPageStart', async () => {
         desc: 'should pass for records containing successful page and tag load',
         networkRecords: [
           {url: 'https://example.com', startTime: .25, statusCode: 200},
-          {url: AD_REQUEST_URL, startTime: .5},
+          {
+            url: AD_REQUEST_URL,
+            startTime: .5,
+            initiator: {
+              stack: {
+                callFrames: [
+                  {url: TAG_URL},
+                ],
+              },
+            },
+          },
         ],
         expectedTime: 250,
       },

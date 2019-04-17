@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const bidderPatterns = require('./bidder-patterns');
+const {URL} = require('url');
 
 /**
  * Checks if the url is from a Google ads host.
@@ -65,12 +66,24 @@ function containsAnySubstring(str, substrings) {
 }
 
 /**
- * Checks if the url has an ad request path.
- * @param {URL} url
+ * Checks if a network request is a GPT ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
  * @return {boolean}
  */
-function hasAdRequestPath(url) {
-  return url.pathname === '/gampad/ads';
+function isGptAdRequest(request) {
+  const url = new URL(request.url);
+  if (!request || url.pathname !== '/gampad/ads') {
+    return false;
+  }
+
+  if (request.initiator.stack) {
+    for (const attributableFrame of request.initiator.stack.callFrames) {
+      if (isImplTag(new URL(attributableFrame.url))) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 /**
@@ -121,7 +134,7 @@ function isGPTIFrame(iframe, excludeNonVisible = true) {
 
 module.exports = {
   isGoogleAds,
-  hasAdRequestPath,
+  isGptAdRequest,
   hasImpressionPath,
   isGpt,
   isGptTag,

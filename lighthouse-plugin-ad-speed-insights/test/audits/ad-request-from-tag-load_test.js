@@ -35,14 +35,34 @@ describe('AdRequestFromTagLoad', async () => {
         desc: 'should pass for records containing successful page and tag load',
         networkRecords: [
           {url: TAG_URL, endTime: .25},
-          {url: AD_REQUEST_URL, startTime: .5},
+          {
+            url: AD_REQUEST_URL,
+            startTime: .5,
+            initiator: {
+              stack: {
+                callFrames: [
+                  {url: TAG_URL},
+                ],
+              },
+            },
+          },
         ],
         expectedTime: 250,
       },
       {
         desc: 'should not be applicable if tag is never loaded',
         networkRecords: [
-          {url: AD_REQUEST_URL, startTime: .5},
+          {
+            url: AD_REQUEST_URL,
+            startTime: .5,
+            initiator: {
+              stack: {
+                callFrames: [
+                  {url: TAG_URL},
+                ],
+              },
+            },
+          },
         ],
         expectedNotAppl: true,
       },
