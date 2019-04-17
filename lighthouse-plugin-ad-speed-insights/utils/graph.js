@@ -67,7 +67,7 @@ function getTransitiveClosure(root, isTargetRequest) {
   }
 
   const requests = Array.from(closure).map((n) => n.record)
-      .filter(Boolean).filter((r) => r.endTime < firstTarget.startTime);
+      .filter(Boolean).filter((r) => r.endTime < firstTarget.record.startTime);
   const cpu = Array.from(closure).filter((n) => n.event)
       .filter((n) => n.event.ts < firstTarget.startTime * 1000 * 1000)
       .map((n) => [n.event, ...n.childEvents]);
