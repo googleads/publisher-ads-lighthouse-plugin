@@ -39,6 +39,7 @@ describe('AdRequestFromPageStart', async () => {
             url: AD_REQUEST_URL,
             startTime: .5,
             initiator: {
+              type: 'script',
               stack: {
                 callFrames: [
                   {url: TAG_URL},

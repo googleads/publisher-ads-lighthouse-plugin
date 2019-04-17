@@ -68,6 +68,7 @@ describe('resource-classification', () => {
       const record = {
         url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar=baz',
         initiator: {
+          type: 'script',
           stack: {
             callFrames: [
               {
@@ -87,6 +88,7 @@ describe('resource-classification', () => {
       const record = {
         url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar=baz',
         initiator: {
+          type: 'script',
           stack: {
             callFrames: [
               {
@@ -106,6 +108,7 @@ describe('resource-classification', () => {
       const record = {
         url: 'https://drive.google.com?bar=baz',
         initiator: {
+          type: 'script',
           stack: {
             callFrames: [
               {

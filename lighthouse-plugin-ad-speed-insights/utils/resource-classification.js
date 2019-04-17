@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const bidderPatterns = require('./bidder-patterns');
+const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {URL} = require('url');
 
 /**
@@ -76,11 +77,9 @@ function isGptAdRequest(request) {
     return false;
   }
 
-  if (request.initiator.stack) {
-    for (const attributableFrame of request.initiator.stack.callFrames) {
-      if (isImplTag(new URL(attributableFrame.url))) {
-        return true;
-      }
+  for (const initUrl of getNetworkInitiators(request)) {
+    if (isImplTag(new URL(initUrl))) {
+      return true;
     }
   }
   return false;

@@ -32,6 +32,7 @@ describe('FullWidthSlots', async () => {
   const genAdReqRecord = (sizeString = '', param = '') => ({
     url: (AD_REQUEST_URL + param + encodeURIComponent(sizeString)),
     initiator: {
+      type: 'script',
       stack: {
         callFrames: [
           {url: TAG_URL},
