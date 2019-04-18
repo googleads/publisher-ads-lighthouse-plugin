@@ -118,6 +118,11 @@ function requestName(url) {
   return host + path;
 }
 
+function criticalPath(networkRecords, isTargetRequest) {
+  const targetRequest = newtorkRecords.find(isTargetRequest);
+
+}
+
 /**
  * Audit to check the length of the critical path to load ads.
  * Also determines the critical path for visualization purposes.
