@@ -161,8 +161,8 @@ class AdRequestCriticalPath extends Audit {
   static get meta() {
     return {
       id: 'ad-request-critical-path',
-      title: 'No resources blocking first ad request',
-      failureTitle: 'There are resources blocking the first ad request',
+      title: 'Minimize critical path for loading ad requests',
+      failureTitle: 'Long critical path for loading ad requests',
       description: 'These are the resources that block the first ad request. ' +
           'Consider reducing the number of resources or improving their ' +
           'execution to start loading ads as soon as possible. ' +
