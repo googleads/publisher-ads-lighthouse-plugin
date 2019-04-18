@@ -23,7 +23,7 @@ const {URL} = require('url');
 
 /**
  * @typedef {Object} SimpleRequest
- * @property {string} request
+ * @property {string} url
  * @property {number} startTime
  * @property {number} endTime
  * @property {number} duration
@@ -35,7 +35,7 @@ const {URL} = require('url');
  */
 const HEADINGS = [
   {
-    key: 'request',
+    key: 'url',
     itemType: 'url',
     text: 'Request',
   },
@@ -58,14 +58,13 @@ const HEADINGS = [
     granularity: 1,
   },
 ];
-
 /**
- * Computes summaries in place by merging overlapping requests with the same
- * host and path.
+ * Summarizes the given array of requests by merging overlapping requests with
+ * the same url. The resulting array will be ordered by start time.
  * @param {Array<SimpleRequest>} requests
+ * @return {Array<SimpleRequest>}
  */
 function computeSummaries(requests) {
-  if (!requests.length) return;
   requests.sort((a, b) => {
     if (a.request != b.request) {
       return a.request < b.request ? -1 : 1;
@@ -75,19 +74,22 @@ function computeSummaries(requests) {
     }
     return a.endTime - b.endTime;
   });
-  let tail = 0;
-  let last = requests[0];
-  for (let i = 1; i < requests.length; i++) {
+  const result = [];
+  for (let i = 0; i < requests.length; i++) {
     const current = requests[i];
-    if (last.request != current.request || last.endTime < current.startTime ||
-        i == requests.length - 1) {
-      requests[tail++] = last;
-      last = current;
-      continue;
+    let next;
+    while (i < requests.length) {
+      next = requests[i + 1];
+      if (!next || current.url != next.url || next.startTime > current.endTime)
+        break;
+      current.endTime = Math.max(current.endTime, next.endTime);
+      current.duration = current.endTime - current.startTime;
+      i++;
     }
-    last.endTime = Math.max(last.endTime, current.endTime);
+    result.push(current)
   }
-  requests.length = tail + 1;
+  result.sort((a, b) => a.startTime - b.startTime);
+  return result;
 }
 
 /**
@@ -101,6 +103,8 @@ function computeDepth(requests) {
     if (startTime > prevEnd) {
       ++hops;
       prevEnd = endTime;
+    } else {
+      prevEnd = Math.min(prevEnd, endTime);
     }
   }
   return hops;
@@ -112,24 +116,32 @@ function computeDepth(requests) {
  * @return {string}
  */
 function requestName(url) {
-  const {host, pathname} = new URL(url);
-  const parts = pathname.split('/');
-  const path = parts.length < 4 ? pathname : parts.splice(0, 3).join('/') + '/...';
-  return host + path;
+  const u = new URL(url);
+  return u.origin + u.pathname;
 }
 
 function getCriticalPath(networkRecords, targetRequest, result = new Set()) {
-  if (!targetRequest) return result;
-  !result.size && console.log(targetRequest.initiator)
+  if (!targetRequest || result.has(targetRequest)) return result;
   result.add(targetRequest)
   for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
-    console.log(targetRequest.url, !!stack.parent, stack)
     const urls = new Set(stack.callFrames.map((f) => f.url));
     for (const url of urls) {
       const request = networkRecords.find((r) => r.url === url);
       if (request && !result.has(request)) {
-        result.add(request);
         getCriticalPath(networkRecords, request, result)
+      }
+    }
+    const sentXhr = [
+        stack.description,
+        stack.callFrames[0].functionName].includes('XMLHttpRequest.send');
+    if (sentXhr) {
+      const url = stack.callFrames[0].url;
+      const request = networkRecords.find((r) => r.url === url);
+      const xhrs = networkRecords.filter((r) =>
+          r.initiatorRequest == request && r.resourceType == 'XHR')
+          .filter((r) => r.endTime < targetRequest.startTime);
+      for (const xhr of xhrs) {
+        getCriticalPath(networkRecords, xhr, result);
       }
     }
   }
@@ -179,29 +191,30 @@ class AdRequestCriticalPath extends Audit {
           (/** @type {string} */ i) => i.includes('pubads_impl'));
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
 
+    const implRequest = networkRecords.find((r) => r.url.includes('pubads_impl'));
+
     const adRequest = networkRecords.find(isGptAdRequest);
     const criticalRequests = getCriticalPath(networkRecords, adRequest);
 
     const blockingRequests = Array.from(criticalRequests)
-        .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream'].includes(r.resourceType))
+        .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))
         .filter((r) => r.mimeType != 'text/css');
 
     if (!blockingRequests) {
       return auditNotApplicable('No ads requested');
     }
     const pageStartTime = getPageStartTime(networkRecords);
-    const tableView = blockingRequests.map((req) =>
+    let tableView = blockingRequests.map((req) =>
       ({
-        request: requestName(req.url),
+        url: requestName(req.url),
         startTime: (req.startTime - pageStartTime) * 1000,
         endTime: (req.endTime - pageStartTime) * 1000,
         duration: (req.endTime - req.startTime) * 1000,
       }));
-    computeSummaries(tableView);
-    tableView.sort((a, b) => a.startTime - b.startTime);
+    tableView = computeSummaries(tableView);
 
     const depth = computeDepth(tableView);
-    const failed = depth > 2;
+    const failed = depth > 3;
 
     return {
       rawValue: depth,
