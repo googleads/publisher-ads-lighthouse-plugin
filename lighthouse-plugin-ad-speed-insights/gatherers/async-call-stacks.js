@@ -15,14 +15,12 @@ class AsyncCallStacks extends Gatherer {
    * @param {LH.Gatherer.PassContext} passContext
    */
   async beforePass(passContext) {
-    try {
-      await passContext.driver.sendCommand(
-          'Debugger.setAsyncCallStackDepth', {maxDepth: 10000});
-      await passContext.driver.sendCommand(
-          'Runtime.setAsyncCallStackDepth', {maxDepth: 10000});
-    } catch (e) {
-      console.log(e);
-    }
+    console.log('hi there!')
+    await passContext.driver.sendCommand(
+        'Debugger.setAsyncCallStackDepth', {maxDepth: 1000});
+    await passContext.driver.sendCommand(
+        'Runtime.setAsyncCallStackDepth', {maxDepth: 1000});
+    console.log(x)
   }
 
    /**

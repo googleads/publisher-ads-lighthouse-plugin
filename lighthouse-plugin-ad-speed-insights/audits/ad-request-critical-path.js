@@ -22,7 +22,6 @@ const {getTransitiveClosure} = require('../utils/graph');
 const {URL} = require('url');
 
 /**
- *
  * @typedef {Object} SimpleRequest
  * @property {string} request
  * @property {number} startTime
@@ -80,14 +79,15 @@ function computeSummaries(requests) {
   let last = requests[0];
   for (let i = 1; i < requests.length; i++) {
     const current = requests[i];
-    if (last.request != current.request || last.endTime < current.startTime) {
+    if (last.request != current.request || last.endTime < current.startTime ||
+        i == requests.length - 1) {
       requests[tail++] = last;
       last = current;
       continue;
     }
     last.endTime = Math.max(last.endTime, current.endTime);
   }
-  requests.length = tail;
+  requests.length = tail + 1;
 }
 
 /**
@@ -118,9 +118,23 @@ function requestName(url) {
   return host + path;
 }
 
-function criticalPath(networkRecords, isTargetRequest) {
-  const targetRequest = newtorkRecords.find(isTargetRequest);
-
+function getCriticalPath(networkRecords, targetRequest, result = new Set()) {
+  if (!targetRequest) return result;
+  !result.size && console.log(targetRequest.initiator)
+  result.add(targetRequest)
+  for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
+    console.log(targetRequest.url, !!stack.parent, stack)
+    const urls = new Set(stack.callFrames.map((f) => f.url));
+    for (const url of urls) {
+      const request = networkRecords.find((r) => r.url === url);
+      if (request && !result.has(request)) {
+        result.add(request);
+        getCriticalPath(networkRecords, request, result)
+      }
+    }
+  }
+  getCriticalPath(networkRecords, targetRequest.initiatorRequest, result)
+  return result;
 }
 
 /**
@@ -142,7 +156,7 @@ class AdRequestCriticalPath extends Audit {
           'execution to start loading ads as soon as possible. ' +
           '[Learn more.]' +
           '(https://ad-speed-insights.appspot.com/#blocking-resouces)',
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks'],
     };
   }
 
@@ -164,7 +178,11 @@ class AdRequestCriticalPath extends Audit {
         PageDependencyGraph.getNetworkInitiators(req).find(
           (/** @type {string} */ i) => i.includes('pubads_impl'));
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
-    const blockingRequests = closure.requests
+
+    const adRequest = networkRecords.find(isGptAdRequest);
+    const criticalRequests = getCriticalPath(networkRecords, adRequest);
+
+    const blockingRequests = Array.from(criticalRequests)
         .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream'].includes(r.resourceType))
         .filter((r) => r.mimeType != 'text/css');
 
@@ -178,8 +196,7 @@ class AdRequestCriticalPath extends Audit {
         startTime: (req.startTime - pageStartTime) * 1000,
         endTime: (req.endTime - pageStartTime) * 1000,
         duration: (req.endTime - req.startTime) * 1000,
-      }))
-        .filter((t) => t.duration > 50);
+      }));
     computeSummaries(tableView);
     tableView.sort((a, b) => a.startTime - b.startTime);
 
