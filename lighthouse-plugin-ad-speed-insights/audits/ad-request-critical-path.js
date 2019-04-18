@@ -80,13 +80,14 @@ function computeSummaries(requests) {
     let next;
     while (i < requests.length) {
       next = requests[i + 1];
-      if (!next || current.url != next.url || next.startTime > current.endTime)
+      if (!next || current.url != next.url || next.startTime > current.endTime) {
         break;
+      }
       current.endTime = Math.max(current.endTime, next.endTime);
       current.duration = current.endTime - current.startTime;
       i++;
     }
-    result.push(current)
+    result.push(current);
   }
   result.sort((a, b) => a.startTime - b.startTime);
   return result;
@@ -122,30 +123,30 @@ function requestName(url) {
 
 function getCriticalPath(networkRecords, targetRequest, result = new Set()) {
   if (!targetRequest || result.has(targetRequest)) return result;
-  result.add(targetRequest)
+  result.add(targetRequest);
   for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
     const urls = new Set(stack.callFrames.map((f) => f.url));
     for (const url of urls) {
       const request = networkRecords.find((r) => r.url === url);
       if (request && !result.has(request)) {
-        getCriticalPath(networkRecords, request, result)
+        getCriticalPath(networkRecords, request, result);
       }
     }
     const sentXhr = [
-        stack.description,
-        stack.callFrames[0].functionName].includes('XMLHttpRequest.send');
+      stack.description,
+      stack.callFrames[0].functionName].includes('XMLHttpRequest.send');
     if (sentXhr) {
       const url = stack.callFrames[0].url;
       const request = networkRecords.find((r) => r.url === url);
       const xhrs = networkRecords.filter((r) =>
-          r.initiatorRequest == request && r.resourceType == 'XHR')
+        r.initiatorRequest == request && r.resourceType == 'XHR')
           .filter((r) => r.endTime < targetRequest.startTime);
       for (const xhr of xhrs) {
         getCriticalPath(networkRecords, xhr, result);
       }
     }
   }
-  getCriticalPath(networkRecords, targetRequest.initiatorRequest, result)
+  getCriticalPath(networkRecords, targetRequest.initiatorRequest, result);
   return result;
 }
 

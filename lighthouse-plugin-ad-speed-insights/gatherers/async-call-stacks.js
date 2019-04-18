@@ -7,7 +7,7 @@
 
 const Gatherer = require('lighthouse/lighthouse-core/gather/gatherers/gatherer.js');
 
- /**
+/**
  * @fileoverview Tracks unused JavaScript
  */
 class AsyncCallStacks extends Gatherer {
@@ -17,15 +17,15 @@ class AsyncCallStacks extends Gatherer {
   async beforePass(passContext) {
     for (const _ of [0, 0]) {
       await passContext.driver.sendCommand(
-          'Runtime.setAsyncCallStackDepth', {maxDepth: 1000});
+        'Runtime.setAsyncCallStackDepth', {maxDepth: 1000});
       await new Promise((resolve) => setTimeout(resolve, 200));
       await passContext.driver.sendCommand(
-          'Debugger.setAsyncCallStackDepth', {maxDepth: 2000});
+        'Debugger.setAsyncCallStackDepth', {maxDepth: 2000});
       await new Promise((resolve) => setTimeout(resolve, 200));
     }
   }
 
-   /**
+  /**
    * @param {LH.Gatherer.PassContext} passContext
    */
   async afterPass(passContext) {
@@ -33,4 +33,4 @@ class AsyncCallStacks extends Gatherer {
   }
 }
 
- module.exports = AsyncCallStacks;
+module.exports = AsyncCallStacks;
