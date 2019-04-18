@@ -30,7 +30,7 @@ function getTransitiveClosure(root, isTargetRequest) {
   const closure = new Set();
   /** @type {LH.Artifacts.NetworkRequest} */
   let firstTarget = null;
-  root.traverse((node) => {
+  root.traverse(/** @param {typeof BaseNode} node */ (node) => {
     if (!node.record || !isTargetRequest(node.record)) return;
     if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
       return;
@@ -76,4 +76,41 @@ function getTransitiveClosure(root, isTargetRequest) {
   return {requests, traceEvents};
 }
 
-module.exports = {getTransitiveClosure};
+/**
+ * Returns the set of requests in the critical path of the target request.
+ * @param {NetworkRequest[]} networkRecords
+ * @param {NetworkRequest} targetRequest
+ * @param {Set<NetworkRequest>=} result
+ * @return {Set<NetworkRequest>}
+ */
+function getCriticalPath(networkRecords, targetRequest, result = new Set()) {
+  if (!targetRequest || result.has(targetRequest)) return result;
+  result.add(targetRequest);
+  for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
+    // @ts-ignore
+    const urls = new Set(stack.callFrames.map((f) => f.url));
+    for (const url of urls) {
+      const request = networkRecords.find((r) => r.url === url);
+      if (request && !result.has(request)) {
+        getCriticalPath(networkRecords, request, result);
+      }
+    }
+    const sentXhr = [
+      stack.description,
+      stack.callFrames[0].functionName].includes('XMLHttpRequest.send');
+    if (sentXhr) {
+      const url = stack.callFrames[0].url;
+      const request = networkRecords.find((r) => r.url === url);
+      const xhrs = networkRecords.filter((r) =>
+        r.initiatorRequest == request && r.resourceType == 'XHR')
+          .filter((r) => r.endTime < targetRequest.startTime);
+      for (const xhr of xhrs) {
+        getCriticalPath(networkRecords, xhr, result);
+      }
+    }
+  }
+  getCriticalPath(networkRecords, targetRequest.initiatorRequest, result);
+  return result;
+}
+
+module.exports = {getTransitiveClosure, getCriticalPath};

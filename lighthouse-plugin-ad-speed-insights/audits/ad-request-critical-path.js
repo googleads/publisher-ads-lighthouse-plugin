@@ -17,8 +17,8 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
+const {getCriticalPath} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
-const {getTransitiveClosure} = require('../utils/graph');
 const {URL} = require('url');
 
 /**
@@ -66,8 +66,8 @@ const HEADINGS = [
  */
 function computeSummaries(requests) {
   requests.sort((a, b) => {
-    if (a.request != b.request) {
-      return a.request < b.request ? -1 : 1;
+    if (a.url != b.url) {
+      return a.url < b.url ? -1 : 1;
     }
     if (a.startTime != b.startTime) {
       return a.startTime < b.startTime ? -1 : 1;
@@ -80,7 +80,8 @@ function computeSummaries(requests) {
     let next;
     while (i < requests.length) {
       next = requests[i + 1];
-      if (!next || current.url != next.url || next.startTime > current.endTime) {
+      if (!next || current.url != next.url ||
+          next.startTime > current.endTime) {
         break;
       }
       current.endTime = Math.max(current.endTime, next.endTime);
@@ -121,35 +122,6 @@ function requestName(url) {
   return u.origin + u.pathname;
 }
 
-function getCriticalPath(networkRecords, targetRequest, result = new Set()) {
-  if (!targetRequest || result.has(targetRequest)) return result;
-  result.add(targetRequest);
-  for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
-    const urls = new Set(stack.callFrames.map((f) => f.url));
-    for (const url of urls) {
-      const request = networkRecords.find((r) => r.url === url);
-      if (request && !result.has(request)) {
-        getCriticalPath(networkRecords, request, result);
-      }
-    }
-    const sentXhr = [
-      stack.description,
-      stack.callFrames[0].functionName].includes('XMLHttpRequest.send');
-    if (sentXhr) {
-      const url = stack.callFrames[0].url;
-      const request = networkRecords.find((r) => r.url === url);
-      const xhrs = networkRecords.filter((r) =>
-        r.initiatorRequest == request && r.resourceType == 'XHR')
-          .filter((r) => r.endTime < targetRequest.startTime);
-      for (const xhr of xhrs) {
-        getCriticalPath(networkRecords, xhr, result);
-      }
-    }
-  }
-  getCriticalPath(networkRecords, targetRequest.initiatorRequest, result);
-  return result;
-}
-
 /**
  * Audit to check the length of the critical path to load ads.
  * Also determines the critical path for visualization purposes.
@@ -160,6 +132,7 @@ class AdRequestCriticalPath extends Audit {
    * @override
    */
   static get meta() {
+    // @ts-ignore - TODO: add AsyncCallStacks to enum.
     return {
       id: 'ad-request-critical-path',
       title: 'Minimize critical path for loading ad requests',
@@ -180,19 +153,11 @@ class AdRequestCriticalPath extends Audit {
    */
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    // @ts-ignore
-    const mainDocumentNode = await PageDependencyGraph.request(
-      {trace, devtoolsLog}, context);
-
     /** @type {(req: LH.Artifacts.NetworkRequest) => boolean} */
     const isGptAdRequest = (req) => req.url.includes('/gampad/ads?') &&
         PageDependencyGraph.getNetworkInitiators(req).find(
           (/** @type {string} */ i) => i.includes('pubads_impl'));
-    const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
-
-    const implRequest = networkRecords.find((r) => r.url.includes('pubads_impl'));
 
     const adRequest = networkRecords.find(isGptAdRequest);
     const criticalRequests = getCriticalPath(networkRecords, adRequest);
