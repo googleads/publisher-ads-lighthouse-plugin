@@ -120,7 +120,7 @@ function addInitiatedRequests(
     // Verify the XHR is actually blocking.
       isXhrCritical(
         initiatedReq, networkRecords, traceEvents, criticalRequests) :
-    // If there are no initiated requests, then it's probably JSONP
+    // If there are no initiated requests, then it's probably JSONP.
       !networkRecords.find((r) => r.initiatorRequest == initiatedReq);
     if (blocking) {
       getCriticalPath(
