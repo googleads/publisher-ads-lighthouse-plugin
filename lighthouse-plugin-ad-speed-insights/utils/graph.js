@@ -90,10 +90,10 @@ function isXhrBlocking(xhrReq, networkRecords, criticalRequests, traceEvents) {
       .filter((t) => t.args.data.url == xhrReq.url);
   // TODO(warrengm): Investigate if we can get async stack traces here.
   const frames = flatten(
-      relevantEvents.map((t) => t.args.data.stackTrace).filter(Boolean));
+    relevantEvents.map((t) => t.args.data.stackTrace).filter(Boolean));
   const urls = new Set(frames.map((f) => f.url));
   const xhrIsCritical = !!networkRecords.find(
-      (r) => urls.has(r.url) && criticalRequests.has(r));
+    (r) => urls.has(r.url) && criticalRequests.has(r));
   return xhrIsCritical;
 }
 
@@ -101,21 +101,21 @@ function isXhrBlocking(xhrReq, networkRecords, criticalRequests, traceEvents) {
  * Adds all XHRs and JSONPs initiated by the given script if they are critical.
  */
 function addInitiatedRequests(
-    scriptReq, parentReq, networkRecords, traceEvents, criticalRequests) {
+  scriptReq, parentReq, networkRecords, traceEvents, criticalRequests) {
   const initiatedRequests = networkRecords.filter((r) =>
     r.initiatorRequest == scriptReq &&
     ['Script', 'XHR'].includes(r.resourceType) &&
-    r.endTime < parentReq.startTime)
+    r.endTime < parentReq.startTime);
 
   for (const initiatedReq of initiatedRequests) {
     const blocking = initiatedReq.resourceType == 'XHR' ?
-        // Verify the XHR is actually blocking.
-        isXhrBlocking(initiatedReq, networkRecords, criticalRequests, traceEvents) :
-        // If there are no initiated requests, then it's probably JSONP
-        !networkRecords.find((r) => r.initiatorRequest == initiatedReq);
+    // Verify the XHR is actually blocking.
+      isXhrBlocking(initiatedReq, networkRecords, criticalRequests, traceEvents) :
+    // If there are no initiated requests, then it's probably JSONP
+      !networkRecords.find((r) => r.initiatorRequest == initiatedReq);
     if (blocking) {
       getCriticalPath(
-          networkRecords, initiatedReq, traceEvents, criticalRequests);
+        networkRecords, initiatedReq, traceEvents, criticalRequests);
     }
   }
 }
@@ -128,7 +128,7 @@ function addInitiatedRequests(
  * @return {Set<NetworkRequest>}
  */
 function getCriticalPath(
-    networkRecords, targetRequest, traceEvents, criticalRequests = new Set()) {
+  networkRecords, targetRequest, traceEvents, criticalRequests = new Set()) {
   if (!targetRequest || criticalRequests.has(targetRequest)) {
     return criticalRequests;
   }
@@ -140,22 +140,22 @@ function getCriticalPath(
       const request = networkRecords.find((r) => r.url === url);
       if (!request) continue;
 
-    getCriticalPath(
+      getCriticalPath(
         networkRecords, request, traceEvents, criticalRequests);
 
-    if (request.resourceType == 'Script') {
-      const scriptUrl = stack.callFrames[0].url;
-      const scriptReq = networkRecords.find((r) => r.url === scriptUrl);
-      if (scriptReq) {
-        addInitiatedRequests(
+      if (request.resourceType == 'Script') {
+        const scriptUrl = stack.callFrames[0].url;
+        const scriptReq = networkRecords.find((r) => r.url === scriptUrl);
+        if (scriptReq) {
+          addInitiatedRequests(
             scriptReq, targetRequest, networkRecords, traceEvents,
             criticalRequests);
+        }
       }
-    }
     }
   }
   getCriticalPath(
-      networkRecords, targetRequest.initiatorRequest, traceEvents, criticalRequests);
+    networkRecords, targetRequest.initiatorRequest, traceEvents, criticalRequests);
   return criticalRequests;
 }
 

@@ -163,7 +163,7 @@ class AdRequestCriticalPath extends Audit {
 
     const adRequest = networkRecords.find(isGptAdRequest);
     const criticalRequests = getCriticalPath(
-        networkRecords, adRequest, trace.traceEvents);
+      networkRecords, adRequest, trace.traceEvents);
 
     const blockingRequests = Array.from(criticalRequests)
         .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))
