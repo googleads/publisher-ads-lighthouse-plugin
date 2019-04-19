@@ -24,5 +24,6 @@ declare global {
     };
     IFrameElements: Array<Artifacts.IFrameElement>;
     StaticAdTags: Array<LH.Crdp.DOM.Node>;
+    AsyncCallStacks: null;  // No output, only side effects
   }
 }

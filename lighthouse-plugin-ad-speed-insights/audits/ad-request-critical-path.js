@@ -16,9 +16,18 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
 const {Audit} = require('lighthouse');
-const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
-const {isGptAdRequest, isGpt} = require('../utils/resource-classification');
+const {getCriticalPath} = require('../utils/graph');
+const {getPageStartTime} = require('../utils/network-timing');
+const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+/**
+ * @typedef {Object} SimpleRequest
+ * @property {string} url
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ */
 
 /**
  * Table headings for audits details sections.
@@ -26,14 +35,20 @@ const {URL} = require('url');
  */
 const HEADINGS = [
   {
-    key: 'resource',
+    key: 'url',
     itemType: 'url',
-    text: 'Resource',
+    text: 'Request',
   },
   {
-    key: 'requestTime',
+    key: 'startTime',
     itemType: 'ms',
-    text: 'Request Start Time',
+    text: 'Start Time',
+    granularity: 1,
+  },
+  {
+    key: 'endTime',
+    itemType: 'ms',
+    text: 'End Time',
     granularity: 1,
   },
   {
@@ -43,116 +58,71 @@ const HEADINGS = [
     granularity: 1,
   },
 ];
-
 /**
- * Finds the critical path and the number of items blocking gpt by using
- * iterative depth-first search. Generates a set of resources blocking gpt, as
- * well as a deconstructed tree to show the relationship between resources
- * (where X is a child of Y if X blocks Y). A node will appear multiple
- * times in the tree if it has multiple parents (i.e. if the underlying
- * dependency graph is not a tree).
- * To illustrate with an example, if Node A and Node B both depend on Node C,
- * Node A would point to an instance of Node C, and Node B would point to an
- * instance of Node C, rather than A and B pointing to one copy of C.
- * @param {LH.Artifacts.NetworkRequest} startingEntry
- * @param {Array<LH.Artifacts.NetworkRequest>} networkRecords
- * @return {{blockedRequests: Set<string>, treeRootNode: RequestTree.TreeNode}}
+ * Summarizes the given array of requests by merging overlapping requests with
+ * the same url. The resulting array will be ordered by start time.
+ * @param {Array<SimpleRequest>} requests
+ * @return {Array<SimpleRequest>}
  */
-function findCriticalPath(startingEntry, networkRecords) {
-  // TODO(bencatarevas): Find a data structure that can contain the DAG for the
-  // stack. Also, determine a way to find the height of the DAG.
-
-  /** @type {Set<string>} */ const blockedRequests = new Set();
-  const treeRootNode = createNode(startingEntry.url);
-
-  /** @type {Array<{name: string, children: Array<RequestTree.TreeNode>}>} */
-  const stack = [treeRootNode];
-  /** @type {Map<string, LH.Artifacts.NetworkRequest>} */
-  const recordMap = new Map();
-
-  /** @type {Set<string>} */
-  // Container to hold all visited edges of the dependency tree. This is to
-  // avoid either ignoring a repeated value that we want to add, or adding an
-  // unwanted repeated value to the tree.
-  const visitedEdges = new Set();
-
-  for (const entry of networkRecords) {
-    recordMap.set(entry.url, entry);
-  }
-
-  while (stack.length) {
-    const parentNode = /** @type {RequestTree.TreeNode} */ (stack.pop());
-    blockedRequests.add(parentNode.name);
-
-    // Something to note here is that the check below serves two purposes.
-    // The first is for checking if the URLs match. The second is for checking
-    // whether we've reached the root domain. We don't actually add the root
-    // domain to recordMap. Thus, we need to check if, when accessing the
-    // recordMap, it returns undefined to see if we've reached the root domain.
-
-    const currentEntry = recordMap.get(parentNode.name);
-    if (!currentEntry) {
-      continue;
+function computeSummaries(requests) {
+  // Sort requests by URL first since we will merge overlapping records with
+  // the same URL below, using a similar algorithm to std::unique.
+  // Within a url, we sort by time to make overlap checks easier.
+  requests.sort((a, b) => {
+    if (a.url != b.url) {
+      return a.url < b.url ? -1 : 1;
     }
-    for (const callFrame of getCallFrames(currentEntry)) {
-      // Concatenation of urls to store in set. We cannot store objects because
-      // Sets check reference equality for objects, not value equality.
-      const relationship = parentNode.name + callFrame.url;
-      const hasVisitedEdge = visitedEdges.has(relationship);
-
-      if (!hasVisitedEdge) {
-        const newChildNode = createNode(callFrame.url);
-        parentNode.children.push(newChildNode);
-        visitedEdges.add(relationship);
-        blockedRequests.add(callFrame.url);
-        stack.push(newChildNode);
+    if (a.startTime != b.startTime) {
+      return a.startTime < b.startTime ? -1 : 1;
+    }
+    return a.endTime - b.endTime;
+  });
+  const result = [];
+  for (let i = 0; i < requests.length; i++) {
+    const current = requests[i];
+    let next;
+    while (i < requests.length) {
+      next = requests[i + 1];
+      if (!next || current.url != next.url ||
+          next.startTime > current.endTime) {
+        break;
       }
+      current.endTime = Math.max(current.endTime, next.endTime);
+      current.duration = current.endTime - current.startTime;
+      i++;
+    }
+    result.push(current);
+  }
+  result.sort((a, b) => a.startTime - b.startTime);
+  return result;
+}
+
+/**
+ * Comptues the depth of the loading graph by comparing timings.
+ * @param {Array<SimpleRequest>} requests
+ */
+function computeDepth(requests) {
+  let prevEnd = 0;
+  let hops = 0;
+  for (const {startTime, endTime} of requests) {
+    if (startTime > prevEnd) {
+      ++hops;
+      prevEnd = endTime;
+    } else {
+      prevEnd = Math.min(prevEnd, endTime);
     }
   }
-
-  return {blockedRequests, treeRootNode};
+  return hops;
 }
 
 /**
- * Returns the entry's call stack. Default to empty if array not applicable
- * (i.e. initiator type is not "script").
- * @param {LH.Artifacts.NetworkRequest} entry
- * @return {LH.Crdp.Network.stack.callFrames}
- */
-function getCallFrames(entry) {
-  const initiatorDetails = getInitiatorDetails(entry);
-  if (!initiatorDetails.stack || initiatorDetails.type !== 'script') {
-    return [];
-  }
-  return initiatorDetails.stack.callFrames;
-}
-
-/**
- * Returns the entry's initiator details. Defaults to empty object with type
- * field if it has empty _initiator_detail, to keep in line with the structure
- * of _initiator_detail.
- * @param {LH.Artifacts.NetworkRequest} entry
- * @return {LH.Crdp.Network.Initiator}
- */
-function getInitiatorDetails(entry) {
-  if (!entry.initiator) {
-    return {
-      type: '',
-    };
-  }
-  return /** @type {LH.Crdp.Network.Initiator} */ (entry.initiator);
-}
-
-/**
- * Generates a TreeNode object.
+ * Extracts the request from a URL.
  * @param {string} url
- * @return {RequestTree.TreeNode}
+ * @return {string}
  */
-function createNode(url) {
-  return {
-    name: url,
-    children: [],
-  };
+function requestName(url) {
+  const u = new URL(url);
+  return u.origin + u.pathname;
 }
 
 /**
@@ -167,8 +137,13 @@ class AdRequestCriticalPath extends Audit {
   static get meta() {
     const id = 'ad-request-critical-path';
     const {title, failureTitle, description} = AUDITS[id];
+    // @ts-ignore - TODO: add AsyncCallStacks to enum.
     return {
-      id, title, failureTitle, description, requiredArtifacts: ['devtoolsLogs'],
+      id,
+      title,
+      failureTitle,
+      description,
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks'],
     };
   }
 
@@ -178,58 +153,40 @@ class AdRequestCriticalPath extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
-    const baseUrl = networkRecords.find((rec) => rec.statusCode == 200).url;
-    const adsEntries = networkRecords.filter(isGptAdRequest);
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
-    if (!adsEntries.length) {
+    const adRequest = networkRecords.find(isGptAdRequest);
+    const criticalRequests = getCriticalPath(
+      networkRecords, adRequest, trace.traceEvents);
+
+    const blockingRequests = Array.from(criticalRequests)
+        .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))
+        .filter((r) => r.mimeType != 'text/css');
+
+    if (!blockingRequests) {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
-
-    // We assume that the first entry in adsEntries will be the first ad
-    // request. When testing, the numbers match using adsEntries[0].
-    const {blockedRequests, treeRootNode} = adsEntries.length ?
-      findCriticalPath(adsEntries[0], networkRecords)
-      : {blockedRequests: new Set(), treeRootNode: {}};
-
-    const tableView = [];
     const pageStartTime = getPageStartTime(networkRecords);
-    const adStartTime = getAdStartTime(networkRecords);
-    for (const req of blockedRequests) {
-      if (!req.length) {
-        continue;
-      }
-      const reqUrl = new URL(req, baseUrl);
-      const record =
-        networkRecords.find((record) => record.url == req);
-      if (!isGpt(reqUrl) && !isGptAdRequest(record)) {
-        if (record && record.startTime > pageStartTime &&
-          record.startTime < adStartTime) {
-          tableView.push(
-            {
-              resource: req,
-              requestTime: (record.startTime - pageStartTime) * 1000,
-              duration: (record.endTime - record.startTime) * 1000,
-            }
-          );
-        }
-      }
-    }
-    tableView.sort((a, b) => a.requestTime - b.requestTime);
+    let tableView = blockingRequests.map((req) =>
+      ({
+        url: requestName(req.url),
+        startTime: (req.startTime - pageStartTime) * 1000,
+        endTime: (req.endTime - pageStartTime) * 1000,
+        duration: (req.endTime - req.startTime) * 1000,
+      }));
+    tableView = computeSummaries(tableView);
 
-    const numBlocked = tableView.length;
-    const pluralEnding = numBlocked == 1 ? '' : 's';
+    const depth = computeDepth(tableView);
+    const failed = depth > 3;
 
     return {
-      rawValue: numBlocked,
-      score: numBlocked ? 0 : 1,
-      displayValue: numBlocked ? `${numBlocked} resource${pluralEnding}` : '',
+      rawValue: depth,
+      score: failed ? 0 : 1,
+      displayValue:
+          `${depth} serial resources, ${tableView.length} total resources`,
       details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
-      extendedInfo: {
-        numBlocked,
-        treeRootNode,
-      },
     };
   }
 }
