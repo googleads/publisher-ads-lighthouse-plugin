@@ -116,7 +116,8 @@ describe('geometry', () => {
 
       tests.forEach(async (test) =>
         it(`should handle slots on the ${test.pos} properly`, () => {
-          const result = boxViewableArea(generateSlot(test).clientRect, viewport);
+          const result = boxViewableArea(
+            generateSlot(test).clientRect, viewport);
           expect(result).to.equal(test.overlap);
         })
       );

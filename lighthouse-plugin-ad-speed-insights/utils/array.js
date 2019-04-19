@@ -58,7 +58,9 @@ function bucket(array, splitter) {
  * @template {T}
  */
 function flatten(arrs) {
-  return [].concat.apply(...arrs);
+  // Typescript compiler doesn't like spread so we invoke concat.apply()
+  // eslint-disable-next-line prefer-spread
+  return [].concat.apply([], ...arrs);
 }
 
 module.exports = {

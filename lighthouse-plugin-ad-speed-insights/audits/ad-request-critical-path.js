@@ -13,12 +13,11 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-// @ts-ignore Could not find module lighthouse
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getCriticalPath} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
+const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -155,11 +154,6 @@ class AdRequestCriticalPath extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    /** @type {(req: LH.Artifacts.NetworkRequest) => boolean} */
-    const isGptAdRequest = (req) => req.url.includes('/gampad/ads?') &&
-        PageDependencyGraph.getNetworkInitiators(req).find(
-          (/** @type {string} */ i) => i.includes('pubads_impl'));
-
 
     const adRequest = networkRecords.find(isGptAdRequest);
     const criticalRequests = getCriticalPath(
