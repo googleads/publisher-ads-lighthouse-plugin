@@ -15,6 +15,7 @@
 // @ts-ignore
 // eslint-disable-next-line
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
+const {flatten} = require('./array');
 
 /** @typedef {LH.TraceEvent} TraceEvent */
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -77,21 +78,22 @@ function getTransitiveClosure(root, isTargetRequest) {
 }
 
 /**
- * @param {T[][]}
- * @return {T[]}
- * @template {T}
+ * Checks if the given XHR request is critical.
+ * @param {NetworkRequest} xhrReq
+ * @param {NetworkRequest[]} networkRecords All network requests.
+ * @param {TraceEvent[]} traceEvents
+ * @param {Set<NetworkRequest>} criticalRequests Known critical requests.
+ * @return {boolean}
  */
-function flatten(arrs) {
-  return [].concat.apply([], arrs);
-}
-
-function isXhrBlocking(xhrReq, networkRecords, criticalRequests, traceEvents) {
+function isXhrCritical(xhrReq, networkRecords, traceEvents, criticalRequests) {
   const relevantEvents = traceEvents.filter((t) => t.name.startsWith('XHR'))
-      .filter((t) => t.args.data.url == xhrReq.url);
+      .filter((t) => (t.args.data || {}).url == xhrReq.url);
   // TODO(warrengm): Investigate if we can get async stack traces here.
   const frames = flatten(
-    relevantEvents.map((t) => t.args.data.stackTrace).filter(Boolean));
-  const urls = new Set(frames.map((f) => f.url));
+    relevantEvents.map((t) => (t.args.data || {}).stackTrace || []));
+  /** @type {Set<string>} */
+  const urls = new Set(
+    frames.map(/** @param {{url: string}} f */ (f) => f.url));
   const xhrIsCritical = !!networkRecords.find(
     (r) => urls.has(r.url) && criticalRequests.has(r));
   return xhrIsCritical;
@@ -99,6 +101,12 @@ function isXhrBlocking(xhrReq, networkRecords, criticalRequests, traceEvents) {
 
 /**
  * Adds all XHRs and JSONPs initiated by the given script if they are critical.
+ * @param {NetworkRequest} scriptReq
+ * @param {NetworkRequest} parentReq
+ * @param {NetworkRequest[]} networkRecords All network requests.
+ * @param {TraceEvent[]} traceEvents
+ * @param {Set<NetworkRequest>} criticalRequests Known critical requests. This
+ *     method may mutate this set to add new requests.
  */
 function addInitiatedRequests(
   scriptReq, parentReq, networkRecords, traceEvents, criticalRequests) {
@@ -110,7 +118,8 @@ function addInitiatedRequests(
   for (const initiatedReq of initiatedRequests) {
     const blocking = initiatedReq.resourceType == 'XHR' ?
     // Verify the XHR is actually blocking.
-      isXhrBlocking(initiatedReq, networkRecords, criticalRequests, traceEvents) :
+      isXhrCritical(
+        initiatedReq, networkRecords, traceEvents, criticalRequests) :
     // If there are no initiated requests, then it's probably JSONP
       !networkRecords.find((r) => r.initiatorRequest == initiatedReq);
     if (blocking) {
@@ -124,7 +133,8 @@ function addInitiatedRequests(
  * Returns the set of requests in the critical path of the target request.
  * @param {NetworkRequest[]} networkRecords
  * @param {NetworkRequest} targetRequest
- * @param {Set<NetworkRequest>=} criticaulRequests
+ * @param {TraceEvent[]} traceEvents
+ * @param {Set<NetworkRequest>=} criticalRequests
  * @return {Set<NetworkRequest>}
  */
 function getCriticalPath(
@@ -154,8 +164,10 @@ function getCriticalPath(
       }
     }
   }
+  // Check the initiator request just to be sure.
   getCriticalPath(
-    networkRecords, targetRequest.initiatorRequest, traceEvents, criticalRequests);
+    networkRecords, targetRequest.initiatorRequest, traceEvents,
+    criticalRequests);
   return criticalRequests;
 }
 
