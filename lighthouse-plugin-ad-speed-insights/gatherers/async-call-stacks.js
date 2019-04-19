@@ -24,11 +24,9 @@ class AsyncCallStacks extends Gatherer {
    */
   async beforePass(passContext) {
     await passContext.driver.sendCommand(
-      'Runtime.setAsyncCallStackDepth', {maxDepth: 1000});
-    await new Promise((resolve) => setTimeout(resolve, 100));
+      'Runtime.setMaxCallStackSizeToCapture', {size: 100});
     await passContext.driver.sendCommand(
-      'Debugger.setAsyncCallStackDepth', {maxDepth: 1000});
-    await new Promise((resolve) => setTimeout(resolve, 100));
+      'Runtime.setAsyncCallStackDepth', {maxDepth: 100});
   }
 
   /**
