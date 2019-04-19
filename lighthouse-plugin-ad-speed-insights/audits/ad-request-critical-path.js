@@ -152,6 +152,7 @@ class AdRequestCriticalPath extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     /** @type {(req: LH.Artifacts.NetworkRequest) => boolean} */
@@ -159,8 +160,10 @@ class AdRequestCriticalPath extends Audit {
         PageDependencyGraph.getNetworkInitiators(req).find(
           (/** @type {string} */ i) => i.includes('pubads_impl'));
 
+
     const adRequest = networkRecords.find(isGptAdRequest);
-    const criticalRequests = getCriticalPath(networkRecords, adRequest);
+    const criticalRequests = getCriticalPath(
+        networkRecords, adRequest, trace.traceEvents);
 
     const blockingRequests = Array.from(criticalRequests)
         .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))

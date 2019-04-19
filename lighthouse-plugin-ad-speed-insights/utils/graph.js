@@ -77,40 +77,86 @@ function getTransitiveClosure(root, isTargetRequest) {
 }
 
 /**
+ * @param {T[][]}
+ * @return {T[]}
+ * @template {T}
+ */
+function flatten(arrs) {
+  return [].concat.apply([], arrs);
+}
+
+function isXhrBlocking(xhrReq, networkRecords, criticalRequests, traceEvents) {
+  const relevantEvents = traceEvents.filter((t) => t.name.startsWith('XHR'))
+      .filter((t) => t.args.data.url == xhrReq.url);
+  // TODO(warrengm): Investigate if we can get async stack traces here.
+  const frames = flatten(
+      relevantEvents.map((t) => t.args.data.stackTrace).filter(Boolean));
+  const urls = new Set(frames.map((f) => f.url));
+  const xhrIsCritical = !!networkRecords.find(
+      (r) => urls.has(r.url) && criticalRequests.has(r));
+  return xhrIsCritical;
+}
+
+/**
+ * Adds all XHRs and JSONPs initiated by the given script if they are critical.
+ */
+function addInitiatedRequests(
+    scriptReq, parentReq, networkRecords, traceEvents, criticalRequests) {
+  const initiatedRequests = networkRecords.filter((r) =>
+    r.initiatorRequest == scriptReq &&
+    ['Script', 'XHR'].includes(r.resourceType) &&
+    r.endTime < parentReq.startTime)
+
+  for (const initiatedReq of initiatedRequests) {
+    const blocking = initiatedReq.resourceType == 'XHR' ?
+        // Verify the XHR is actually blocking.
+        isXhrBlocking(initiatedReq, networkRecords, criticalRequests, traceEvents) :
+        // If there are no initiated requests, then it's probably JSONP
+        !networkRecords.find((r) => r.initiatorRequest == initiatedReq);
+    if (blocking) {
+      getCriticalPath(
+          networkRecords, initiatedReq, traceEvents, criticalRequests);
+    }
+  }
+}
+
+/**
  * Returns the set of requests in the critical path of the target request.
  * @param {NetworkRequest[]} networkRecords
  * @param {NetworkRequest} targetRequest
- * @param {Set<NetworkRequest>=} result
+ * @param {Set<NetworkRequest>=} criticaulRequests
  * @return {Set<NetworkRequest>}
  */
-function getCriticalPath(networkRecords, targetRequest, result = new Set()) {
-  if (!targetRequest || result.has(targetRequest)) return result;
-  result.add(targetRequest);
+function getCriticalPath(
+    networkRecords, targetRequest, traceEvents, criticalRequests = new Set()) {
+  if (!targetRequest || criticalRequests.has(targetRequest)) {
+    return criticalRequests;
+  }
+  criticalRequests.add(targetRequest);
   for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
     // @ts-ignore
     const urls = new Set(stack.callFrames.map((f) => f.url));
     for (const url of urls) {
       const request = networkRecords.find((r) => r.url === url);
-      if (request && !result.has(request)) {
-        getCriticalPath(networkRecords, request, result);
+      if (!request) continue;
+
+    getCriticalPath(
+        networkRecords, request, traceEvents, criticalRequests);
+
+    if (request.resourceType == 'Script') {
+      const scriptUrl = stack.callFrames[0].url;
+      const scriptReq = networkRecords.find((r) => r.url === scriptUrl);
+      if (scriptReq) {
+        addInitiatedRequests(
+            scriptReq, targetRequest, networkRecords, traceEvents,
+            criticalRequests);
       }
     }
-    const sentXhr = [
-      stack.description,
-      stack.callFrames[0].functionName].includes('XMLHttpRequest.send');
-    if (sentXhr) {
-      const url = stack.callFrames[0].url;
-      const request = networkRecords.find((r) => r.url === url);
-      const xhrs = networkRecords.filter((r) =>
-        r.initiatorRequest == request && r.resourceType == 'XHR')
-          .filter((r) => r.endTime < targetRequest.startTime);
-      for (const xhr of xhrs) {
-        getCriticalPath(networkRecords, xhr, result);
-      }
     }
   }
-  getCriticalPath(networkRecords, targetRequest.initiatorRequest, result);
-  return result;
+  getCriticalPath(
+      networkRecords, targetRequest.initiatorRequest, traceEvents, criticalRequests);
+  return criticalRequests;
 }
 
 module.exports = {getTransitiveClosure, getCriticalPath};
