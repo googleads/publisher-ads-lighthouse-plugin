@@ -20,7 +20,7 @@ const networkRecords = [
   },
   // Filtered out ad request.
   {
-    url: 'https://doubleclick.net/gampad/ads',
+    url: 'https://doubleclick.net/gampad/ads?gdfp_req=1',
     startTime: 3,
     initiator: {
       type: 'script',
