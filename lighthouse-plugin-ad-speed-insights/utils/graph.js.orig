@@ -15,7 +15,10 @@
 // @ts-ignore
 // eslint-disable-next-line
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
+<<<<<<< HEAD
+=======
 const {flatten} = require('./array');
+>>>>>>> b639adc32769618f33a330107e343a0507851227
 
 /** @typedef {LH.TraceEvent} TraceEvent */
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -31,7 +34,11 @@ function getTransitiveClosure(root, isTargetRequest) {
   const closure = new Set();
   /** @type {LH.Artifacts.NetworkRequest} */
   let firstTarget = null;
+<<<<<<< HEAD
+  root.traverse((node) => {
+=======
   root.traverse(/** @param {typeof BaseNode} node */ (node) => {
+>>>>>>> b639adc32769618f33a330107e343a0507851227
     if (!node.record || !isTargetRequest(node.record)) return;
     if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
       return;
@@ -73,6 +80,13 @@ function getTransitiveClosure(root, isTargetRequest) {
       .filter((n) => n.event.ts < firstTarget.startTime * 1000 * 1000)
       .map((n) => [n.event, ...n.childEvents]);
 
+<<<<<<< HEAD
+  const  traceEvents = [].concat.apply([], cpu);  // eslint-disable-line
+  return {requests, traceEvents};
+}
+
+module.exports = {getTransitiveClosure};
+=======
   const traceEvents = flatten(cpu);
   return {requests, traceEvents};
 }
@@ -172,3 +186,4 @@ function getCriticalPath(
 }
 
 module.exports = {getTransitiveClosure, getCriticalPath};
+>>>>>>> b639adc32769618f33a330107e343a0507851227

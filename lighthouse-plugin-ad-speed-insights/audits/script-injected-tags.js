@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getPageStartTime} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
+const {isGptAdRequest} = require('../utils/resource-classification');
 
 /**
  * Table headings for audits details sections.
@@ -86,10 +87,6 @@ class ScriptInjectedTags extends Audit {
     const mainDocumentNode = await PageDependencyGraph.request(
       {trace, devtoolsLog}, context);
 
-    /** @type {(req: LH.Artifacts.NetworkRequest) => boolean} */
-    const isGptAdRequest = (req) => req.url.includes('/gampad/ads?') &&
-        PageDependencyGraph.getNetworkInitiators(req).find(
-          (/** @type {string} */ i) => i.includes('pubads_impl'));
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
     if (!closure.requests.length) {
       return auditNotApplicable('No ads requested');

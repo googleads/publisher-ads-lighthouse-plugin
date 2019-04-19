@@ -85,6 +85,10 @@ declare module 'lighthouse/lighthouse-core/computed/network-records' {
   export function request(devToolsLog: LH.DevtoolsLog, context: LH.Audit.Context): Promise<Array<LH.Artifacts.NetworkRequest>>;
 }
 
+declare module 'lighthouse/lighthouse-core/computed/page-dependency-graph' {
+  export function getNetworkInitiators(record: LH.Artifacts.NetworkRequest): Array<string>;
+}
+
 declare module 'lighthouse/lighthouse-core/computed/main-thread-tasks' {
   export function request(trace: LH.Trace, context: LH.Audit.Context): Promise<Array<TaskNode>>;
 }

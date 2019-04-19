@@ -25,11 +25,22 @@ describe('FullWidthSlots', async () => {
   };
 
   const AD_REQUEST_URL = 'https://securepubads.g.doubleclick.net/gampad/ads?';
+  const TAG_URL = 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_243.js';
   const SRA_PARAM = 'prev_iu_szs=';
   const NON_SRA_PARAM = 'sz=';
 
-  const genUrl = (sizeString, param) =>
-    AD_REQUEST_URL + param + encodeURIComponent(sizeString);
+  const genAdReqRecord = (sizeString = '', param = '') => ({
+    url: (AD_REQUEST_URL + param + encodeURIComponent(sizeString)),
+    initiator: {
+      type: 'script',
+      stack: {
+        callFrames: [
+          {url: TAG_URL},
+        ],
+      },
+    },
+  });
+
 
   describe('fullWidthSlotsTest', async () => {
     let sandbox;
@@ -44,8 +55,8 @@ describe('FullWidthSlots', async () => {
         desc: 'should give min margin percentage for multiple sra requests',
         networkRecords: [
           {url: 'https://example.com'},
-          {url: genUrl('150x150,80x80|50x50,50x80', SRA_PARAM)},
-          {url: genUrl('100x100,20x20', SRA_PARAM)},
+          genAdReqRecord('150x150,80x80|50x50,50x80', SRA_PARAM),
+          genAdReqRecord('100x100,20x20', SRA_PARAM),
         ],
         expectedValue: .5,
         expectedNotApplicable: false,
@@ -54,7 +65,7 @@ describe('FullWidthSlots', async () => {
         desc: 'should give min margin percentage for single sra request',
         networkRecords: [
           {url: 'https://example.com'},
-          {url: genUrl('100x100,20x20|150x150,80x80|50x50,50x80', SRA_PARAM)},
+          genAdReqRecord('100x100,20x20|150x150,80x80|50x50,50x80', SRA_PARAM),
         ],
         expectedValue: .5,
         expectedNotApplicable: false,
@@ -63,8 +74,8 @@ describe('FullWidthSlots', async () => {
         desc: 'should give min margin percentage for multiple non-sra requests',
         networkRecords: [
           {url: 'https://example.com'},
-          {url: genUrl('150x150,80x80', NON_SRA_PARAM)},
-          {url: genUrl('100x100', NON_SRA_PARAM)},
+          genAdReqRecord('150x150,80x80', NON_SRA_PARAM),
+          genAdReqRecord('100x100', NON_SRA_PARAM),
         ],
         expectedValue: .5,
         expectedNotApplicable: false,
@@ -73,7 +84,7 @@ describe('FullWidthSlots', async () => {
         desc: 'should give min margin percentage for single non-sra request',
         networkRecords: [
           {url: 'https://example.com'},
-          {url: genUrl('150x150', NON_SRA_PARAM)},
+          genAdReqRecord('150x150', NON_SRA_PARAM),
         ],
         expectedValue: .5,
         expectedNotApplicable: false,
@@ -90,7 +101,7 @@ describe('FullWidthSlots', async () => {
         desc: 'should not be applicable if no sizes are provided',
         networkRecords: [
           {url: 'https://example.com'},
-          {url: AD_REQUEST_URL},
+          genAdReqRecord(),
         ],
         expectedValue: true,
         expectedNotApplicable: true,
@@ -99,7 +110,7 @@ describe('FullWidthSlots', async () => {
         desc: 'should not be applicable if no valid sizes are provided',
         networkRecords: [
           {url: 'https://example.com'},
-          {url: genUrl('400x400,1x1', SRA_PARAM)},
+          genAdReqRecord('400x400,1x1', SRA_PARAM),
         ],
         expectedValue: true,
         expectedNotApplicable: true,

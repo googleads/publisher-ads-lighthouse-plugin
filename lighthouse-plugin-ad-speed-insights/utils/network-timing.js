@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {hasAdRequestPath, isImplTag} = require('./resource-classification');
+const {isGptAdRequest, isImplTag} = require('./resource-classification');
 const {URL} = require('url');
 
 /**
@@ -33,7 +33,7 @@ function getTagEndTime(networkRecords) {
  */
 function getAdStartTime(networkRecords) {
   const firstAdRecord = networkRecords.find(
-    (record) => hasAdRequestPath(new URL(record.url)));
+    (record) => isGptAdRequest(record));
   return firstAdRecord ? firstAdRecord.startTime : -1;
 }
 

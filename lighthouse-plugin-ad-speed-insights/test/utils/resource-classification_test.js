@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const {expect} = require('chai');
-const {isGoogleAds, hasAdRequestPath, hasImpressionPath, isGptTag} = require('../../utils/resource-classification');
+const {isGoogleAds, isGptAdRequest, hasImpressionPath, isGptTag} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {
@@ -63,15 +63,65 @@ describe('resource-classification', () => {
     }
   });
 
-  describe('#hasAdRequestPath', () => {
-    it('should return true for /gampad/ads in the request path', () => {
-      const url = new URL('https://securepubads.g.doubleclick.net/gampad/ads?bar=baz');
-      expect(hasAdRequestPath(url)).to.be.true;
+  describe('#isGptAdRequest', () => {
+    it('should return true for /gampad/ads in the request path and pubads_impl in the initiator stack', () => {
+      const record = {
+        url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar=baz',
+        initiator: {
+          type: 'script',
+          stack: {
+            callFrames: [
+              {
+                url: 'https://google.com',
+              },
+              {
+                url: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_19700101.js?1234',
+              },
+            ],
+          },
+        },
+      };
+      expect(isGptAdRequest(record)).to.be.true;
+    });
+
+    it('should return false if pubads_impl not in the initiator stack', () => {
+      const record = {
+        url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar=baz',
+        initiator: {
+          type: 'script',
+          stack: {
+            callFrames: [
+              {
+                url: 'https://google.com',
+              },
+              {
+                url: 'https://gmail.com',
+              },
+            ],
+          },
+        },
+      };
+      expect(isGptAdRequest(record)).to.be.false;
     });
 
     it('should return false for any other ad request path', () => {
-      const url = new URL('https://googlesyndication.com/file/folder?bar=baz');
-      expect(hasAdRequestPath(url)).to.be.false;
+      const record = {
+        url: 'https://drive.google.com?bar=baz',
+        initiator: {
+          type: 'script',
+          stack: {
+            callFrames: [
+              {
+                url: 'https://google.com',
+              },
+              {
+                url: 'https://securepubads.g.doubleclick.net/gpt/pubads_impl_19700101.js?1234',
+              },
+            ],
+          },
+        },
+      };
+      expect(isGptAdRequest(record)).to.be.false;
     });
   });
 
