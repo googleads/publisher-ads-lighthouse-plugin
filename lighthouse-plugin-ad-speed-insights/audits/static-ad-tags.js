@@ -15,6 +15,7 @@
 const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
 const {Audit} = require('lighthouse');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -26,14 +27,13 @@ class StaticAdTags extends Audit {
    * @override
    */
   static get meta() {
+    const id = 'static-ad-tags';
+    const {title, failureTitle, description} = AUDITS[id];
     return {
-      id: 'static-ad-tags',
-      title: 'GPT tag is loaded statically',
-      failureTitle: 'GPT tag is loaded dynamically',
-      description: 'Tags loaded dynamically are not visible to the browser ' +
-        'preloader, consider using a static tag or `<link rel="preload">`. ' +
-        '[Learn more.]' +
-        '(https://ad-speed-insights.appspot.com/#dynamic-tag)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -50,7 +50,7 @@ class StaticAdTags extends Audit {
         .filter((req) => isGptTag(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No tag requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
     const numStatic = array.count(tagReqs, isStaticRequest);

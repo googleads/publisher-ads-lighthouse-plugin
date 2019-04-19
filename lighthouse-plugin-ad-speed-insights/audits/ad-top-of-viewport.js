@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
 const {Audit} = require('lighthouse');
 const {isGPTIFrame} = require('../utils/resource-classification');
 
@@ -33,16 +34,13 @@ class AdTopOfViewport extends Audit {
    * @override
    */
   static get meta() {
+    const id = 'ad-top-of-viewport';
+    const {title, failureTitle, description} = AUDITS[id];
     return {
-      id: 'ad-top-of-viewport',
-      title: 'Ads are below top of viewport',
-      failureTitle: 'Top ad is too high in viewport',
-      description: 'Over 10% of ads are never viewed due to the user scrolling' +
-        ' past before the ad is visible. By moving ads away from the very top' +
-        ' of the viewport, the likelihood of the ad being scrolled past prior' +
-        ' to load is decreased  and the ad is more likely to be viewed. ' +
-        '[Learn more.]' +
-        '(https://ad-speed-insights.appspot.com/#top-of-viewport)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
@@ -61,7 +59,7 @@ class AdTopOfViewport extends Audit {
         }));
 
     if (!slots.length) {
-      return auditNotApplicable('No visible slots');
+      return auditNotApplicable(NOT_APPLICABLE.NO_SLOTS);
     }
 
     const topSlot = slots.reduce((a, b) => (a.midpoint < b.midpoint) ? a : b);
@@ -69,7 +67,7 @@ class AdTopOfViewport extends Audit {
     const inViewport = topSlot.midpoint < viewport.innerHeight;
 
     if (!inViewport) {
-      return auditNotApplicable('No ads in viewport');
+      return auditNotApplicable(NOT_APPLICABLE.NO_ADS_VP);
     }
 
     const score = inViewport && topSlot.midpoint < 200 ? 0 : 1;

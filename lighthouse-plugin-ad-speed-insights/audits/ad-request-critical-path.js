@@ -14,6 +14,7 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getAdStartTime} = require('../utils/network-timing');
 const {isGptAdRequest, isGpt} = require('../utils/resource-classification');
@@ -164,16 +165,10 @@ class AdRequestCriticalPath extends Audit {
    * @override
    */
   static get meta() {
+    const id = 'ad-request-critical-path';
+    const {title, failureTitle, description} = AUDITS[id];
     return {
-      id: 'ad-request-critical-path',
-      title: 'No resources blocking first ad request',
-      failureTitle: 'There are resources blocking the first ad request',
-      description: 'These are the resources that block the first ad request. ' +
-          'Consider reducing the number of resources or improving their ' +
-          'execution to start loading ads as soon as possible. ' +
-          '[Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#blocking-resouces)',
-      requiredArtifacts: ['devtoolsLogs'],
+      id, title, failureTitle, description, requiredArtifacts: ['devtoolsLogs'],
     };
   }
 
@@ -189,7 +184,7 @@ class AdRequestCriticalPath extends Audit {
     const adsEntries = networkRecords.filter(isGptAdRequest);
 
     if (!adsEntries.length) {
-      return auditNotApplicable('No ads requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 
     // We assume that the first entry in adsEntries will be the first ad

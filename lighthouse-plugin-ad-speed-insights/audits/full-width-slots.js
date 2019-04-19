@@ -14,6 +14,7 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
 const {Audit} = require('lighthouse');
 const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -25,14 +26,13 @@ class FullWidthSlots extends Audit {
    * @override
    */
   static get meta() {
+    const id = 'full-width-slots';
+    const {title, failureTitle, description} = AUDITS[id];
     return {
-      id: 'full-width-slots',
-      title: 'Slots are utilizing most of the viewport width',
-      failureTitle: 'Slots are not utilizing the full viewport width',
-      description: 'Have ad slot sizes that utilize most of the viewport\'s ' +
-      'width to increase CTR. We recommend leaving no more than 25% of the ' +
-      'viewport\'s width unutilized. [Learn more.]' +
-      '(https://ad-speed-insights.appspot.com/#full-width-slots)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['ViewportDimensions', 'devtoolsLogs'],
     };
   }
@@ -54,7 +54,7 @@ class FullWidthSlots extends Audit {
         .map((record) => new URL(record.url));
 
     if (!adRequestUrls.length) {
-      return auditNotApplicable('No ads requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 
     const sizeArrs = adRequestUrls.map((url) =>
@@ -68,7 +68,7 @@ class FullWidthSlots extends Audit {
         .filter((w) => w <= vpWidth && w > 1);
 
     if (!widths.length) {
-      return auditNotApplicable('No requested ads contain ads of valid width');
+      return auditNotApplicable(NOT_APPLICABLE.NO_VALID_AD_WIDTHS);
     }
 
     const maxWidth = Math.max(...widths);

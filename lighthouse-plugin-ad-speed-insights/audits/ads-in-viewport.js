@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
 const {isGPTIFrame} = require('../utils/resource-classification');
@@ -32,17 +33,13 @@ class AdsInViewport extends Audit {
    * @override
    */
   static get meta() {
+    const id = 'ads-in-viewport';
+    const {title, failureTitle, description} = AUDITS[id];
     return {
-      id: 'ads-in-viewport',
-      title: 'Few or no ads loaded outside viewport',
-      failureTitle: 'There are eager ads loaded outside viewport',
-      description: 'Too many ads loaded outside the viewport lowers ' +
-          'viewability rates and impact user experience, consider loading ' +
-          'ads below the fold lazily as the user scrolls down. Consider ' +
-          'using GPT\'s [Lazy Loading API]' +
-          '(https://developers.google.com/doubleclick-gpt/reference' +
-          '#googletag.PubAdsService_enableLazyLoad). [Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#eager-ads)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
@@ -57,7 +54,7 @@ class AdsInViewport extends Audit {
         .filter((iframe) => isGPTIFrame(iframe));
 
     if (!slots.length) {
-      return auditNotApplicable('No visible slots on page');
+      return auditNotApplicable(NOT_APPLICABLE.NO_SLOTS);
     }
 
     /** @type {Array<{slot: string}>} */

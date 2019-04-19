@@ -12,12 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const {NOT_APPLICABLE} = require('../messages/en-US');
+
 /**
  * Returns object for a notApplicable audit given a message string
  * @param {string} message
  * @return {Object}
  */
-function auditNotApplicable(message = 'Audit not applicable') {
+function auditNotApplicable(message = NOT_APPLICABLE.DEFAULT) {
   return {
     notApplicable: true,
     rawValue: true,

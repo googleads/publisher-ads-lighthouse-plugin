@@ -15,6 +15,7 @@
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
 const {Audit} = require('lighthouse');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -139,16 +140,13 @@ class AdBlockingTasks extends Audit {
    * @override
    */
   static get meta() {
+    const id = 'ad-blocking-tasks';
+    const {title, failureTitle, description} = AUDITS[id];
     return {
-      id: 'ad-blocking-tasks',
-      title: 'No long tasks seem to block ad-related network requests',
-      failureTitle: 'Long tasks are blocking ad-related network requests',
-      description: 'Tasks blocking the main thread can delay the ad related ' +
-          'resources, consider removing long blocking tasks or moving them ' +
-          'off the main thread with web workers. These tasks can be ' +
-          'especially detrimental to performance on less powerful devices. ' +
-          '[Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#long-tasks)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['traces'],
     };
   }
@@ -167,19 +165,19 @@ class AdBlockingTasks extends Audit {
     try {
       tasks = await MainThreadTasks.request(trace, context);
     } catch (e) {
-      return auditNotApplicable('Invalid timing task data');
+      return auditNotApplicable(NOT_APPLICABLE.INVALID_TIMING);
     }
 
     if (!networkRecords.length) {
-      return auditNotApplicable('No network records to compare');
+      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
     }
     if (!tasks.length) {
-      return auditNotApplicable('No tasks to compare');
+      return auditNotApplicable(NOT_APPLICABLE.NO_TASKS);
     }
 
     const offset = computeNetworkTimelineOffset(trace, tasks, networkRecords);
     if (offset == null) {
-      return auditNotApplicable('No event matches network records');
+      return auditNotApplicable(NOT_APPLICABLE.NO_EVENT_MATCHING_REQ);
     }
     const fixTime = (/** @type {number} */ networkTime) =>
       networkTime * 1000 + offset;
@@ -189,7 +187,7 @@ class AdBlockingTasks extends Audit {
         .filter((req) => req.resourceType == 'XHR');
 
     if (!adNetworkReqs.length) {
-      return auditNotApplicable('No ad-related requests');
+      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
     }
 
     const /** @type {Set<string>} */ knownScripts = new Set(networkRecords
