@@ -73,7 +73,7 @@ function getTransitiveClosure(root, isTargetRequest) {
       .filter((n) => n.event.ts < firstTarget.startTime * 1000 * 1000)
       .map((n) => [n.event, ...n.childEvents]);
 
-  const  traceEvents = [].concat.apply([], cpu);  // eslint-disable-line
+  const traceEvents = flatten(cpu);
   return {requests, traceEvents};
 }
 
