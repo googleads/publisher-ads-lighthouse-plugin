@@ -41,13 +41,13 @@ const HEADINGS = [
   {
     key: 'startTime',
     itemType: 'ms',
-    text: 'Request Start Time',
+    text: 'Start Time',
     granularity: 1,
   },
   {
     key: 'endTime',
     itemType: 'ms',
-    text: 'Request End Time',
+    text: 'End Time',
     granularity: 1,
   },
   {
@@ -64,6 +64,9 @@ const HEADINGS = [
  * @return {Array<SimpleRequest>}
  */
 function computeSummaries(requests) {
+  // Sort requests by URL first since we will merge overlapping records with
+  // the same URL below, using a similar algorithm to std::unique.
+  // Within a url, we sort by time to make overlap checks easier.
   requests.sort((a, b) => {
     if (a.url != b.url) {
       return a.url < b.url ? -1 : 1;
