@@ -18,6 +18,7 @@ const PLUGIN_PATH = 'lighthouse-plugin-ad-speed-insights';
 module.exports = {
   audits: [
     {path: `${PLUGIN_PATH}/audits/ad-blocking-tasks`},
+    {path: `${PLUGIN_PATH}/audits/ad-render-blocking-resources`},
     {path: `${PLUGIN_PATH}/audits/ad-request-critical-path`},
     {path: `${PLUGIN_PATH}/audits/ads-in-viewport`},
     {path: `${PLUGIN_PATH}/audits/async-ad-tags`},
@@ -54,6 +55,7 @@ module.exports = {
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
+      {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
