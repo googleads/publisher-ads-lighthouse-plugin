@@ -19,6 +19,7 @@ const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getCriticalPath} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
+const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /**
@@ -75,16 +76,13 @@ class IdleNetworkTimes extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    /** @type {(req: LH.Artifacts.NetworkRequest) => boolean} */
-    const isGptAdRequest = (req) => req.url.includes('/gampad/ads?') &&
-        PageDependencyGraph.getNetworkInitiators(req).find(
-          (/** @type {string} */ i) => i.includes('pubads_impl'));
 
-    try {
     const adRequest = networkRecords.find(isGptAdRequest);
-    const criticalRequests = getCriticalPath(networkRecords, adRequest);
+    const criticalRequests = getCriticalPath(
+      networkRecords, adRequest, trace.traceEvents);
 
     const pageStartTime = getPageStartTime(networkRecords);
     const blockingRequests = Array.from(criticalRequests)
@@ -134,7 +132,6 @@ class IdleNetworkTimes extends Audit {
       displayValue: `${displayTime} ms spent idle in critical path`,
       details: IdleNetworkTimes.makeTableDetails(HEADINGS, idleTimes),
     };
-    } catch(e) { console.log(e) }
   }
 }
 

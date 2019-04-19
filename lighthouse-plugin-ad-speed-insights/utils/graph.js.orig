@@ -15,7 +15,10 @@
 // @ts-ignore
 // eslint-disable-next-line
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
+<<<<<<< HEAD
+=======
 const {flatten} = require('./array');
+>>>>>>> b639adc32769618f33a330107e343a0507851227
 
 /** @typedef {LH.TraceEvent} TraceEvent */
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -73,11 +76,26 @@ function getTransitiveClosure(root, isTargetRequest) {
       .filter((n) => n.event.ts < firstTarget.startTime * 1000 * 1000)
       .map((n) => [n.event, ...n.childEvents]);
 
+<<<<<<< HEAD
+  const  traceEvents = [].concat.apply([], cpu);  // eslint-disable-line
+=======
   const traceEvents = flatten(cpu);
+>>>>>>> b639adc32769618f33a330107e343a0507851227
   return {requests, traceEvents};
 }
 
 /**
+<<<<<<< HEAD
+ * Returns the set of requests in the critical path of the target request.
+ * @param {NetworkRequest[]} networkRecords
+ * @param {NetworkRequest} targetRequest
+ * @param {Set<NetworkRequest>=} result
+ * @return {Set<NetworkRequest>}
+ */
+function getCriticalPath(networkRecords, targetRequest, result = new Set()) {
+  if (!targetRequest || result.has(targetRequest)) return result;
+  result.add(targetRequest);
+=======
  * Checks if the given XHR request is critical.
  * @param {NetworkRequest} xhrReq
  * @param {NetworkRequest[]} networkRecords All network requests.
@@ -143,11 +161,34 @@ function getCriticalPath(
     return criticalRequests;
   }
   criticalRequests.add(targetRequest);
+>>>>>>> b639adc32769618f33a330107e343a0507851227
   for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
     // @ts-ignore
     const urls = new Set(stack.callFrames.map((f) => f.url));
     for (const url of urls) {
       const request = networkRecords.find((r) => r.url === url);
+<<<<<<< HEAD
+      if (request && !result.has(request)) {
+        getCriticalPath(networkRecords, request, result);
+      }
+    }
+    const sentXhr = [
+      stack.description,
+      stack.callFrames[0].functionName].includes('XMLHttpRequest.send');
+    if (sentXhr) {
+      const url = stack.callFrames[0].url;
+      const request = networkRecords.find((r) => r.url === url);
+      const xhrs = networkRecords.filter((r) =>
+        r.initiatorRequest == request && r.resourceType == 'XHR')
+          .filter((r) => r.endTime < targetRequest.startTime);
+      for (const xhr of xhrs) {
+        getCriticalPath(networkRecords, xhr, result);
+      }
+    }
+  }
+  getCriticalPath(networkRecords, targetRequest.initiatorRequest, result);
+  return result;
+=======
       if (!request) continue;
 
       getCriticalPath(
@@ -169,6 +210,7 @@ function getCriticalPath(
     networkRecords, targetRequest.initiatorRequest, traceEvents,
     criticalRequests);
   return criticalRequests;
+>>>>>>> b639adc32769618f33a330107e343a0507851227
 }
 
 module.exports = {getTransitiveClosure, getCriticalPath};

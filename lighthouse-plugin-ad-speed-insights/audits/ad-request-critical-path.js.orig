@@ -19,7 +19,10 @@ const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getCriticalPath} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
+<<<<<<< HEAD
+=======
 const {isGptAdRequest} = require('../utils/resource-classification');
+>>>>>>> b639adc32769618f33a330107e343a0507851227
 const {URL} = require('url');
 
 /**
@@ -72,9 +75,12 @@ const HEADINGS = [
  * @return {Array<SimpleRequest>}
  */
 function computeSummaries(requests) {
+<<<<<<< HEAD
+=======
   // Sort requests by URL first since we will merge overlapping records with
   // the same URL below, using a similar algorithm to std::unique.
   // Within a url, we sort by time to make overlap checks easier.
+>>>>>>> b639adc32769618f33a330107e343a0507851227
   requests.sort((a, b) => {
     if (a.url != b.url) {
       return a.url < b.url ? -1 : 1;
@@ -162,6 +168,17 @@ class AdRequestCriticalPath extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
+<<<<<<< HEAD
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    /** @type {(req: LH.Artifacts.NetworkRequest) => boolean} */
+    const isGptAdRequest = (req) => req.url.includes('/gampad/ads?') &&
+        PageDependencyGraph.getNetworkInitiators(req).find(
+          (/** @type {string} */ i) => i.includes('pubads_impl'));
+
+    const adRequest = networkRecords.find(isGptAdRequest);
+    const criticalRequests = getCriticalPath(networkRecords, adRequest);
+=======
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
@@ -169,6 +186,7 @@ class AdRequestCriticalPath extends Audit {
     const adRequest = networkRecords.find(isGptAdRequest);
     const criticalRequests = getCriticalPath(
       networkRecords, adRequest, trace.traceEvents);
+>>>>>>> b639adc32769618f33a330107e343a0507851227
 
     const blockingRequests = Array.from(criticalRequests)
         .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))
