@@ -51,12 +51,6 @@ const HEADINGS = [
     granularity: 1,
   },
   {
-    key: 'endTime',
-    itemType: 'ms',
-    text: 'Request End Time',
-    granularity: 1,
-  },
-  {
     key: 'duration',
     itemType: 'ms',
     text: 'Duration',
