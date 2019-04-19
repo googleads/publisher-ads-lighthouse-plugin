@@ -13,14 +13,11 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-// @ts-ignore Could not find module lighthouse
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getCriticalPath} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGptAdRequest} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 /**
  * Table headings for audits details sections.
@@ -102,8 +99,8 @@ class IdleNetworkTimes extends Audit {
     let maxEndSoFar = Infinity;
     const idleTimes = [];
     for (let i = 0; i < blockingRequests.length;) {
-      let {startTime, endTime} = blockingRequests[i];
-      if (startTime - maxEndSoFar > 150) {  // Tune this
+      const {startTime, endTime} = blockingRequests[i];
+      if (startTime - maxEndSoFar > 150) { // Tune this!
         idleTimes.push({
           startTime: maxEndSoFar,
           endTime: startTime,
@@ -121,7 +118,7 @@ class IdleNetworkTimes extends Audit {
     const durations = idleTimes.map((it) => it.duration);
     const totalIdleTime = durations.reduce((sum, dur) => sum + dur, 0);
     const maxIdleTime = Math.max(...durations);
-    const failed = maxIdleTime > 400 || totalIdleTime > 1500;  // Tune this!
+    const failed = maxIdleTime > 400 || totalIdleTime > 1500; // Tune this!
 
     const displayTime = Math.round(totalIdleTime).toLocaleString();
 
