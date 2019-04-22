@@ -12,10 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, ERRORS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
 const {isGPTIFrame} = require('../utils/resource-classification');
+
+const id = 'viewport-ad-density';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
@@ -25,15 +36,10 @@ class ViewportAdDensity extends Audit {
    */
   static get meta() {
     return {
-      id: 'viewport-ad-density',
-      title: 'Ad density inside viewport is within recommended range',
-      failureTitle: 'Ad density inside viewport is higher than recommended',
-      description: 'The ads-to-content ratio inside the viewport can have ' +
-          'an impact on user experience and ultimately user retention. The ' +
-          'Better Ads Standard [recommends having an ad density below 30%]' +
-          '(https://www.betterads.org/mobile-ad-density-higher-than-30/). ' +
-          '[Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#ad-density)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
@@ -49,7 +55,7 @@ class ViewportAdDensity extends Audit {
       (slot) => isGPTIFrame(slot));
 
     if (!slots.length) {
-      return auditNotApplicable('No visible slots on page');
+      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
     }
 
     const adArea = slots.reduce((sum, slot) =>
@@ -58,18 +64,19 @@ class ViewportAdDensity extends Audit {
     const viewArea = viewport.innerWidth * viewport.innerHeight;
 
     if (viewArea <= 0) {
-      throw new Error('Viewport area is zero');
+      throw new Error(ERRORS.VIEWPORT_AREA_ZERO);
     }
     if (adArea > viewArea) {
-      throw new Error('Calculated ad area is larger than viewport');
+      throw new Error(ERRORS.AREA_LARGER_THAN_VIEWPORT);
     }
     const score = adArea / viewArea > 0.3 ? 0 : 1;
     return {
       score,
       rawValue: adArea / viewArea,
       // No displayValue if passing, no changes to be made.
-      displayValue: score ? ''
-        : `${Math.floor(100 * adArea / viewArea)}% covered by ads`,
+      displayValue: score ?
+        displayValue :
+        util.format(failureDisplayValue, Math.floor(100 * adArea / viewArea)),
     };
   }
 }

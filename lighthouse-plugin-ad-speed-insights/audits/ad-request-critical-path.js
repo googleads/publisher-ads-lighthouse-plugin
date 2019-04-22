@@ -13,12 +13,22 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getCriticalPath} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'ad-request-critical-path';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+} = AUDITS[id];
 
 /**
  * @typedef {Object} SimpleRequest
@@ -136,14 +146,10 @@ class AdRequestCriticalPath extends Audit {
   static get meta() {
     // @ts-ignore - TODO: add AsyncCallStacks to enum.
     return {
-      id: 'ad-request-critical-path',
-      title: 'Minimize critical path for loading ad requests',
-      failureTitle: 'Long critical path for loading ad requests',
-      description: 'These are the resources that block the first ad request. ' +
-          'Consider reducing the number of resources or improving their ' +
-          'execution to start loading ads as soon as possible. ' +
-          '[Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#blocking-resouces)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks'],
     };
   }
@@ -166,8 +172,8 @@ class AdRequestCriticalPath extends Audit {
         .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))
         .filter((r) => r.mimeType != 'text/css');
 
-    if (!blockingRequests) {
-      return auditNotApplicable('No ads requested');
+    if (!blockingRequests.length) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
     const pageStartTime = getPageStartTime(networkRecords);
     let tableView = blockingRequests.map((req) =>
@@ -185,8 +191,7 @@ class AdRequestCriticalPath extends Audit {
     return {
       rawValue: depth,
       score: failed ? 0 : 1,
-      displayValue:
-          `${depth} serial resources, ${tableView.length} total resources`,
+      displayValue: util.format(displayValue, depth, tableView.length),
       details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
     };
   }

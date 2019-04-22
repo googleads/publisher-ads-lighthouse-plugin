@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,19 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {NOT_APPLICABLE} = require('../messages/messages');
+const Messages = require('./en-US.json');
 
-/**
- * Returns object for a notApplicable audit given a message string
- * @param {string} message
- * @return {Object}
- */
-function auditNotApplicable(message = NOT_APPLICABLE.DEFAULT) {
-  return {
-    notApplicable: true,
-    rawValue: true,
-    displayValue: message,
-  };
-}
-
-module.exports = {auditNotApplicable};
+module.exports = Messages;

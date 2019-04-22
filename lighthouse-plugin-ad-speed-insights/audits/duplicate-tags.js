@@ -13,9 +13,20 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
+
+const id = 'duplicate-tags';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 const tags = [
   'googletagservices.com/tag/js/gpt.js',
@@ -44,12 +55,10 @@ class DuplicateTags extends Audit {
    */
   static get meta() {
     return {
-      id: 'duplicate-tags',
-      title: 'No duplicate tags are loaded in any frame',
-      failureTitle: 'There are duplicate tags loaded in the same frame',
-      description: 'Loading a tag more than once in the same frame is ' +
-        'redundant and adds overhead without benefit. [Learn more.]' +
-        '(https://ad-speed-insights.appspot.com/#duplicate-tags)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -66,7 +75,7 @@ class DuplicateTags extends Audit {
         .filter((record) => containsAnySubstring(record.url, tags));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No tags requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_TAGS);
     }
     /** @type {Object<string, Object<string, number>>} */
     const tagsByFrame = {};
@@ -98,7 +107,8 @@ class DuplicateTags extends Audit {
       score: dups.length ? 0 : 1,
       details: DuplicateTags.makeTableDetails(HEADINGS, dups),
       displayValue: dups.length ?
-        `${dups.length} duplicate tag${pluralEnding}` : '',
+        util.format(failureDisplayValue, dups.length, pluralEnding) :
+        displayValue,
     };
   }
 }
