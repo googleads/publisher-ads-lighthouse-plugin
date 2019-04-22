@@ -7,6 +7,10 @@
       "displayValue": "",
       "failureDisplayValue": "%i long task%s"
     },
+    "ad-render-blocking-resources": {
+      "title": "No render blocking resources",
+      "failureTitle": "Found render blocking resources"
+    },
     "ad-request-critical-path": {
       "title": "Minimize critical path for loading ad requests",
       "failureTitle": "Long critical path for loading ad requests",
