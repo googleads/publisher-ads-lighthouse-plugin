@@ -44,6 +44,23 @@ const HEADINGS = [
   },
 ];
 
+// TODO(warrengm) tune parameters below.
+
+/**
+ * Any contiguous idle times that exceed the following threshold will be
+ * included in the report.
+ */
+const MINIMUM_NOTEWORTHY_IDLE_GAP_MS = 150;
+
+/**
+ * This audit will fail if there is a contiguous idle time that exceeds this
+ * threshold.
+ */
+const FAILING_IDLE_GAP_MS = 400;
+
+/** This audit will fail if the total idle time exceeds this threshold. */
+const FAILING_TOTAL_IDLE_TIME_MS = 1500;
+
 /**
  * Audit to check the length of the critical path to load ads.
  * Also determines the critical path for visualization purposes.
@@ -57,7 +74,7 @@ class IdleNetworkTimes extends Audit {
     // @ts-ignore - TODO: add AsyncCallStacks to enum.
     return {
       id: 'idle-network-times',
-      title: 'Minimize network idle time before ad requests',
+      title: '[Experimental] Minimize network idle time before ad requests',
       failureTitle: '[Experimental] High network idle time before ad requests',
       description: 'High network idle times indicate that there are ' +
           'opportunities to speed up ad loading by utiilizing the network ' +
@@ -100,7 +117,7 @@ class IdleNetworkTimes extends Audit {
     const idleTimes = [];
     for (let i = 0; i < blockingRequests.length;) {
       const {startTime, endTime} = blockingRequests[i];
-      if (startTime - maxEndSoFar > 150) { // Tune this!
+      if (startTime - maxEndSoFar > MINIMUM_NOTEWORTHY_IDLE_GAP_MS) {
         idleTimes.push({
           startTime: maxEndSoFar,
           endTime: startTime,
@@ -118,7 +135,8 @@ class IdleNetworkTimes extends Audit {
     const durations = idleTimes.map((it) => it.duration);
     const totalIdleTime = durations.reduce((sum, dur) => sum + dur, 0);
     const maxIdleTime = Math.max(...durations);
-    const failed = maxIdleTime > 400 || totalIdleTime > 1500; // Tune this!
+    const failed = maxIdleTime > FAILING_IDLE_GAP_MS ||
+      totalIdleTime > FAILING_TOTAL_IDLE_TIME_MS;
 
     const displayTime = Math.round(totalIdleTime).toLocaleString();
 
