@@ -31,13 +31,13 @@ const HEADINGS = [
   {
     key: 'startTime',
     itemType: 'ms',
-    text: 'Request Start Time',
+    text: 'Start Time',
     granularity: 1,
   },
   {
     key: 'endTime',
     itemType: 'ms',
-    text: 'Request End Time',
+    text: 'End Time',
     granularity: 1,
   },
   {
