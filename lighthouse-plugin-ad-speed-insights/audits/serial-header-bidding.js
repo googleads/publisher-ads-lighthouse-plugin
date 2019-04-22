@@ -14,12 +14,19 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'serial-header-bidding';
+const {
+  title,
+  failureTitle,
+  description,
+} = AUDITS[id];
 
 // Min record duration (s) to be considered a bid.
 const MIN_BID_DURATION = .05;
@@ -110,8 +117,6 @@ class SerialHeaderBidding extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'serial-header-bidding';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,

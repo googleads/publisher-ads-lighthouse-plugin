@@ -12,10 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGPTIFrame} = require('../utils/resource-classification');
+
+const id = 'ad-top-of-viewport';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 
 /**
@@ -34,8 +44,6 @@ class AdTopOfViewport extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'ad-top-of-viewport';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -59,7 +67,7 @@ class AdTopOfViewport extends Audit {
         }));
 
     if (!slots.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_SLOTS);
+      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
     }
 
     const topSlot = slots.reduce((a, b) => (a.midpoint < b.midpoint) ? a : b);
@@ -67,7 +75,7 @@ class AdTopOfViewport extends Audit {
     const inViewport = topSlot.midpoint < viewport.innerHeight;
 
     if (!inViewport) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_ADS_VP);
+      return auditNotApplicable(NOT_APPLICABLE.NO_ADS_VIEWPORT);
     }
 
     const score = inViewport && topSlot.midpoint < 200 ? 0 : 1;
@@ -76,8 +84,8 @@ class AdTopOfViewport extends Audit {
       score,
       rawValue: topSlot.midpoint,
       // No displayValue if passing, no changes to be made.
-      displayValue: score ? '' : 'A scroll of ' + Math.round(topSlot.midpoint)
-        + ' px would hide half of your topmost ad.',
+      displayValue: score ? displayValue :
+        util.format(failureDisplayValue, Math.round(topSlot.midpoint)),
       details: AdTopOfViewport.makeTableDetails(
         HEADINGS,
         score ? [] : [{slot: topSlot.id}]

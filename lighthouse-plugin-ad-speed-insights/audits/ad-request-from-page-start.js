@@ -13,10 +13,19 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getAdStartTime, getPageStartTime} = require('../utils/network-timing');
+
+const id = 'ad-request-from-page-start';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+} = AUDITS[id];
 
 // Point of diminishing returns.
 const PODR = 2000;
@@ -31,8 +40,6 @@ class AdRequestFromPageStart extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'ad-request-from-page-start';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -74,7 +81,8 @@ class AdRequestFromPageStart extends Audit {
     return {
       rawValue: adReqTime,
       score: normalScore,
-      displayValue: Math.round(adReqTime).toLocaleString() + ' ms',
+      displayValue:
+        util.format(displayValue, Math.round(adReqTime).toLocaleString()),
     };
   }
 }

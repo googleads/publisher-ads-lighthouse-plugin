@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, ERRORS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, ERRORS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
 const {isGPTIFrame} = require('../utils/resource-classification');
+
+const id = 'viewport-ad-density';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
@@ -25,8 +35,6 @@ class ViewportAdDensity extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'viewport-ad-density';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -47,7 +55,7 @@ class ViewportAdDensity extends Audit {
       (slot) => isGPTIFrame(slot));
 
     if (!slots.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_SLOTS);
+      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
     }
 
     const adArea = slots.reduce((sum, slot) =>
@@ -56,18 +64,19 @@ class ViewportAdDensity extends Audit {
     const viewArea = viewport.innerWidth * viewport.innerHeight;
 
     if (viewArea <= 0) {
-      throw new Error(ERRORS.VP_AREA_ZERO);
+      throw new Error(ERRORS.VIEWPORT_AREA_ZERO);
     }
     if (adArea > viewArea) {
-      throw new Error(ERRORS.AREA_LARGER_THAN_VP);
+      throw new Error(ERRORS.AREA_LARGER_THAN_VIEWPORT);
     }
     const score = adArea / viewArea > 0.3 ? 0 : 1;
     return {
       score,
       rawValue: adArea / viewArea,
       // No displayValue if passing, no changes to be made.
-      displayValue: score ? ''
-        : `${Math.floor(100 * adArea / viewArea)}% covered by ads`,
+      displayValue: score ?
+        displayValue :
+        util.format(failureDisplayValue, Math.floor(100 * adArea / viewArea)),
     };
   }
 }

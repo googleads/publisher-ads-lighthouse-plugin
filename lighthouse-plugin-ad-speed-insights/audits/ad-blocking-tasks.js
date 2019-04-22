@@ -14,11 +14,21 @@
 
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'ad-blocking-tasks';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
@@ -140,8 +150,6 @@ class AdBlockingTasks extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'ad-blocking-tasks';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -243,7 +251,8 @@ class AdBlockingTasks extends Audit {
     return {
       rawValue: blocking.length == 0,
       displayValue: blocking.length ?
-        `${blocking.length} long task${pluralEnding}` : '',
+        util.format(failureDisplayValue, blocking.length, pluralEnding) :
+        displayValue,
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };
   }

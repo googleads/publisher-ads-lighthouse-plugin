@@ -15,10 +15,17 @@
 const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'static-ad-tags';
+const {
+  title,
+  failureTitle,
+  description,
+} = AUDITS[id];
 
 /** @inheritDoc */
 class StaticAdTags extends Audit {
@@ -27,8 +34,6 @@ class StaticAdTags extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'static-ad-tags';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,

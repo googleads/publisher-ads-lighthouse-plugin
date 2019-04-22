@@ -13,11 +13,21 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'loads-gpt-over-https';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 /**
  * Simple audit that checks if gpt is loaded over https.
@@ -30,8 +40,6 @@ class LoadsGptOverHttps extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'loads-gpt-over-https';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -78,7 +86,8 @@ class LoadsGptOverHttps extends Audit {
       rawValue: details.numGptHttpReqs,
       score: details.numGptHttpReqs ? 0 : 1,
       displayValue: details.numGptHttpReqs ?
-        `${details.numGptHttpReqs} unsafe request${pluralEnding}` : '',
+        util.format(failureDisplayValue, details.numGptHttpReqs, pluralEnding) :
+        displayValue,
       details,
     };
   }

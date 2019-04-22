@@ -13,10 +13,20 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
+
+const id = 'duplicate-tags';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 const tags = [
   'googletagservices.com/tag/js/gpt.js',
@@ -44,8 +54,6 @@ class DuplicateTags extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'duplicate-tags';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -99,7 +107,8 @@ class DuplicateTags extends Audit {
       score: dups.length ? 0 : 1,
       details: DuplicateTags.makeTableDetails(HEADINGS, dups),
       displayValue: dups.length ?
-        `${dups.length} duplicate tag${pluralEnding}` : '',
+        util.format(failureDisplayValue, dups.length, pluralEnding) :
+        displayValue,
     };
   }
 }

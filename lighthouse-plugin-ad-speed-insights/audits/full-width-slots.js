@@ -13,11 +13,21 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'full-width-slots';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 /** @inheritDoc */
 class FullWidthSlots extends Audit {
@@ -26,8 +36,6 @@ class FullWidthSlots extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'full-width-slots';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -82,8 +90,9 @@ class FullWidthSlots extends Audit {
       score,
       rawValue: pctUnoccupied,
       // No displayValue if passing, no changes to be made.
-      displayValue: score ? ''
-        : Math.round(pctUnoccupied * 100) + '% of viewport width is unused',
+      displayValue: score ?
+        displayValue :
+        util.format(failureDisplayValue, Math.round(pctUnoccupied * 100)),
     };
   }
 }

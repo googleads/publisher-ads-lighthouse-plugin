@@ -15,10 +15,17 @@
 const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'async-ad-tags';
+const {
+  title,
+  failureTitle,
+  description,
+} = AUDITS[id];
 
 /**
  * @param {LH.Artifacts.NetworkRequest} tagReq
@@ -39,8 +46,6 @@ class AsyncAdTags extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'async-ad-tags';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,

@@ -5,6 +5,7 @@
     "target": "ES2017",
     "allowJs": true,
     "checkJs": true,
+    "resolveJsonModule": true,
     "strict": true,
     "skipLibCheck": true,
     "typeRoots": [

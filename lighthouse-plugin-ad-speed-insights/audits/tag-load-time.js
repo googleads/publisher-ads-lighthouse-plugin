@@ -13,10 +13,19 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
+
+const id = 'tag-load-time';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+} = AUDITS[id];
 
 // Point of diminishing returns.
 const PODR = 500;
@@ -30,8 +39,6 @@ class TagLoadTime extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'tag-load-time';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -70,7 +77,8 @@ class TagLoadTime extends Audit {
     return {
       rawValue: tagLoadTime,
       score: normalScore,
-      displayValue: Math.round(tagLoadTime).toLocaleString() + ' ms',
+      displayValue:
+        util.format(displayValue, Math.round(tagLoadTime).toLocaleString()),
     };
   }
 }

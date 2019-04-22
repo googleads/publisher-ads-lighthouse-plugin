@@ -12,11 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/en-US.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
 const {isGPTIFrame} = require('../utils/resource-classification');
+
+const id = 'ads-in-viewport';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 /**
  * Table headings for audits details sections.
@@ -33,8 +43,6 @@ class AdsInViewport extends Audit {
    * @override
    */
   static get meta() {
-    const id = 'ads-in-viewport';
-    const {title, failureTitle, description} = AUDITS[id];
     return {
       id,
       title,
@@ -54,7 +62,7 @@ class AdsInViewport extends Audit {
         .filter((iframe) => isGPTIFrame(iframe));
 
     if (!slots.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_SLOTS);
+      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
     }
 
     /** @type {Array<{slot: string}>} */
@@ -70,7 +78,8 @@ class AdsInViewport extends Audit {
       rawValue: visibleCount / slots.length,
       score: nonvisible.length > 3 ? 0 : 1,
       displayValue: nonvisible.length ?
-        `${nonvisible.length} ad${pluralEnding} out of view` : '',
+        util.format(failureDisplayValue, nonvisible.length, pluralEnding) :
+        displayValue,
       details: AdsInViewport.makeTableDetails(HEADINGS, nonvisible),
     };
   }
