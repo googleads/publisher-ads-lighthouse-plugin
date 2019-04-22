@@ -13,9 +13,19 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
+
+const id = 'tag-load-time';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+} = AUDITS[id];
 
 // Point of diminishing returns.
 const PODR = 500;
@@ -30,13 +40,10 @@ class TagLoadTime extends Audit {
    */
   static get meta() {
     return {
-      id: 'tag-load-time',
-      title: 'Tag load time',
-      failureTitle: 'Reduce tag load time',
-      description: 'This measures the time for the Google Publisher' +
-          ' Tag\'s implementation script (pubads_impl.js) to load after the ' +
-          'page loads. [Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#measurements)',
+      id,
+      title,
+      failureTitle,
+      description,
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],
@@ -53,10 +60,10 @@ class TagLoadTime extends Audit {
     const pageStartTime = getPageStartTime(networkRecords);
     const tagEndTime = getTagEndTime(networkRecords);
     if (pageStartTime < 0) {
-      return auditNotApplicable('No successful network records');
+      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
     }
     if (tagEndTime < 0) {
-      return auditNotApplicable('No tag loaded');
+      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
     const tagLoadTime = (tagEndTime - pageStartTime) * 1000;
 
@@ -70,7 +77,8 @@ class TagLoadTime extends Audit {
     return {
       rawValue: tagLoadTime,
       score: normalScore,
-      displayValue: Math.round(tagLoadTime).toLocaleString() + ' ms',
+      displayValue:
+        util.format(displayValue, Math.round(tagLoadTime).toLocaleString()),
     };
   }
 }

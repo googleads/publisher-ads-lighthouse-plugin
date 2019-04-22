@@ -14,11 +14,19 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'serial-header-bidding';
+const {
+  title,
+  failureTitle,
+  description,
+} = AUDITS[id];
 
 // Min record duration (s) to be considered a bid.
 const MIN_BID_DURATION = .05;
@@ -110,13 +118,10 @@ class SerialHeaderBidding extends Audit {
    */
   static get meta() {
     return {
-      id: 'serial-header-bidding',
-      title: 'No serial header bidding detected',
-      failureTitle: 'There are serial header bidding requests',
-      description: 'Running header bidding serially make ads load slower, ' +
-          'which has an impact on impressions. Consider running in parallel. ' +
-          '[Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#serial-header-bidding)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -145,7 +150,7 @@ class SerialHeaderBidding extends Audit {
     const recordsByType = bucket(networkRecords, checkRecordType);
 
     if (!recordsByType[RequestType.BID]) {
-      return auditNotApplicable('No bids detected');
+      return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
     }
 
     // networkRecords are sorted by start time. We use this to offset
