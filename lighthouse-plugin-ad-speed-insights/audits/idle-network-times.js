@@ -14,7 +14,9 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
+const {format} = require('util');
 const {getCriticalPath} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGptAdRequest} = require('../utils/resource-classification');
@@ -61,6 +63,14 @@ const FAILING_IDLE_GAP_MS = 400;
 /** This audit will fail if the total idle time exceeds this threshold. */
 const FAILING_TOTAL_IDLE_TIME_MS = 1500;
 
+const id = 'idle-network-times';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+} = AUDITS[id];
+
 /**
  * Audit to check the length of the critical path to load ads.
  * Also determines the critical path for visualization purposes.
@@ -73,13 +83,10 @@ class IdleNetworkTimes extends Audit {
   static get meta() {
     // @ts-ignore - TODO: add AsyncCallStacks to enum.
     return {
-      id: 'idle-network-times',
-      title: '[Experimental] Minimize network idle time before ad requests',
-      failureTitle: '[Experimental] High network idle time before ad requests',
-      description: 'High network idle times indicate that there are ' +
-          'opportunities to speed up ad loading by utiilizing the network ' +
-          'effectively. Network idle times can be caused by long tasks, ' +
-          'timeouts, waiting on load events, or render blocking resources.',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks'],
     };
   }
@@ -110,7 +117,7 @@ class IdleNetworkTimes extends Audit {
         .sort((a, b) => a.startTime - b.startTime);
 
     if (!blockingRequests) {
-      return auditNotApplicable('No ads requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
     }
 
     let maxEndSoFar = Infinity;
@@ -144,7 +151,7 @@ class IdleNetworkTimes extends Audit {
     return {
       rawValue: maxIdleTime,
       score: failed ? 0 : 1,
-      displayValue: `${displayTime} ms spent idle in critical path`,
+      displayValue: format(displayValue, displayTime),
       details: IdleNetworkTimes.makeTableDetails(HEADINGS, idleTimes),
     };
   }
