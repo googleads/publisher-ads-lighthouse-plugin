@@ -31,6 +31,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/ad-top-of-viewport`},
     {path: `${PLUGIN_PATH}/audits/duplicate-tags`},
     {path: `${PLUGIN_PATH}/audits/serial-header-bidding`},
+    {path: `${PLUGIN_PATH}/audits/script-injected-tags`},
   ],
   groups: {
     'measurements': {
@@ -54,6 +55,7 @@ module.exports = {
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
+      {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
