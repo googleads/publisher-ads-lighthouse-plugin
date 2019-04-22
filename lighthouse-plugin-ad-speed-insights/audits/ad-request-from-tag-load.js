@@ -13,9 +13,19 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getAdStartTime, getTagEndTime} = require('../utils/network-timing');
+
+const id = 'ad-request-from-tag-load';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+} = AUDITS[id];
 
 // Point of diminishing returns.
 const PODR = 300;
@@ -31,13 +41,10 @@ class AdRequestFromTagLoad extends Audit {
    */
   static get meta() {
     return {
-      id: 'ad-request-from-tag-load',
-      title: 'Latency of first ad request (from tag load)',
-      failureTitle: 'Reduce latency of first ad request (from tag load)',
-      description: 'This measures the time for the first ad request to be' +
-          ' made relative to the Google Publisher Tag loading. ' +
-          '[Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#measurements)',
+      id,
+      title,
+      failureTitle,
+      description,
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs'],
@@ -56,10 +63,10 @@ class AdRequestFromTagLoad extends Audit {
     const tagEndTime = getTagEndTime(networkRecords);
 
     if (tagEndTime < 0) {
-      return auditNotApplicable('No tag loaded');
+      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
     if (adStartTime < 0) {
-      return auditNotApplicable('No ads requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 
     const adReqTime = (adStartTime - tagEndTime) * 1000;
@@ -74,7 +81,8 @@ class AdRequestFromTagLoad extends Audit {
     return {
       rawValue: adReqTime,
       score: normalScore,
-      displayValue: Math.round(adReqTime).toLocaleString() + ' ms',
+      displayValue:
+        util.format(displayValue, Math.round(adReqTime).toLocaleString()),
     };
   }
 }

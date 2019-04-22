@@ -15,10 +15,18 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getPageStartTime} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
 const {isGptAdRequest} = require('../utils/resource-classification');
+
+const id = 'script-injected-tags';
+const {
+  title,
+  failureTitle,
+  description,
+} = AUDITS[id];
 
 /**
  * Table headings for audits details sections.
@@ -55,14 +63,10 @@ class ScriptInjectedTags extends Audit {
    */
   static get meta() {
     return {
-      id: 'script-injected-tags',
-      title: 'Avoid script injected tags in the document',
-      failureTitle: 'Found script injected tags in path of ad requests',
-      description: 'Prefer loading scripts via `<script async>` instead of ' +
-          'injecting script tags with JavaScript. Doing so lets the browser ' +
-          'to request the script as quickly as possible. ' +
-          '[Learn more.]' +
-          '(https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
@@ -82,7 +86,7 @@ class ScriptInjectedTags extends Audit {
 
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
     if (!closure.requests.length) {
-      return auditNotApplicable('No ads requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
     }
     const injectedBlockingRequests = closure.requests
         .filter((r) => r.resourceType == 'Script')

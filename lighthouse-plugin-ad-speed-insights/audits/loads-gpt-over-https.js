@@ -13,10 +13,21 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'loads-gpt-over-https';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  failureDisplayValue,
+} = AUDITS[id];
 
 /**
  * Simple audit that checks if gpt is loaded over https.
@@ -30,15 +41,10 @@ class LoadsGptOverHttps extends Audit {
    */
   static get meta() {
     return {
-      id: 'loads-gpt-over-https',
-      title: 'Uses HTTPS to load GPT',
-      failureTitle: 'GPT tag is loaded insecurely',
-      description: 'For privacy and security always load GPT over HTTPS. With' +
-        ' insecure pages explicitly request the GPT script securely. Example:' +
-        '`<script async="async" ' +
-        'src="https://www.googletagservices.com/tag/js/gpt.js">`. ' +
-        '[Learn more.]' +
-        '(https://ad-speed-insights.appspot.com/#https)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -54,7 +60,7 @@ class LoadsGptOverHttps extends Audit {
 
     const pageReq = networkRecords.find((record) => record.statusCode == 200);
     if (!pageReq) {
-      return auditNotApplicable('No successful network records');
+      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
     }
 
     const gptRequests = networkRecords
@@ -70,7 +76,7 @@ class LoadsGptOverHttps extends Audit {
     };
 
     if (!gptRequests.length) {
-      const returnVal = auditNotApplicable('GPT not requested');
+      const returnVal = auditNotApplicable(NOT_APPLICABLE.NO_GPT);
       returnVal.details = details;
       return returnVal;
     }
@@ -80,7 +86,8 @@ class LoadsGptOverHttps extends Audit {
       rawValue: details.numGptHttpReqs,
       score: details.numGptHttpReqs ? 0 : 1,
       displayValue: details.numGptHttpReqs ?
-        `${details.numGptHttpReqs} unsafe request${pluralEnding}` : '',
+        util.format(failureDisplayValue, details.numGptHttpReqs, pluralEnding) :
+        displayValue,
       details,
     };
   }
