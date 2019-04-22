@@ -50,6 +50,12 @@ const HEADINGS = [
     text: 'Duration',
     granularity: 1,
   },
+  {
+    key: 'lineNumber',
+    itemType: 'numeric',
+    text: 'Source Line Number',
+    granularity: 1,
+  },
 ];
 
 /**
@@ -100,6 +106,7 @@ class ScriptInjectedTags extends Audit {
         request: req.url,
         startTime: (req.startTime - pageStartTime) * 1000,
         duration: (req.endTime - req.startTime) * 1000,
+        lineNumber: req.initiator.stack.callFrames[0].lineNumber,
       }));
     tableView.sort((a, b) => a.startTime - b.startTime);
 
