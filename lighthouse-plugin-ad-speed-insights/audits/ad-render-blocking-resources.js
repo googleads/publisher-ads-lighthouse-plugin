@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
 const RenderBlockingResources = require('lighthouse/lighthouse-core/audits/byte-efficiency/render-blocking-resources.js');
+const {AUDITS} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {getPageStartTime} = require('../utils/network-timing');
 
@@ -48,6 +49,12 @@ const HEADINGS = [
   },
 ];
 
+const id = 'ad-render-blocking-resources';
+const {
+  title,
+  failureTitle,
+} = AUDITS[id];
+
 /** Audits for render blocking resources */
 class AdRenderBlockingResources extends RenderBlockingResources {
   /**
@@ -56,9 +63,9 @@ class AdRenderBlockingResources extends RenderBlockingResources {
    */
   static get meta() {
     return {
-      id: 'ad-render-blocking-resources',
-      title: 'No render-blocking resources',
-      failureTitle: 'Found render blocking resources',
+      id,
+      title,
+      failureTitle,
       scoreDisplayMode: 'numeric',
       // TODO: update to be more ad specific.
       description: RenderBlockingResources.meta.description,

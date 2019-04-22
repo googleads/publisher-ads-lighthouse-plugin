@@ -15,9 +15,17 @@
 const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+const id = 'async-ad-tags';
+const {
+  title,
+  failureTitle,
+  description,
+} = AUDITS[id];
 
 /**
  * @param {LH.Artifacts.NetworkRequest} tagReq
@@ -39,14 +47,10 @@ class AsyncAdTags extends Audit {
    */
   static get meta() {
     return {
-      id: 'async-ad-tags',
-      title: 'GPT tag is loaded asynchronously',
-      failureTitle: 'GPT tag is loaded synchronously',
-      description: 'Loading the GPT tag synchronously blocks all content ' +
-          'rendering until the tag is fetched and evaluated, consider using ' +
-          'the `async` attribute for the GPT tag to ensure it is loaded ' +
-          'asynchronously. [Learn more.]' +
-          '(https://ad-speed-insights.appspot.com/#async-tags)',
+      id,
+      title,
+      failureTitle,
+      description,
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -63,7 +67,7 @@ class AsyncAdTags extends Audit {
         .filter((req) => isGptTag(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable('No tag requested');
+      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
     const numAsync = array.count(tagReqs, isAsync);
