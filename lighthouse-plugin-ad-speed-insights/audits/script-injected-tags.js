@@ -13,7 +13,6 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-// @ts-ignore Could not find module lighthouse
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
@@ -40,13 +39,13 @@ const HEADINGS = [
   {
     key: 'startTime',
     itemType: 'ms',
-    text: 'Request Start Time',
+    text: 'Start Time',
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: 'Request Duration',
+    text: 'Duration',
     granularity: 1,
   },
 ];
