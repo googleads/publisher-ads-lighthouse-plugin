@@ -58,6 +58,12 @@
       "displayValue": "",
       "failureDisplayValue": "%i%% of viewport is unused"
     },
+    "idle-network-times": {
+      "title": "[Experimental] Minimize network idle time before ad requests",
+      "failureTitle": "[Experimental] High network idle time before ad requests",
+      "description": "High network idle times indicate that there are opportunities to speed up ad loading by utiilizing the network effectively. Network idle times can be caused by long tasks, timeouts, waiting on load events, or render blocking resources",
+      "displayValue": "%s ms spent idle in critical path"
+    },
     "loads-gpt-over-https": {
       "title": "Uses HTTPS to load GPT",
       "failureTitle": "GPT tag is loaded insecurely",

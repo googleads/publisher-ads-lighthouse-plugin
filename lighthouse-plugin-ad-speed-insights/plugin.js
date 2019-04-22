@@ -19,6 +19,7 @@ module.exports = {
   audits: [
     {path: `${PLUGIN_PATH}/audits/ad-blocking-tasks`},
     {path: `${PLUGIN_PATH}/audits/ad-request-critical-path`},
+    {path: `${PLUGIN_PATH}/audits/idle-network-times`},
     {path: `${PLUGIN_PATH}/audits/ads-in-viewport`},
     {path: `${PLUGIN_PATH}/audits/async-ad-tags`},
     {path: `${PLUGIN_PATH}/audits/loads-gpt-over-https`},
@@ -55,6 +56,7 @@ module.exports = {
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
+      {id: 'idle-network-times', weight: 0.5, group: 'ads-performance'},
       {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
