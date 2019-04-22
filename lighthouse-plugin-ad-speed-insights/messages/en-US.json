@@ -71,6 +71,11 @@
       "displayValue": "",
       "failureDisplayValue": "%i unsafe request%s"
     },
+    "script-injected-tags": {
+      "title": "Avoid script injected tags in the main document",
+      "failureTitle": "Found script injected tags in the main document",
+      "description": "Prefer loading scripts using `<script async>` instead of injecting script tags with JavaScript. Doing so lets the browser to request scripts earlier. [Learn more.](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)"
+    },
     "serial-header-bidding": {
       "title": "No serial header bidding detected",
       "failureTitle": "There are serial header bidding requests",
