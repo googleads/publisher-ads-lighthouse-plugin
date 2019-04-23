@@ -17,9 +17,8 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getCriticalPath} = require('../utils/graph');
+const {getAdCriticalGraph} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
-const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const id = 'ad-request-critical-path';
@@ -164,25 +163,24 @@ class AdRequestCriticalPath extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
-    const adRequest = networkRecords.find(isGptAdRequest);
-    const criticalRequests = getCriticalPath(
-      networkRecords, adRequest, trace.traceEvents);
+    const criticalRequests = getAdCriticalGraph(
+      networkRecords, trace.traceEvents);
 
+    const REQUEST_TYPES = ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'];
     const blockingRequests = Array.from(criticalRequests)
-        .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))
+        .filter((r) => REQUEST_TYPES.includes(r.resourceType))
         .filter((r) => r.mimeType != 'text/css');
 
     if (!blockingRequests.length) {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
     const pageStartTime = getPageStartTime(networkRecords);
-    let tableView = blockingRequests.map((req) =>
-      ({
-        url: requestName(req.url),
-        startTime: (req.startTime - pageStartTime) * 1000,
-        endTime: (req.endTime - pageStartTime) * 1000,
-        duration: (req.endTime - req.startTime) * 1000,
-      }));
+    let tableView = blockingRequests.map((req) => ({
+      url: requestName(req.url),
+      startTime: (req.startTime - pageStartTime) * 1000,
+      endTime: (req.endTime - pageStartTime) * 1000,
+      duration: (req.endTime - req.startTime) * 1000,
+    }));
     tableView = computeSummaries(tableView);
 
     const depth = computeDepth(tableView);
