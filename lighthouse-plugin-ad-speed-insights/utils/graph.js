@@ -16,13 +16,8 @@
 // eslint-disable-next-line
 const BaseNode = require("lighthouse/lighthouse-core/lib/dependency-graph/base-node");
 const {flatten} = require('./array');
-const {
-  getNetworkInitiators,
-} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
-const {
-  isGptAdRequest,
-  getHeaderBidder,
-} = require('./resource-classification');
+const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
+const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
 
 /** @typedef {LH.TraceEvent} TraceEvent */
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -38,15 +33,13 @@ function getTransitiveClosure(root, isTargetRequest) {
   const closure = new Set();
   /** @type {LH.Artifacts.NetworkRequest} */
   let firstTarget = null;
-  root.traverse(
-    /** @param {typeof BaseNode} node */ (node) => {
-      if (!node.record || !isTargetRequest(node.record)) return;
-      if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
-        return;
-      }
-      firstTarget = node;
+  root.traverse(/** @param {typeof BaseNode} node */ (node) => {
+    if (!node.record || !isTargetRequest(node.record)) return;
+    if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
+      return;
     }
-  );
+    firstTarget = node;
+  });
 
   // Search target -> root
   const stack = [firstTarget];

@@ -22,7 +22,12 @@ const {getPageStartTime} = require('../utils/network-timing');
 const {URL} = require('url');
 
 const id = 'ad-request-critical-path';
-const {title, failureTitle, description, displayValue} = AUDITS[id];
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+} = AUDITS[id];
 
 /**
  * @typedef {Object} SimpleRequest
@@ -87,7 +92,7 @@ function computeSummaries(requests) {
     while (i < requests.length) {
       next = requests[i + 1];
       if (!next || current.url != next.url ||
-        next.startTime > current.endTime) {
+          next.startTime > current.endTime) {
         break;
       }
       current.endTime = Math.max(current.endTime, next.endTime);
@@ -159,14 +164,12 @@ class AdRequestCriticalPath extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
     const criticalRequests = getAdCriticalGraph(
-      networkRecords,
-      trace.traceEvents);
+      networkRecords, trace.traceEvents);
 
+    const REQUEST_TYPES = ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'];
     const blockingRequests = Array.from(criticalRequests)
-        .filter((r) =>
-          ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(
-            r.resourceType)
-        ).filter((r) => r.mimeType != 'text/css');
+        .filter((r) => REQUEST_TYPES.includes(r.resourceType))
+        .filter((r) => r.mimeType != 'text/css');
 
     if (!blockingRequests.length) {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
