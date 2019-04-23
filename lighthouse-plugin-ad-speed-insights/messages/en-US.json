@@ -70,7 +70,7 @@
       "displayValue": "%s ms spent idle in critical path"
     },
     "loads-gpt-over-https": {
-      "title": "gpt.js is loaded over HTTPS",
+      "title": "GPT tag is loaded over HTTPS",
       "failureTitle": "Load gpt.js over HTTPS",
       "description": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://www.googletagservices.com/tag/js/gpt.js\">`. [Learn more.](https://ad-speed-insights.appspot.com/#https)",
       "displayValue": "",
