@@ -14,7 +14,7 @@
 
 // @ts-ignore
 // eslint-disable-next-line
-const BaseNode = require("lighthouse/lighthouse-core/lib/dependency-graph/base-node");
+const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
 const {flatten} = require('./array');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
