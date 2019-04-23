@@ -118,7 +118,7 @@ function getHeaderBidder(url) {
  */
 function isStaticRequest(request) {
   // Use initiator type to determine if tag was loaded statically.
-  return ['parser', 'preload'].includes(request.initiator.type);
+  return ['parser', 'preload', 'other'].includes(request.initiator.type);
 }
 
 /**

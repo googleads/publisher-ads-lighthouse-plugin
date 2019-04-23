@@ -27,6 +27,41 @@ const {
   description,
 } = AUDITS[id];
 
+/**
+ * Table headings for audits details sections.
+ * @type {LH.Audit.Details.Table['headings']}
+ */
+const HEADINGS = [
+  {
+    key: 'url',
+    itemType: 'url',
+    text: 'Initiator',
+  },
+  {
+    key: 'lineNumber',
+    itemType: 'numeric',
+    text: 'Line Number',
+    granularity: 1,
+  },
+];
+
+/**
+ * @param {LH.Artifacts.NetworkRequest} dynamicReq
+ * @return {{url: string, lineNumber: number}[]}
+ */
+function getDetailsTable(dynamicReq) {
+  const table = [];
+  const seen = new Set();
+  for (let stack = dynamicReq.initiator.stack; stack; stack = stack.parent) {
+    for (const {url, lineNumber} of stack.callFrames) {
+      if (seen.has(url)) continue;
+      table.push({url, lineNumber});
+      seen.add(url);
+    }
+  }
+  return table;
+}
+
 /** @inheritDoc */
 class StaticAdTags extends Audit {
   /**
@@ -61,8 +96,12 @@ class StaticAdTags extends Audit {
     const numStatic = array.count(tagReqs, isStaticRequest);
     const numTags = tagReqs.length;
 
+    const dynamicReq = tagReqs.find((r) => !isStaticRequest(r));
+    const table = dynamicReq ? getDetailsTable(dynamicReq) : [];
+
     return {
       rawValue: numStatic === numTags,
+      details: StaticAdTags.makeTableDetails(HEADINGS, table),
     };
   }
 }
