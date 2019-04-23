@@ -17,9 +17,8 @@ const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {format} = require('util');
-const {getCriticalPath} = require('../utils/graph');
+const {getAdCriticalGraph} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
-const {isGptAdRequest} = require('../utils/resource-classification');
 
 /**
  * Table headings for audits details sections.
@@ -101,9 +100,8 @@ class IdleNetworkTimes extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
-    const adRequest = networkRecords.find(isGptAdRequest);
-    const criticalRequests = getCriticalPath(
-      networkRecords, adRequest, trace.traceEvents);
+    const criticalRequests =
+      getAdCriticalGraph(networkRecords, trace.traceEvents);
 
     const pageStartTime = getPageStartTime(networkRecords);
     const blockingRequests = Array.from(criticalRequests)
