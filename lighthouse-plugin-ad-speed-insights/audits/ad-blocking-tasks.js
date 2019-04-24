@@ -221,7 +221,7 @@ class AdBlockingTasks extends Audit {
       const name = TASK_NAMES[taskName] || taskName;
 
       const url = scriptUrl && new URL(scriptUrl);
-      const displayUrl = url && (url.host + url.pathname);
+      const displayUrl = url && (url.origin + url.pathname);
 
       blocking.push({
         name,
