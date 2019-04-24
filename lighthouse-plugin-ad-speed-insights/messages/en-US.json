@@ -1,104 +1,105 @@
 {
   "AUDITS": {
     "ad-blocking-tasks": {
-      "title": "No long tasks seem to block ad-related network requests",
-      "failureTitle": "Long tasks are blocking ad-related network requests",
-      "description": "Tasks blocking the main thread can delay the ad related resources, consider removing long blocking tasks or moving them off the main thread with web workers. These tasks can be especially detrimental to performance on less powerful devices. [Learn more.](https://ad-speed-insights.appspot.com/#long-tasks)",
+      "title": "No long tasks blocking ad-related network requests",
+      "failureTitle": "Avoid long tasks that block ad-related network requests",
+      "description": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more.](https://ad-speed-insights.appspot.com/#long-tasks)",
       "displayValue": "",
       "failureDisplayValue": "%i long task%s"
     },
     "ad-render-blocking-resources": {
-      "title": "No render blocking resources",
-      "failureTitle": "Found render blocking resources"
+      "title": "Minimal render-blocking resources found",
+      "failureTitle": "Avoid render-blocking resources",
+      "description": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources)"
     },
     "ad-request-critical-path": {
-      "title": "Minimize critical path for loading ad requests",
-      "failureTitle": "Long critical path for loading ad requests",
-      "description": "These are the resources that block the first ad request. Consider reducing the number of resources or improving their execution to start loading ads as soon as possible. [Learn more.](https://ad-speed-insights.appspot.com/#blocking-resouces)",
-      "displayValue": "%i serial resources, %i total resources"
+      "title": "Minimal requests found in ad critical path",
+      "failureTitle": "Reduce critical path for ad loading",
+      "description": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more.](https://ad-speed-insights.appspot.com/#blocking-resouces)",
+      "displayValue": "%i serial resource%s, %i total resource%s"
     },
     "ad-request-from-page-start": {
       "title": "Latency of first ad request (from page start)",
       "failureTitle": "Reduce latency of first ad request (from page start)",
-      "description": "This measures the time for the first ad request to be made relative to the page load starting. [Learn more.](https://ad-speed-insights.appspot.com/#measurements)",
+      "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more.](https://ad-speed-insights.appspot.com/#measurements)",
       "displayValue": "%s ms"
     },
     "ad-request-from-tag-load": {
       "title": "Latency of first ad request (from tag load)",
       "failureTitle": "Reduce latency of first ad request (from tag load)",
-      "description": "This measures the time for the first ad request to be made relative to the Google Publisher Tag loading. [Learn more.](https://ad-speed-insights.appspot.com/#measurements)",
+      "description": "This metric measures the elapsed time from loading of the Google Publisher Tag until the first ad request is made. [Learn more.](https://ad-speed-insights.appspot.com/#measurements)",
       "displayValue": "%s ms"
     },
     "ad-top-of-viewport": {
-      "title": "Ads are below top of viewport",
-      "failureTitle": "Top ad is too high in viewport",
-      "description": "Over 10% of ads are never viewed due to the user scrolling past before the ad is visible. By moving ads away from the very top of the viewport, the likelihood of the ad being scrolled past prior to load is decreased  and the ad is more likely to be viewed. [Learn more.](https://ad-speed-insights.appspot.com/#top-of-viewport)",
+      "title": "No ad found at the very top of the page",
+      "failureTitle": "Move the top ad further down the page",
+      "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more.](https://ad-speed-insights.appspot.com/#top-of-viewport)",
       "displayValue": "",
       "failureDisplayValue": "A scroll of %i px would hide half of your topmost ad"
     },
     "ads-in-viewport": {
       "title": "Few or no ads loaded outside viewport",
-      "failureTitle": "There are eager ads loaded outside viewport",
-      "description": "Too many ads loaded outside the viewport lowers viewability rates and impact user experience, consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more.](https://ad-speed-insights.appspot.com/#eager-ads)",
+      "failureTitle": "Avoid loading ads until they are nearly on-screen",
+      "description": "Too many ads loaded outside the viewport lowers viewability rates and impact user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more.](https://ad-speed-insights.appspot.com/#eager-ads)",
       "displayValue": "",
       "failureDisplayValue": "%i ad%s out of view"
     },
     "async-ad-tags": {
       "title": "GPT tag is loaded asynchronously",
-      "failureTitle": "GPT tag is loaded synchronously",
-      "description": "Loading the GPT tag synchronously blocks all content rendering until the tag is fetched and evaluated, consider using the `async` attribute for the GPT tag to ensure it is loaded asynchronously. [Learn more.](https://ad-speed-insights.appspot.com/#async-tags)"
+      "failureTitle": "Load gpt.js asynchronously",
+      "description": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more.](https://ad-speed-insights.appspot.com/#async-tags)"
     },
     "duplicate-tags": {
-      "title": "No duplicate tags are loaded in any frame",
-      "failureTitle": "There are duplicate tags loaded in the same frame",
+      "title": "No duplicate tags found in any frame",
+      "failureTitle": "Load tags only once per frame",
       "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more.](https://ad-speed-insights.appspot.com/#duplicate-tags)",
       "displayValue": "",
       "failureDisplayValue": "%i duplicate tag%s"
     },
     "full-width-slots": {
-      "title": "Slots are utilizing most of the viewport width",
-      "failureTitle": "Slots are not utilizing the full viewport width",
-      "description": "Have ad slot sizes that utilize most of the viewport's width to increase CTR. We recommend leaving no more than 25% of the viewport's width unutilized. [Learn more.](https://ad-speed-insights.appspot.com/#full-width-slots)",
+      "title": "Ad slots effectively use horizontal space",
+      "failureTitle": "Increase the width of ad slots",
+      "description": "Ad slots that utilize most of the page width generally experience increased click-through rate over smaller ad sizes. We recommend leaving no more than 25% of the viewport width unutilized on mobile devices. [Learn more.](https://ad-speed-insights.appspot.com/#full-width-slots)",
       "displayValue": "",
-      "failureDisplayValue": "%i%% of viewport is unused"
+      "failureDisplayValue": "%i%% of viewport width is underutilized"
     },
     "idle-network-times": {
-      "title": "[Experimental] Minimize network idle time before ad requests",
-      "failureTitle": "[Experimental] High network idle time before ad requests",
-      "description": "High network idle times indicate that there are opportunities to speed up ad loading by utiilizing the network effectively. Network idle times can be caused by long tasks, timeouts, waiting on load events, or render blocking resources",
+      "title": "[Experimental] Network is efficiently utilized before ad requests",
+      "failureTitle": "[Experimental] Reduce network idle time before ad requests",
+      "description": "Moments of network idleness in the critical path to ad loading present opportunities to improve speed. Consider eliminating long tasks, timeouts, waiting on load events, or synchronous resources to avoid idleness. Chrome DevTools can be used to find out what is causing network idleness. [Learn more](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference).",
       "displayValue": "%s ms spent idle in critical path"
     },
     "loads-gpt-over-https": {
-      "title": "Uses HTTPS to load GPT",
-      "failureTitle": "GPT tag is loaded insecurely",
-      "description": "For privacy and security always load GPT over HTTPS. With insecure pages explicitly request the GPT script securely. Example:`<script async=\"async\" src=\"https://www.googletagservices.com/tag/js/gpt.js\">`. [Learn more.](https://ad-speed-insights.appspot.com/#https)",
+      "title": "GPT tag is loaded over HTTPS",
+      "failureTitle": "Load gpt.js over HTTPS",
+      "description": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://www.googletagservices.com/tag/js/gpt.js\">`. [Learn more.](https://ad-speed-insights.appspot.com/#https)",
       "displayValue": "",
       "failureDisplayValue": "%i unsafe request%s"
     },
     "script-injected-tags": {
-      "title": "Avoid script injected tags in the main document",
-      "failureTitle": "Found script injected tags in the main document",
-      "description": "Prefer loading scripts using `<script async>` instead of injecting script tags with JavaScript. Doing so lets the browser to request scripts earlier. [Learn more.](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)"
+      "title": "No script-injected tags found",
+      "failureTitle": "Avoid script-injected tags",
+      "description": "Prefer loading scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. Doing so lets the browser fetch the script sooner. [Learn more.](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)"
     },
     "serial-header-bidding": {
-      "title": "No serial header bidding detected",
-      "failureTitle": "There are serial header bidding requests",
-      "description": "Running header bidding serially make ads load slower, which has an impact on impressions. Consider running in parallel. [Learn more.](https://ad-speed-insights.appspot.com/#serial-header-bidding)"
+      "title": "Header bidding is parallelized",
+      "failureTitle": "Parallelize SSP bid requests",
+      "description": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more.](https://ad-speed-insights.appspot.com/#serial-header-bidding)"
     },
     "static-ad-tags": {
       "title": "GPT tag is loaded statically",
-      "failureTitle": "GPT tag is loaded dynamically",
-      "description": "Tags loaded dynamically are not visible to the browser preloader, consider using a static tag or `<link rel=\"preload\">`. [Learn more.](https://ad-speed-insights.appspot.com/#dynamic-tag)"
+      "failureTitle": "Load GPT tag statically",
+      "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more.](https://ad-speed-insights.appspot.com/#dynamic-tag)"
     },
     "tag-load-time": {
       "title": "Tag load time",
       "failureTitle": "Reduce tag load time",
-      "description": "This measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more.](https://ad-speed-insights.appspot.com/#measurements)",
+      "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more.](https://ad-speed-insights.appspot.com/#measurements)",
       "displayValue": "%s ms"
     },
     "viewport-ad-density": {
-      "title": "Ad density inside viewport is within recommended range",
-      "failureTitle": "Ad density inside viewport is higher than recommended",
+      "title": "Ad density in initial viewport is within recommended range",
+      "failureTitle": "Reduce ad density in initial viewport",
       "description": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more.](https://ad-speed-insights.appspot.com/#ad-density)",
       "displayValue": "",
       "failureDisplayValue": "%i%% covered by ads"
