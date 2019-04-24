@@ -186,10 +186,19 @@ class AdRequestCriticalPath extends Audit {
     const depth = computeDepth(tableView);
     const failed = depth > 3;
 
+    const serialPluralEnding = depth != 1 ? 's' : '';
+    const totalPluralEnding = tableView.length != 1 ? 's' : '';
+
     return {
       rawValue: depth,
       score: failed ? 0 : 1,
-      displayValue: util.format(displayValue, depth, tableView.length),
+      displayValue: util.format(
+        displayValue,
+        depth,
+        serialPluralEnding,
+        tableView.length,
+        totalPluralEnding
+      ),
       details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
     };
   }

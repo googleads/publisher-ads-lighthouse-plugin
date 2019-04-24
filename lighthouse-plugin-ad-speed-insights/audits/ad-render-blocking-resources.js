@@ -53,6 +53,7 @@ const id = 'ad-render-blocking-resources';
 const {
   title,
   failureTitle,
+  description,
 } = AUDITS[id];
 
 /** Audits for render blocking resources */
@@ -67,8 +68,7 @@ class AdRenderBlockingResources extends RenderBlockingResources {
       title,
       failureTitle,
       scoreDisplayMode: 'numeric',
-      // TODO: update to be more ad specific.
-      description: RenderBlockingResources.meta.description,
+      description,
       requiredArtifacts: RenderBlockingResources.meta.requiredArtifacts,
     };
   }
