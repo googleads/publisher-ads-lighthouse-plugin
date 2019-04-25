@@ -32,6 +32,8 @@ const {
 /**
  * @typedef {Object} SimpleRequest
  * @property {string} url
+ * @property {string} abbreviatedUrl
+ * @property {string} type
  * @property {number} startTime
  * @property {number} endTime
  * @property {number} duration
@@ -46,6 +48,11 @@ const HEADINGS = [
     key: 'url',
     itemType: 'url',
     text: 'Request',
+  },
+  {
+    key: 'type',
+    itemType: 'text',
+    text: 'Type',
   },
   {
     key: 'startTime',
@@ -66,19 +73,39 @@ const HEADINGS = [
     granularity: 1,
   },
 ];
+
+/**
+ * Checks if two requests are similar enough to be merged.
+ * @param {SimpleRequest} r1
+ * @param {SimpleRequest} r2
+ * @return {boolean}
+ */
+function areSimilarRequests(r1, r2) {
+  if (Math.max(r1.startTime, r2.startTime) > Math.min(r1.endTime, r2.endTime)) {
+    return false;
+  }
+  if (r1.type != r2.type) {
+    return false;
+  }
+  return r1.abbreviatedUrl == r2.abbreviatedUrl;
+}
+
 /**
  * Summarizes the given array of requests by merging overlapping requests with
  * the same url. The resulting array will be ordered by start time.
- * @param {Array<SimpleRequest>} requests
- * @return {Array<SimpleRequest>}
+ * @param {SimpleRequest[]} requests
+ * @return {SimpleRequest[]}
  */
 function computeSummaries(requests) {
   // Sort requests by URL first since we will merge overlapping records with
   // the same URL below, using a similar algorithm to std::unique.
   // Within a url, we sort by time to make overlap checks easier.
   requests.sort((a, b) => {
-    if (a.url != b.url) {
-      return a.url < b.url ? -1 : 1;
+    if (a.abbreviatedUrl != b.abbreviatedUrl) {
+      return a.abbreviatedUrl < b.abbreviatedUrl ? -1 : 1;
+    }
+    if (a.type != b.type) {
+      return a.type < b.type ? -1 : 1;
     }
     if (a.startTime != b.startTime) {
       return a.startTime < b.startTime ? -1 : 1;
@@ -91,10 +118,10 @@ function computeSummaries(requests) {
     let next;
     while (i < requests.length) {
       next = requests[i + 1];
-      if (!next || current.url != next.url ||
-          next.startTime > current.endTime) {
+      if (!next || !areSimilarRequests(next, current)) {
         break;
       }
+      current.url = current.abbreviatedUrl;
       current.endTime = Math.max(current.endTime, next.endTime);
       current.duration = current.endTime - current.startTime;
       i++;
@@ -107,7 +134,8 @@ function computeSummaries(requests) {
 
 /**
  * Comptues the depth of the loading graph by comparing timings.
- * @param {Array<SimpleRequest>} requests
+ * @param {SimpleRequest[]} requests
+ * @return {number}
  */
 function computeDepth(requests) {
   let prevEnd = 0;
@@ -128,7 +156,21 @@ function computeDepth(requests) {
  * @param {string} url
  * @return {string}
  */
-function requestName(url) {
+function getAbbreviatedUrl(url) {
+  const u = new URL(trimQuery(url));
+  const parts = u.pathname.split('/');
+  if (parts.length > 4) {
+    u.pathname = [...parts.splice(0, 4), '...'].join('/');
+  }
+  return u.toString();
+}
+
+/**
+ * Removes the query string from the URL.
+ * @param {string} url
+ * @return {string}
+ */
+function trimQuery(url) {
   const u = new URL(url);
   return u.origin + u.pathname;
 }
@@ -176,7 +218,9 @@ class AdRequestCriticalPath extends Audit {
     }
     const pageStartTime = getPageStartTime(networkRecords);
     let tableView = blockingRequests.map((req) => ({
-      url: requestName(req.url),
+      url: trimQuery(req.url),
+      abbreviatedUrl: getAbbreviatedUrl(req.url),
+      type: req.resourceType,
       startTime: (req.startTime - pageStartTime) * 1000,
       endTime: (req.endTime - pageStartTime) * 1000,
       duration: (req.endTime - req.startTime) * 1000,
