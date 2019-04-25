@@ -157,7 +157,7 @@ function computeDepth(requests) {
  * @return {string}
  */
 function getAbbreviatedUrl(url) {
-  const u = new URL(trimQuery(url));
+  const u = new URL(trimUrl(url));
   const parts = u.pathname.split('/');
   if (parts.length > 4) {
     u.pathname = [...parts.splice(0, 4), '...'].join('/');
@@ -170,9 +170,12 @@ function getAbbreviatedUrl(url) {
  * @param {string} url
  * @return {string}
  */
-function trimQuery(url) {
+function trimUrl(url) {
   const u = new URL(url);
-  return u.origin + u.pathname;
+  const PATH_MAX = 60;
+  const path = u.pathname.length > PATH_MAX ?
+    u.pathname.substr(0, PATH_MAX) + '...' : u.pathname;
+  return u.origin + path;
 }
 
 /**
@@ -218,7 +221,7 @@ class AdRequestCriticalPath extends Audit {
     }
     const pageStartTime = getPageStartTime(networkRecords);
     let tableView = blockingRequests.map((req) => ({
-      url: trimQuery(req.url),
+      url: trimUrl(req.url),
       abbreviatedUrl: getAbbreviatedUrl(req.url),
       type: req.resourceType,
       startTime: (req.startTime - pageStartTime) * 1000,
