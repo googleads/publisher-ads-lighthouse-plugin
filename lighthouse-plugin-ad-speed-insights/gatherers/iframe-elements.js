@@ -21,6 +21,43 @@ const pageFunctions = require('lighthouse/lighthouse-core/lib/page-functions.js'
 
 /**
  * TODO(jburger): Move to page-functions.js once integrated with Lighthouse.
+ * @param {?HTMLElement} element
+ * @return {Boolean}
+ */
+function isFixed(element) {
+  // @ts-ignore
+  const scrollableAncestor = ((element) => {
+    let currentEl = element.parentElement;
+    while (currentEl) {
+      if (currentEl.scrollHeight > currentEl.clientHeight) {
+        // Check style before computedStyle as computedStyle is expensive.
+        const yScroll = currentEl.style.overflowY ||
+          window.getComputedStyle(currentEl).overflowY;
+        if (yScroll) {
+          return true;
+        }
+      }
+      currentEl = currentEl.parentElement;
+    }
+    return false;
+  });
+
+  let currentEl = element;
+  while (currentEl) {
+    // Check style before computedStyle as computedStyle is expensive.
+    const position = currentEl.style.position ||
+      window.getComputedStyle(currentEl).position;
+    // Only truly fixed if an ancestor is scrollable.
+    if (position == 'fixed' && scrollableAncestor(currentEl)) {
+      return true;
+    }
+    currentEl = currentEl.parentElement;
+  }
+  return false;
+}
+
+/**
+ * TODO(jburger): Move to page-functions.js once integrated with Lighthouse.
  * @param {HTMLIFrameElement} element
  * @return {DOMRect | ClientRect}
  */
@@ -43,6 +80,7 @@ function collectIFrameElements() {
       src: node.src,
       clientRect,
       isVisible,
+      isFixed: isVisible && isFixed(node),
     };
   });
 }
@@ -61,6 +99,7 @@ class IFrameElements extends Gatherer {
       ${pageFunctions.getOuterHTMLSnippetString};
       ${pageFunctions.getElementsInDocumentString};
       ${getClientRect};
+      ${isFixed};
       return (${collectIFrameElements})();
     })()`;
 
