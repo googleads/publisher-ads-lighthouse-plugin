@@ -96,8 +96,7 @@ function isXhrCritical(xhrReq, networkRecords, traceEvents, criticalRequests) {
       .filter((t) => (t.args.data || {}).url == xhrReq.url);
   // TODO(warrengm): Investigate if we can get async stack traces here.
   const frames = flatten(
-    relevantEvents.map((t) => (t.args.data || {}).stackTrace || [])
-  );
+    relevantEvents.map((t) => (t.args.data || {}).stackTrace || []));
   /** @type {Set<string>} */
   const urls =
       new Set(frames.map(/** @param {{url: string}} f */ (f) => f.url));
@@ -129,13 +128,11 @@ function addInitiatedRequests(
           r.endTime < parentReq.startTime);
 
   for (const initiatedReq of initiatedRequests) {
+    // TODO(warrengm): Check for JSONP and Fetch requests.
     const blocking =
-      initiatedReq.resourceType == 'XHR' ?
-        // Verify the XHR is actually blocking.
-        isXhrCritical(
-          initiatedReq, networkRecords, traceEvents, criticalRequests) :
-        // If there are no initiated requests, then it's probably JSONP.
-        !networkRecords.find((r) => r.initiatorRequest == initiatedReq);
+      initiatedReq.resourceType == 'XHR' &&
+      isXhrCritical(
+        initiatedReq, networkRecords, traceEvents, criticalRequests);
     if (blocking) {
       getCriticalGraph(
         networkRecords, initiatedReq, traceEvents, criticalRequests);
