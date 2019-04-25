@@ -114,7 +114,7 @@ class IdleNetworkTimes extends Audit {
         }))
         .sort((a, b) => a.startTime - b.startTime);
 
-    if (!blockingRequests) {
+    if (!blockingRequests.length) {
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
     }
 
