@@ -24,6 +24,14 @@ Available options:
 -   `--view`: Open report in Chrome after execution.
 -   Any other [Lighthouse flags](https://github.com/GoogleChrome/lighthouse/#cli-options).
 
+Some common options are:
+
+-   `--additional-trace-categories=performance` to include general web
+    performance audits.
+-   `--emulated-form-factor=desktop` to run on the desktop version of the site.
+-   `--extra-headers "{\"Cookie\":\"monster=blue\"}"` to include additional
+    cookies on all requests.
+
 ## Tests
 ```sh
 # Lint and test all files.
