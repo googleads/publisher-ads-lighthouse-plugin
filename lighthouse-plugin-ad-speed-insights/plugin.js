@@ -37,17 +37,17 @@ module.exports = {
   ],
   groups: {
     'measurements': {
-      title: 'Measurements',
+      title: 'Metrics',
     },
     'ads-performance': {
-      title: 'Performance',
+      title: 'Ad Speed',
     },
     'ads-best-practices': {
-      title: 'Best Practices',
+      title: 'Tag Best Practices',
     },
   },
   category: {
-    title: 'Ad Quality [Alpha]',
+    title: 'Publisher Ads [Preview]',
     auditRefs: [
       // Measurements group.
       {id: 'tag-load-time', weight: 1, group: 'measurements'},
@@ -59,14 +59,13 @@ module.exports = {
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
+      {id: 'static-ad-tags', weight: 1, group: 'ads-performance'},
       {id: 'idle-network-times', weight: 0.5, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
       {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
-      {id: 'static-ad-tags', weight: 1, group: 'ads-best-practices'},
       {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
-      {id: 'full-width-slots', weight: 1, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 1, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
     ],

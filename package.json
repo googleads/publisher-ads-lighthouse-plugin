@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "lighthouse": "^4.2.0",
+    "lighthouse": "^4.3.0",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
