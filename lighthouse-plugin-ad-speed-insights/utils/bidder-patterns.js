@@ -218,8 +218,7 @@ module.exports = [
   {
     label: 'IndexExchange',
     patterns: [
-      '^http[s]?:\/\/as\.casalemedia\.com\/cygnus.*',
-      '^http[s]?:\/\/as-sec\.casalemedia\.com\/cygnus.*',
+      '^http[s]?:\/\/as(-sec)?\.casalemedia\.com\/(cygnus|headertag).*',
     ],
   },
   {
