@@ -27,6 +27,7 @@ const {
   failureDisplayValue,
 } = AUDITS[id];
 
+const SCROLL_PX_THRESHOLD = 100;
 
 /**
  * Table headings for audits details sections.
@@ -79,7 +80,7 @@ class AdTopOfViewport extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS_VIEWPORT);
     }
 
-    const score = inViewport && topSlot.midpoint < 100 ? 0 : 1;
+    const score = inViewport && topSlot.midpoint < SCROLL_PX_THRESHOLD ? 0 : 1;
 
     return {
       score,

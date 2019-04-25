@@ -21,34 +21,46 @@ const pageFunctions = require('lighthouse/lighthouse-core/lib/page-functions.js'
 
 /**
  * TODO(jburger): Move to page-functions.js once integrated with Lighthouse.
+ * @param {HTMLElement} element
+ * @param {String} attr
+ * @return {String}
+ */
+function getStyleAttrValue(element, attr) {
+  // Check style before computedStyle as computedStyle is expensive.
+  // @ts-ignore
+  return element.style[attr] || window.getComputedStyle(element)[attr];
+}
+
+/**
+ * TODO(jburger): Move to page-functions.js once integrated with Lighthouse.
+ * @param {HTMLElement} element
+ * @return {Boolean}
+ */
+function hasScrollableAncestor(element) {
+  let currentEl = element.parentElement;
+  while (currentEl) {
+    if (currentEl.scrollHeight > currentEl.clientHeight) {
+      const yScroll = getStyleAttrValue(currentEl, 'overflowY');
+      if (yScroll) {
+        return true;
+      }
+    }
+    currentEl = currentEl.parentElement;
+  }
+  return false;
+}
+
+/**
+ * TODO(jburger): Move to page-functions.js once integrated with Lighthouse.
  * @param {?HTMLElement} element
  * @return {Boolean}
  */
 function isFixed(element) {
-  // @ts-ignore
-  const scrollableAncestor = ((element) => {
-    let currentEl = element.parentElement;
-    while (currentEl) {
-      if (currentEl.scrollHeight > currentEl.clientHeight) {
-        // Check style before computedStyle as computedStyle is expensive.
-        const yScroll = currentEl.style.overflowY ||
-          window.getComputedStyle(currentEl).overflowY;
-        if (yScroll) {
-          return true;
-        }
-      }
-      currentEl = currentEl.parentElement;
-    }
-    return false;
-  });
-
   let currentEl = element;
   while (currentEl) {
-    // Check style before computedStyle as computedStyle is expensive.
-    const position = currentEl.style.position ||
-      window.getComputedStyle(currentEl).position;
+    const position = getStyleAttrValue(currentEl, 'position');
     // Only truly fixed if an ancestor is scrollable.
-    if (position == 'fixed' && scrollableAncestor(currentEl)) {
+    if (position == 'fixed' && hasScrollableAncestor(currentEl)) {
       return true;
     }
     currentEl = currentEl.parentElement;
@@ -99,6 +111,8 @@ class IFrameElements extends Gatherer {
       ${pageFunctions.getOuterHTMLSnippetString};
       ${pageFunctions.getElementsInDocumentString};
       ${getClientRect};
+      ${getStyleAttrValue};
+      ${hasScrollableAncestor};
       ${isFixed};
       return (${collectIFrameElements})();
     })()`;
