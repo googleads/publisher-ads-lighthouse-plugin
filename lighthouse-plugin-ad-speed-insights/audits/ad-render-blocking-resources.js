@@ -15,9 +15,12 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
 const RenderBlockingResources = require('lighthouse/lighthouse-core/audits/byte-efficiency/render-blocking-resources.js');
-const {AUDITS} = require('../messages/messages');
+const {auditNotApplicable} = require('../utils/builder');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {getPageStartTime} = require('../utils/network-timing');
+const {isGptTag} = require('../utils/resource-classification');
+const {URL} = require('url');
 
 /**
  * Table headings for audits details sections.
@@ -81,6 +84,11 @@ class AdRenderBlockingResources extends RenderBlockingResources {
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    const hasTag = !!networkRecords.find((req) => isGptTag(new URL(req.url)));
+    if (!hasTag) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+    }
+
     const {results} = await RenderBlockingResources.computeResults(
       artifacts, context);
 
