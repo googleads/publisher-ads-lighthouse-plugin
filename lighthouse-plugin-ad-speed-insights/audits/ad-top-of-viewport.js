@@ -27,6 +27,7 @@ const {
   failureDisplayValue,
 } = AUDITS[id];
 
+const SCROLL_PX_THRESHOLD = 100;
 
 /**
  * Table headings for audits details sections.
@@ -61,6 +62,7 @@ class AdTopOfViewport extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements.filter((slot) => isGPTIFrame(slot))
+        .filter((slot) => !slot.isFixed)
         .map((slot) => ({
           midpoint: slot.clientRect.top + slot.clientRect.height / 2,
           id: slot.id,
@@ -78,7 +80,7 @@ class AdTopOfViewport extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS_VIEWPORT);
     }
 
-    const score = inViewport && topSlot.midpoint < 200 ? 0 : 1;
+    const score = inViewport && topSlot.midpoint < SCROLL_PX_THRESHOLD ? 0 : 1;
 
     return {
       score,
