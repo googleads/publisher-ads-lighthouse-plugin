@@ -37,13 +37,13 @@ module.exports = {
   ],
   groups: {
     'measurements': {
-      title: 'Ad Load Times',
+      title: 'Metrics',
     },
     'ads-performance': {
       title: 'Ad Speed',
     },
     'ads-best-practices': {
-      title: 'Tagging Best Practices',
+      title: 'Tag Best Practices',
     },
   },
   category: {
@@ -66,7 +66,6 @@ module.exports = {
       {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
       {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
       {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
-      {id: 'full-width-slots', weight: 1, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 1, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
     ],
