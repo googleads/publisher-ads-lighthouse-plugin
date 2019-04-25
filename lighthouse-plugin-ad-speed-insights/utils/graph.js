@@ -128,6 +128,7 @@ function addInitiatedRequests(
           r.endTime < parentReq.startTime);
 
   for (const initiatedReq of initiatedRequests) {
+    // TODO(warrengm): Check for JSONP and Fetch requests.
     const blocking =
       initiatedReq.resourceType == 'XHR' &&
       isXhrCritical(
