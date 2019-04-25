@@ -61,6 +61,7 @@ class AdTopOfViewport extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements.filter((slot) => isGPTIFrame(slot))
+        .filter((slot) => !slot.isFixed)
         .map((slot) => ({
           midpoint: slot.clientRect.top + slot.clientRect.height / 2,
           id: slot.id,
