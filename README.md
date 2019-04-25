@@ -1,8 +1,8 @@
-# Ad Speed Insights (Alpha)
+# Publisher Ads Audits for Lighthouse (Alpha)
 
-Ad Speed Insights is a tool to improve ad speed and overall quality through a series of automated audits. At the moment, this is primarily targeted at sites using Google Ad Manager. This tool will aid in resolving discovered problems, providing a tool to be used to evaluate effectiveness of iterative changes while suggesting actionable feedback.
+Publisher Ads Audits for Lighthouse is a tool to improve ad speed and overall quality through a series of automated audits. At the moment, this is primarily targeted at sites using Google Ad Manager. This tool will aid in resolving discovered problems, providing a tool to be used to evaluate effectiveness of iterative changes while suggesting actionable feedback.
 
-Ad Speed Insights is built on top of [Lighthouse](https://github.com/GoogleChrome/lighthouse), an open-sourced tool integrated into Chrome dev tools that is widely used by developers.
+Publisher Ads Audits for Lighthouse is built on top of [Lighthouse](https://github.com/GoogleChrome/lighthouse), an open-sourced tool integrated into Chrome dev tools that is widely used by developers.
 
 We are currently in alpha and still in the development process. In order to help us improve please [file an issue](https://github.com/googleads/ad-speed-insights/issues) to let us know of any issues or suggestions you may have.
 
