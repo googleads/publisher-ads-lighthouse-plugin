@@ -79,7 +79,7 @@ class AdTopOfViewport extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS_VIEWPORT);
     }
 
-    const score = inViewport && topSlot.midpoint < 200 ? 0 : 1;
+    const score = inViewport && topSlot.midpoint < 100 ? 0 : 1;
 
     return {
       score,
