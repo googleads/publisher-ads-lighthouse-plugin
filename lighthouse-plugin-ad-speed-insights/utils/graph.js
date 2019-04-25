@@ -45,7 +45,7 @@ function getTransitiveClosure(root, isTargetRequest) {
   const stack = [firstTarget];
   while (stack.length) {
     const node = stack.pop();
-    if (closure.has(node)) {
+    if (!node || closure.has(node)) {
       continue;
     }
     closure.add(node);
@@ -57,7 +57,7 @@ function getTransitiveClosure(root, isTargetRequest) {
   stack.push(...root.getDependents());
   while (stack.length) {
     const node = stack.pop();
-    if (visited.has(node)) {
+    if (!node || visited.has(node)) {
       continue;
     }
     visited.add(node);
