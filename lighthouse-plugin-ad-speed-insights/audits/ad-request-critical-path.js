@@ -224,7 +224,7 @@ class AdRequestCriticalPath extends Audit {
       startTime: (req.startTime - pageStartTime) * 1000,
       endTime: (req.endTime - pageStartTime) * 1000,
       duration: (req.endTime - req.startTime) * 1000,
-    }));
+    })).filter((r) => r.duration > 30 && r.startTime > 0);
     tableView = computeSummaries(tableView);
 
     const depth = computeDepth(tableView);
