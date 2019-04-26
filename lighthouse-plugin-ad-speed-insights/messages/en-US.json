@@ -27,11 +27,11 @@
     "ad-request-from-tag-load": {
       "title": "Latency of first ad request (from tag load)",
       "failureTitle": "Reduce latency of first ad request (from tag load)",
-      "description": "This metric measures the elapsed time from loading of the Google Publisher Tag until the first ad request is made. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
+      "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
       "displayValue": "%s ms"
     },
     "ad-top-of-viewport": {
-      "title": "No ad found at the very top of the page",
+      "title": "No ad found at the very top of the viewport",
       "failureTitle": "Move the top ad further down the page",
       "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://ad-speed-insights.appspot.com/#top-of-viewport).",
       "displayValue": "",
@@ -40,7 +40,7 @@
     "ads-in-viewport": {
       "title": "Few or no ads loaded outside viewport",
       "failureTitle": "Avoid loading ads until they are nearly on-screen",
-      "description": "Too many ads loaded outside the viewport lowers viewability rates and impact user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://ad-speed-insights.appspot.com/#eager-ads).",
+      "description": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://ad-speed-insights.appspot.com/#eager-ads).",
       "displayValue": "",
       "failureDisplayValue": "%i ad%s out of view"
     },
@@ -66,7 +66,7 @@
     "idle-network-times": {
       "title": "[Experimental] Network is efficiently utilized before ad requests",
       "failureTitle": "[Experimental] Reduce network idle time before ad requests",
-      "description": "Moments of network idleness in the critical path to ad loading present opportunities to improve speed. Consider eliminating long tasks, timeouts, waiting on load events, or synchronous resources to avoid idleness. Chrome DevTools can be used to find out what is causing network idleness. [Learn more](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference).",
+      "description": "Moments of network idleness in the critical path to ad loading present opportunities to improve speed. Consider eliminating long tasks, timeouts, waiting on load events, or synchronous resources to avoid idleness. Chrome DevTools can be used to discover what is causing network idleness. [Learn more](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference).",
       "displayValue": "%s ms spent idle in critical path"
     },
     "loads-gpt-over-https": {
@@ -79,7 +79,7 @@
     "script-injected-tags": {
       "title": "No script-injected tags found",
       "failureTitle": "Avoid script-injected tags",
-      "description": "Prefer loading scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. Doing so lets the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)."
+      "description": "Load scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. This allows the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)."
     },
     "serial-header-bidding": {
       "title": "Header bidding is parallelized",
