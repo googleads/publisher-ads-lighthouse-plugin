@@ -5,7 +5,7 @@
       "failureTitle": "Avoid long tasks that block ad-related network requests",
       "description": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more](https://ad-speed-insights.appspot.com/#long-tasks).",
       "displayValue": "",
-      "failureDisplayValue": "%i long task%s"
+      "failureDisplayValue": "%s long task%s"
     },
     "ad-render-blocking-resources": {
       "title": "Minimal render-blocking resources found",
@@ -16,7 +16,7 @@
       "title": "Minimal requests found in ad critical path",
       "failureTitle": "Reduce critical path for ad loading",
       "description": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more](https://ad-speed-insights.appspot.com/#blocking-resouces).",
-      "displayValue": "%i serial resource%s, %i total resource%s"
+      "displayValue": "%s serial resource%s, %s total resource%s"
     },
     "ad-request-from-page-start": {
       "title": "Latency of first ad request (from page start)",
@@ -35,14 +35,14 @@
       "failureTitle": "Move the top ad further down the page",
       "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://ad-speed-insights.appspot.com/#top-of-viewport).",
       "displayValue": "",
-      "failureDisplayValue": "A scroll of %i px would hide half of your topmost ad"
+      "failureDisplayValue": "A scroll of %s px would hide half of your topmost ad"
     },
     "ads-in-viewport": {
       "title": "Few or no ads loaded outside viewport",
       "failureTitle": "Avoid loading ads until they are nearly on-screen",
       "description": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://ad-speed-insights.appspot.com/#eager-ads).",
       "displayValue": "",
-      "failureDisplayValue": "%i ad%s out of view"
+      "failureDisplayValue": "%s ad%s out of view"
     },
     "async-ad-tags": {
       "title": "GPT tag is loaded asynchronously",
@@ -54,14 +54,14 @@
       "failureTitle": "Load tags only once per frame",
       "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://ad-speed-insights.appspot.com/#duplicate-tags).",
       "displayValue": "",
-      "failureDisplayValue": "%i duplicate tag%s"
+      "failureDisplayValue": "%s duplicate tag%s"
     },
     "full-width-slots": {
       "title": "Ad slots effectively use horizontal space",
       "failureTitle": "Increase the width of ad slots",
       "description": "Ad slots that utilize most of the page width generally experience increased click-through rate over smaller ad sizes. We recommend leaving no more than 25% of the viewport width unutilized on mobile devices. [Learn more](https://ad-speed-insights.appspot.com/#full-width-slots).",
       "displayValue": "",
-      "failureDisplayValue": "%i%% of viewport width is underutilized"
+      "failureDisplayValue": "%s%% of viewport width is underutilized"
     },
     "idle-network-times": {
       "title": "[Experimental] Network is efficiently utilized before ad requests",
@@ -74,7 +74,7 @@
       "failureTitle": "Load gpt.js over HTTPS",
       "description": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://www.googletagservices.com/tag/js/gpt.js\">`. [Learn more](https://ad-speed-insights.appspot.com/#https).",
       "displayValue": "",
-      "failureDisplayValue": "%i unsafe request%s"
+      "failureDisplayValue": "%s unsafe request%s"
     },
     "script-injected-tags": {
       "title": "No script-injected tags found",
@@ -102,7 +102,7 @@
       "failureTitle": "Reduce ad density in initial viewport",
       "description": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://ad-speed-insights.appspot.com/#ad-density).",
       "displayValue": "",
-      "failureDisplayValue": "%i%% covered by ads"
+      "failureDisplayValue": "%s%% covered by ads"
     }
   },
   "NOT_APPLICABLE": {
