@@ -26,7 +26,7 @@ const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
  * @typedef {Object} NetworkSummary
  * @property {Map<string, NetworkRequest>} requestsByUrl
  * @property {Map<string, Set<string>>} xhrEdges
- * @property {NetworkRequest[]} allRequests
+ * @property {NetworkRequest[]} allRecords
  */
 
 /**
@@ -92,8 +92,7 @@ function getTransitiveClosure(root, isTargetRequest) {
 /**
  * Checks if the given XHR request is critical.
  * @param {NetworkRequest} xhrReq
- * @param {NetworkRequest[]} networkRecords All network requests.
- * @param {TraceEvent[]} traceEvents
+ * @param {NetworkSummary} networkSummary
  * @param {Set<NetworkRequest>} criticalRequests Known critical requests.
  * @return {boolean}
  */
@@ -114,7 +113,7 @@ function isXhrCritical(xhrReq, networkSummary, criticalRequests) {
  * Adds all XHRs and JSONPs initiated by the given script if they are critical.
  * @param {NetworkRequest} scriptReq
  * @param {NetworkRequest} parentReq
- * @param {networkSummary} traceEvents
+ * @param {NetworkSummary} networkSummary
  * @param {Set<NetworkRequest>} criticalRequests Known critical requests. This
  *     method may mutate this set to add new requests.
  */
@@ -132,7 +131,7 @@ function addInitiatedRequests(
       initiatedReq.resourceType == 'XHR' &&
       isXhrCritical(initiatedReq, networkSummary, criticalRequests);
     if (blocking) {
-      getCriticalGraph(networkRecords, networkSummary, criticalRequests);
+      getCriticalGraph(networkSummary, initiatedReq, criticalRequests);
     }
   }
 }
@@ -176,7 +175,7 @@ function getCriticalGraph(
   }
   // Check the initiator request just to be sure.
   getCriticalGraph(
-      networkSummary, targetRequest.initiatorRequest, criticalRequests);
+    networkSummary, targetRequest.initiatorRequest, criticalRequests);
   return criticalRequests;
 }
 
@@ -196,10 +195,12 @@ function buildNetworkSummary(networkRecords, traceEvents) {
       .filter((t) => !!(t.args.data || {}).url);
   const xhrEdges = new Map();
   for (const e of xhrEvents) {
-    const url = e.args.data.url;
-    const newEdges = (e.args.data.stackTrace || []).map((f) => f.url);
-    const allEdges = new Set(...newEdges, ...(xhrEdges.get(url) || []));
-    xhrEdges.set(url, allEdges);
+    const data = e.args.data || {};
+    const edges = xhrEdges.get(data.url) || new Set();
+    for (const {url} of data.stackTrace || []) {
+      edges.add(url);
+    }
+    xhrEdges.set(data.url, edges);
   }
   return {requestsByUrl, xhrEdges, allRecords: networkRecords};
 }
