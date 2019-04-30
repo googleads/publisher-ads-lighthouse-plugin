@@ -23,6 +23,13 @@ const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 
 /**
+ * @typedef {Object} NetworkSummary
+ * @property {Map<string, NetworkRequest>} requestsByUrl
+ * @property {Map<string, Set<string>>} xhrEdges
+ * @property {NetworkRequest[]} allRecords
+ */
+
+/**
  * Returns all requests and CPU tasks in the loading graph of the target
  * requests.
  * @param {typeof BaseNode} root The root node of the DAG.
@@ -85,108 +92,117 @@ function getTransitiveClosure(root, isTargetRequest) {
 /**
  * Checks if the given XHR request is critical.
  * @param {NetworkRequest} xhrReq
- * @param {NetworkRequest[]} networkRecords All network requests.
- * @param {TraceEvent[]} traceEvents
+ * @param {NetworkSummary} networkSummary
  * @param {Set<NetworkRequest>} criticalRequests Known critical requests.
  * @return {boolean}
  */
-function isXhrCritical(xhrReq, networkRecords, traceEvents, criticalRequests) {
-  const relevantEvents = traceEvents
-      .filter((t) => t.name.startsWith('XHR'))
-      .filter((t) => (t.args.data || {}).url == xhrReq.url);
-  // TODO(warrengm): Investigate if we can get async stack traces here.
-  const frames = flatten(
-    relevantEvents.map((t) => (t.args.data || {}).stackTrace || []));
-  /** @type {Set<string>} */
-  const urls =
-      new Set(frames.map(/** @param {{url: string}} f */ (f) => f.url));
-  const xhrIsCritical = !!networkRecords.find(
-    (r) => urls.has(r.url) && criticalRequests.has(r));
-  return xhrIsCritical;
+function isXhrCritical(xhrReq, networkSummary, criticalRequests) {
+  const edges = networkSummary.xhrEdges.get(xhrReq.url);
+  if (!edges) {
+    return false;
+  }
+  for (const {url} of criticalRequests) {
+    if (edges.has(url)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
  * Adds all XHRs and JSONPs initiated by the given script if they are critical.
  * @param {NetworkRequest} scriptReq
  * @param {NetworkRequest} parentReq
- * @param {NetworkRequest[]} networkRecords All network requests.
- * @param {TraceEvent[]} traceEvents
+ * @param {NetworkSummary} networkSummary
  * @param {Set<NetworkRequest>} criticalRequests Known critical requests. This
  *     method may mutate this set to add new requests.
  */
 function addInitiatedRequests(
-  scriptReq,
-  parentReq,
-  networkRecords,
-  traceEvents,
-  criticalRequests
-) {
-  const initiatedRequests = networkRecords
-      .filter((r) => r.initiatorRequest == scriptReq ||
-        getNetworkInitiators(r).includes(scriptReq.url))
+  scriptReq, parentReq, networkSummary, criticalRequests) {
+  const initiatedRequests = networkSummary.allRecords
       .filter((r) => ['Script', 'XHR'].includes(r.resourceType) &&
-          r.endTime < parentReq.startTime);
+          r.endTime < parentReq.startTime)
+      .filter((r) => r.initiatorRequest == scriptReq ||
+        getNetworkInitiators(r).includes(scriptReq.url));
 
   for (const initiatedReq of initiatedRequests) {
     // TODO(warrengm): Check for JSONP and Fetch requests.
     const blocking =
       initiatedReq.resourceType == 'XHR' &&
-      isXhrCritical(
-        initiatedReq, networkRecords, traceEvents, criticalRequests);
+      isXhrCritical(initiatedReq, networkSummary, criticalRequests);
     if (blocking) {
-      getCriticalGraph(
-        networkRecords, initiatedReq, traceEvents, criticalRequests);
+      getCriticalGraph(networkSummary, initiatedReq, criticalRequests);
     }
   }
 }
 
 /**
  * Returns the set of requests in the critical path of the target request.
- * @param {NetworkRequest[]} networkRecords
+ * @param {NetworkSummary} networkSummary
  * @param {NetworkRequest} targetRequest
- * @param {TraceEvent[]} traceEvents
  * @param {Set<NetworkRequest>=} criticalRequests
  * @return {Set<NetworkRequest>}
  */
 function getCriticalGraph(
-  networkRecords,
-  targetRequest,
-  traceEvents,
-  criticalRequests = new Set()
-) {
+  networkSummary, targetRequest, criticalRequests = new Set()) {
   if (!targetRequest || criticalRequests.has(targetRequest)) {
     return criticalRequests;
   }
   criticalRequests.add(targetRequest);
+  const seen = new Set();
   for (let stack = targetRequest.initiator.stack; stack; stack = stack.parent) {
-    // @ts-ignore
-    const urls = new Set(stack.callFrames.map((f) => f.url));
-    for (const url of urls) {
-      const request = networkRecords.find((r) => r.url === url);
+    for (const {url} of stack.callFrames) {
+      if (seen.has(url)) continue;
+      seen.add(url);
+
+      const request = networkSummary.requestsByUrl.get(url);
       if (!request) continue;
 
-      getCriticalGraph(networkRecords, request, traceEvents, criticalRequests);
+      getCriticalGraph(networkSummary, request, criticalRequests);
 
       if (request.resourceType == 'Script') {
         const scriptUrl = stack.callFrames[0].url;
-        const scriptReq = networkRecords.find((r) => r.url === scriptUrl);
+        const scriptReq = networkSummary.requestsByUrl.get(scriptUrl);
         if (scriptReq) {
           addInitiatedRequests(
             scriptReq,
             targetRequest,
-            networkRecords,
-            traceEvents,
-            criticalRequests
-          );
+            networkSummary,
+            criticalRequests);
         }
       }
     }
   }
   // Check the initiator request just to be sure.
   getCriticalGraph(
-    networkRecords, targetRequest.initiatorRequest, traceEvents,
-    criticalRequests);
+    networkSummary, targetRequest.initiatorRequest, criticalRequests);
   return criticalRequests;
+}
+
+/**
+ * @param {NetworkRequest[]} networkRecords
+ * @param {TraceEvent[]} traceEvents
+ * @return {NetworkSummary}
+ */
+function buildNetworkSummary(networkRecords, traceEvents) {
+  const requestsByUrl = new Map();
+  for (const req of networkRecords) {
+    requestsByUrl.set(req.url, req);
+  }
+
+  const xhrEvents = traceEvents
+      .filter((t) => t.name.startsWith('XHR'))
+      .filter((t) => !!(t.args.data || {}).url);
+  const xhrEdges = new Map();
+  for (const e of xhrEvents) {
+    const data = e.args.data || {};
+    const edges = xhrEdges.get(data.url) || new Set();
+    for (const {url} of data.stackTrace || []) {
+      edges.add(url);
+    }
+    xhrEdges.set(data.url, edges);
+  }
+  return {requestsByUrl, xhrEdges, allRecords: networkRecords};
 }
 
 /**
@@ -200,9 +216,10 @@ function getAdCriticalGraph(networkRecords, traceEvents) {
   const adRequests = networkRecords
       .filter((r) => isGptAdRequest(r) || !!getHeaderBidder(r.url))
       .filter((r) => r.endTime <= sinkRequest.endTime);
+  const summary = buildNetworkSummary(networkRecords, traceEvents);
   const criticalRequests = new Set();
   for (const req of adRequests) {
-    getCriticalGraph(networkRecords, req, traceEvents, criticalRequests);
+    getCriticalGraph(summary, req, criticalRequests);
   }
   return criticalRequests;
 }
