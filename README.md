@@ -4,12 +4,16 @@ Publisher Ads Audits for Lighthouse is a tool to improve ad speed and overall qu
 
 Publisher Ads Audits for Lighthouse is a plugin for [Lighthouse](https://github.com/GoogleChrome/lighthouse), an open-sourced tool integrated into Chrome dev tools that is widely used by developers.
 
-We are currently in alpha and still in the development process. In order to help us improve please [file an issue](https://github.com/googleads/ad-speed-insights/issues) to let us know of any issues or suggestions you may have.
+We are currently in preview and still in the development process. In order to help us improve please [file an issue](https://github.com/googleads/pub-ads-lighthouse-plugin/issues) to let us know of any issues or suggestions you may have.
+
+## Web App
+
+We currently have a web app version of Publisher Ads Audits for Lighthouse. It is currently in preview, if you'd like to request access you can do so [here](https://forms.gle/1tYvRjrkwPXYUpLW8).
 
 ## Setup
 
 ```sh
-git clone git@github.com:googleads/ad-speed-insights.git
+git clone git@github.com:googleads/pub-ads-lighthouse-plugin.git
 cd ad-speed-insights
 yarn
 ```
@@ -41,7 +45,7 @@ yarn test
 
 ## Contributions
 
-See [CONTRIBUTING.md](https://github.com/googleads/ad-speed-insights/blob/master/lighthouse-plugin-ad-speed-insights/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/googleads/pub-ads-lighthouse-plugin/blob/master/lighthouse-plugin-ad-speed-insights/CONTRIBUTING.md)
 
 
 
