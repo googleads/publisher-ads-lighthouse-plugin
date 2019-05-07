@@ -14,7 +14,7 @@ We currently have a web app version of Publisher Ads Audits for Lighthouse. It i
 
 ```sh
 git clone git@github.com:googleads/pub-ads-lighthouse-plugin.git
-cd ad-speed-insights
+cd pub-ads-lighthouse-plugin
 yarn
 ```
 
