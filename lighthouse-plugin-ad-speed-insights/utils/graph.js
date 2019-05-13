@@ -213,11 +213,14 @@ function buildNetworkSummary(networkRecords, traceEvents) {
  */
 function getAdCriticalGraph(networkRecords, traceEvents) {
   const sinkRequest = networkRecords.find(isGptAdRequest);
+  const criticalRequests = new Set();
+  if (!sinkRequest) {
+    return criticalRequests;
+  }
   const adRequests = networkRecords
       .filter((r) => isGptAdRequest(r) || !!getHeaderBidder(r.url))
       .filter((r) => r.endTime <= sinkRequest.endTime);
   const summary = buildNetworkSummary(networkRecords, traceEvents);
-  const criticalRequests = new Set();
   for (const req of adRequests) {
     getCriticalGraph(summary, req, criticalRequests);
   }
