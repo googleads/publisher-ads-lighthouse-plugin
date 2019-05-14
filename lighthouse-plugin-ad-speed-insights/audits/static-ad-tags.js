@@ -14,6 +14,7 @@
 
 const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
@@ -24,6 +25,7 @@ const id = 'static-ad-tags';
 const {
   title,
   failureTitle,
+  failureDisplayValue,
   description,
 } = AUDITS[id];
 
@@ -60,6 +62,24 @@ function getDetailsTable(dynamicReq) {
     }
   }
   return table;
+}
+
+/**
+ * Returns the estimated opportunity in loading GPT statically.
+ * @param {LH.Artifacts.NetworkRequest} tagRequest
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
+ * @return {number}
+ */
+function quantifyOpportunitySec(tagRequest, networkRecords) {
+  // The first HTML-initiated request is the best possible load time.
+  const firstResource = networkRecords.find((r) =>
+    ['parser', 'preload'].includes(r.initiatorType));
+  if (!firstResource) {
+    return 0;
+  }
+  const opportunitySec = tagRequest.startTime - firstResource.startTime;
+  // Scale down the opportunity to be conservative.
+  return opportunitySec * 0.9;
 }
 
 /** @inheritDoc */
@@ -99,8 +119,19 @@ class StaticAdTags extends Audit {
     const dynamicReq = tagReqs.find((r) => !isStaticRequest(r));
     const table = dynamicReq ? getDetailsTable(dynamicReq) : [];
 
+    const failed = numStatic < numTags;
+    let displayValue;
+    if (failed) {
+      const opportunitySec = quantifyOpportunitySec(tagReqs[0], networkRecords);
+      if (opportunitySec > 0.1) {
+        displayValue =
+            util.format(failureDisplayValue, opportunitySec.toFixed(2));
+      }
+    }
+
     return {
-      rawValue: numStatic === numTags,
+      displayValue,
+      rawValue: !failed,
       details: StaticAdTags.makeTableDetails(HEADINGS, table),
     };
   }
