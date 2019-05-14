@@ -73,7 +73,7 @@ class AsyncAdTags extends Audit {
     const numAsync = array.count(tagReqs, isAsync);
     const numTags = tagReqs.length;
     return {
-      rawValue: numAsync === numTags,
+      score: Number(numAsync === numTags),
     };
   }
 }

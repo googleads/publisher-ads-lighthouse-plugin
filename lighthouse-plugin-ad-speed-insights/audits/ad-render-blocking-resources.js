@@ -108,7 +108,7 @@ class AdRenderBlockingResources extends RenderBlockingResources {
 
     const pluralEnding = results.length != 1 ? 's' : '';
     return {
-      rawValue: results.length,
+      numericValue: results.length,
       score: results.length ? 0 : 1,
       displayValue: results.length ? `${results.length} render blocking resource${pluralEnding}` : '',
       details: AdRenderBlockingResources.makeTableDetails(HEADINGS, tableView),

@@ -37,12 +37,12 @@ describe('AdsInViewport', () => {
     innerWidth: 300,
   };
 
-  describe('rawValue', () => {
+  describe('numericValue', () => {
     it('should succeed if there are no ad slots', async () => {
       const IFrameElements = [];
 
       const artifacts = {IFrameElements, ViewportDimensions};
-      expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', true);
+      expect(AdsInViewport.audit(artifacts)).to.have.property('numericValue', true);
     });
 
     it('should return fraction of ad slots inside viewport', async () => {
@@ -54,7 +54,7 @@ describe('AdsInViewport', () => {
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
-      expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1 / 3);
+      expect(AdsInViewport.audit(artifacts)).to.have.property('numericValue', 1 / 3);
     });
 
     const positiveTests = [
@@ -75,7 +75,7 @@ describe('AdsInViewport', () => {
       it(`should handle slots on the ${test.pos} properly`, () => {
         const IFrameElements = [generateSlot(test)];
         const artifacts = {IFrameElements, ViewportDimensions};
-        expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 1);
+        expect(AdsInViewport.audit(artifacts)).to.have.property('numericValue', 1);
       })
     );
 
@@ -96,7 +96,7 @@ describe('AdsInViewport', () => {
       it(`should handle slots outside the ${test.pos}`, () => {
         const IFrameElements = [generateSlot(test)];
         const artifacts = {IFrameElements, ViewportDimensions};
-        expect(AdsInViewport.audit(artifacts)).to.have.property('rawValue', 0);
+        expect(AdsInViewport.audit(artifacts)).to.have.property('numericValue', 0);
       })
     );
 

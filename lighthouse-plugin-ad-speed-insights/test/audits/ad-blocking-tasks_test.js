@@ -70,7 +70,7 @@ describe('AdBlockingTasks', async () => {
   afterEach(() => {
     sandbox.restore();
   });
-  describe('rawValue', async () => {
+  describe('numericValue', async () => {
     const testCases = [
       {
         desc: 'should succeed if there are no ad requests',
@@ -193,7 +193,7 @@ describe('AdBlockingTasks', async () => {
         sandbox.stub(MainThreadTasks, 'request').returns(tasks);
         const result = await AdBlockingTasks.audit(artifacts);
 
-        expect(result).to.have.property('rawValue', expectedValue);
+        expect(result).to.have.property('numericValue', expectedValue);
       });
     }
 
@@ -220,9 +220,9 @@ describe('AdBlockingTasks', async () => {
       const artifacts = makeArtifacts(requests, tasks, 0 /* offset */);
       sandbox.stub(NetworkRecords, 'request').returns(requests);
       sandbox.stub(MainThreadTasks, 'request').returns(tasks);
-      const {rawValue, displayValue} = await AdBlockingTasks.audit(artifacts);
+      const {numericValue, displayValue} = await AdBlockingTasks.audit(artifacts);
 
-      expect(rawValue).to.equal(false);
+      expect(numericValue).to.equal(false);
       expect(displayValue).to.match(/2 long tasks/);
     });
   });

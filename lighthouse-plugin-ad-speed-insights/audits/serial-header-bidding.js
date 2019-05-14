@@ -202,15 +202,15 @@ class SerialHeaderBidding extends Audit {
     }
 
     return {
-      rawValue: hasSerialHeaderBidding,
+      numericValue: Number(hasSerialHeaderBidding),
       score: hasSerialHeaderBidding ? 0 : 1,
       details: SerialHeaderBidding.makeTableDetails(
         HEADINGS, Object.values(bidRequests)),
-      extendedInfo: {
-        adsRecords,
-        headerBiddingRecords:
-          hasSerialHeaderBidding ? validHeaderBiddingRecords : [],
-      },
+      // extendedInfo: {
+      //   adsRecords,
+      //   headerBiddingRecords:
+      //     hasSerialHeaderBidding ? validHeaderBiddingRecords : [],
+      // },
     };
   }
 }

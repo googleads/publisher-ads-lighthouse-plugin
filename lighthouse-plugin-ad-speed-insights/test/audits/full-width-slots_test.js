@@ -128,7 +128,7 @@ describe('FullWidthSlots', async () => {
         if (expectedNotApplicable) {
           expect(results).to.have.property('notApplicable', true);
         }
-        expect(results).to.have.property('rawValue', expectedValue);
+        expect(results).to.have.property('numericValue', expectedValue);
       });
     }
   });

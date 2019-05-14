@@ -237,7 +237,7 @@ class AdRequestCriticalPath extends Audit {
     const totalPluralEnding = tableView.length != 1 ? 's' : '';
 
     return {
-      rawValue: depth,
+      numericValue: depth,
       score: failed ? 0 : 1,
       displayValue: util.format(
         displayValue,

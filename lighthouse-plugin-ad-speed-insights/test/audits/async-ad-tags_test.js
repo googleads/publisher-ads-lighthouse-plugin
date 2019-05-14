@@ -25,7 +25,7 @@ describe('AsyncAdTags', async () => {
   afterEach(() => {
     sandbox.restore();
   });
-  describe('rawValue', async () => {
+  describe('numericValue', async () => {
     const testCases = [
       {
         desc: 'should succeed if there are no ad tags',
@@ -65,7 +65,7 @@ describe('AsyncAdTags', async () => {
       it(`${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await AsyncAdTags.audit({devtoolsLogs: {}}, {});
-        expect(results).to.have.property('rawValue', expectedRawVal);
+        expect(results).to.have.property('numericValue', expectedRawVal);
       });
     }
   });

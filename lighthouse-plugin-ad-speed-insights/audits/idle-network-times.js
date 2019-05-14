@@ -147,7 +147,7 @@ class IdleNetworkTimes extends Audit {
 
     // TODO(warrengm): Identify culprits in idle times.
     return {
-      rawValue: maxIdleTime,
+      numericValue: maxIdleTime,
       score: failed ? 0 : 1,
       displayValue: format(displayValue, displayTime),
       details: IdleNetworkTimes.makeTableDetails(HEADINGS, idleTimes),

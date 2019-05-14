@@ -83,7 +83,7 @@ class LoadsGptOverHttps extends Audit {
 
     const pluralEnding = details.numGptHttpReqs == 1 ? '' : 's';
     return {
-      rawValue: details.numGptHttpReqs,
+      numericValue: details.numGptHttpReqs,
       score: details.numGptHttpReqs ? 0 : 1,
       displayValue: details.numGptHttpReqs ?
         util.format(failureDisplayValue, details.numGptHttpReqs, pluralEnding) :
