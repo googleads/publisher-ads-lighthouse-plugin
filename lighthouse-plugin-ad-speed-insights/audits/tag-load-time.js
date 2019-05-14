@@ -28,8 +28,8 @@ const {
 } = AUDITS[id];
 
 // Point of diminishing returns.
-const PODR = 500;
-const MEDIAN = 1000;
+const PODR = 0.5; // seconds
+const MEDIAN = 1; // seconds
 /**
  * Audit to determine time for tag to load relative to page start.
  */
@@ -65,7 +65,7 @@ class TagLoadTime extends Audit {
     if (tagEndTime < 0) {
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
-    const tagLoadTime = (tagEndTime - pageStartTime) * 1000;
+    const tagLoadTime = (tagEndTime - pageStartTime);
 
     let normalScore = Audit.computeLogNormalScore(tagLoadTime, PODR, MEDIAN);
 
@@ -77,8 +77,7 @@ class TagLoadTime extends Audit {
     return {
       rawValue: tagLoadTime,
       score: normalScore,
-      displayValue:
-        util.format(displayValue, Math.round(tagLoadTime).toLocaleString()),
+      displayValue: util.format(displayValue, tagLoadTime.toFixed(2)),
     };
   }
 }
