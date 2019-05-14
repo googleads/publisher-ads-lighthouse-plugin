@@ -36,7 +36,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/script-injected-tags`},
   ],
   groups: {
-    'measurements': {
+    'metrics': {
       title: 'Metrics',
     },
     'ads-performance': {
@@ -50,9 +50,9 @@ module.exports = {
     title: 'Publisher Ads [Preview]',
     auditRefs: [
       // Measurements group.
-      {id: 'tag-load-time', weight: 1, group: 'measurements'},
-      {id: 'ad-request-from-tag-load', weight: 1, group: 'measurements'},
-      {id: 'ad-request-from-page-start', weight: 1, group: 'measurements'},
+      {id: 'tag-load-time', weight: 1, group: 'metrics'},
+      {id: 'ad-request-from-tag-load', weight: 1, group: 'metrics'},
+      {id: 'ad-request-from-page-start', weight: 1, group: 'metrics'},
       // Performance group.
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
