@@ -206,22 +206,33 @@ function buildNetworkSummary(networkRecords, traceEvents) {
 }
 
 /**
- * Returns all requests in the loading graph of ads.
+ * Returns all requests in the loading graph of ads. This will return the empty
+ * set if no ad requests are present.
  * @param {NetworkRequest[]} networkRecords
  * @param {TraceEvent[]} traceEvents
  * @return {Set<NetworkRequest>}
  */
 function getAdCriticalGraph(networkRecords, traceEvents) {
-  const sinkRequest = networkRecords.find(isGptAdRequest);
-  const adRequests = networkRecords
-      .filter((r) => isGptAdRequest(r) || !!getHeaderBidder(r.url))
-      .filter((r) => r.endTime <= sinkRequest.endTime);
-  const summary = buildNetworkSummary(networkRecords, traceEvents);
+  /** @type {NetworkRequest} */ let firstAdRequest;
+  for (const req of networkRecords) {
+    if (isGptAdRequest(req) &&
+        (!firstAdRequest || req.startTime < firstAdRequest.startTime)) {
+      firstAdRequest = req;
+    }
+  }
   const criticalRequests = new Set();
-  for (const req of adRequests) {
+  if (!firstAdRequest) {
+    return criticalRequests;
+  }
+  const bidRequests = networkRecords.filter((r) =>
+    !!getHeaderBidder(r.url) && r.endTime <= firstAdRequest.startTime);
+  const summary = buildNetworkSummary(networkRecords, traceEvents);
+  for (const req of [firstAdRequest, ...bidRequests]) {
     getCriticalGraph(summary, req, criticalRequests);
   }
-  return criticalRequests;
+  const result = new Set(Array.from(criticalRequests).filter(
+    (r) => r.endTime < firstAdRequest.startTime));
+  return result;
 }
 
 module.exports = {getTransitiveClosure, getCriticalGraph, getAdCriticalGraph};
