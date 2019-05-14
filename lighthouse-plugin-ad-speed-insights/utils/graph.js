@@ -230,7 +230,9 @@ function getAdCriticalGraph(networkRecords, traceEvents) {
   for (const req of [firstAdRequest, ...bidRequests]) {
     getCriticalGraph(summary, req, criticalRequests);
   }
-  return criticalRequests;
+  const result = new Set(Array.from(criticalRequests).filter(
+    (r) => r.endTime < firstAdRequest.startTime));
+  return result;
 }
 
 module.exports = {getTransitiveClosure, getCriticalGraph, getAdCriticalGraph};
