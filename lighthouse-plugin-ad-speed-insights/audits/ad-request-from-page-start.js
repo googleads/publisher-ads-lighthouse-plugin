@@ -28,8 +28,8 @@ const {
 } = AUDITS[id];
 
 // Point of diminishing returns.
-const PODR = 2000;
-const MEDIAN = 2500;
+const PODR = 2.0; // seconds
+const MEDIAN = 2.5; // seconds
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -69,7 +69,7 @@ class AdRequestFromPageStart extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 
-    const adReqTime = (adStartTime - pageStartTime) * 1000;
+    const adReqTime = (adStartTime - pageStartTime);
 
     let normalScore = Audit.computeLogNormalScore(adReqTime, PODR, MEDIAN);
 
@@ -81,8 +81,7 @@ class AdRequestFromPageStart extends Audit {
     return {
       rawValue: adReqTime,
       score: normalScore,
-      displayValue:
-        util.format(displayValue, Math.round(adReqTime).toLocaleString()),
+      displayValue: util.format(displayValue, adReqTime.toFixed(2)),
     };
   }
 }

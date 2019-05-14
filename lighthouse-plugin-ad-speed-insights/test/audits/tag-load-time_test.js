@@ -36,7 +36,7 @@ describe('TagLoadTime', async () => {
           {url: 'https://example.com', statusCode: 200, startTime: .1},
           {url: TAG_URL, endTime: .25},
         ],
-        expectedLoadTime: 150,
+        expectedLoadTime: 0.15,
       },
       {
         desc: 'should not be applicable if tag is never loaded',

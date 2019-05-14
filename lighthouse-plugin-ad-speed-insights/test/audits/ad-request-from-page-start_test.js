@@ -48,7 +48,7 @@ describe('AdRequestFromPageStart', async () => {
             },
           },
         ],
-        expectedTime: 250,
+        expectedTime: 0.25,
       },
       {
         desc: 'should not be applicable if ad is never requested',

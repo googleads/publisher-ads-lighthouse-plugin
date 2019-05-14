@@ -22,13 +22,13 @@
       "title": "Latency of first ad request (from page start)",
       "failureTitle": "Reduce latency of first ad request (from page start)",
       "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
-      "displayValue": "%s ms"
+      "displayValue": "%s s"
     },
     "ad-request-from-tag-load": {
       "title": "Latency of first ad request (from tag load)",
       "failureTitle": "Reduce latency of first ad request (from tag load)",
       "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
-      "displayValue": "%s ms"
+      "displayValue": "%s s"
     },
     "ad-top-of-viewport": {
       "title": "No ad found at the very top of the viewport",
@@ -95,7 +95,7 @@
       "title": "Tag load time",
       "failureTitle": "Reduce tag load time",
       "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
-      "displayValue": "%s ms"
+      "displayValue": "%s s"
     },
     "viewport-ad-density": {
       "title": "Ad density in initial viewport is within recommended range",
