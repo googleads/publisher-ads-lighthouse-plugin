@@ -73,13 +73,12 @@ function getDetailsTable(dynamicReq) {
 function quantifyOpportunitySec(tagRequest, networkRecords) {
   // The first HTML-initiated request is the best possible load time.
   const firstResource = networkRecords.find((r) =>
-    ['parser', 'preload'].includes(r.initiatorType));
+    ['parser', 'preload'].includes(r.initiator.type) ||
+    r.resourceType == 'Script');
   if (!firstResource) {
     return 0;
   }
-  const opportunitySec = tagRequest.startTime - firstResource.startTime;
-  // Scale down the opportunity to be conservative.
-  return opportunitySec * 0.9;
+  return tagRequest.startTime - firstResource.startTime;
 }
 
 /** @inheritDoc */
@@ -120,7 +119,7 @@ class StaticAdTags extends Audit {
     const table = dynamicReq ? getDetailsTable(dynamicReq) : [];
 
     const failed = numStatic < numTags;
-    let displayValue;
+    let displayValue = '';
     if (failed) {
       const opportunitySec = quantifyOpportunitySec(tagReqs[0], networkRecords);
       if (opportunitySec > 0.1) {
