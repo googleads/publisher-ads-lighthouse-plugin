@@ -57,6 +57,12 @@
       "displayValue": "",
       "failureDisplayValue": "%s duplicate tag%s"
     },
+    "first-ad-paint": {
+      "title": "First Ad Paint Time",
+      "failureTitle": "Reduce time to render first ad (from page start)",
+      "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
+      "displayValue": "%s s"
+    },
     "full-width-slots": {
       "title": "Ad slots effectively use horizontal space",
       "failureTitle": "Increase the width of ad slots",

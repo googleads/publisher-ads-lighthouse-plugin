@@ -28,8 +28,8 @@ const {
 } = AUDITS[id];
 
 // Point of diminishing returns.
-const PODR = 0.5; // seconds
-const MEDIAN = 1; // seconds
+const PODR = 1; // seconds
+const MEDIAN = 1.5; // seconds
 /**
  * Audit to determine time for tag to load relative to page start.
  */

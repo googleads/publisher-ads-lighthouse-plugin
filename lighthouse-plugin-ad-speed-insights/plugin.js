@@ -29,6 +29,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/tag-load-time`},
     {path: `${PLUGIN_PATH}/audits/ad-request-from-page-start`},
     {path: `${PLUGIN_PATH}/audits/ad-request-from-tag-load`},
+    {path: `${PLUGIN_PATH}/audits/first-ad-paint`},
     {path: `${PLUGIN_PATH}/audits/full-width-slots`},
     {path: `${PLUGIN_PATH}/audits/ad-top-of-viewport`},
     {path: `${PLUGIN_PATH}/audits/duplicate-tags`},
@@ -50,9 +51,10 @@ module.exports = {
     title: 'Publisher Ads [Preview]',
     auditRefs: [
       // Measurements group.
-      {id: 'tag-load-time', weight: 1, group: 'metrics'},
-      {id: 'ad-request-from-tag-load', weight: 1, group: 'metrics'},
-      {id: 'ad-request-from-page-start', weight: 1, group: 'metrics'},
+      {id: 'tag-load-time', weight: 5, group: 'metrics'},
+      {id: 'ad-request-from-tag-load', weight: 5, group: 'metrics'},
+      {id: 'ad-request-from-page-start', weight: 20, group: 'metrics'},
+      {id: 'first-ad-paint', weight: 60, group: 'metrics'},
       // Performance group.
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
