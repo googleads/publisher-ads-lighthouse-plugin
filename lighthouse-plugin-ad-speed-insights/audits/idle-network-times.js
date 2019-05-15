@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
@@ -20,11 +21,28 @@ const {format} = require('util');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
 
+/** @enum {string} */
+const Cause = {
+  LOAD_EVENT: 'Load Event',
+  LONG_TASK: 'Long Task',
+  OTHER: 'Other',
+};
+
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
+  {
+    key: 'cause',
+    itemType: 'text',
+    text: 'Cause',
+  },
+  {
+    key: 'script',
+    itemType: 'url',
+    text: 'Attributable Script',
+  },
   {
     key: 'startTime',
     itemType: 'ms',
@@ -61,6 +79,24 @@ const FAILING_IDLE_GAP_MS = 400;
 
 /** This audit will fail if the total idle time exceeds this threshold. */
 const FAILING_TOTAL_IDLE_TIME_MS = 1500;
+
+function determineCause(idlePeriod, tasks) {
+  for (const task of tasks) {
+    const LONG_TASK_OVERLAP_TRESHOLD = 0.8;
+    const overlapTime =
+        Math.min(task.endTime, idlePeriod.endTime) -
+        Math.max(task.startTime, idlePeriod.startTime);
+    if (overlapTime / idlePeriod.duration > LONG_TASK_OVERLAP_TRESHOLD) {
+      idlePeriod.cause = Cause.LONG_TASK;
+      idlePeriod.url = task.attributableURLs[0];
+      return;
+    }
+    if (task.startTime > idlePeriod.endTime) {
+      break;
+    }
+  }
+  idlePeriod.cause = Cause.OTHER;
+};
 
 const id = 'idle-network-times';
 const {
@@ -99,6 +135,7 @@ class IdleNetworkTimes extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    const tasks = await MainThreadTasks.request(trace, context);
 
     const criticalRequests =
       getAdCriticalGraph(networkRecords, trace.traceEvents);
@@ -123,11 +160,13 @@ class IdleNetworkTimes extends Audit {
     for (let i = 0; i < blockingRequests.length;) {
       const {startTime, endTime} = blockingRequests[i];
       if (startTime - maxEndSoFar > MINIMUM_NOTEWORTHY_IDLE_GAP_MS) {
-        idleTimes.push({
+        const idlePeriod = {
           startTime: maxEndSoFar,
           endTime: startTime,
           duration: startTime - maxEndSoFar,
-        });
+        };
+        determineCause(idlePeriod, tasks);
+        idleTimes.push(idlePeriod);
       }
 
       maxEndSoFar = endTime;
