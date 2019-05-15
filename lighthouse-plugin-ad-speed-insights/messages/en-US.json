@@ -10,7 +10,8 @@
     "ad-render-blocking-resources": {
       "title": "Minimal render-blocking resources found",
       "failureTitle": "Avoid render-blocking resources",
-      "description": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources)."
+      "description": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously or loading the tag earlier in the head. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).",
+      "failureDisplayValue": "Up to %s s tag load time improvement"
     },
     "ad-request-critical-path": {
       "title": "Minimal requests found in ad critical path",
