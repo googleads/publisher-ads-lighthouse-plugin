@@ -42,7 +42,7 @@ describe('AsyncAdTags', async () => {
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should succeed if there are no ad tags',
