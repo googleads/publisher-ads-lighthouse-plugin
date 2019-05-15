@@ -37,12 +37,12 @@ describe('AdTopOfViewport', () => {
     innerWidth: 300,
   };
 
-  describe('rawValue', () => {
+  describe('score', () => {
     it('should succeed if there are no ad slots', async () => {
       const IFrameElements = [];
 
       const artifacts = {IFrameElements, ViewportDimensions};
-      expect(AdTopOfViewport.audit(artifacts)).to.have.property('rawValue', true);
+      expect(AdTopOfViewport.audit(artifacts)).to.have.property('score', 1);
     });
 
     it('should return midpoint of top ad within viewport', async () => {
@@ -54,7 +54,7 @@ describe('AdTopOfViewport', () => {
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
-      expect(AdTopOfViewport.audit(artifacts)).to.have.property('rawValue', 125);
+      expect(AdTopOfViewport.audit(artifacts)).to.have.property('numericValue', 125);
     });
 
     it('should not be applicable if no ads in viewport', async () => {
