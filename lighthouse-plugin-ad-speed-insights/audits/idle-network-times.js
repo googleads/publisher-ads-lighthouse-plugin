@@ -14,16 +14,15 @@
 
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
+// @ts-ignore
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {format} = require('util');
-const {getAdCriticalGraph, getTransitiveClosure} = require('../utils/graph');
+const {getAdCriticalGraph} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
-const {isGptAdRequest} = require('../utils/resource-classification');
 
 /** @enum {string} */
 const Cause = {
@@ -34,6 +33,15 @@ const Cause = {
   TIMEOUT: 'Timeout',
   OTHER: 'Other',
 };
+
+/**
+ * @typedef {Object} IdlePeriod
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ * @property {string} url The attributable url
+ * @property {string} cause
+ */
 
 /**
  * Table headings for audits details sections.
@@ -87,12 +95,26 @@ const FAILING_IDLE_GAP_MS = 400;
 /** This audit will fail if the total idle time exceeds this threshold. */
 const FAILING_TOTAL_IDLE_TIME_MS = 1500;
 
+/**
+ * Returns the intersection of a and b.
+ * @param {{startTime: number, endTime: number}} a
+ * @param {{startTime: number, endTime: number}} b
+ * @return {number}
+ */
 function getOverlapTime(a, b) {
   return Math.min(a.endTime, b.endTime) - Math.max(a.startTime, b.startTime);
 }
 
+/**
+ * Checks the cause of the idle period.
+ * @param {IdlePeriod} idlePeriod
+ * @param {LH.Artifacts.TaskNode[]} mainThreadTasks
+ * @param {LH.TraceEvent[]} timerEvents
+ * @param {LH.Artifacts.TraceTimes} timings
+ * @param {LH.Artifacts.NetworkRequest[]} blockingRequests
+ */
 function determineCause(
-    idlePeriod, mainThreadTasks, timerEvents, timings, blockingRequests) {
+  idlePeriod, mainThreadTasks, timerEvents, timings, blockingRequests) {
   const OVERLAP_THRESHOLD = 0.80;
   const PROXIMITY_MS_THRESHOLD = 50;
 
@@ -108,10 +130,13 @@ function determineCause(
         idlePeriod.endTime - task.startTime < PROXIMITY_MS_THRESHOLD) {
       const timerId = task.event.args.data.timerId;
       const start = timerEvents.find((t) =>
-          t.name == 'TimerInstall' && t.args.data.timerId == timerId);
+        // @ts-ignore
+        t.name == 'TimerInstall' && t.args.data.timerId == timerId);
+      // @ts-ignore
       const timeout = start.args.data.timeout;
       if (timeout / idlePeriod.duration > OVERLAP_THRESHOLD) {
         idlePeriod.cause = Cause.TIMEOUT + ` (${timeout} ms)`;
+        // @ts-ignore
         idlePeriod.url = start.args.data.stackTrace[0].url;
         return;
       }
@@ -124,14 +149,15 @@ function determineCause(
   }
 
   const blockingReq = blockingRequests.find((r) =>
-      getOverlapTime(r, idlePeriod) / idlePeriod.duration > OVERLAP_THRESHOLD);
+    getOverlapTime(r, idlePeriod) / idlePeriod.duration > OVERLAP_THRESHOLD);
   if (blockingReq) {
     idlePeriod.cause = Cause.RENDER_BLOCKING_RESOURCE;
     idlePeriod.url = blockingReq.url;
     return;
   }
 
-  if (idlePeriod.endTime > timings.domContentLoaded &&
+  if (timings.domContentLoaded &&
+      idlePeriod.endTime > timings.domContentLoaded &&
       idlePeriod.endTime - timings.domContentLoaded < PROXIMITY_MS_THRESHOLD) {
     // TODO(warrengm): Attribute this to the script that installed the load
     // event listener.
@@ -139,7 +165,7 @@ function determineCause(
     return;
   }
 
-  if (idlePeriod.endTime > timings.load &&
+  if (timings.load && idlePeriod.endTime > timings.load &&
       idlePeriod.endTime - timings.load < PROXIMITY_MS_THRESHOLD) {
     // TODO(warrengm): Attribute this to the script that installed the load
     // event listener.
@@ -148,7 +174,7 @@ function determineCause(
   }
 
   idlePeriod.cause = Cause.OTHER;
-};
+}
 
 const id = 'idle-network-times';
 const {
@@ -187,10 +213,12 @@ class IdleNetworkTimes extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    let mainThreadTasks = [];
+    /** @type {LH.Artifacts.TaskNode[]} */ let mainThreadTasks = [];
     try {
       mainThreadTasks = await MainThreadTasks.request(trace, context);
-    } catch (e) {}
+    } catch (e) {
+      // Ignore tracing errors.
+    }
     const {timings} = await TraceOfTab.request(trace, context);
 
     const timerEvents =
@@ -223,10 +251,12 @@ class IdleNetworkTimes extends Audit {
           startTime: maxEndSoFar,
           endTime: startTime,
           duration: startTime - maxEndSoFar,
+          cause: Cause.OTHER,
+          url: '',
         };
         determineCause(
-            idlePeriod, mainThreadTasks, timerEvents, timings,
-            artifacts.TagsBlockingFirstPaint);
+          idlePeriod, mainThreadTasks, timerEvents, timings,
+          artifacts.TagsBlockingFirstPaint);
         idleTimes.push(idlePeriod);
       }
 
