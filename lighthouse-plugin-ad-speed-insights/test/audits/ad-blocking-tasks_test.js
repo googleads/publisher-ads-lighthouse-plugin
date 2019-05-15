@@ -84,7 +84,7 @@ describe('AdBlockingTasks', async () => {
           generateReq([110, 150, 160], 1, 'https://example.com'),
           generateReq([210, 300, 360], 2, 'https://test.com'),
         ],
-        expectedValue: true,
+        expectedValue: 1,
 
       },
       {
@@ -100,7 +100,7 @@ describe('AdBlockingTasks', async () => {
           generateReq([210, 300, 310], 2, 'https://doubleclick.net'),
           generateReq([410, 500, 510], 3, 'https://googlesyndication.com'),
         ],
-        expectedValue: true,
+        expectedValue: 1,
 
       },
       {
@@ -116,7 +116,7 @@ describe('AdBlockingTasks', async () => {
           generateReq([310, 400, 410], 2, 'https://doubleclick.net'),
           generateReq([610, 700, 710], 3, 'https://googlesyndication.com'),
         ],
-        expectedValue: true,
+        expectedValue: 1,
 
       },
       {
@@ -132,7 +132,7 @@ describe('AdBlockingTasks', async () => {
           generateReq([210, 300, 360], 2, 'https://doubleclick.net', 'XHR'), // Block
           generateReq([410, 500, 510], 3, 'https://googlesyndication.com'),
         ],
-        expectedValue: false,
+        expectedValue: 0,
 
       },
       {
@@ -148,7 +148,7 @@ describe('AdBlockingTasks', async () => {
           generateReq([210, 300, 360], 2, 'https://doubleclick.net', 'XHR'), // Block
           generateReq([410, 500, 510], 3, 'https://googlesyndication.com'),
         ],
-        expectedValue: true,
+        expectedValue: 1,
       },
       {
         desc: 'should handle offsets in the network timeline',
@@ -164,7 +164,7 @@ describe('AdBlockingTasks', async () => {
           generateReq([1410, 1500, 1510], 3, 'https://googlesyndication.com'),
         ],
         offset: -1000,
-        expectedValue: false,
+        expectedValue: 0,
 
       },
       {
@@ -181,7 +181,7 @@ describe('AdBlockingTasks', async () => {
           generateReq([1210, 1300, 1360], 2, 'https://doubleclick.net', 'XHR'), // Block
         ],
         offset: -1000,
-        expectedValue: false,
+        expectedValue: 0,
       },
     ];
 
@@ -193,7 +193,7 @@ describe('AdBlockingTasks', async () => {
         sandbox.stub(MainThreadTasks, 'request').returns(tasks);
         const result = await AdBlockingTasks.audit(artifacts);
 
-        expect(result).to.have.property('numericValue', expectedValue);
+        expect(result).to.have.property('score', expectedValue);
       });
     }
 
@@ -220,10 +220,10 @@ describe('AdBlockingTasks', async () => {
       const artifacts = makeArtifacts(requests, tasks, 0 /* offset */);
       sandbox.stub(NetworkRecords, 'request').returns(requests);
       sandbox.stub(MainThreadTasks, 'request').returns(tasks);
-      const {numericValue, displayValue} =
+      const {score, displayValue} =
         await AdBlockingTasks.audit(artifacts);
 
-      expect(numericValue).to.equal(false);
+      expect(score).to.equal(0);
       expect(displayValue).to.match(/2 long tasks/);
     });
   });

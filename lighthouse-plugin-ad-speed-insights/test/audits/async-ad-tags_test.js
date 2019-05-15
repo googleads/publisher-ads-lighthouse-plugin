@@ -25,7 +25,7 @@ describe('AsyncAdTags', async () => {
   afterEach(() => {
     sandbox.restore();
   });
-  describe('numericValue', async () => {
+  describe('score', async () => {
     const testCases = [
       {
         desc: 'should succeed if there are no ad tags',
@@ -34,12 +34,12 @@ describe('AsyncAdTags', async () => {
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should succeed if all ad tags are async',
         networkRecords: [],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should fail unless all ad tags are async',
@@ -49,23 +49,23 @@ describe('AsyncAdTags', async () => {
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}},
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}},
         ],
-        expectedRawVal: false,
+        expectedScore: 0,
       },
       {
         desc: 'should assume async if loaded statically',
         networkRecords: [
           {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'preload'}},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
     ];
 
-    for (const {desc, networkRecords, expectedRawVal}
+    for (const {desc, networkRecords, expectedScore}
       of testCases) {
       it(`${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await AsyncAdTags.audit({devtoolsLogs: {}}, {});
-        expect(results).to.have.property('numericValue', expectedRawVal);
+        expect(results).to.have.property('score', expectedScore);
       });
     }
   });

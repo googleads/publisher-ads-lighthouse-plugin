@@ -37,12 +37,12 @@ describe('AdsInViewport', () => {
     innerWidth: 300,
   };
 
-  describe('numericValue', () => {
+  describe('score', () => {
     it('should succeed if there are no ad slots', async () => {
       const IFrameElements = [];
 
       const artifacts = {IFrameElements, ViewportDimensions};
-      expect(AdsInViewport.audit(artifacts)).to.have.property('numericValue', true);
+      expect(AdsInViewport.audit(artifacts)).to.have.property('score', 1);
     });
 
     it('should return fraction of ad slots inside viewport', async () => {

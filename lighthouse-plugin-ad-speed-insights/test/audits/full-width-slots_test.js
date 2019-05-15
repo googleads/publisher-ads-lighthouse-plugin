@@ -94,7 +94,6 @@ describe('FullWidthSlots', async () => {
         networkRecords: [
           {url: 'https://example.com'},
         ],
-        expectedValue: true,
         expectedNotApplicable: true,
       },
       {
@@ -103,7 +102,6 @@ describe('FullWidthSlots', async () => {
           {url: 'https://example.com'},
           genAdReqRecord(),
         ],
-        expectedValue: true,
         expectedNotApplicable: true,
       },
       {
@@ -112,7 +110,6 @@ describe('FullWidthSlots', async () => {
           {url: 'https://example.com'},
           genAdReqRecord('400x400,1x1', SRA_PARAM),
         ],
-        expectedValue: true,
         expectedNotApplicable: true,
       },
 
@@ -127,8 +124,9 @@ describe('FullWidthSlots', async () => {
         });
         if (expectedNotApplicable) {
           expect(results).to.have.property('notApplicable', true);
+        } else {
+          expect(results).to.have.property('numericValue', expectedValue);
         }
-        expect(results).to.have.property('numericValue', expectedValue);
       });
     }
   });
