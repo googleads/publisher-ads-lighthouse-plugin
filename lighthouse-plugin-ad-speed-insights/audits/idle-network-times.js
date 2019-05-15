@@ -80,13 +80,12 @@ class IdleNetworkTimes extends Audit {
    * @override
    */
   static get meta() {
-    // @ts-ignore - TODO: add AsyncCallStacks to enum.
     return {
       id,
       title,
       failureTitle,
       description,
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
