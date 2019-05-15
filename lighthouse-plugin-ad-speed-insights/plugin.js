@@ -51,12 +51,12 @@ module.exports = {
     title: 'Publisher Ads [Preview]',
     auditRefs: [
       // Measurements group.
-      {id: 'tag-load-time', weight: 5, group: 'metrics'},
-      {id: 'ad-request-from-tag-load', weight: 5, group: 'metrics'},
-      {id: 'ad-request-from-page-start', weight: 20, group: 'metrics'},
-      {id: 'first-ad-paint', weight: 60, group: 'metrics'},
+      {id: 'tag-load-time', weight: 4, group: 'metrics'},
+      {id: 'ad-request-from-tag-load', weight: 4, group: 'metrics'},
+      {id: 'ad-request-from-page-start', weight: 4, group: 'metrics'},
+      {id: 'first-ad-paint', weight: 8, group: 'metrics'},
       // Performance group.
-      {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
+      {id: 'ad-blocking-tasks', weight: 2, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
@@ -64,11 +64,11 @@ module.exports = {
       {id: 'static-ad-tags', weight: 1, group: 'ads-performance'},
       {id: 'idle-network-times', weight: 0.5, group: 'ads-performance'},
       // Best Practices group.
-      {id: 'ads-in-viewport', weight: 1, group: 'ads-best-practices'},
-      {id: 'async-ad-tags', weight: 1, group: 'ads-best-practices'},
+      {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
+      {id: 'async-ad-tags', weight: 2, group: 'ads-best-practices'},
       {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
       {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
-      {id: 'ad-top-of-viewport', weight: 1, group: 'ads-best-practices'},
+      {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
     ],
   },
