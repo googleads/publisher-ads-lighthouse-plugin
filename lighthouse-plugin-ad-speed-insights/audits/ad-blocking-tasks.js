@@ -18,6 +18,7 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
+const {getAttributableUrl} = require('../utils/tasks');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
 
@@ -97,33 +98,6 @@ function computeNetworkTimelineOffset(trace, tasks, networkRecords) {
   return taskTime - 1000 * network.startTime;
 }
 
-/**
- * Returns the attributable script for this long task.
- * @param {LH.Artifacts.TaskNode} longTask
- * @param {Set<string>} knownScripts
- * @return {string}
- */
-function getAttributableUrl(longTask, knownScripts) {
-  const scriptUrl = longTask.attributableURLs.find(
-    /** @param {string} url */ (url) => knownScripts.has(url));
-  const fallbackUrl = longTask.attributableURLs[0] ||
-      (longTask.event.args.data || {}).url;
-  const attributableUrl = scriptUrl || fallbackUrl;
-
-  if (attributableUrl) {
-    return attributableUrl;
-  }
-  let maxChildDuration = 50; // Filter children with duration < 50ms.
-  let childUrl = '';
-  for (const child of longTask.children) {
-    const url = getAttributableUrl(child, knownScripts);
-    if (url && child.duration > maxChildDuration) {
-      childUrl = url;
-      maxChildDuration = child.duration;
-    }
-  }
-  return childUrl;
-}
 
 /** @inheritDoc */
 class AdBlockingTasks extends Audit {

@@ -21,6 +21,7 @@ const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {format} = require('util');
 const {getAdCriticalGraph, getTransitiveClosure} = require('../utils/graph');
+const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGptAdRequest} = require('../utils/resource-classification');
 
@@ -92,7 +93,7 @@ function getOverlapTime(a, b) {
 
 function determineCause(
     idlePeriod, mainThreadTasks, timerEvents, timings, blockingRequests) {
-  const OVERLAP_THRESHOLD = 0.85;
+  const OVERLAP_THRESHOLD = 0.80;
   const PROXIMITY_MS_THRESHOLD = 50;
 
   for (const task of mainThreadTasks) {
@@ -100,7 +101,7 @@ function determineCause(
     if (task.duration > 100 &&
         overlapTime / idlePeriod.duration > OVERLAP_THRESHOLD) {
       idlePeriod.cause = Cause.LONG_TASK;
-      idlePeriod.url = task.attributableURLs[0];
+      idlePeriod.url = getAttributableUrl(task);
       return;
     }
     if (task.event.name == 'TimerFire' &&
@@ -130,14 +131,16 @@ function determineCause(
     return;
   }
 
-  if (idlePeriod.endTime - timings.domContentLoaded < PROXIMITY_MS_THRESHOLD) {
+  if (idlePeriod.endTime > timings.domContentLoaded &&
+      idlePeriod.endTime - timings.domContentLoaded < PROXIMITY_MS_THRESHOLD) {
     // TODO(warrengm): Attribute this to the script that installed the load
     // event listener.
-    idlePeriod.cause = Cause.LOAD_EVENT;
+    idlePeriod.cause = Cause.DOM_CONTENT_LOADED;
     return;
   }
 
-  if (idlePeriod.endTime - timings.load < PROXIMITY_MS_THRESHOLD) {
+  if (idlePeriod.endTime > timings.load &&
+      idlePeriod.endTime - timings.load < PROXIMITY_MS_THRESHOLD) {
     // TODO(warrengm): Attribute this to the script that installed the load
     // event listener.
     idlePeriod.cause = Cause.LOAD_EVENT;
@@ -184,7 +187,10 @@ class IdleNetworkTimes extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const mainThreadTasks = await MainThreadTasks.request(trace, context);
+    let mainThreadTasks = [];
+    try {
+      mainThreadTasks = await MainThreadTasks.request(trace, context);
+    } catch (e) {}
     const {timings} = await TraceOfTab.request(trace, context);
 
     const timerEvents =
