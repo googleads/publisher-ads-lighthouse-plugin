@@ -273,9 +273,7 @@ class IdleNetworkTimes extends Audit {
     const failed = maxIdleTime > FAILING_IDLE_GAP_MS ||
       totalIdleTime > FAILING_TOTAL_IDLE_TIME_MS;
 
-    const displayTime = Math.round(totalIdleTime).toLocaleString();
-
-    // TODO(warrengm): Identify culprits in idle times.
+    const displayTime = (totalIdleTime * 1e-3).toFixed(2);
     return {
       rawValue: maxIdleTime,
       score: failed ? 0 : 1,
