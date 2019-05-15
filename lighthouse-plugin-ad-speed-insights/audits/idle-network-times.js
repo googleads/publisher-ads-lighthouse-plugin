@@ -14,17 +14,23 @@
 
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
+const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {format} = require('util');
-const {getAdCriticalGraph} = require('../utils/graph');
+const {getAdCriticalGraph, getTransitiveClosure} = require('../utils/graph');
 const {getPageStartTime} = require('../utils/network-timing');
+const {isGptAdRequest} = require('../utils/resource-classification');
 
 /** @enum {string} */
 const Cause = {
+  DOM_CONTENT_LOADED: 'DOMContentLoaded Event',
   LOAD_EVENT: 'Load Event',
   LONG_TASK: 'Long Task',
+  RENDER_BLOCKING_RESOURCE: 'Blocking Resource',
+  TIMEOUT: 'Timeout',
   OTHER: 'Other',
 };
 
@@ -36,12 +42,12 @@ const HEADINGS = [
   {
     key: 'cause',
     itemType: 'text',
-    text: 'Cause',
+    text: 'Suspected Cause',
   },
   {
-    key: 'script',
+    key: 'url',
     itemType: 'url',
-    text: 'Attributable Script',
+    text: 'Attributable URL',
   },
   {
     key: 'startTime',
@@ -80,21 +86,64 @@ const FAILING_IDLE_GAP_MS = 400;
 /** This audit will fail if the total idle time exceeds this threshold. */
 const FAILING_TOTAL_IDLE_TIME_MS = 1500;
 
-function determineCause(idlePeriod, tasks) {
-  for (const task of tasks) {
-    const LONG_TASK_OVERLAP_TRESHOLD = 0.8;
-    const overlapTime =
-        Math.min(task.endTime, idlePeriod.endTime) -
-        Math.max(task.startTime, idlePeriod.startTime);
-    if (overlapTime / idlePeriod.duration > LONG_TASK_OVERLAP_TRESHOLD) {
+function getOverlapTime(a, b) {
+  return Math.min(a.endTime, b.endTime) - Math.max(a.startTime, b.startTime);
+}
+
+function determineCause(
+    idlePeriod, mainThreadTasks, timerEvents, timings, blockingRequests) {
+  const OVERLAP_THRESHOLD = 0.85;
+  const PROXIMITY_MS_THRESHOLD = 50;
+
+  for (const task of mainThreadTasks) {
+    const overlapTime = getOverlapTime(task, idlePeriod);
+    if (task.duration > 100 &&
+        overlapTime / idlePeriod.duration > OVERLAP_THRESHOLD) {
       idlePeriod.cause = Cause.LONG_TASK;
       idlePeriod.url = task.attributableURLs[0];
       return;
     }
+    if (task.event.name == 'TimerFire' &&
+        idlePeriod.endTime - task.startTime < PROXIMITY_MS_THRESHOLD) {
+      const timerId = task.event.args.data.timerId;
+      const start = timerEvents.find((t) =>
+          t.name == 'TimerInstall' && t.args.data.timerId == timerId);
+      const timeout = start.args.data.timeout;
+      if (timeout / idlePeriod.duration > OVERLAP_THRESHOLD) {
+        idlePeriod.cause = Cause.TIMEOUT + ` (${timeout} ms)`;
+        idlePeriod.url = start.args.data.stackTrace[0].url;
+        return;
+      }
+    }
+
     if (task.startTime > idlePeriod.endTime) {
+      // Done searching tasks.
       break;
     }
   }
+
+  const blockingReq = blockingRequests.find((r) =>
+      getOverlapTime(r, idlePeriod) / idlePeriod.duration > OVERLAP_THRESHOLD);
+  if (blockingReq) {
+    idlePeriod.cause = Cause.RENDER_BLOCKING_RESOURCE;
+    idlePeriod.url = blockingReq.url;
+    return;
+  }
+
+  if (idlePeriod.endTime - timings.domContentLoaded < PROXIMITY_MS_THRESHOLD) {
+    // TODO(warrengm): Attribute this to the script that installed the load
+    // event listener.
+    idlePeriod.cause = Cause.LOAD_EVENT;
+    return;
+  }
+
+  if (idlePeriod.endTime - timings.load < PROXIMITY_MS_THRESHOLD) {
+    // TODO(warrengm): Attribute this to the script that installed the load
+    // event listener.
+    idlePeriod.cause = Cause.LOAD_EVENT;
+    return;
+  }
+
   idlePeriod.cause = Cause.OTHER;
 };
 
@@ -122,7 +171,7 @@ class IdleNetworkTimes extends Audit {
       title,
       failureTitle,
       description,
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks', 'TagsBlockingFirstPaint'],
     };
   }
 
@@ -135,7 +184,11 @@ class IdleNetworkTimes extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const tasks = await MainThreadTasks.request(trace, context);
+    const mainThreadTasks = await MainThreadTasks.request(trace, context);
+    const {timings} = await TraceOfTab.request(trace, context);
+
+    const timerEvents =
+        trace.traceEvents.filter((t) => t.name.startsWith('Timer'));
 
     const criticalRequests =
       getAdCriticalGraph(networkRecords, trace.traceEvents);
@@ -165,7 +218,9 @@ class IdleNetworkTimes extends Audit {
           endTime: startTime,
           duration: startTime - maxEndSoFar,
         };
-        determineCause(idlePeriod, tasks);
+        determineCause(
+            idlePeriod, mainThreadTasks, timerEvents, timings,
+            artifacts.TagsBlockingFirstPaint);
         idleTimes.push(idlePeriod);
       }
 
