@@ -220,7 +220,8 @@ describe('AdBlockingTasks', async () => {
       const artifacts = makeArtifacts(requests, tasks, 0 /* offset */);
       sandbox.stub(NetworkRecords, 'request').returns(requests);
       sandbox.stub(MainThreadTasks, 'request').returns(tasks);
-      const {numericValue, displayValue} = await AdBlockingTasks.audit(artifacts);
+      const {numericValue, displayValue} =
+        await AdBlockingTasks.audit(artifacts);
 
       expect(numericValue).to.equal(false);
       expect(displayValue).to.match(/2 long tasks/);

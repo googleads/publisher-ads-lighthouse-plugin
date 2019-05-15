@@ -68,9 +68,9 @@ class LoadsGptOverHttps extends Audit {
 
     const secureGptRequests = gptRequests.filter((request) => request.isSecure);
 
-    /** @type {LH.Audit.Details.Diagnostic} */
+    /** @type {LH.Audit.Details.DebugData} */
     const details = {
-      type: 'diagnostic',
+      type: 'debugdata',
       numGptHttpReqs: gptRequests.length - secureGptRequests.length,
       numGptHttpsReqs: secureGptRequests.length,
     };

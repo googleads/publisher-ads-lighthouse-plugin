@@ -22,6 +22,7 @@
 import 'lighthouse/types/artifacts';
 import 'lighthouse/types/audit-details';
 import 'lighthouse/types/audit';
+import 'lighthouse/types/budget';
 import 'lighthouse/types/config';
 import 'lighthouse/types/externs';
 import 'lighthouse/types/gatherer';
