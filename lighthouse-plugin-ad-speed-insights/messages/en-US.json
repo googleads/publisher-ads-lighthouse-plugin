@@ -89,7 +89,8 @@
     "static-ad-tags": {
       "title": "GPT tag is loaded statically",
       "failureTitle": "Load GPT tag statically",
-      "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://ad-speed-insights.appspot.com/#dynamic-tag)."
+      "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://ad-speed-insights.appspot.com/#dynamic-tag).",
+      "failureDisplayValue": "Up to %s s tag load time improvement"
     },
     "tag-load-time": {
       "title": "Tag load time",
