@@ -111,10 +111,12 @@ function getOverlapTime(a, b) {
  * @param {LH.Artifacts.TaskNode[]} mainThreadTasks
  * @param {LH.TraceEvent[]} timerEvents
  * @param {LH.Artifacts.TraceTimes} timings
- * @param {LH.Artifacts.NetworkRequest[]} blockingRequests
+ * @param {LH.Artifacts.TagBlockingFirstPaint[]} blockingTags
+ * @param {number} pageStartTime
  */
 function determineCause(
-  idlePeriod, mainThreadTasks, timerEvents, timings, blockingRequests) {
+  idlePeriod, mainThreadTasks, timerEvents, timings, blockingTags,
+  pageStartTime) {
   const OVERLAP_THRESHOLD = 0.80;
   const PROXIMITY_MS_THRESHOLD = 50;
 
@@ -148,12 +150,18 @@ function determineCause(
     }
   }
 
-  const blockingReq = blockingRequests.find((r) =>
-    getOverlapTime(r, idlePeriod) / idlePeriod.duration > OVERLAP_THRESHOLD);
-  if (blockingReq) {
-    idlePeriod.cause = Cause.RENDER_BLOCKING_RESOURCE;
-    idlePeriod.url = blockingReq.url;
-    return;
+  for (const tag of blockingTags) {
+    const shifted = {
+      startTime: (tag.startTime - pageStartTime) * 1000,
+      endTime: (tag.endTime - pageStartTime) * 1000,
+    };
+    const overlap = getOverlapTime(shifted, idlePeriod);
+    if (overlap / idlePeriod.duration > OVERLAP_THRESHOLD) {
+      idlePeriod.cause = Cause.RENDER_BLOCKING_RESOURCE;
+      // Yes, tag.tag is correct.
+      idlePeriod.url = tag.tag.url;
+      return;
+    }
   }
 
   if (timings.domContentLoaded &&
@@ -256,7 +264,7 @@ class IdleNetworkTimes extends Audit {
         };
         determineCause(
           idlePeriod, mainThreadTasks, timerEvents, timings,
-          artifacts.TagsBlockingFirstPaint);
+          artifacts.TagsBlockingFirstPaint, pageStartTime);
         idleTimes.push(idlePeriod);
       }
 
