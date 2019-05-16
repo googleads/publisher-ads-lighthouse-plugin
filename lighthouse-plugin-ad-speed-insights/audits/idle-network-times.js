@@ -105,29 +105,27 @@ function getOverlapTime(a, b) {
   return Math.min(a.endTime, b.endTime) - Math.max(a.startTime, b.startTime);
 }
 
+const OVERLAP_THRESHOLD = 0.80;
+const PROXIMITY_MS_THRESHOLD = 50;
+
 /**
- * Checks the cause of the idle period.
+ * Checks if any task causes the idle period and attributes it if so.
  * @param {IdlePeriod} idlePeriod
  * @param {LH.Artifacts.TaskNode[]} mainThreadTasks
  * @param {LH.TraceEvent[]} timerEvents
- * @param {LH.Artifacts.TraceTimes} timings
- * @param {LH.Artifacts.TagBlockingFirstPaint[]} blockingTags
- * @param {number} pageStartTime
+ * @return {boolean} True if the task caused the idle period, false otherwise.
  */
-function determineCause(
-  idlePeriod, mainThreadTasks, timerEvents, timings, blockingTags,
-  pageStartTime) {
-  const OVERLAP_THRESHOLD = 0.80;
-  const PROXIMITY_MS_THRESHOLD = 50;
-
+function checkIfTaskIsBlocking(idlePeriod, mainThreadTasks, timerEvents) {
+  // Check if long task is blocking.
   for (const task of mainThreadTasks) {
     const overlapTime = getOverlapTime(task, idlePeriod);
     if (task.duration > 100 &&
         overlapTime / idlePeriod.duration > OVERLAP_THRESHOLD) {
       idlePeriod.cause = Cause.LONG_TASK;
       idlePeriod.url = getAttributableUrl(task);
-      return;
+      return true;
     }
+    // Check if timer is blocking.
     if (task.event.name == 'TimerFire' &&
         idlePeriod.endTime - task.startTime < PROXIMITY_MS_THRESHOLD) {
       const timerId = task.event.args.data.timerId;
@@ -140,16 +138,26 @@ function determineCause(
         idlePeriod.cause = Cause.TIMEOUT + ` (${timeout} ms)`;
         // @ts-ignore
         idlePeriod.url = start.args.data.stackTrace[0].url;
-        return;
+        return true;
       }
     }
-
     if (task.startTime > idlePeriod.endTime) {
       // Done searching tasks.
       break;
     }
   }
+  return false;
+}
 
+/**
+ * Checks if any tag is blocking and therefore causing the idle period in ad
+ * loading.
+ * @param {IdlePeriod} idlePeriod
+ * @param {LH.Artifacts.TagBlockingFirstPaint[]} blockingTags
+ * @param {number} pageStartTime
+ * @return {boolean} True if the tag caused the idle period, false otherwise.
+ */
+function checkIfTagIsBlocking(idlePeriod, blockingTags, pageStartTime) {
   for (const tag of blockingTags) {
     const shifted = {
       startTime: (tag.startTime - pageStartTime) * 1000,
@@ -160,28 +168,52 @@ function determineCause(
       idlePeriod.cause = Cause.RENDER_BLOCKING_RESOURCE;
       // Yes, tag.tag is correct.
       idlePeriod.url = tag.tag.url;
-      return;
+      return true;
     }
   }
-
+  return false;
+}
+/**
+ * Checks waiting on load events is the cause of the idle period.
+ * @param {IdlePeriod} idlePeriod
+ * @param {LH.Artifacts.TraceTimes} timings
+ * @return {boolean} True if waiting on load is the suspected cause, false
+ *     otherwise.
+ */
+function checkIfLoadIsBlocking(idlePeriod, timings) {
   if (timings.domContentLoaded &&
       idlePeriod.endTime > timings.domContentLoaded &&
       idlePeriod.endTime - timings.domContentLoaded < PROXIMITY_MS_THRESHOLD) {
     // TODO(warrengm): Attribute this to the script that installed the load
     // event listener.
     idlePeriod.cause = Cause.DOM_CONTENT_LOADED;
-    return;
+    return true;
   }
-
   if (timings.load && idlePeriod.endTime > timings.load &&
       idlePeriod.endTime - timings.load < PROXIMITY_MS_THRESHOLD) {
     // TODO(warrengm): Attribute this to the script that installed the load
     // event listener.
     idlePeriod.cause = Cause.LOAD_EVENT;
-    return;
+    return true;
   }
+  return false;
+}
 
-  idlePeriod.cause = Cause.OTHER;
+/**
+ * Checks the cause of the idle period.
+ * @param {IdlePeriod} idlePeriod
+ * @param {LH.Artifacts.TaskNode[]} mainThreadTasks
+ * @param {LH.TraceEvent[]} timerEvents
+ * @param {LH.Artifacts.TraceTimes} timings
+ * @param {LH.Artifacts.TagBlockingFirstPaint[]} blockingTags
+ * @param {number} pageStartTime
+ */
+function determineCause(
+  idlePeriod, mainThreadTasks, timerEvents, timings, blockingTags,
+  pageStartTime) {
+  checkIfTaskIsBlocking(idlePeriod, mainThreadTasks, timerEvents) ||
+      checkIfTagIsBlocking(idlePeriod, blockingTags, pageStartTime) ||
+      checkIfLoadIsBlocking(idlePeriod, timings);
 }
 
 const id = 'idle-network-times';
