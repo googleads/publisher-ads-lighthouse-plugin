@@ -88,7 +88,7 @@ class FullWidthSlots extends Audit {
 
     return {
       score,
-      rawValue: pctUnoccupied,
+      numericValue: pctUnoccupied,
       // No displayValue if passing, no changes to be made.
       displayValue: score ?
         displayValue :

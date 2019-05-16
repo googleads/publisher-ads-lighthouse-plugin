@@ -13,6 +13,8 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
+// @ts-ignore
+const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
@@ -51,7 +53,7 @@ class AsyncAdTags extends Audit {
       title,
       failureTitle,
       description,
-      requiredArtifacts: ['devtoolsLogs'],
+      requiredArtifacts: ['devtoolsLogs', 'URL'],
     };
   }
 
@@ -61,10 +63,13 @@ class AsyncAdTags extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    const mainResource =
+        await MainResource.request({URL: artifacts.URL, devtoolsLog}, context);
     const tagReqs = networkRecords
-        .filter((req) => isGptTag(new URL(req.url)));
+        .filter((req) => isGptTag(new URL(req.url)))
+        .filter((req) => req.frameId === mainResource.frameId);
 
     if (!tagReqs.length) {
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
@@ -73,7 +78,7 @@ class AsyncAdTags extends Audit {
     const numAsync = array.count(tagReqs, isAsync);
     const numTags = tagReqs.length;
     return {
-      rawValue: numAsync === numTags,
+      score: Number(numAsync === numTags),
     };
   }
 }

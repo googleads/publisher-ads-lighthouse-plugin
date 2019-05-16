@@ -113,7 +113,7 @@ class ScriptInjectedTags extends Audit {
     const failed = tableView.length > 0;
     const plural = tableView.length == 1 ? '' : 's';
     return {
-      rawValue: tableView.length,
+      numericValue: tableView.length,
       score: failed ? 0 : 1,
       displayValue: `${tableView.length} script-injected resource${plural}`,
       details: ScriptInjectedTags.makeTableDetails(HEADINGS, tableView),

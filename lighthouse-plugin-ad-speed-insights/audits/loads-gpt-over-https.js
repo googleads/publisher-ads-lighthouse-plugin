@@ -68,9 +68,9 @@ class LoadsGptOverHttps extends Audit {
 
     const secureGptRequests = gptRequests.filter((request) => request.isSecure);
 
-    /** @type {LH.Audit.Details.Diagnostic} */
+    /** @type {LH.Audit.Details.DebugData} */
     const details = {
-      type: 'diagnostic',
+      type: 'debugdata',
       numGptHttpReqs: gptRequests.length - secureGptRequests.length,
       numGptHttpsReqs: secureGptRequests.length,
     };
@@ -83,7 +83,7 @@ class LoadsGptOverHttps extends Audit {
 
     const pluralEnding = details.numGptHttpReqs == 1 ? '' : 's';
     return {
-      rawValue: details.numGptHttpReqs,
+      numericValue: details.numGptHttpReqs,
       score: details.numGptHttpReqs ? 0 : 1,
       displayValue: details.numGptHttpReqs ?
         util.format(failureDisplayValue, details.numGptHttpReqs, pluralEnding) :
