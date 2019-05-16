@@ -84,7 +84,7 @@ class AdTopOfViewport extends Audit {
 
     return {
       score,
-      rawValue: topSlot.midpoint,
+      numericValue: topSlot.midpoint,
       // No displayValue if passing, no changes to be made.
       displayValue: score ? displayValue :
         util.format(failureDisplayValue, Math.round(topSlot.midpoint)),

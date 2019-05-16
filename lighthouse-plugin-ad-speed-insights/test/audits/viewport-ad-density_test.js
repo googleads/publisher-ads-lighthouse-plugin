@@ -37,7 +37,7 @@ describe('ViewportAdDensity', () => {
     innerWidth: 300,
   };
 
-  describe('rawValue', () => {
+  describe('numericValue', () => {
     it('should not be applicable if there are no ad slots', async () => {
       const IFrameElements = [];
 
@@ -57,7 +57,7 @@ describe('ViewportAdDensity', () => {
 
       const artifacts = {IFrameElements, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('rawValue', 50 / 600);
+      expect(result).to.have.property('numericValue', 50 / 600);
     });
 
     it('should throw error if ad area exceeds viewport area', async () => {
@@ -98,7 +98,7 @@ describe('ViewportAdDensity', () => {
         const IFrameElements = [generateSlot(test)];
         const artifacts = {IFrameElements, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
-        expect(result).to.have.property('rawValue', test.overlap / 60000);
+        expect(result).to.have.property('numericValue', test.overlap / 60000);
       })
     );
 
@@ -120,7 +120,7 @@ describe('ViewportAdDensity', () => {
         const IFrameElements = [generateSlot(test)];
         const artifacts = {IFrameElements, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
-        expect(result).to.have.property('rawValue', 0);
+        expect(result).to.have.property('numericValue', 0);
       })
     );
 

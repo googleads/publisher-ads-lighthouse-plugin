@@ -137,7 +137,7 @@ class AdBlockingTasks extends Audit {
       title,
       failureTitle,
       description,
-      requiredArtifacts: ['traces'],
+      requiredArtifacts: ['traces', 'devtoolsLogs'],
     };
   }
 
@@ -148,8 +148,8 @@ class AdBlockingTasks extends Audit {
    * @override
    */
   static async audit(artifacts, context) {
-    const trace = artifacts.traces[AdBlockingTasks.DEFAULT_PASS];
-    const devtoolsLogs = artifacts.devtoolsLogs[AdBlockingTasks.DEFAULT_PASS];
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     let tasks = [];
     try {
@@ -227,7 +227,7 @@ class AdBlockingTasks extends Audit {
     const pluralEnding = blocking.length == 1 ? '' : 's';
 
     return {
-      rawValue: blocking.length == 0,
+      score: Number(blocking.length == 0),
       displayValue: blocking.length ?
         util.format(failureDisplayValue, blocking.length, pluralEnding) :
         displayValue,

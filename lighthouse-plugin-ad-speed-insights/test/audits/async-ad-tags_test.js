@@ -26,7 +26,7 @@ describe('AsyncAdTags', async () => {
   afterEach(() => {
     sandbox.restore();
   });
-  describe('rawValue', async () => {
+  describe('score', async () => {
     const testCases = [
       {
         desc: 'should succeed if all ad tags are async',
@@ -34,7 +34,7 @@ describe('AsyncAdTags', async () => {
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should ignore tags in sub-frames',
@@ -42,12 +42,12 @@ describe('AsyncAdTags', async () => {
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should succeed if there are no ad tags',
         networkRecords: [],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should fail unless all ad tags are async',
@@ -57,24 +57,24 @@ describe('AsyncAdTags', async () => {
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
           {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
         ],
-        expectedRawVal: false,
+        expectedScore: 0,
       },
       {
         desc: 'should assume async if loaded statically',
         networkRecords: [
           {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'preload'}, frameId: 'mainFrameId'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
     ];
 
-    for (const {desc, networkRecords, expectedRawVal}
+    for (const {desc, networkRecords, expectedScore}
       of testCases) {
       it(`${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         sandbox.stub(MainResource, 'request').returns({frameId: 'mainFrameId'});
         const results = await AsyncAdTags.audit({devtoolsLogs: {}}, {});
-        expect(results).to.have.property('rawValue', expectedRawVal);
+        expect(results).to.have.property('score', expectedScore);
       });
     }
   });

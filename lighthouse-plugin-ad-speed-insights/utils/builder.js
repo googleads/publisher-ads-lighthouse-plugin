@@ -22,7 +22,7 @@ const {NOT_APPLICABLE} = require('../messages/messages');
 function auditNotApplicable(message = NOT_APPLICABLE.DEFAULT) {
   return {
     notApplicable: true,
-    rawValue: true,
+    score: 1,
     displayValue: message,
   };
 }

@@ -116,7 +116,7 @@ class AdRenderBlockingResources extends RenderBlockingResources {
     }
 
     return {
-      rawValue: results.length,
+      numericValue: results.length,
       score: results.length ? 0 : 1,
       displayValue,
       details: AdRenderBlockingResources.makeTableDetails(HEADINGS, tableView),

@@ -90,7 +90,7 @@
     },
     "serial-header-bidding": {
       "title": "Header bidding is parallelized",
-      "failureTitle": "Parallelize SSP bid requests",
+      "failureTitle": "Parallelize bid requests",
       "description": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more](https://ad-speed-insights.appspot.com/#serial-header-bidding)."
     },
     "static-ad-tags": {

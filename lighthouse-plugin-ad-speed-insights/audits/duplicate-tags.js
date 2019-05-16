@@ -103,7 +103,7 @@ class DuplicateTags extends Audit {
 
     const pluralEnding = dups.length == 1 ? '' : 's';
     return {
-      rawValue: dups.length,
+      numericValue: dups.length,
       score: dups.length ? 0 : 1,
       details: DuplicateTags.makeTableDetails(HEADINGS, dups),
       displayValue: dups.length ?

@@ -188,13 +188,12 @@ class AdRequestCriticalPath extends Audit {
    * @override
    */
   static get meta() {
-    // @ts-ignore - TODO: add AsyncCallStacks to enum.
     return {
       id,
       title,
       failureTitle,
       description,
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'AsyncCallStacks'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
@@ -237,7 +236,7 @@ class AdRequestCriticalPath extends Audit {
     const totalPluralEnding = tableView.length != 1 ? 's' : '';
 
     return {
-      rawValue: depth,
+      numericValue: depth,
       score: failed ? 0 : 1,
       displayValue: util.format(
         displayValue,

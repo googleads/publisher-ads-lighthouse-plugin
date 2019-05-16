@@ -28,8 +28,6 @@ module.exports = {
       passName: 'defaultPass',
       gatherers: [
         require.resolve(
-          './lighthouse-plugin-ad-speed-insights/gatherers/async-call-stacks'),
-        require.resolve(
           './lighthouse-plugin-ad-speed-insights/gatherers/iframe-elements'),
       ],
     },
