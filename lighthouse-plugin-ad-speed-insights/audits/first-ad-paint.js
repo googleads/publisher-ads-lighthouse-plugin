@@ -77,7 +77,7 @@ class FirstAdPaint extends Audit {
     if (normalScore >= 0.9) normalScore = 1;
 
     return {
-      rawValue: firstAdPaintSec,
+      numericValue: firstAdPaintSec,
       score: normalScore,
       displayValue: util.format(displayValue, firstAdPaintSec.toFixed(2)),
     };
