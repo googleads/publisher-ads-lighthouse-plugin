@@ -28,7 +28,7 @@ const {
 } = AUDITS[id];
 
 // Point of diminishing returns.
-const PODR = 1; // seconds, 1 second beyond tag load time PODR
+const PODR = 1.5; // seconds, 1 second beyond tag load time PODR
 const MEDIAN = 2.5; // seconds
 
 /**
