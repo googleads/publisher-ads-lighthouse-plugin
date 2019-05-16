@@ -38,19 +38,33 @@ function getAdStartTime(networkRecords) {
 }
 
 /**
- * Returns start time of page load (s) relative to system boot.
+ * Returns start time of page request (s) relative to system boot.
  * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @param {number=} defaultValue
  * @return {number}
  */
 function getPageStartTime(networkRecords, defaultValue = -1) {
-  const fistSuccessRecord = networkRecords.find(
+  const firstSuccessRecord = networkRecords.find(
     (record) => record.statusCode == 200);
-  return fistSuccessRecord ? fistSuccessRecord.startTime : defaultValue;
+  return firstSuccessRecord ? firstSuccessRecord.startTime : defaultValue;
+}
+
+/**
+ * Returns start time of page response (s) relative to system boot.
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
+ * @param {number=} defaultValue
+ * @return {number}
+ */
+function getPageResponseTime(networkRecords, defaultValue = -1) {
+  const firstSuccessRecord = networkRecords.find(
+    (record) => record.statusCode == 200);
+  return firstSuccessRecord ?
+    firstSuccessRecord.responseReceivedTime : defaultValue;
 }
 
 module.exports = {
   getTagEndTime,
   getAdStartTime,
   getPageStartTime,
+  getPageResponseTime,
 };

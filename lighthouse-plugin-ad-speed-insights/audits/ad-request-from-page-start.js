@@ -17,7 +17,7 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getAdStartTime, getPageStartTime} = require('../utils/network-timing');
+const {getPageStartTime, getPageResponseTime, getAdStartTime} = require('../utils/network-timing');
 
 const id = 'ad-request-from-page-start';
 const {
@@ -28,7 +28,7 @@ const {
 } = AUDITS[id];
 
 // Point of diminishing returns.
-const PODR = 2.0; // seconds
+const PODR = 1; // seconds, 1 second beyond tag load time PODR
 const MEDIAN = 2.5; // seconds
 
 /**
@@ -61,6 +61,7 @@ class AdRequestFromPageStart extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     const adStartTime = getAdStartTime(networkRecords);
     const pageStartTime = getPageStartTime(networkRecords);
+    const pageResponseTime = getPageResponseTime(networkRecords);
 
     if (pageStartTime < 0) {
       return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
@@ -69,15 +70,16 @@ class AdRequestFromPageStart extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 
-    const adReqTime = (adStartTime - pageStartTime);
 
-    let normalScore = Audit.computeLogNormalScore(adReqTime, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(
+      adStartTime - pageResponseTime, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
       normalScore = 1;
     }
 
+    const adReqTime = (adStartTime - pageStartTime);
     return {
       rawValue: adReqTime,
       score: normalScore,
