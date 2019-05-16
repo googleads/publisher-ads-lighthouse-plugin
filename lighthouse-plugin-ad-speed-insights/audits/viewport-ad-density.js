@@ -72,7 +72,7 @@ class ViewportAdDensity extends Audit {
     const score = adArea / viewArea > 0.3 ? 0 : 1;
     return {
       score,
-      rawValue: adArea / viewArea,
+      numericValue: adArea / viewArea,
       // No displayValue if passing, no changes to be made.
       displayValue: score ?
         displayValue :

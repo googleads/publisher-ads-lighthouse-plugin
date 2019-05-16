@@ -75,7 +75,7 @@ class AdsInViewport extends Audit {
     const pluralEnding = nonvisible.length == 1 ? '' : 's';
 
     return {
-      rawValue: visibleCount / slots.length,
+      numericValue: visibleCount / slots.length,
       score: nonvisible.length > 3 ? 0 : 1,
       displayValue: nonvisible.length ?
         util.format(failureDisplayValue, nonvisible.length, pluralEnding) :

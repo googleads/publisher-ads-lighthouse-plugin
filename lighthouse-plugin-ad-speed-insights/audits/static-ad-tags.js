@@ -130,7 +130,7 @@ class StaticAdTags extends Audit {
 
     return {
       displayValue,
-      rawValue: !failed,
+      score: Number(!failed),
       details: StaticAdTags.makeTableDetails(HEADINGS, table),
     };
   }

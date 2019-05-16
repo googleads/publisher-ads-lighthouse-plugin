@@ -25,12 +25,12 @@ describe('StaticAdTags', async () => {
   afterEach(() => {
     sandbox.restore();
   });
-  describe('rawValue', async () => {
+  describe('numericValue', async () => {
     const testCases = [
       {
         desc: 'should succeed if there are no ad tags',
         networkRecords: [],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should succeed if all ad tags are static',
@@ -39,7 +39,7 @@ describe('StaticAdTags', async () => {
           {initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
           {initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should succeed if all ad tags are preloaded',
@@ -48,7 +48,7 @@ describe('StaticAdTags', async () => {
           {initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
           {initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should succeed if all ad tags are static or preloaded',
@@ -57,7 +57,7 @@ describe('StaticAdTags', async () => {
           {initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
           {initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
         ],
-        expectedRawVal: true,
+        expectedScore: 1,
       },
       {
         desc: 'should fail unless all ad tags are static or preloaded',
@@ -67,16 +67,16 @@ describe('StaticAdTags', async () => {
           {initiator: {type: 'preload'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
           {initiator: {type: 'parser'}, url: 'http://www.googletagservices.com/tag/js/gpt.js'},
         ],
-        expectedRawVal: false,
+        expectedScore: 0,
       },
     ];
 
-    for (const {desc, networkRecords, expectedRawVal}
+    for (const {desc, networkRecords, expectedScore}
       of testCases) {
       it(`${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await StaticAdTags.audit({devtoolsLogs: {}}, {});
-        expect(results).to.have.property('rawValue', expectedRawVal);
+        expect(results).to.have.property('score', expectedScore);
       });
     }
   });

@@ -79,7 +79,7 @@ class AdRequestFromTagLoad extends Audit {
     }
 
     return {
-      rawValue: adReqTime,
+      numericValue: adReqTime,
       score: normalScore,
       displayValue: util.format(displayValue, adReqTime.toFixed(2)),
     };
