@@ -58,7 +58,7 @@ describe('TagLoadTime', async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await TagLoadTime.audit({devtoolsLogs: {}}, {});
         if (!expectedNotAppl) {
-          expect(results).to.have.property('rawValue', expectedLoadTime);
+          expect(results).to.have.property('numericValue', expectedLoadTime);
         } else {
           expect(results).to.have.property('notApplicable', true);
         }

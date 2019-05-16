@@ -81,7 +81,7 @@ class AdRequestFromPageStart extends Audit {
 
     const adReqTime = (adStartTime - pageStartTime);
     return {
-      rawValue: adReqTime,
+      numericValue: adReqTime,
       score: normalScore,
       displayValue: util.format(displayValue, adReqTime.toFixed(2)),
     };

@@ -73,7 +73,7 @@ describe('AdRequestFromPageStart', async () => {
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
-          expect(results).to.have.property('rawValue', expectedTime);
+          expect(results).to.have.property('numericValue', expectedTime);
         }
       });
     }

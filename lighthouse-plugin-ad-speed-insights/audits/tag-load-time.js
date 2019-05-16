@@ -79,7 +79,7 @@ class TagLoadTime extends Audit {
 
     const tagLoadTime = (tagEndTime - pageStartTime);
     return {
-      rawValue: tagLoadTime,
+      numericValue: tagLoadTime,
       score: normalScore,
       displayValue: util.format(displayValue, tagLoadTime.toFixed(2)),
     };
