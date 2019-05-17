@@ -17,7 +17,7 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getPageStartTime, getPageResponseTime, getAdStartTime} = require('../utils/network-timing');
+const {getAdStartTime, getPageResponseTime, getPageStartTime} = require('../utils/network-timing');
 
 const id = 'ad-request-from-page-start';
 const {

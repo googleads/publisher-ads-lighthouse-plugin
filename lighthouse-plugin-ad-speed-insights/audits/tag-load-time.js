@@ -17,7 +17,7 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getPageStartTime, getPageResponseTime, getTagEndTime} = require('../utils/network-timing');
+const {getPageResponseTime, getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 
 const id = 'tag-load-time';
 const {
