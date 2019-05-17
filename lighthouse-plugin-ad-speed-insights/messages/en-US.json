@@ -117,6 +117,7 @@
     "DEFAULT": "Audit not applicable",
     "INVALID_TIMING": "Invalid timing task data",
     "NO_AD_RELATED_REQ": "No ad-related requests",
+    "NO_AD_RENDERED": "No ads rendered",
     "NO_ADS_VIEWPORT": "No ads in viewport",
     "NO_ADS": "No ads requested",
     "NO_BIDS": "No bids detected",
