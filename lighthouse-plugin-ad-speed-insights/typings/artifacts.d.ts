@@ -22,6 +22,7 @@ declare global {
       clientRect: ClientRect,
       isVisible: boolean,
       isFixed: boolean,
+      frame: LH.Crdp.Page.Frame,
     };
     IFrameElements: Array<Artifacts.IFrameElement>;
     StaticAdTags: Array<LH.Crdp.DOM.Node>;

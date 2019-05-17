@@ -17,7 +17,7 @@ const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, ERRORS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
-const {isGPTIFrame} = require('../utils/resource-classification');
+const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'viewport-ad-density';
 const {
@@ -52,7 +52,7 @@ class ViewportAdDensity extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements.filter(
-      (slot) => isGPTIFrame(slot));
+      (slot) => isGptIframe(slot) && slot.isVisible);
 
     if (!slots.length) {
       return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);

@@ -16,7 +16,7 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {isGPTIFrame} = require('../utils/resource-classification');
+const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'ad-top-of-viewport';
 const {
@@ -61,8 +61,8 @@ class AdTopOfViewport extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.IFrameElements.filter((slot) => isGPTIFrame(slot))
-        .filter((slot) => !slot.isFixed)
+    const slots = artifacts.IFrameElements.filter(isGptIframe)
+        .filter((slot) => slot.isVisible && !slot.isFixed)
         .map((slot) => ({
           midpoint: slot.clientRect.top + slot.clientRect.height / 2,
           id: slot.id,

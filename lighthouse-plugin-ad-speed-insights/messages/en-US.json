@@ -20,13 +20,13 @@
       "displayValue": "%s serial resource%s, %s total resource%s"
     },
     "ad-request-from-page-start": {
-      "title": "Latency of first ad request (from page start)",
-      "failureTitle": "Reduce latency of first ad request (from page start)",
+      "title": "Latency of first ad request",
+      "failureTitle": "Reduce latency of first ad request",
       "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
       "displayValue": "%s s"
     },
     "ad-request-from-tag-load": {
-      "title": "Latency of first ad request (from tag load)",
+      "title": "Latency of first ad request, from tag load",
       "failureTitle": "Reduce latency of first ad request (from tag load)",
       "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
       "displayValue": "%s s"
@@ -56,6 +56,12 @@
       "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://ad-speed-insights.appspot.com/#duplicate-tags).",
       "displayValue": "",
       "failureDisplayValue": "%s duplicate tag%s"
+    },
+    "first-ad-paint": {
+      "title": "Latency of First Ad Render",
+      "failureTitle": "Reduce time to render first ad",
+      "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://ad-speed-insights.appspot.com/#measurements).",
+      "displayValue": "%s s"
     },
     "full-width-slots": {
       "title": "Ad slots effectively use horizontal space",
