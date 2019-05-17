@@ -29,6 +29,23 @@ const {
 // Point of diminishing returns.
 const PODR = 3.0; // seconds
 const MEDIAN = 4.0; // seconds
+
+/**
+ * Returns the first timestamp of the given event for ad iframes, or 0 if no
+ * relevant timing is found.
+ * @param {string} eventName
+ * @param {LH.TraceEvent[]} traceEvents
+ * @param {Set<string>} adFrameIds
+ * @return {number}
+ */
+function getMinEventTime(eventName, traceEvents, adFrameIds) {
+  const times = traceEvents
+      .filter((e) => e.name == eventName)
+      .filter((e) => adFrameIds.has(e.args.frame || ''))
+      .map((e) => e.ts);
+  return times.length ? Math.min(...times) : 0;
+}
+
 /**
  * Measures the first ad paint time.
  */
@@ -46,7 +63,7 @@ class FirstAdPaint extends Audit {
       description,
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs', 'IFrameElements'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'IFrameElements'],
     };
   }
   /**
@@ -55,21 +72,24 @@ class FirstAdPaint extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const {traceEvents} = artifacts.traces[Audit.DEFAULT_PASS];
     const slots = artifacts.IFrameElements.filter(isGptIframe);
     if (slots.length == 0) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
+      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
     }
 
     const adFrameIds = new Set(slots.map((s) => s.frame.id));
 
-    const adPaintTimes = trace.traceEvents
-        .filter((e) => e.name == 'firstContentfulPaint')
-        .filter((e) => adFrameIds.has(e.args.frame))
-        .map((e) => e.ts);
+    const adPaintTime =
+        getMinEventTime('firstContentfulPaint', traceEvents, adFrameIds) ||
+        getMinEventTime('firstPaint', traceEvents, adFrameIds);
+    if (!adPaintTime) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
+    }
+
     const {ts: pageNavigationStart} =
-      trace.traceEvents.find((e) => e.name == 'navigationStart') || {ts: 0};
-    const firstAdPaintMicros = Math.min(...adPaintTimes) - pageNavigationStart;
+      traceEvents.find((e) => e.name == 'navigationStart') || {ts: 0};
+    const firstAdPaintMicros = adPaintTime - pageNavigationStart;
 
     const firstAdPaintSec = firstAdPaintMicros * 1e-6;
     let normalScore =
