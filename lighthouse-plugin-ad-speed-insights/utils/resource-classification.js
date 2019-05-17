@@ -123,12 +123,10 @@ function isStaticRequest(request) {
 
 /**
  * @param {Artifacts['IFrameElement']} iframe
- * @param {?boolean} excludeNonVisible
  * @return {boolean}
  */
-function isGPTIFrame(iframe, excludeNonVisible = true) {
-  return /(^google_ads_iframe_)/.test(iframe.id) &&
-    (!excludeNonVisible || iframe.isVisible);
+function isGptIframe(iframe) {
+  return /(^google_ads_iframe_)/.test(iframe.id);
 }
 
 module.exports = {
@@ -141,5 +139,5 @@ module.exports = {
   containsAnySubstring,
   getHeaderBidder,
   isStaticRequest,
-  isGPTIFrame,
+  isGptIframe,
 };

@@ -107,6 +107,17 @@ class IFrameElements extends Gatherer {
   async afterPass(passContext) {
     const driver = passContext.driver;
 
+    const {frameTree} = await driver.sendCommand('Page.getFrameTree');
+    const framesByDomId = new Map();
+    for (const {frame} of frameTree.childFrames) {
+      if (framesByDomId.has(frame.name)) {
+        // DOM ID collision, mark it as null.
+        framesByDomId.set(frame.name, null);
+      } else {
+        framesByDomId.set(frame.name, frame);
+      }
+    }
+
     const expression = `(() => {
       ${pageFunctions.getOuterHTMLSnippetString};
       ${pageFunctions.getElementsInDocumentString};
@@ -117,8 +128,13 @@ class IFrameElements extends Gatherer {
       return (${collectIFrameElements})();
     })()`;
 
-    /** @type {Artifacts.IFrameElements} */
-    return driver.evaluateAsync(expression, {useIsolation: true});
+    /** @type {Artifacts['IFrameElements']} */
+    const elements =
+        await driver.evaluateAsync(expression, {useIsolation: true});
+    for (const el of elements) {
+      el.frame = framesByDomId.get(el.id);
+    }
+    return elements;
   }
 }
 

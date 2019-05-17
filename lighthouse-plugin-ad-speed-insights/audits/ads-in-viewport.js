@@ -17,7 +17,7 @@ const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
-const {isGPTIFrame} = require('../utils/resource-classification');
+const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'ads-in-viewport';
 const {
@@ -59,7 +59,7 @@ class AdsInViewport extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements
-        .filter((iframe) => isGPTIFrame(iframe));
+        .filter((iframe) => isGptIframe(iframe) && iframe.isVisible);
 
     if (!slots.length) {
       return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);

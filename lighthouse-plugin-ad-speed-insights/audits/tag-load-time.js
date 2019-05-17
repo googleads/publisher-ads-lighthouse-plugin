@@ -17,7 +17,7 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
+const {getPageResponseTime, getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 
 const id = 'tag-load-time';
 const {
@@ -28,8 +28,8 @@ const {
 } = AUDITS[id];
 
 // Point of diminishing returns.
-const PODR = 0.5; // seconds
-const MEDIAN = 1; // seconds
+const PODR = 1; // seconds
+const MEDIAN = 1.5; // seconds
 /**
  * Audit to determine time for tag to load relative to page start.
  */
@@ -58,6 +58,7 @@ class TagLoadTime extends Audit {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     const pageStartTime = getPageStartTime(networkRecords);
+    const pageResponseTime = getPageResponseTime(networkRecords);
     const tagEndTime = getTagEndTime(networkRecords);
     if (pageStartTime < 0) {
       return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
@@ -65,15 +66,18 @@ class TagLoadTime extends Audit {
     if (tagEndTime < 0) {
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
-    const tagLoadTime = (tagEndTime - pageStartTime);
 
-    let normalScore = Audit.computeLogNormalScore(tagLoadTime, PODR, MEDIAN);
+    // NOTE: score is relative to page response time to avoid counting time for
+    // first party rendering.
+    let normalScore = Audit.computeLogNormalScore(
+      tagEndTime - pageResponseTime, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
       normalScore = 1;
     }
 
+    const tagLoadTime = (tagEndTime - pageStartTime);
     return {
       numericValue: tagLoadTime,
       score: normalScore,
