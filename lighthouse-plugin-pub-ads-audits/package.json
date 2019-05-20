@@ -1,5 +1,5 @@
 {
-  "name": "lighthouse-plugin-ad-speed-insights",
+  "name": "lighthouse-plugin-pub-ads-audits",
   "version": "0.0.3.6",
   "description": "Ad-aware plugin for lighthouse.",
   "license": "Apache-2.0",

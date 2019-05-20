@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const PLUGIN_PATH = 'lighthouse-plugin-ad-speed-insights';
+const PLUGIN_PATH = 'lighthouse-plugin-pub-ads-audits';
 
 /** @type {LH.Config.Plugin} */
 module.exports = {

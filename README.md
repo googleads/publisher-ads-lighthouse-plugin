@@ -45,7 +45,7 @@ yarn test
 
 ## Contributions
 
-See [CONTRIBUTING.md](https://github.com/googleads/pub-ads-lighthouse-plugin/blob/master/lighthouse-plugin-ad-speed-insights/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/googleads/pub-ads-lighthouse-plugin/blob/master/lighthouse-plugin-pub-ads-audits/CONTRIBUTING.md)
 
 
 
