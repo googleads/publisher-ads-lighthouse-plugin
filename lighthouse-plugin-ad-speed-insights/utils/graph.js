@@ -34,7 +34,11 @@ const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
  * requests.
  * @param {typeof BaseNode} root The root node of the DAG.
  * @param {(req: NetworkRequest) => boolean} isTargetRequest
- * @return {{requests: NetworkRequest[], traceEvents: TraceEvent[]}}
+ * @return {{
+ *   requests: NetworkRequest[],
+ *   traceEvents: TraceEvent[],
+ *   nodes: Set<typeof BaseNode>,
+ * }}
  */
 function getTransitiveClosure(root, isTargetRequest) {
   const closure = new Set();
@@ -86,7 +90,7 @@ function getTransitiveClosure(root, isTargetRequest) {
       .map((n) => [n.event, ...n.childEvents]);
 
   const traceEvents = flatten(cpu);
-  return {requests, traceEvents};
+  return {requests, traceEvents, nodes: closure};
 }
 
 /**

@@ -13,6 +13,8 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const ComputedAdRequestTime = require('../computed/ad-request-time');
+const ComputedTagLoadTime = require('../computed/tag-load-time');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
@@ -29,7 +31,7 @@ const {
 
 // Point of diminishing returns.
 const PODR = 0.3; // seconds
-const MEDIAN = 0.6; // seconds
+const MEDIAN = 1; // seconds
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -47,7 +49,7 @@ class AdRequestFromTagLoad extends Audit {
       description,
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
@@ -57,21 +59,25 @@ class AdRequestFromTagLoad extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
-    const adStartTime = getAdStartTime(networkRecords);
-    const tagEndTime = getTagEndTime(networkRecords);
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const metricData = {trace, devtoolsLog, settings: context.settings};
 
+    const {timing: tagEndTime} =
+        await ComputedTagLoadTime.request(metricData, context);
     if (tagEndTime < 0) {
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
+
+    const {timing: adStartTime} =
+        await ComputedAdRequestTime.request(metricData, context);
     if (adStartTime < 0) {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 
-    const adReqTime = (adStartTime - tagEndTime);
+    const adReqTimeSec = (adStartTime - tagEndTime) / 1000;
 
-    let normalScore = Audit.computeLogNormalScore(adReqTime, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(adReqTimeSec, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
@@ -79,9 +85,9 @@ class AdRequestFromTagLoad extends Audit {
     }
 
     return {
-      numericValue: adReqTime,
+      numericValue: adReqTimeSec,
       score: normalScore,
-      displayValue: util.format(displayValue, adReqTime.toFixed(2)),
+      displayValue: util.format(displayValue, adReqTimeSec.toFixed(2)),
     };
   }
 }
