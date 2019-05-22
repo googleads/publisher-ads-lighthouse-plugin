@@ -53,7 +53,7 @@ class TagLoadTime extends ComputedMetric {
    * @param {LH.Artifacts.MetricComputationData} data
    * @return {Promise<LH.Artifacts.Metric>}
    */
-  static async computeObservedMetric(data) {
+  static async computeObservedMetric(data, context) {
     const {networkRecords} = data;
     const pageStartTime = getPageStartTime(networkRecords);
     const tagEndTime = getTagEndTime(networkRecords);
