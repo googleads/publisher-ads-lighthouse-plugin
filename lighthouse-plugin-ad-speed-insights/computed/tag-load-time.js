@@ -76,7 +76,7 @@ class TagLoadTime extends ComputedMetric {
    * @return {Promise<LH.Artifacts.Metric>}
    * @override
    */
-  static computeSimulatedMetric(data, context) {
+  static async computeSimulatedMetric(data, context) {
     return LanternTagLoadTime.request(data, context);
   }
 
@@ -90,8 +90,8 @@ class TagLoadTime extends ComputedMetric {
     const {networkRecords} = data;
     const pageStartTime = getPageStartTime(networkRecords);
     const tagEndTime = getTagEndTime(networkRecords);
-    const timing = tagEndTime - pageStartTime;
-    return Promise.resolve({timing});
+    const tagLoadMs = (tagEndTime - pageStartTime) * 1000;
+    return Promise.resolve({timing: tagLoadMs});
   }
 }
 

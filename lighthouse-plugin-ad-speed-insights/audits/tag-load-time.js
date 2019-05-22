@@ -64,7 +64,7 @@ class TagLoadTime extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
-    const tagLoadTimeSec = timing / 1000;
+    const tagLoadTimeSec = timing * 1e-3;
 
     // NOTE: score is relative to page response time to avoid counting time for
     // first party rendering.

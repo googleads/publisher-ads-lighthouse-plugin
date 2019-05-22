@@ -91,8 +91,8 @@ class AdRequestTime extends ComputedMetric {
     const {networkRecords} = data;
     const pageStartTime = getPageStartTime(networkRecords);
     const adStartTime = getAdStartTime(networkRecords);
-    const timing = adStartTime - pageStartTime;
-    return Promise.resolve({timing});
+    const adRequestTimeMs = (adStartTime - pageStartTime) * 1000;
+    return Promise.resolve({timing: adRequestTimeMs});
   }
 }
 
