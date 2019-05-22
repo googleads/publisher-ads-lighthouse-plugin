@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const ComputedAdRequestTime = require('../computed/ad-request-time');
 const ComputedTagLoadTime = require('../computed/tag-load-time');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getAdStartTime, getTagEndTime} = require('../utils/network-timing');
 
 const id = 'ad-request-from-tag-load';
 const {

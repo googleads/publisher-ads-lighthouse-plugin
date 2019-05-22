@@ -17,7 +17,6 @@ const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'first-ad-paint';
 const {

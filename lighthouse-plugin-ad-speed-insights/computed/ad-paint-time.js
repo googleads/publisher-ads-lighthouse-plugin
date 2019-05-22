@@ -11,10 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
+
+// @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
-const {isGptIframe} = require('../utils/resource-classification');
+// @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
+const {isGptIframe} = require('../utils/resource-classification');
 
 /**
  * Returns the first timestamp of the given event for ad iframes, or 0 if no
@@ -32,14 +34,23 @@ function getMinEventTime(eventName, traceEvents, adFrameIds) {
   return times.length ? Math.min(...times) : 0;
 }
 
+/** Computes the first ad paint time on the page */
 class AdPaintTime extends ComputedMetric {
+  /**
+   * @param {LH.Artifacts.MetricComputationData} data
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Artifacts.Metric>}
+   * @override
+   */
   static computeSimulatedMetric(data, context) {
     throw new Error('Simulated ad paint time not implemented');
   }
 
   /**
-   * @param {LH.Artifacts.MetricComputationData} data
+   * @param {MetricComputationData} data
+   * @param {LH.Audit.Context} context
    * @return {Promise<LH.Artifacts.Metric>}
+   * @override
    */
   static async computeObservedMetric(data, context) {
     const {iframeElements, trace: {traceEvents}} = data;
@@ -61,11 +72,12 @@ class AdPaintTime extends ComputedMetric {
     const timing = (adPaintTime - pageNavigationStart) * 1e-6;
     return Promise.resolve({timing});
   }
-
 }
 
+// Decorate the class.
+// @ts-ignore Allow reassignment for decoration.
+// eslint-disable-next-line no-class-assign
 AdPaintTime = makeComputedArtifact(AdPaintTime);
-
 
 module.exports = AdPaintTime;
 

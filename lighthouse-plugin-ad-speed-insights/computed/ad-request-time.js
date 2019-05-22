@@ -12,15 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// @ts-ignore
+const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
+// @ts-ignore
+const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
+// @ts-ignore
+const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
 const {getAdStartTime, getPageStartTime} = require('../utils/network-timing');
 const {isGptAdRequest} = require('../utils/resource-classification');
-const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
-const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
-const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 
+// @ts-ignore
+// eslint-disable-next-line max-len
+/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
+
+/** Computes simulated first ad request time using Lantern. */
 class LanternAdRequestTime extends LanternMetric {
   /**
    * @return {LH.Gatherer.Simulation.MetricCoefficients}
+   * @override
    */
   static get COEFFICIENTS() {
     return {
@@ -30,19 +39,45 @@ class LanternAdRequestTime extends LanternMetric {
     };
   }
 
+  /**
+   * @param {Node} root Root of the dependency graph, i.e. the
+   *     document node.
+   * @return {Node} A subgraph from root to the first ad request.
+   * @override
+   */
   static getPessimisticGraph(root) {
     return LanternAdRequestTime.getOptimisticGraph(root);
   }
 
+  /**
+   * @param {Node} root Root of the dependency graph, i.e. the
+   *     document node.
+   * @return {Node} A subgraph from root to the first ad request.
+   * @override
+   */
   static getOptimisticGraph(root) {
-    const isAdRequest = (node) => node.record && isGptAdRequest(node.record);
+    // TODO(warrengm): Does this return the time to request or time to response?
+    // DO NOT SUBMIT!
+    const isAdRequest =
+      /** @param {Node} node @return {boolean} */
+      (node) => node.record && isGptAdRequest(node.record);
     return root.cloneWithRelationships(isAdRequest);
   }
 }
 
+// Decorate the class.
+// @ts-ignore Allow reassignment for decoration.
+// eslint-disable-next-line no-class-assign
 LanternAdRequestTime = makeComputedArtifact(LanternAdRequestTime);
 
+/** Computes time to the first ad request. */
 class AdRequestTime extends ComputedMetric {
+  /**
+   * @param {LH.Artifacts.MetricComputationData} data
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Artifacts.Metric>}
+   * @override
+   */
   static async computeSimulatedMetric(data, context) {
     return LanternAdRequestTime.request(data, context);
   }
@@ -50,6 +85,7 @@ class AdRequestTime extends ComputedMetric {
   /**
    * @param {LH.Artifacts.MetricComputationData} data
    * @return {Promise<LH.Artifacts.Metric>}
+   * @override
    */
   static async computeObservedMetric(data) {
     const {networkRecords} = data;
@@ -58,9 +94,11 @@ class AdRequestTime extends ComputedMetric {
     const timing = adStartTime - pageStartTime;
     return Promise.resolve({timing});
   }
-
 }
 
+// Decorate the class.
+// @ts-ignore Allow reassignment for decoration.
+// eslint-disable-next-line no-class-assign
 AdRequestTime = makeComputedArtifact(AdRequestTime);
 
 module.exports = AdRequestTime;
