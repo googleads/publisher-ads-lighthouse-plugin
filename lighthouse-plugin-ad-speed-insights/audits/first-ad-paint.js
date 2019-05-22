@@ -30,7 +30,6 @@ const {
 const PODR = 3.0; // seconds
 const MEDIAN = 4.0; // seconds
 
-
 /**
  * Measures the first ad paint time.
  */
@@ -67,19 +66,20 @@ class FirstAdPaint extends Audit {
     };
 
     const {timing} = await AdPaintTime.request(metricData, context);
+    const adPaintTimeSec = timing / 1000;
 
-    if (timing < 0) {
+    if (adPaintTimeSec < 0) {
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
     }
 
     let normalScore =
-        Audit.computeLogNormalScore(timing, PODR, MEDIAN);
+        Audit.computeLogNormalScore(adPaintTimeSec, PODR, MEDIAN);
     if (normalScore >= 0.9) normalScore = 1;
 
     return {
-      numericValue: timing,
+      numericValue: adPaintTimeSec,
       score: normalScore,
-      displayValue: util.format(displayValue, timing.toFixed(2)),
+      displayValue: util.format(displayValue, adPaintTimeSec.toFixed(2)),
     };
   }
 }
