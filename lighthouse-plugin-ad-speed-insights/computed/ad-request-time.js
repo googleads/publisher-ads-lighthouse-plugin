@@ -56,12 +56,13 @@ class LanternAdRequestTime extends LanternMetric {
    * @override
    */
   static getOptimisticGraph(root) {
-    // TODO(warrengm): Does this return the time to request or time to response?
-    // DO NOT SUBMIT!
     const isAdRequest =
       /** @param {Node} node @return {boolean} */
       (node) => node.record && isGptAdRequest(node.record);
-    return root.cloneWithRelationships(isAdRequest);
+    const isBlockingAdRequest =
+      /** @param {Node} node @return {boolean} */
+      (node) => !!node.getDependents().find(isAdRequest);
+    return root.cloneWithRelationships(isBlockingAdRequest);
   }
 }
 
