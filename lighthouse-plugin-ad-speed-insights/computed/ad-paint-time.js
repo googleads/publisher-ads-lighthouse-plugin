@@ -120,8 +120,8 @@ class AdPaintTime extends ComputedMetric {
         getMinEventTime('firstPaint', traceEvents, adFrameIds);
     const {ts: pageNavigationStart} =
       traceEvents.find((e) => e.name == 'navigationStart') || {ts: 0};
-    const timing = (adPaintTime - pageNavigationStart) * 1e-6;
-    return Promise.resolve({timing});
+    const timingMs = (adPaintTime - pageNavigationStart) * 1e-3;
+    return Promise.resolve({timing: timingMs});
   }
 }
 
