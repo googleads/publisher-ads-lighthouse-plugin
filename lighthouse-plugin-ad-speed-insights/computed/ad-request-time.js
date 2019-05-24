@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const AdLanternMetric = require('./ad-lantern-metric');
 // @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
-// @ts-ignore
-const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 // @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
 const {getAdStartTime, getPageStartTime} = require('../utils/network-timing');
@@ -26,43 +25,19 @@ const {isGptAdRequest} = require('../utils/resource-classification');
 /** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
 
 /** Computes simulated first ad request time using Lantern. */
-class LanternAdRequestTime extends LanternMetric {
+class LanternAdRequestTime extends AdLanternMetric {
   /**
-   * @return {LH.Gatherer.Simulation.MetricCoefficients}
+   * @param {LH.Gatherer.Simulation.Result} simulationResult
+   * @param {Object} extras
+   * @return {LH.Gatherer.Simulation.Result}
    * @override
    */
-  static get COEFFICIENTS() {
-    return {
-      intercept: 0,
-      optimistic: 0.5,
-      pessimistic: 0.5,
-    };
-  }
-
-  /**
-   * @param {Node} root Root of the dependency graph, i.e. the
-   *     document node.
-   * @return {Node} A subgraph from root to the first ad request.
-   * @override
-   */
-  static getPessimisticGraph(root) {
-    return LanternAdRequestTime.getOptimisticGraph(root);
-  }
-
-  /**
-   * @param {Node} root Root of the dependency graph, i.e. the
-   *     document node.
-   * @return {Node} A subgraph from root to the first ad request.
-   * @override
-   */
-  static getOptimisticGraph(root) {
-    const isAdRequest =
-      /** @param {Node} node @return {boolean} */
-      (node) => node.record && isGptAdRequest(node.record);
-    const isBlockingAdRequest =
-      /** @param {Node} node @return {boolean} */
-      (node) => !!node.getDependents().find(isAdRequest);
-    return root.cloneWithRelationships(isBlockingAdRequest);
+  static getEstimateFromSimulation(simulationResult, extras) {
+    const {nodeTimings} = simulationResult;
+    const timeInMs = AdLanternMetric.findNetworkTiming(
+        nodeTimings, isGptAdRequest);
+    console.log('timeInMs', timeInMs)
+    return {timeInMs, nodeTimings};
   }
 }
 
@@ -76,7 +51,7 @@ class AdRequestTime extends ComputedMetric {
   /**
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.Metric>}
+   * @return {Promise<LH.Artifacts.LanternMetric>}
    * @override
    */
   static async computeSimulatedMetric(data, context) {

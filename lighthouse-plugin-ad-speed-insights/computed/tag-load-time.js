@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const AdLanternMetric = require('./ad-lantern-metric');
 // @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
@@ -27,39 +28,18 @@ const {URL} = require('url');
 /** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
 
 /** Computes simulated tag load time using Lantern. */
-class LanternTagLoadTime extends LanternMetric {
+class LanternTagLoadTime extends AdLanternMetric {
   /**
-   * @return {LH.Gatherer.Simulation.MetricCoefficients}
+   * @param {LH.Gatherer.Simulation.Result} simulationResult
+   * @param {Object} extras
+   * @return {LH.Gatherer.Simulation.Result}
    * @override
    */
-  static get COEFFICIENTS() {
-    return {
-      intercept: 0,
-      optimistic: 0.5,
-      pessimistic: 0.5,
-    };
-  }
-
-  /**
-   * @param {Node} root Root of the dependency graph, i.e. the
-   *     document node.
-   * @return {Node} A subgraph from root to the first ad request.
-   * @override
-   */
-  static getPessimisticGraph(root) {
-    return LanternTagLoadTime.getOptimisticGraph(root);
-  }
-
-  /**
-   * @param {Node} root Root of the dependency graph, i.e. the
-   *     document node.
-   * @return {Node} A subgraph from root to the first ad request.
-   * @override
-   */
-  static getOptimisticGraph(root) {
-    const isTagNode = /** @param {Node} node @return boolean */ (node) =>
-      node.record && node.record.url && isImplTag(new URL(node.record.url));
-    return root.cloneWithRelationships(isTagNode);
+  static getEstimateFromSimulation(simulationResult, extras) {
+    const {nodeTimings} = simulationResult;
+    const timeInMs = AdLanternMetric.findNetworkTiming(
+        nodeTimings, (req) => req.url && isImplTag(new URL(req.url)));
+    return {timeInMs, nodeTimings};
   }
 }
 
@@ -73,7 +53,7 @@ class TagLoadTime extends ComputedMetric {
   /**
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.Metric>}
+   * @return {Promise<LH.Artifacts.LanternMetric>}
    * @override
    */
   static async computeSimulatedMetric(data, context) {

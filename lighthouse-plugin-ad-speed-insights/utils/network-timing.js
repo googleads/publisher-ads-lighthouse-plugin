@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// @ts-ignore
+const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
+// @ts-ignore
+const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, isImplTag} = require('./resource-classification');
 const {URL} = require('url');
 
@@ -62,9 +66,56 @@ function getPageResponseTime(networkRecords, defaultValue = -1) {
     firstSuccessRecord.responseReceivedTime : defaultValue;
 }
 
+/**
+ * @param {LH.Trace} trace
+ * @param {LH.DevtoolsLog} devtoolsLog
+ * @param {Set<LH.Artifacts.NetworkRequest>} networkRecords
+ * @param {LH.Audit.Context} context
+ * @return {Map<LH.NetworkRecord, LH.Gatherer.NodeTiming>}
+ */
+async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
+  /** @type {Map<LH.NetworkRecord, LH.Gatherer.NodeTiming>} */
+  const timingsByRecord = new Map();
+
+  if (context.settings.throttlingMethod == 'simulate') {
+    const documentNode =
+      await PageDependencyGraph.request({trace, devtoolsLog}, context);
+    const releventGraph = documentNode.cloneWithRelationships(
+      (node) => networkRecords.has(node.record) && node != documentNode);
+    const simulator = await LoadSimulator.request(
+      {devtoolsLog, settings: context.settings}, context);
+    const {nodeTimings} = simulator.simulate(releventGraph, {});
+    const pageStartTime = documentNode.record.startTime;
+    console.log(pageStartTime)
+    console.log(Object.keys(documentNode))
+    for (const [{record}, timing] of nodeTimings.entries()) {
+      if (!record) continue;
+      const originalTiming = {
+        startTime: record.startTime - pageStartTime,
+        endTime: record.endTime - pageStartTime,
+        duration: record.duration,
+      }
+      //console.log((originalTiming.endTime - originalTiming.startTime) * 1000, timing.duration)
+      //console.log(originalTiming,timing)
+      timingsByRecord.set(record, timing);
+    }
+  } else {
+    const pageStartTime = getPageStartTime(networkRecords);
+    for (const record of networkRecords) {
+      timingsByRecord.set(record, {
+        startTime: (record.startTime - pageStartTime) * 1000,
+        endTime: (record.endTime - pageStartTime) * 1000,
+        duration: (record.endTime - record.startTime) * 1000,
+      });
+    }
+  }
+  return timingsByRecord;
+}
+
 module.exports = {
   getTagEndTime,
   getAdStartTime,
   getPageStartTime,
   getPageResponseTime,
+  getTimingsByRecord,
 };

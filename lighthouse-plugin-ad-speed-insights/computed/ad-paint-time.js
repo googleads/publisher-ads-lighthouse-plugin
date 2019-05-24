@@ -53,7 +53,7 @@ class AdPaintTime extends ComputedMetric {
   /**
    * @param {MetricComputationData} data
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.Metric>}
+   * @return {Promise<LH.Artifacts.LanternMetric>}
    * @override
    */
   static async computeSimulatedMetric(data, context) {
@@ -92,9 +92,16 @@ class AdPaintTime extends ComputedMetric {
       return isFirstPaint;
     });
 
-    const timing = foundFirstPaint ?
-      simulator.simulate(releventGraph, {}).timeInMs : -1;
-    return {timing};
+    const simulation = foundFirstPaint ?
+      simulator.simulate(releventGraph, {}) : {};
+
+    return {
+      timing: simulation.timeInMs || -1,
+      optimisticEstimate: simulation,
+      pessimisticEstimate: simulation,
+      optimisticGraph: releventGraph,
+      pessimisticGraph: releventGraph,
+    };
   }
 
   /**
