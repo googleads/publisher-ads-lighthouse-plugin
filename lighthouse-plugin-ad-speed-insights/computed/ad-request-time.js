@@ -35,8 +35,7 @@ class LanternAdRequestTime extends AdLanternMetric {
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
     const timeInMs = AdLanternMetric.findNetworkTiming(
-        nodeTimings, isGptAdRequest);
-    console.log('timeInMs', timeInMs)
+        nodeTimings, isGptAdRequest).startTime;
     return {timeInMs, nodeTimings};
   }
 }

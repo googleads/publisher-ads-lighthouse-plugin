@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
+const AdLanternMetric = require('./ad-lantern-metric');
 // @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
@@ -48,6 +50,42 @@ function getMinEventTime(eventName, traceEvents, adFrameIds) {
   return times.length ? Math.min(...times) : 0;
 }
 
+/** Computes simulated first ad request time using Lantern. */
+class LanternAdPaintTime extends AdLanternMetric {
+  static async compute_(data, context) {
+    const {iframeElements} = data;
+    if (!iframeElements) {
+      return Promise.resolve({});
+    }
+    const slots = iframeElements.filter(isGptIframe);
+    return this.computeMetricWithGraphs(data, context, {slots});
+  }
+
+  /**
+   * @param {LH.Gatherer.Simulation.Result} simulationResult
+   * @param {Object} extras
+   * @return {LH.Gatherer.Simulation.Result}
+   * @override
+   */
+  static getEstimateFromSimulation(simulationResult, extras) {
+    const {nodeTimings} = simulationResult;
+    const {slots} = extras;
+    const adFrameIds = new Set(slots.map((s) => s.frame && s.frame.id));
+    const isBlockingEvent = /** @param {LH.TraceEvent} event */ (event) => {
+      return adFrameIds.has(getFrame(event)) && event.name == 'Paint';
+    }
+    const adResponseMs = AdLanternMetric.findNetworkTiming(
+        nodeTimings, isGptAdRequest).endTime;
+    // TODO: filter out pixels from resources
+    const firstAdResource = AdLanternMetric.findNetworkTiming(
+        nodeTimings, (request) => adFrameIds.has(request.frameId)).endTime;
+    const timeInMs = adResponseMs + firstAdResource;
+    return {timeInMs, nodeTimings};
+  }
+}
+
+LanternAdPaintTime = makeComputedArtifact(LanternAdPaintTime);
+
 /** Computes the first ad paint time on the page */
 class AdPaintTime extends ComputedMetric {
   /**
@@ -57,51 +95,7 @@ class AdPaintTime extends ComputedMetric {
    * @override
    */
   static async computeSimulatedMetric(data, context) {
-    const {iframeElements, trace, devtoolsLog, settings} = data;
-    if (!iframeElements) {
-      return Promise.resolve({timing: -1});
-    }
-
-    // @ts-ignore
-    const documentNode =
-        await PageDependencyGraph.request({trace, devtoolsLog}, context);
-    const simulator = data.simulator ||
-        await LoadSimulator.request({devtoolsLog, settings}, context);
-
-    const slots = iframeElements.filter(isGptIframe);
-    if (!slots.length) {
-      return Promise.resolve({timing: -1});
-    }
-    const adFrameIds = new Set(slots.map((s) => s.frame && s.frame.id));
-
-    const isBlockingEvent = /** @param {LH.TraceEvent} event */ (event) =>
-      adFrameIds.has(getFrame(event)) && event.name == 'Paint';
-
-    let foundFirstPaint = false;
-    const releventGraph = documentNode.cloneWithRelationships((node) => {
-      if (node.record) {
-        // Blocking resources are either (1) a blocking resources inside an ad
-        // or (2) an ad request from the page.
-        return adFrameIds.has(node.record.frameId) ?
-          node.hasRenderBlockingPriority() :
-          isGptAdRequest(node.record);
-      }
-      const isFirstPaint = !foundFirstPaint &&
-          !!(node.childEvents && node.childEvents.find(isBlockingEvent));
-      foundFirstPaint = foundFirstPaint || isFirstPaint;
-      return isFirstPaint;
-    });
-
-    const simulation = foundFirstPaint ?
-      simulator.simulate(releventGraph, {}) : {};
-
-    return {
-      timing: simulation.timeInMs || -1,
-      optimisticEstimate: simulation,
-      pessimisticEstimate: simulation,
-      optimisticGraph: releventGraph,
-      pessimisticGraph: releventGraph,
-    };
+    return LanternAdPaintTime.request(data, context);
   }
 
   /**

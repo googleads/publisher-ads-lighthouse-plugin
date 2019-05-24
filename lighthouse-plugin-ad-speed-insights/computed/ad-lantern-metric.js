@@ -16,6 +16,16 @@
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 const {getHeaderBidder, isGoogleAds} = require('../utils/resource-classification');
 
+/**
+ * Returns the frame ID of the given event, if present.
+ * @param {LH.TraceEvent} event
+ * @return {?string}
+ */
+function getFrame(event) {
+  // @ts-ignore
+  return event.args.frame || event.args.data && event.args.data.frame || null;
+}
+
 class AdLanternMetric extends LanternMetric {
   /**
    * @return {LH.Gatherer.Simulation.MetricCoefficients}
@@ -46,12 +56,14 @@ class AdLanternMetric extends LanternMetric {
    * @override
    */
   static getOptimisticGraph(graph) {
+    const mainFrame = graph.record.frameId;
     // Only include resources in the following categories:
     //   - render blocking
     //   - ads/analytics related.
     return graph.cloneWithRelationships((node) => {
       if (!node.record) {
-        return false;
+        // TODO(warrengm): Check URLs of CPU nodes.
+        return getFrame(node.event) && getFrame(node.event) !== mainFrame;
       }
       if (node.hasRenderBlockingPriority()) {
         return true;
@@ -74,18 +86,25 @@ class AdLanternMetric extends LanternMetric {
   /**
    * @param {Map<LH.Gatherer.Simulation.GraphNode,
    *             LH.Gatherer.Simulation.NodeTiming>} nodeTimings
-   * @param {(LH.Artifacts.NetworkRequest) => boolean} isTargetRequest
-   * @return {number}
+   * @param {(LH.Gatherer.Simulation.GraphNode) => boolean} isTargetNode
+   * @return {LH.Gatherer.Simulation.NodeTiming}
    */
-  static findNetworkTiming(nodeTimings, isTargetRequest) {
-    let leastStartTime = Infinity;
-    for (const [{record}, timing] of nodeTimings.entries()) {
-      if (!record || !isTargetRequest(record)) continue;
-      if (leastStartTime < timing.startTime) continue;
-      leastStartTime = timing.startTime;
+  static findTiming(nodeTimings, isTargetNode) {
+    let leastTiming = {startTime: Infinity, endTime: -Infinity};
+    for (const [node, timing] of nodeTimings.entries()) {
+      if (isTargetNode(node, timing) &&
+          leastTiming.startTime > timing.startTime) {
+        leastTiming = timing;
+      }
     }
-    return leastStartTime;
- }
+    return leastTiming;
+  }
+
+  static findNetworkTiming(nodeTimings, isTargetRequest) {
+    return this.findTiming(
+        nodeTimings,
+        (node) => node.record && isTargetRequest(node.record));
+  }
 }
 
 module.exports = AdLanternMetric;
