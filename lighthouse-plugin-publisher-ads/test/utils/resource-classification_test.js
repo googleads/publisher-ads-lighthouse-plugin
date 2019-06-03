@@ -146,22 +146,22 @@ describe('resource-classification', () => {
     const testCases = [
       {
         description: 'URLs that load gpt.js',
-        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js'),
+        url: new URL('http://securepubads.g.doubleclick.net/tag/js/gpt.js'),
         expectation: true,
       },
       {
         description: 'URLs that load gpt.js with hash',
-        url: new URL('https://www.googletagservices.com/tag/js/gpt.js#foo'),
+        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js#foo'),
         expectation: true,
       },
       {
         description: 'URLs that load gpt.js with query string',
-        url: new URL('https://www.googletagservices.com/tag/js/gpt.js?foo=bar'),
+        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js?foo=bar'),
         expectation: true,
       },
       {
         description: 'URLs that load gpt.js with query string and hash',
-        url: new URL('https://www.googletagservices.com/tag/js/gpt.js?foo=bar#baz'),
+        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js?foo=bar#baz'),
         expectation: true,
       },
       {
