@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const PLUGIN_PATH = 'lighthouse-plugin-ad-speed-insights';
+const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';
 
 /** @type {LH.Config.Plugin} */
 module.exports = {
@@ -48,7 +48,7 @@ module.exports = {
     },
   },
   category: {
-    title: 'Publisher Ads [Preview]',
+    title: 'Publisher Ads [Beta]',
     auditRefs: [
       // Measurements group.
       {id: 'tag-load-time', weight: 4, group: 'metrics'},

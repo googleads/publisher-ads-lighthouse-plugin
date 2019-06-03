@@ -1,7 +1,7 @@
 {
-  "name": "lighthouse-plugin-ad-speed-insights",
-  "version": "0.0.3.6",
-  "description": "Ad-aware plugin for lighthouse.",
+  "name": "lighthouse-plugin-publisher-ads",
+  "version": "0.0.3.7",
+  "description": "Ad-aware plugin for Lighthouse.",
   "license": "Apache-2.0",
   "main": "plugin.js",
   "scripts": {
