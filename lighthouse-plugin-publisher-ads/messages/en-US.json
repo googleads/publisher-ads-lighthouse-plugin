@@ -47,7 +47,7 @@
     },
     "async-ad-tags": {
       "title": "GPT tag is loaded asynchronously",
-      "failureTitle": "Load gpt.js asynchronously",
+      "failureTitle": "Load GPT asynchronously",
       "description": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more](https://pub-ads-audits.appspot.com/#async-tags)."
     },
     "duplicate-tags": {
@@ -77,13 +77,13 @@
       "displayValue": "%s s spent idle in critical path"
     },
     "loads-gpt-from-sgdn": {
-      "title": "GPT tag is loaded from correct host",
-      "failureTitle": "Load gpt.js from correct host",
-      "description": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load latency. By ensuring that GPT is loaded from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://pub-ads-audits.appspot.com/#loads-gpt-from-sgdn)."
+      "title": "GPT tag is loaded from recommended host",
+      "failureTitle": "Load GPT from recommended host",
+      "description": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load time. By loading GPT from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://pub-ads-audits.appspot.com/#loads-gpt-from-sgdn)."
     },
     "loads-gpt-over-https": {
       "title": "GPT tag is loaded over HTTPS",
-      "failureTitle": "Load gpt.js over HTTPS",
+      "failureTitle": "Load GPT over HTTPS",
       "description": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://pub-ads-audits.appspot.com/#https).",
       "displayValue": "",
       "failureDisplayValue": "%s unsafe request%s"
