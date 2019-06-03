@@ -1,7 +1,7 @@
 {
-  "name": "pub-ads-audits-wrapper",
-  "version": "0.0.3.6",
-  "description": "Wrapper for Publisher Ads Audits lighthouse plugin.",
+  "name": "ad-speed-insights-wrapper",
+  "version": "0.0.3.7",
+  "description": "Wrapper for Ad Speed Insights lighthouse plugin.",
   "license": "Apache-2.0",
   "main": "index.js",
   "scripts": {

@@ -78,7 +78,7 @@ class FirstAdPaint extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
     }
 
-    const adFrameIds = new Set(slots.map((s) => s.frame.id));
+    const adFrameIds = new Set(slots.map((s) => s.frame && s.frame.id));
 
     const adPaintTime =
         getMinEventTime('firstContentfulPaint', traceEvents, adFrameIds) ||

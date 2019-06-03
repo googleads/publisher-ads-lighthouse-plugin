@@ -109,7 +109,7 @@ class IFrameElements extends Gatherer {
 
     const {frameTree} = await driver.sendCommand('Page.getFrameTree');
     const framesByDomId = new Map();
-    for (const {frame} of frameTree.childFrames) {
+    for (const {frame} of frameTree.childFrames || []) {
       if (framesByDomId.has(frame.name)) {
         // DOM ID collision, mark it as null.
         framesByDomId.set(frame.name, null);
