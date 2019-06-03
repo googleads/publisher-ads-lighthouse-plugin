@@ -22,17 +22,17 @@
  */
 module.exports = {
   extends: 'lighthouse:full',
-  plugins: ['lighthouse-plugin-pub-ads-audits'],
+  plugins: ['lighthouse-plugin-publisher-ads'],
   passes: [
     {
       passName: 'defaultPass',
       gatherers: [
         require.resolve(
-          './lighthouse-plugin-pub-ads-audits/gatherers/iframe-elements'),
+          './lighthouse-plugin-publisher-ads/gatherers/iframe-elements'),
       ],
     },
   ],
   settings: {
-    onlyCategories: ['lighthouse-plugin-pub-ads-audits'],
+    onlyCategories: ['lighthouse-plugin-publisher-ads'],
   },
 };

@@ -5,7 +5,7 @@ cache:
   yarn: true
   directories:
     - node_modules
-    - lighthouse-plugin-pub-ads-audits/node_modules
+    - lighthouse-plugin-publisher-ads/node_modules
 branches:
   only:
     - master

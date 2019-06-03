@@ -1,20 +1,20 @@
-# Publisher Ads Audits for Lighthouse (Alpha)
+# Publisher Ads Lighthouse Plugin (Beta)
 
-Publisher Ads Audits for Lighthouse is a tool to improve ad speed and overall quality through a series of automated audits. At the moment, this is primarily targeted at sites using Google Ad Manager. This tool will aid in resolving discovered problems, providing a tool to be used to evaluate effectiveness of iterative changes while suggesting actionable feedback.
+Publisher Ads Lighthouse Plugin is a tool to improve ad speed and overall quality through a series of automated audits. At the moment, this is primarily targeted at sites using Google Ad Manager. This tool will aid in resolving discovered problems, providing a tool to be used to evaluate effectiveness of iterative changes while suggesting actionable feedback.
 
-Publisher Ads Audits for Lighthouse is a plugin for [Lighthouse](https://github.com/GoogleChrome/lighthouse), an open-sourced tool integrated into Chrome dev tools that is widely used by developers.
+This tool is a plugin for [Lighthouse](https://github.com/GoogleChrome/lighthouse), an open-sourced tool integrated into Chrome dev tools that is widely used by developers.
 
-We are currently in preview and still in the development process. In order to help us improve please [file an issue](https://github.com/googleads/pub-ads-lighthouse-plugin/issues) to let us know of any issues or suggestions you may have.
+We are currently in beta and still in the development process. In order to help us improve please [file an issue](https://github.com/googleads/publisher-ads-lighthouse-plugin/issues) to let us know of any issues or suggestions you may have.
 
 ## Web App
 
-We currently have a web app version of Publisher Ads Audits for Lighthouse. It is currently in preview, if you'd like to request access you can do so [here](https://forms.gle/1tYvRjrkwPXYUpLW8).
+We currently have a web app version of Publisher Ads Lighthouse Plugin. It is currently in beta and can be accessed at [pub-ads-audits.appspot.com](http://pub-ads-audits.appspot.com).
 
 ## Setup
 
 ```sh
-git clone git@github.com:googleads/pub-ads-lighthouse-plugin.git
-cd pub-ads-lighthouse-plugin
+git clone git@github.com:googleads/publisher-ads-lighthouse-plugin.git
+cd publisher-ads-lighthouse-plugin
 yarn
 ```
 
@@ -45,7 +45,7 @@ yarn test
 
 ## Contributions
 
-See [CONTRIBUTING.md](https://github.com/googleads/pub-ads-lighthouse-plugin/blob/master/lighthouse-plugin-pub-ads-audits/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouse-plugin-publisher-ads/CONTRIBUTING.md)
 
 
 
