@@ -1,14 +1,14 @@
 {
-  "name": "ad-speed-insights-wrapper",
-  "version": "0.0.3.6",
-  "description": "Wrapper for Ad Speed Insights lighthouse plugin.",
+  "name": "lighthouse-plugin-publisher-ads-wrapper",
+  "version": "0.0.3.7",
+  "description": "Wrapper for Publisher Ads Lighthouse Plugin.",
   "license": "Apache-2.0",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint -c lighthouse-plugin-ad-speed-insights/.eslintrc.js .",
-    "debug": "mocha debug lighthouse-plugin-ad-speed-insights/test/**/*.js",
-    "test": "mocha lighthouse-plugin-ad-speed-insights/test/**/*.js",
-    "type-check": "tsc -p lighthouse-plugin-ad-speed-insights/tsconfig.json"
+    "lint": "eslint -c lighthouse-plugin-publisher-ads/.eslintrc.js .",
+    "debug": "mocha debug lighthouse-plugin-publisher-ads/test/**/*.js",
+    "test": "mocha lighthouse-plugin-publisher-ads/test/**/*.js",
+    "type-check": "tsc -p lighthouse-plugin-publisher-ads/tsconfig.json"
   },
   "husky": {
     "hooks": {

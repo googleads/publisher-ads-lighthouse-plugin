@@ -22,17 +22,17 @@
  */
 module.exports = {
   extends: 'lighthouse:full',
-  plugins: ['lighthouse-plugin-ad-speed-insights'],
+  plugins: ['lighthouse-plugin-publisher-ads'],
   passes: [
     {
       passName: 'defaultPass',
       gatherers: [
         require.resolve(
-          './lighthouse-plugin-ad-speed-insights/gatherers/iframe-elements'),
+          './lighthouse-plugin-publisher-ads/gatherers/iframe-elements'),
       ],
     },
   ],
   settings: {
-    onlyCategories: ['lighthouse-plugin-ad-speed-insights'],
+    onlyCategories: ['lighthouse-plugin-publisher-ads'],
   },
 };
