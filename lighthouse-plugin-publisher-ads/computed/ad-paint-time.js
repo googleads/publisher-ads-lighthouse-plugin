@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 const AdLanternMetric = require('./ad-lantern-metric');
+const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 // @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
@@ -71,14 +71,12 @@ class LanternAdPaintTime extends AdLanternMetric {
     const {nodeTimings} = simulationResult;
     const {slots} = extras;
     const adFrameIds = new Set(slots.map((s) => s.frame && s.frame.id));
-    const isBlockingEvent = /** @param {LH.TraceEvent} event */ (event) => {
-      return adFrameIds.has(getFrame(event)) && event.name == 'Paint';
-    }
+    const isBlockingEvent = /** @param {LH.TraceEvent} event */ (event) => adFrameIds.has(getFrame(event)) && event.name == 'Paint';
     const adResponseMs = AdLanternMetric.findNetworkTiming(
-        nodeTimings, isGptAdRequest).endTime;
+      nodeTimings, isGptAdRequest).endTime;
     // TODO: filter out pixels from resources
     const firstAdResource = AdLanternMetric.findNetworkTiming(
-        nodeTimings, (request) => adFrameIds.has(request.frameId)).endTime;
+      nodeTimings, (request) => adFrameIds.has(request.frameId)).endTime;
     const timeInMs = adResponseMs + firstAdResource;
     return {timeInMs, nodeTimings};
   }

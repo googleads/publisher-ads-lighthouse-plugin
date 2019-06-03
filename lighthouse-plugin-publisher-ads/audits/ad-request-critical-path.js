@@ -232,9 +232,9 @@ class AdRequestCriticalPath extends Audit {
         type: req.resourceType,
       };
     });
-    console.log(tableView)
+    console.log(tableView);
     tableView = computeSummaries(tableView)
-      .filter((r) => r.duration > 30 && r.startTime > 0);
+        .filter((r) => r.duration > 30 && r.startTime > 0);
 
     const depth = computeDepth(tableView);
     const failed = depth > 3;

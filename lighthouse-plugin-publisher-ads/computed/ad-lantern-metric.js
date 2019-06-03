@@ -46,7 +46,7 @@ class AdLanternMetric extends LanternMetric {
    * @override
    */
   static getPessimisticGraph(graph) {
-    return graph;  // Return the whole graph
+    return graph; // Return the whole graph
   }
 
   /**
@@ -69,7 +69,7 @@ class AdLanternMetric extends LanternMetric {
         return true;
       }
       const url = node.record.url;
-      return getHeaderBidder(url) || isGoogleAds(new URL(url))
+      return getHeaderBidder(url) || isGoogleAds(new URL(url));
     });
   }
 
@@ -102,8 +102,8 @@ class AdLanternMetric extends LanternMetric {
 
   static findNetworkTiming(nodeTimings, isTargetRequest) {
     return this.findTiming(
-        nodeTimings,
-        (node) => node.record && isTargetRequest(node.record));
+      nodeTimings,
+      (node) => node.record && isTargetRequest(node.record));
   }
 }
 

@@ -38,7 +38,7 @@ class LanternTagLoadTime extends AdLanternMetric {
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
     const timeInMs = AdLanternMetric.findNetworkTiming(
-        nodeTimings, (req) => req.url && isImplTag(new URL(req.url))).endTime;
+      nodeTimings, (req) => req.url && isImplTag(new URL(req.url))).endTime;
     return {timeInMs, nodeTimings};
   }
 }

@@ -86,17 +86,17 @@ async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
       {devtoolsLog, settings: context.settings}, context);
     const {nodeTimings} = simulator.simulate(releventGraph, {});
     const pageStartTime = documentNode.record.startTime;
-    console.log(pageStartTime)
-    console.log(Object.keys(documentNode))
+    console.log(pageStartTime);
+    console.log(Object.keys(documentNode));
     for (const [{record}, timing] of nodeTimings.entries()) {
       if (!record) continue;
       const originalTiming = {
         startTime: record.startTime - pageStartTime,
         endTime: record.endTime - pageStartTime,
         duration: record.duration,
-      }
-      //console.log((originalTiming.endTime - originalTiming.startTime) * 1000, timing.duration)
-      //console.log(originalTiming,timing)
+      };
+      // console.log((originalTiming.endTime - originalTiming.startTime) * 1000, timing.duration)
+      // console.log(originalTiming,timing)
       timingsByRecord.set(record, timing);
     }
   } else {
