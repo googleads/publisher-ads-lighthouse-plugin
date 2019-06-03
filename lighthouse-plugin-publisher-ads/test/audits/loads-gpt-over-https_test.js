@@ -43,7 +43,7 @@ describe('LoadsGptOverHttps', async () => {
             isSecure: true,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js#foo',
             isSecure: false,
           },
         ],
@@ -79,7 +79,7 @@ describe('LoadsGptOverHttps', async () => {
             isSecure: true,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js#foo',
             isSecure: false,
           },
         ],
@@ -95,7 +95,7 @@ describe('LoadsGptOverHttps', async () => {
             statusCode: 200,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
             isSecure: false,
           },
         ],
@@ -111,11 +111,11 @@ describe('LoadsGptOverHttps', async () => {
             statusCode: 200,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
             isSecure: false,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js#foo',
             isSecure: false,
           },
           {
@@ -135,15 +135,15 @@ describe('LoadsGptOverHttps', async () => {
             statusCode: 200,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js?foo=bar',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js?foo=bar',
             isSecure: false,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js?cb=true',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js?cb=true',
             isSecure: false,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js?foo=bar#baz',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js?foo=bar#baz',
             isSecure: false,
           },
         ],
@@ -188,7 +188,7 @@ describe('LoadsGptOverHttps', async () => {
             statusCode: 200,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
             isSecure: false,
           },
         ],
@@ -212,7 +212,7 @@ describe('LoadsGptOverHttps', async () => {
             isSecure: true,
           },
           {
-            url: 'http://www.googletagservices.com/tag/js/gpt.js#foo',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js#foo',
             isSecure: false,
           },
         ],

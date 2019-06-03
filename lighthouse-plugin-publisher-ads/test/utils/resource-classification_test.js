@@ -146,7 +146,7 @@ describe('resource-classification', () => {
     const testCases = [
       {
         description: 'URLs that load gpt.js',
-        url: new URL('http://www.googletagservices.com/tag/js/gpt.js'),
+        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js'),
         expectation: true,
       },
       {
