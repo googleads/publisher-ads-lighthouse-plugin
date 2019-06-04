@@ -83,19 +83,14 @@ async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
     const releventGraph = documentNode.cloneWithRelationships(
       (node) => {
         if (!node.record) return false;
-        return node.hasRenderBlockingPriority() || networkRecords.has(node.record);
+        return node.hasRenderBlockingPriority() ||
+            networkRecords.has(node.record);
       });
     const simulator = await LoadSimulator.request(
       {devtoolsLog, settings: context.settings}, context);
     const {nodeTimings} = simulator.simulate(releventGraph, {});
-    const pageStartTime = documentNode.record.startTime;
     for (const [{record}, timing] of nodeTimings.entries()) {
       if (!record) continue;
-      const originalTiming = {
-        startTime: record.startTime - pageStartTime,
-        endTime: record.endTime - pageStartTime,
-        duration: record.duration,
-      };
       timingsByRecord.set(record, timing);
     }
   } else {

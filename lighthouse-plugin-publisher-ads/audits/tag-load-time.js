@@ -55,7 +55,6 @@ class TagLoadTime extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    try {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const metricData = {trace, devtoolsLog, settings: context.settings};
@@ -81,7 +80,6 @@ class TagLoadTime extends Audit {
       score: normalScore,
       displayValue: util.format(displayValue, tagLoadTimeSec.toFixed(2)),
     };
-  } catch(e) {console.log(e)}
   }
 }
 module.exports = TagLoadTime;

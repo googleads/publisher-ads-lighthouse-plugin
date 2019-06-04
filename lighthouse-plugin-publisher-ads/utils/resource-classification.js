@@ -118,7 +118,7 @@ function getHeaderBidder(url) {
  */
 function isBidRequest(requestOrUrl) {
   return !!getHeaderBidder(
-      typeof requestOrUrl == 'string' ? requestOrUrl : requestOrUrl.url);
+    typeof requestOrUrl == 'string' ? requestOrUrl : requestOrUrl.url);
 }
 
 

@@ -16,8 +16,6 @@ const AdLanternMetric = require('./ad-lantern-metric');
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
-// @ts-ignore
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, isGptIframe} = require('../utils/resource-classification');
 
 /**
@@ -48,15 +46,6 @@ function getMinEventTime(eventName, traceEvents, adFrameIds) {
 
 /** Computes simulated first ad request time using Lantern. */
 class LanternAdPaintTime extends AdLanternMetric {
-  static async compute_(data, context) {
-    const {iframeElements} = data;
-    if (!iframeElements) {
-      return Promise.resolve({});
-    }
-    const slots = iframeElements.filter(isGptIframe);
-    return this.computeMetricWithGraphs(data, context, {slots});
-  }
-
   /**
    * @param {LH.Gatherer.Simulation.Result} simulationResult
    * @param {Object} extras
@@ -77,6 +66,9 @@ class LanternAdPaintTime extends AdLanternMetric {
   }
 }
 
+// Decorate the class.
+// @ts-ignore Allow reassignment for decoration.
+// eslint-disable-next-line no-class-assign
 LanternAdPaintTime = makeComputedArtifact(LanternAdPaintTime);
 
 /** Computes the first ad paint time on the page */

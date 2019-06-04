@@ -16,6 +16,12 @@
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 const {isBidRequest, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
 
+// @ts-ignore
+// eslint-disable-next-line max-len
+/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
+// eslint-disable-next-line max-len
+/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js')} CpuNode */
+
 /**
  * Returns the frame ID of the given event, if present.
  * @param {LH.TraceEvent} event
@@ -26,6 +32,11 @@ function getFrame(event) {
   return event.args.frame || event.args.data && event.args.data.frame || null;
 }
 
+/**
+ * Returns a list of URLs associated with this CPU node.
+ * @param {CpuNode} cpuNode
+ * @return {string[]}
+ */
 function getCpuNodeUrls(cpuNode) {
   /** @type {Set<string>} */ const results = new Set();
   for (const {args} of cpuNode.childEvents) {
@@ -36,6 +47,10 @@ function getCpuNodeUrls(cpuNode) {
   return Array.from(results);
 }
 
+/**
+ * Inserts edges between bid requests and ad requests.
+ * @param {Node} graph
+ */
 function linkBidAndAdRequests(graph) {
   const adRequestNodes = [];
   graph.traverse((node) => {
@@ -95,7 +110,8 @@ class AdLanternMetric extends LanternMetric {
     // Filter the pessimistic graph.
     const optimisticGraph = pessimisticGraph.cloneWithRelationships((node) => {
       if (!node.record) {
-        return getCpuNodeUrls(node).includes(isBidRequest);
+        return getCpuNodeUrls(node).includes(isBidRequest) ||
+          getFrame(node.event) && getFrame(node.event) !== mainFrame;
       }
       if (node.hasRenderBlockingPriority()) {
         return true;
