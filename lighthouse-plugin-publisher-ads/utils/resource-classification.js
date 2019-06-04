@@ -111,6 +111,16 @@ function getHeaderBidder(url) {
   return false;
 }
 
+/**
+ * Checks whether the given request is a bid request.
+ * @param {LH.Artifacts.NetworkRequest|string} requestOrUrl
+ * @return {boolean}
+ */
+function isBidRequest(requestOrUrl) {
+  return !!getHeaderBidder(
+      typeof requestOrUrl == 'string' ? requestOrUrl : requestOrUrl.url);
+}
+
 
 /**
  * @param {LH.Artifacts.NetworkRequest} request
@@ -130,6 +140,7 @@ function isGptIframe(iframe) {
 }
 
 module.exports = {
+  isBidRequest,
   isGoogleAds,
   isGptAdRequest,
   hasImpressionPath,

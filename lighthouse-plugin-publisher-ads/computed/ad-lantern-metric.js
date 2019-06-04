@@ -14,7 +14,7 @@
 
 // @ts-ignore
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
-const {getHeaderBidder, isGoogleAds} = require('../utils/resource-classification');
+const {isBidRequest, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
 
 /**
  * Returns the frame ID of the given event, if present.
@@ -26,6 +26,37 @@ function getFrame(event) {
   return event.args.frame || event.args.data && event.args.data.frame || null;
 }
 
+function getCpuNodeUrls(cpuNode) {
+  /** @type {Set<string>} */ const results = new Set();
+  for (const {args} of cpuNode.childEvents) {
+    if (args.data && args.data.url) {
+      results.add(args.data.url);
+    }
+  }
+  return Array.from(results);
+}
+
+function linkBidAndAdRequests(graph) {
+  const adRequestNodes = [];
+  graph.traverse((node) => {
+    if (node.record && isGptAdRequest(node.record)) {
+      adRequestNodes.push(node);
+    }
+  });
+  graph.traverse((node) => {
+    if (node.record && isBidRequest(node.record)) {
+      for (const adNode of adRequestNodes) {
+        // TODO(warrengm): Check for false positives. We don't worry too much
+        // since we're focussing on the first few requests.
+        if (adNode.record.startTime >= node.record.endTime) {
+          node.addDependent(adNode);
+        }
+      }
+    }
+  });
+}
+
+/** An abstract class for ad lantern metrics. */
 class AdLanternMetric extends LanternMetric {
   /**
    * @return {LH.Gatherer.Simulation.MetricCoefficients}
@@ -34,8 +65,8 @@ class AdLanternMetric extends LanternMetric {
   static get COEFFICIENTS() {
     return {
       intercept: 0,
-      optimistic: 0.7,
-      pessimistic: 0.3,
+      optimistic: 1,
+      pessimistic: 0,
     };
   }
 
@@ -46,7 +77,10 @@ class AdLanternMetric extends LanternMetric {
    * @override
    */
   static getPessimisticGraph(graph) {
-    return graph; // Return the whole graph
+    // The pessimistic graph is the whole graph.
+    const pessimisticGraph = graph.cloneWithRelationships((n) => true);
+    linkBidAndAdRequests(pessimisticGraph);
+    return pessimisticGraph;
   }
 
   /**
@@ -57,20 +91,19 @@ class AdLanternMetric extends LanternMetric {
    */
   static getOptimisticGraph(graph) {
     const mainFrame = graph.record.frameId;
-    // Only include resources in the following categories:
-    //   - render blocking
-    //   - ads/analytics related.
-    return graph.cloneWithRelationships((node) => {
+    const pessimisticGraph = AdLanternMetric.getPessimisticGraph(graph);
+    // Filter the pessimistic graph.
+    const optimisticGraph = pessimisticGraph.cloneWithRelationships((node) => {
       if (!node.record) {
-        // TODO(warrengm): Check URLs of CPU nodes.
-        return getFrame(node.event) && getFrame(node.event) !== mainFrame;
+        return getCpuNodeUrls(node).includes(isBidRequest);
       }
       if (node.hasRenderBlockingPriority()) {
         return true;
       }
       const url = node.record.url;
-      return getHeaderBidder(url) || isGoogleAds(new URL(url));
+      return isBidRequest(url) || isGoogleAds(new URL(url));
     });
+    return optimisticGraph;
   }
 
   /**
@@ -100,6 +133,12 @@ class AdLanternMetric extends LanternMetric {
     return leastTiming;
   }
 
+  /**
+   * @param {Map<LH.Gatherer.Simulation.GraphNode,
+   *             LH.Gatherer.Simulation.NodeTiming>} nodeTimings
+   * @param {(LH.Artifacts.NetworkRequest) => boolean} isTargetNode
+   * @return {LH.Gatherer.Simulation.NodeTiming}
+   */
   static findNetworkTiming(nodeTimings, isTargetRequest) {
     return this.findTiming(
       nodeTimings,

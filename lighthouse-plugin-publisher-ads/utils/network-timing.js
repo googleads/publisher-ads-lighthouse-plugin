@@ -81,13 +81,14 @@ async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
     const documentNode =
       await PageDependencyGraph.request({trace, devtoolsLog}, context);
     const releventGraph = documentNode.cloneWithRelationships(
-      (node) => networkRecords.has(node.record) && node != documentNode);
+      (node) => {
+        if (!node.record) return false;
+        return node.hasRenderBlockingPriority() || networkRecords.has(node.record);
+      });
     const simulator = await LoadSimulator.request(
       {devtoolsLog, settings: context.settings}, context);
     const {nodeTimings} = simulator.simulate(releventGraph, {});
     const pageStartTime = documentNode.record.startTime;
-    console.log(pageStartTime);
-    console.log(Object.keys(documentNode));
     for (const [{record}, timing] of nodeTimings.entries()) {
       if (!record) continue;
       const originalTiming = {
@@ -95,12 +96,10 @@ async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
         endTime: record.endTime - pageStartTime,
         duration: record.duration,
       };
-      // console.log((originalTiming.endTime - originalTiming.startTime) * 1000, timing.duration)
-      // console.log(originalTiming,timing)
       timingsByRecord.set(record, timing);
     }
   } else {
-    const pageStartTime = getPageStartTime(networkRecords);
+    const pageStartTime = getPageStartTime(Array.from(networkRecords));
     for (const record of networkRecords) {
       timingsByRecord.set(record, {
         startTime: (record.startTime - pageStartTime) * 1000,

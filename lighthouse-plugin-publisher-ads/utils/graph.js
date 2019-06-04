@@ -78,8 +78,7 @@ function getTransitiveClosure(root, isTargetRequest) {
 
   const requests = Array.from(closure)
       .map((n) => n.record)
-      .filter(Boolean)
-      .filter((r) => r.endTime < firstTarget.record.startTime);
+      .filter(Boolean);
   const cpu = Array.from(closure)
       .filter((n) => n.event)
       .filter((n) => n.event.ts < firstTarget.startTime * 1000 * 1000)
@@ -231,7 +230,7 @@ function getAdCriticalGraph(networkRecords, traceEvents) {
     getCriticalGraph(summary, req, criticalRequests);
   }
   const result = new Set(Array.from(criticalRequests).filter(
-    (r) => r.endTime < firstAdRequest.startTime));
+    (r) => r.endTime < firstAdRequest.startTime || r == firstAdRequest));
   return result;
 }
 

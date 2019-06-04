@@ -18,7 +18,7 @@ const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getAdCriticalGraph} = require('../utils/graph');
-const {getPageStartTime, getTimingsByRecord} = require('../utils/network-timing');
+const {getTimingsByRecord} = require('../utils/network-timing');
 const {URL} = require('url');
 
 const id = 'ad-request-critical-path';
@@ -206,12 +206,11 @@ class AdRequestCriticalPath extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-
     const criticalRequests = getAdCriticalGraph(
       networkRecords, trace.traceEvents);
 
     const timingsByRecord =
-        await getTimingsByRecord(trace, devtoolsLog, new Set(networkRecords), context);
+        await getTimingsByRecord(trace, devtoolsLog, criticalRequests, context);
     const REQUEST_TYPES = ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'];
     const blockingRequests = Array.from(criticalRequests)
         .filter((r) => REQUEST_TYPES.includes(r.resourceType))
@@ -232,7 +231,6 @@ class AdRequestCriticalPath extends Audit {
         type: req.resourceType,
       };
     });
-    console.log(tableView);
     tableView = computeSummaries(tableView)
         .filter((r) => r.duration > 30 && r.startTime > 0);
 
