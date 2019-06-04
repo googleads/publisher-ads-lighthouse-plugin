@@ -42,7 +42,7 @@ function isImplTag(url) {
  * @return {boolean}
  */
 function isGptTag(url) {
-  return url.host === 'www.googletagservices.com' &&
+  return (url.host === 'www.googletagservices.com' || url.host === 'securepubads.g.doubleclick.net') &&
       (url.pathname === '/tag/js/gpt.js' ||
       url.pathname === '/tag/js/gpt_mobile.js');
 }

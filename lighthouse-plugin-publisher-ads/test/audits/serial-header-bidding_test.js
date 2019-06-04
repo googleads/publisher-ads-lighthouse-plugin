@@ -37,7 +37,7 @@ describe('SerialHeaderBidding', async () => {
         networkRecords: [
           {url: 'https://example.com', startTime: 5, endTime: 10, statusCode: 200},
           {url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo', startTime: 10, endTime: 15},
-          {url: 'https://www.googletagservices.com/tag/js/gpt.js', startTime: 15, endTime: 20},
+          {url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js', startTime: 15, endTime: 20},
         ],
         expectedNotAppl: true,
       },
