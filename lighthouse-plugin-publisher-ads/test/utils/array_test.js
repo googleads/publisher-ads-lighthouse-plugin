@@ -52,7 +52,7 @@ describe('array', () => {
     it('should handle empty arrays', () => {
       const records = [];
       const results = array.bucket(records, checkRecordType);
-      expect(results).to.eql({});
+      expect(results).to.eql(new Map());
     });
 
     it('should handle non-empty arrays', () => {
@@ -79,32 +79,37 @@ describe('array', () => {
         },
       ];
       const results = array.bucket(records, checkRecordType);
-      expect(results).to.eql({
-        'ad': [
-          {
-            startTime: 65,
-            endTime: 70,
-            url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar',
-          },
-          {
-            startTime: 75,
-            endTime: 80,
-            url: 'https://googlesyndication.com/gpt/',
-          },
+      expect(results).to.eql(new Map([
+        [
+          'ad',
+          [
+            {
+              startTime: 65,
+              endTime: 70,
+              url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar',
+            },
+            {
+              startTime: 75,
+              endTime: 80,
+              url: 'https://googlesyndication.com/gpt/',
+            },
+          ],
         ],
-        'unknown': [
-          {
-            startTime: 10,
-            endTime: 20,
-            url: 'https://example.com',
-          },
-          {
-            startTime: 15,
-            endTime: 30,
-            url: 'https://foo.uk.com',
-          },
+        [
+          'unknown', [
+            {
+              startTime: 10,
+              endTime: 20,
+              url: 'https://example.com',
+            },
+            {
+              startTime: 15,
+              endTime: 30,
+              url: 'https://foo.uk.com',
+            },
+          ],
         ],
-      });
+      ]));
     });
   });
 });

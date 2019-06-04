@@ -149,7 +149,7 @@ class SerialHeaderBidding extends Audit {
     // in the details field.
     const recordsByType = bucket(networkRecords, checkRecordType);
 
-    if (!recordsByType[RequestType.BID]) {
+    if (!recordsByType.has(RequestType.BID)) {
       return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
     }
 
@@ -159,9 +159,9 @@ class SerialHeaderBidding extends Audit {
 
     // Construct shallow copies of records. If no records are found, return [].
     const adsRecords = constructRecords(
-      recordsByType[RequestType.AD] || [], RequestType.AD, timeOffset);
+      recordsByType.get(RequestType.AD) || [], RequestType.AD, timeOffset);
     const headerBiddingRecords = constructRecords(
-      recordsByType[RequestType.BID] || [], RequestType.BID, timeOffset);
+      recordsByType.get(RequestType.BID) || [], RequestType.BID, timeOffset);
     /** @type {Object<string, BidRequest>} */
     const bidRequests = {};
 
