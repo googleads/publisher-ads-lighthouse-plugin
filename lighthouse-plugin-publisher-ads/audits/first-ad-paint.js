@@ -63,6 +63,7 @@ class FirstAdPaint extends Audit {
       description,
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
+      // @ts-ignore
       requiredArtifacts: ['devtoolsLogs', 'traces', 'IFrameElements'],
     };
   }

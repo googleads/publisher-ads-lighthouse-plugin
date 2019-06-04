@@ -33,19 +33,22 @@ function count(arr, pred) {
  * Sorts an array into buckets depending on a splitting function.
  * We use the type 'any' because the bucket function works on any type, and
  * returns an object of arrays of any type. The type is not specified.
- * @param {Array<any>} array
- * @param {function(any): any} splitter
- * @return {Object<string, Array<any>>}
+ * @param {V[]} array
+ * @param {function(V): B} splitter
+ * @return {Map<!B, V[]>}
+ * @template V, B
  */
 function bucket(array, splitter) {
-  const buckets = {};
+  /** @type {Map<!B, V[]>} */
+  const buckets = new Map();
   for (const element of array) {
     const result = splitter(element);
-    if (result) {
+    if (result != null) {
       // The result is not undefined, so either push the result to the right
       // bucket, or create it if necessary.
-      const bucket = buckets[result] || (buckets[result] = []);
+      const bucket = buckets.get(result) || [];
       bucket.push(element);
+      buckets.set(result, bucket);
     }
   }
   return buckets;
@@ -55,12 +58,14 @@ function bucket(array, splitter) {
  * Flattens a 2-d array to a 1-d array.
  * @param {T[][]} arrs
  * @return {T[]}
- * @template {T}
+ * @template T
  */
 function flatten(arrs) {
-  // Typescript compiler doesn't like spread so we invoke concat.apply()
-  // eslint-disable-next-line prefer-spread
-  return [].concat.apply([], ...arrs);
+  const result = [];
+  for (const arr of arrs) {
+    result.push(...arr);
+  }
+  return result;
 }
 
 module.exports = {
