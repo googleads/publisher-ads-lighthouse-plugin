@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// @ts-ignore
-// eslint-disable-next-line
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
+const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 const {flatten} = require('./array');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
@@ -32,7 +31,7 @@ const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
 /**
  * Returns all requests and CPU tasks in the loading graph of the target
  * requests.
- * @param {typeof BaseNode} root The root node of the DAG.
+ * @param {BaseNode.Node} root The root node of the DAG.
  * @param {(req: NetworkRequest) => boolean} isTargetRequest
  * @return {{requests: NetworkRequest[], traceEvents: TraceEvent[]}}
  */
@@ -40,8 +39,8 @@ function getTransitiveClosure(root, isTargetRequest) {
   const closure = new Set();
   /** @type {LH.Artifacts.NetworkRequest} */
   let firstTarget = null;
-  root.traverse(/** @param {typeof BaseNode} node */ (node) => {
-    if (!node.record || !isTargetRequest(node.record)) return;
+  root.traverse((node) => {
+    if (node instanceof CpuNode || !isTargetRequest(node.record)) return;
     if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
       return;
     }

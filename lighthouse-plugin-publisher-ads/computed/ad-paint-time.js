@@ -13,8 +13,8 @@
 // limitations under the License.
 
 const AdLanternMetric = require('./ad-lantern-metric');
-const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
+const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
 const {isGptAdRequest, isGptIframe} = require('../utils/resource-classification');
 
@@ -55,7 +55,9 @@ class LanternAdPaintTime extends AdLanternMetric {
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
     const {slots} = extras;
-    const adFrameIds = new Set(slots.map((s) => s.frame && s.frame.id));
+    const adFrameIds = new Set(slots.map(
+        /** @param {Artifacts['IFrameElement']} s */
+          (s) => s.frame && s.frame.id));
     const adResponseMs = AdLanternMetric.findNetworkTiming(
       nodeTimings, isGptAdRequest).endTime;
     // TODO: filter out pixels from resources
@@ -80,6 +82,7 @@ class AdPaintTime extends ComputedMetric {
    * @override
    */
   static async computeSimulatedMetric(data, context) {
+    // @ts-ignore request does not exist on LanternAdPaintTime
     return LanternAdPaintTime.request(data, context);
   }
 

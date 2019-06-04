@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // @ts-ignore
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
 // @ts-ignore
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
+const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const {isGptAdRequest, isImplTag} = require('./resource-classification');
 const {URL} = require('url');
+
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 /**
  * Returns end time of tag load (s) relative to system boot.
@@ -69,20 +74,22 @@ function getPageResponseTime(networkRecords, defaultValue = -1) {
 /**
  * @param {LH.Trace} trace
  * @param {LH.DevtoolsLog} devtoolsLog
- * @param {Set<LH.Artifacts.NetworkRequest>} networkRecords
+ * @param {Set<NetworkRequest>} networkRecords
  * @param {LH.Audit.Context} context
- * @return {Map<LH.NetworkRecord, LH.Gatherer.NodeTiming>}
+ * @return {Promise<Map<NetworkRequest, NodeTiming>>}
  */
 async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
-  /** @type {Map<LH.NetworkRecord, LH.Gatherer.NodeTiming>} */
+  /** @type {Map<NetworkRequest, NodeTiming>} */
   const timingsByRecord = new Map();
 
   if (context.settings.throttlingMethod == 'simulate') {
+    /** @type {NetworkNode} */
     const documentNode =
+      // @ts-ignore Property 'request' does not appear on PageDependencyGraph
       await PageDependencyGraph.request({trace, devtoolsLog}, context);
     const releventGraph = documentNode.cloneWithRelationships(
       (node) => {
-        if (!node.record) return false;
+        if (node instanceof CpuNode) return false;
         return node.hasRenderBlockingPriority() ||
             networkRecords.has(node.record);
       });

@@ -17,6 +17,9 @@
   "include": [
     "**/*.js",
     "**/*.d.ts",
+    "../node_modules/lighthouse/lighthouse-core/computed/computed-artifact.js",
+    "../node_modules/lighthouse/lighthouse-core/lib/arbitrary-equality-map.js",
+    "../node_modules/lighthouse/lighthouse-core/lib/dependency-graph/*.js"
   ],
   "exclude": [
     "test/**/*.js",

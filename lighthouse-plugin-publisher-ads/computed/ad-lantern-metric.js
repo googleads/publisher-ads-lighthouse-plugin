@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// @ts-ignore
+const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js');
+const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
+// @ts-ignore Remove request() below after importing the type.
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
+const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const {isBidRequest, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
+const {URL} = require('url');
 
-// @ts-ignore
-// eslint-disable-next-line max-len
-/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
-// eslint-disable-next-line max-len
-/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js')} CpuNode */
+/** @typedef {LH.Gatherer.Simulation.GraphNode} GraphNode */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 /**
  * Returns the frame ID of the given event, if present.
@@ -49,17 +50,17 @@ function getCpuNodeUrls(cpuNode) {
 
 /**
  * Inserts edges between bid requests and ad requests.
- * @param {Node} graph
+ * @param {BaseNode} graph
  */
 function linkBidAndAdRequests(graph) {
-  const adRequestNodes = [];
+  /** @type {NetworkNode[]} */ const adRequestNodes = [];
   graph.traverse((node) => {
-    if (node.record && isGptAdRequest(node.record)) {
+    if (node instanceof NetworkNode && isGptAdRequest(node.record)) {
       adRequestNodes.push(node);
     }
   });
   graph.traverse((node) => {
-    if (node.record && isBidRequest(node.record)) {
+    if (node instanceof NetworkNode && isBidRequest(node.record)) {
       for (const adNode of adRequestNodes) {
         // TODO(warrengm): Check for false positives. We don't worry too much
         // since we're focussing on the first few requests.
@@ -86,37 +87,38 @@ class AdLanternMetric extends LanternMetric {
   }
 
   /**
-   * @param {Node} root Root of the dependency graph, i.e. the
+   * @param {BaseNode} graph Root of the dependency graph, i.e. the
    *     document node.
-   * @return {Node}
+   * @return {BaseNode}
    * @override
    */
   static getPessimisticGraph(graph) {
     // The pessimistic graph is the whole graph.
-    const pessimisticGraph = graph.cloneWithRelationships((n) => true);
+    const pessimisticGraph = graph.cloneWithRelationships(_ => true);
     linkBidAndAdRequests(pessimisticGraph);
     return pessimisticGraph;
   }
 
   /**
-   * @param {Node} root Root of the dependency graph, i.e. the
+   * @param {BaseNode} graph Root of the dependency graph, i.e. the
    *     document node.
-   * @return {Node}
+   * @return {BaseNode}
    * @override
    */
   static getOptimisticGraph(graph) {
+    // @ts-ignore
     const mainFrame = graph.record.frameId;
     const pessimisticGraph = AdLanternMetric.getPessimisticGraph(graph);
     // Filter the pessimistic graph.
     const optimisticGraph = pessimisticGraph.cloneWithRelationships((node) => {
-      if (!node.record) {
-        return getCpuNodeUrls(node).includes(isBidRequest) ||
-          getFrame(node.event) && getFrame(node.event) !== mainFrame;
+      if (node instanceof CpuNode) {
+        return !!getCpuNodeUrls(node).find(isBidRequest) ||
+          !!getFrame(node.event) && getFrame(node.event) !== mainFrame;
       }
       if (node.hasRenderBlockingPriority()) {
         return true;
       }
-      const url = node.record.url;
+      const /** string */ url = node.record.url;
       return isBidRequest(url) || isGoogleAds(new URL(url));
     });
     return optimisticGraph;
@@ -133,13 +135,12 @@ class AdLanternMetric extends LanternMetric {
   }
 
   /**
-   * @param {Map<LH.Gatherer.Simulation.GraphNode,
-   *             LH.Gatherer.Simulation.NodeTiming>} nodeTimings
-   * @param {(LH.Gatherer.Simulation.GraphNode) => boolean} isTargetNode
-   * @return {LH.Gatherer.Simulation.NodeTiming}
+   * @param {Map<GraphNode, NodeTiming>} nodeTimings
+   * @param {function(GraphNode, NodeTiming): boolean} isTargetNode
+   * @return {NodeTiming}
    */
   static findTiming(nodeTimings, isTargetNode) {
-    let leastTiming = {startTime: Infinity, endTime: -Infinity};
+    let leastTiming = {startTime: Infinity, endTime: -Infinity, duration: 0};
     for (const [node, timing] of nodeTimings.entries()) {
       if (isTargetNode(node, timing) &&
           leastTiming.startTime > timing.startTime) {
@@ -150,15 +151,14 @@ class AdLanternMetric extends LanternMetric {
   }
 
   /**
-   * @param {Map<LH.Gatherer.Simulation.GraphNode,
-   *             LH.Gatherer.Simulation.NodeTiming>} nodeTimings
-   * @param {(LH.Artifacts.NetworkRequest) => boolean} isTargetNode
-   * @return {LH.Gatherer.Simulation.NodeTiming}
+   * @param {Map<GraphNode, NodeTiming>} nodeTimings
+   * @param {function(LH.Artifacts.NetworkRequest): boolean} isTargetRequest
+   * @return {NodeTiming}
    */
   static findNetworkTiming(nodeTimings, isTargetRequest) {
     return this.findTiming(
       nodeTimings,
-      (node) => node.record && isTargetRequest(node.record));
+      (node) => node instanceof NetworkNode && isTargetRequest(node.record));
   }
 }
 

@@ -15,7 +15,6 @@
 const AdLanternMetric = require('./ad-lantern-metric');
 // @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
-// @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
 const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 const {isImplTag} = require('../utils/resource-classification');
@@ -55,6 +54,7 @@ class TagLoadTime extends ComputedMetric {
    * @override
    */
   static async computeSimulatedMetric(data, context) {
+    // @ts-ignore request does not exist on LanternTagLoadTime
     return LanternTagLoadTime.request(data, context);
   }
 
