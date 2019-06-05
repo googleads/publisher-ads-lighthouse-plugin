@@ -15,6 +15,7 @@
 const AdLanternMetric = require('./ad-lantern-metric');
 // @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
+// @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
 const {isGptAdRequest, isGptIframe} = require('../utils/resource-classification');
 
@@ -46,7 +47,7 @@ function getMinEventTime(eventName, traceEvents, adFrameIds) {
 
 /**
  * @param {MetricComputationData} data
- * @return {Artifacts['IFrameElement']}
+ * @return {Array<Artifacts['IFrameElement']>}
  */
 function getAdIframes(data) {
   const {iframeElements} = data;
@@ -95,6 +96,8 @@ class AdPaintTime extends ComputedMetric {
    */
   static async computeSimulatedMetric(data, context) {
     const iframes = getAdIframes(data);
+    // @ts-ignore computeMetricWithGraphs is not a property of
+    // LanternAdPaintTime.
     return LanternAdPaintTime.computeMetricWithGraphs(data, context, {iframes});
   }
 

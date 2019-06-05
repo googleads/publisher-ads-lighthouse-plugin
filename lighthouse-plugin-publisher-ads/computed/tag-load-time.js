@@ -15,6 +15,7 @@
 const AdLanternMetric = require('./ad-lantern-metric');
 // @ts-ignore
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
+// @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
 const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 const {isImplTag} = require('../utils/resource-classification');
@@ -35,7 +36,7 @@ class LanternTagLoadTime extends AdLanternMetric {
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
     const timeInMs = AdLanternMetric.findNetworkTiming(
-      nodeTimings, (req) => req.url && isImplTag(new URL(req.url))).endTime;
+      nodeTimings, (req) => !!req.url && isImplTag(new URL(req.url))).endTime;
     return {timeInMs, nodeTimings};
   }
 }

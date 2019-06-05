@@ -220,12 +220,11 @@ class AdRequestCriticalPath extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
     let tableView = blockingRequests.map((req) => {
-      const {startTime, endTime, duration} =
-          timingsByRecord.get(req) || req;
+      const {startTime, endTime} = timingsByRecord.get(req) || req;
       return {
         startTime,
         endTime,
-        duration,
+        duration: endTime - startTime,
         url: trimUrl(req.url),
         abbreviatedUrl: getAbbreviatedUrl(req.url),
         type: req.resourceType,

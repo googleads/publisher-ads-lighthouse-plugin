@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdLanternMetric = require('../computed/ad-lantern-metric');
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 const {flatten} = require('./array');
@@ -38,11 +37,11 @@ const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
  */
 function getTransitiveClosure(root, isTargetRequest) {
   const closure = new Set();
-  /** @type {LH.Artifacts.NetworkRequest} */
+  /** @type {?LH.Artifacts.NetworkRequest} */
   let firstTarget = null;
   root.traverse((node) => {
     if (node instanceof CpuNode || !isTargetRequest(node.record)) return;
-    if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
+    if (firstTarget && firstTarget.startTime < node.record.startTime) {
       return;
     }
     firstTarget = node;
