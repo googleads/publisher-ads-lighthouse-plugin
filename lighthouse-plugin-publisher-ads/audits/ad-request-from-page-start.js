@@ -61,7 +61,7 @@ class AdRequestFromPageStart extends Audit {
     const metricData = {trace, devtoolsLog, settings: context.settings};
 
     const {timing} = await ComputedAdRequestTime.request(metricData, context);
-    if (timing < 0) {
+    if (!(timing > 0)) { // Handle NaN, etc.
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 

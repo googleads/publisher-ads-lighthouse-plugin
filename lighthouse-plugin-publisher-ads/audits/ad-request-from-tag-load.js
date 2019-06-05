@@ -63,13 +63,13 @@ class AdRequestFromTagLoad extends Audit {
 
     const {timing: tagEndTime} =
         await ComputedTagLoadTime.request(metricData, context);
-    if (tagEndTime < 0) {
+    if (!(tagEndTime > 0)) { // Handle NaN, etc.
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
     const {timing: adStartTime} =
         await ComputedAdRequestTime.request(metricData, context);
-    if (adStartTime < 0) {
+    if (!(adStartTime > 0)) { // Handle NaN, etc.
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 

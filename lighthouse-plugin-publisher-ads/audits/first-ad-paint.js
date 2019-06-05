@@ -67,12 +67,12 @@ class FirstAdPaint extends Audit {
     };
 
     const {timing} = await AdPaintTime.request(metricData, context);
-    const adPaintTimeSec = timing / 1000;
 
-    if (adPaintTimeSec < 0) {
+    if (!(timing > 0)) { // Handle NaN, etc.
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
     }
 
+    const adPaintTimeSec = timing / 1000;
     let normalScore =
         Audit.computeLogNormalScore(adPaintTimeSec, PODR, MEDIAN);
     if (normalScore >= 0.9) normalScore = 1;

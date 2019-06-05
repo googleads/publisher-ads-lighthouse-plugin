@@ -60,7 +60,7 @@ class TagLoadTime extends Audit {
     const metricData = {trace, devtoolsLog, settings: context.settings};
 
     const {timing} = await ComputedTagLoadTime.request(metricData, context);
-    if (timing < 0) {
+    if (!(timing > 0)) { // Handle NaN, etc.
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
