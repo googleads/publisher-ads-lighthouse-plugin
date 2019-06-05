@@ -146,7 +146,7 @@ function addInitiatedRequests(
 /**
  * Returns the set of requests in the critical path of the target request.
  * @param {NetworkSummary} networkSummary
- * @param {NetworkRequest} targetRequest
+ * @param {?NetworkRequest} targetRequest
  * @param {Set<NetworkRequest>=} criticalRequests
  * @return {Set<NetworkRequest>}
  */
@@ -182,7 +182,7 @@ function getCriticalGraph(
   }
   // Check the initiator request just to be sure.
   getCriticalGraph(
-    networkSummary, assert(targetRequest.initiatorRequest), criticalRequests);
+    networkSummary, targetRequest.initiatorRequest || null, criticalRequests);
   return criticalRequests;
 }
 
