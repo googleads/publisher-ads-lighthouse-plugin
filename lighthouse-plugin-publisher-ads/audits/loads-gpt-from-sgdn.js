@@ -12,76 +12,54 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdPaintTime = require('../computed/ad-paint-time');
-const util = require('util');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
+const {isGptTag} = require('../utils/resource-classification');
+const {URL} = require('url');
 
-const id = 'first-ad-paint';
+const id = 'loads-gpt-from-sgdn';
 const {
   title,
   failureTitle,
   description,
-  displayValue,
 } = AUDITS[id];
 
-// Point of diminishing returns.
-const PODR = 3.0; // seconds
-const MEDIAN = 4.0; // seconds
-
 /**
- * Measures the first ad paint time.
+ * Simple audit that checks if gpt is loaded over from updated host.
  */
-class FirstAdPaint extends Audit {
+class LoadsGptFromSgdn extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
-    // @ts-ignore
     return {
       id,
       title,
       failureTitle,
       description,
-      // @ts-ignore
-      scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      // @ts-ignore
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'IFrameElements'],
+      requiredArtifacts: ['devtoolsLogs'],
     };
   }
+
   /**
-   * @param {Artifacts} artifacts
+   * @param {LH.Artifacts} artifacts
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {
-      devtoolsLog,
-      trace,
-      iframeElements: artifacts.IFrameElements,
-      settings: context.settings,
-    };
-
-    const {timing} = await AdPaintTime.request(metricData, context);
-    const adPaintTimeSec = timing / 1000;
-
-    if (adPaintTimeSec < 0) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    const gptUrl = networkRecords.map((r) => new URL(r.url)).find(isGptTag);
+    if (!gptUrl) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_GPT);
     }
-
-    let normalScore =
-        Audit.computeLogNormalScore(adPaintTimeSec, PODR, MEDIAN);
-    if (normalScore >= 0.9) normalScore = 1;
-
     return {
-      numericValue: adPaintTimeSec,
-      score: normalScore,
-      displayValue: util.format(displayValue, adPaintTimeSec.toFixed(2)),
+      score: Number(gptUrl.host === 'securepubads.g.doubleclick.net'),
     };
   }
 }
-module.exports = FirstAdPaint;
+
+module.exports = LoadsGptFromSgdn;

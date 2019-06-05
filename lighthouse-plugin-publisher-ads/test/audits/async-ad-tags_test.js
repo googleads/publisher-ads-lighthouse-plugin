@@ -31,16 +31,16 @@ describe('AsyncAdTags', async () => {
       {
         desc: 'should succeed if all ad tags are async',
         networkRecords: [
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
+          {priority: 'Low', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', frameId: 'mainFrameId'},
+          {priority: 'Low', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', frameId: 'mainFrameId'},
         ],
         expectedScore: 1,
       },
       {
         desc: 'should ignore tags in sub-frames',
         networkRecords: [
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', frameId: 'mainFrameId'},
+          {priority: 'Low', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', frameId: 'mainFrameId'},
+          {priority: 'Low', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', frameId: 'mainFrameId'},
         ],
         expectedScore: 1,
       },
@@ -52,17 +52,17 @@ describe('AsyncAdTags', async () => {
       {
         desc: 'should fail unless all ad tags are async',
         networkRecords: [
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
-          {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
-          {priority: 'Low', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
+          {priority: 'Low', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
+          {priority: 'High', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
+          {priority: 'Low', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
+          {priority: 'Low', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', initiator: {type: 'script'}, frameId: 'mainFrameId'},
         ],
         expectedScore: 0,
       },
       {
         desc: 'should assume async if loaded statically',
         networkRecords: [
-          {priority: 'High', url: 'http://www.googletagservices.com/tag/js/gpt.js', initiator: {type: 'preload'}, frameId: 'mainFrameId'},
+          {priority: 'High', url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js', initiator: {type: 'preload'}, frameId: 'mainFrameId'},
         ],
         expectedScore: 1,
       },

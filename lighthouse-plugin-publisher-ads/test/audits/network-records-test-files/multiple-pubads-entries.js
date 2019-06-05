@@ -63,7 +63,7 @@ const networkRecords = [
           {
             functionName: 'us',
             scriptId: '56',
-            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
             lineNumber: '0',
             columnNumber: '126445',
           },
@@ -83,7 +83,7 @@ const networkRecords = [
           {
             functionName: 'us',
             scriptId: '56',
-            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
             lineNumber: '0',
             columnNumber: '126445',
           },
@@ -103,7 +103,7 @@ const networkRecords = [
           {
             functionName: 'us',
             scriptId: '56',
-            url: 'https://www.googletagservices.com/tag/js/gpt.js',
+            url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
             lineNumber: '0',
             columnNumber: '126445',
           },
@@ -113,7 +113,7 @@ const networkRecords = [
   },
   // Filtered out GPT loader script.
   {
-    url: 'https://www.googletagservices.com/tag/js/gpt.js',
+    url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js',
     startTime: 1,
     endTime: 2,
     initiator: {
