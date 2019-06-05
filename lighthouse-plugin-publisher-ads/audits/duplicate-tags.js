@@ -80,7 +80,7 @@ class DuplicateTags extends Audit {
     /** @type {Object<string, Object<string, number>>} */
     const tagsByFrame = {};
     tagReqs.forEach((record) => {
-      const frameId = record.frameId;
+      const frameId = record.frameId || '';
       // Ignores protocol, is tested in other audit.
       const url = record.url.split('://')[1];
       if (!tagsByFrame[frameId]) {

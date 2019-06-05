@@ -15,6 +15,9 @@
 // @ts-ignore
 // eslint-disable-next-line
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
+const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
+const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
+const {assert} = require('./asserts');
 const {flatten} = require('./array');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
@@ -32,24 +35,29 @@ const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
 /**
  * Returns all requests and CPU tasks in the loading graph of the target
  * requests.
- * @param {typeof BaseNode} root The root node of the DAG.
+ * @param {BaseNode.Node} root The root node of the DAG.
  * @param {(req: NetworkRequest) => boolean} isTargetRequest
  * @return {{requests: NetworkRequest[], traceEvents: TraceEvent[]}}
  */
 function getTransitiveClosure(root, isTargetRequest) {
   const closure = new Set();
-  /** @type {LH.Artifacts.NetworkRequest} */
+  /** @type {?NetworkNode} */
   let firstTarget = null;
-  root.traverse(/** @param {typeof BaseNode} node */ (node) => {
-    if (!node.record || !isTargetRequest(node.record)) return;
-    if (firstTarget && firstTarget.record.startTime < node.record.startTime) {
+  root.traverse((node) => {
+    if (node instanceof CpuNode || !isTargetRequest(node.record)) return;
+    if (firstTarget && firstTarget.startTime < node.startTime) {
       return;
     }
     firstTarget = node;
   });
 
+  if (firstTarget == null) {
+    return {requests: [], traceEvents: []};
+  }
+
+  /** @type {BaseNode.Node[]} */ const stack = [firstTarget];
+
   // Search target -> root
-  const stack = [firstTarget];
   while (stack.length) {
     const node = stack.pop();
     if (!node || closure.has(node)) {
@@ -77,12 +85,11 @@ function getTransitiveClosure(root, isTargetRequest) {
   }
 
   const requests = Array.from(closure)
-      .map((n) => n.record)
-      .filter(Boolean)
-      .filter((r) => r.endTime < firstTarget.record.startTime);
+      .filter((r) => r instanceof NetworkNode)
+      .filter((r) => r.endTime < assert(firstTarget).startTime);
   const cpu = Array.from(closure)
-      .filter((n) => n.event)
-      .filter((n) => n.event.ts < firstTarget.startTime * 1000 * 1000)
+      .filter((n) => n instanceof CpuNode)
+      .filter((n) => n.event.ts < assert(firstTarget).startTime * 1000 * 1000)
       .map((n) => [n.event, ...n.childEvents]);
 
   const traceEvents = flatten(cpu);
@@ -139,7 +146,7 @@ function addInitiatedRequests(
 /**
  * Returns the set of requests in the critical path of the target request.
  * @param {NetworkSummary} networkSummary
- * @param {NetworkRequest} targetRequest
+ * @param {?NetworkRequest} targetRequest
  * @param {Set<NetworkRequest>=} criticalRequests
  * @return {Set<NetworkRequest>}
  */
@@ -175,7 +182,7 @@ function getCriticalGraph(
   }
   // Check the initiator request just to be sure.
   getCriticalGraph(
-    networkSummary, targetRequest.initiatorRequest, criticalRequests);
+    networkSummary, targetRequest.initiatorRequest || null, criticalRequests);
   return criticalRequests;
 }
 
@@ -213,17 +220,12 @@ function buildNetworkSummary(networkRecords, traceEvents) {
  * @return {Set<NetworkRequest>}
  */
 function getAdCriticalGraph(networkRecords, traceEvents) {
-  /** @type {NetworkRequest} */ let firstAdRequest;
-  for (const req of networkRecords) {
-    if (isGptAdRequest(req) &&
-        (!firstAdRequest || req.startTime < firstAdRequest.startTime)) {
-      firstAdRequest = req;
-    }
-  }
+  const maybeFirstAdRequest = networkRecords.find(isGptAdRequest);
   const criticalRequests = new Set();
-  if (!firstAdRequest) {
+  if (maybeFirstAdRequest == null) {
     return criticalRequests;
   }
+  const firstAdRequest = assert(maybeFirstAdRequest);
   const bidRequests = networkRecords.filter((r) =>
     !!getHeaderBidder(r.url) && r.endTime <= firstAdRequest.startTime);
   const summary = buildNetworkSummary(networkRecords, traceEvents);
