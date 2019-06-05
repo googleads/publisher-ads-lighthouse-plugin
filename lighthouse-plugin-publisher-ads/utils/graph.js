@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// eslint-disable-next-line no-unused-vars
+// @ts-ignore
+// eslint-disable-next-line
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
@@ -232,7 +233,7 @@ function getAdCriticalGraph(networkRecords, traceEvents) {
     getCriticalGraph(summary, req, criticalRequests);
   }
   const result = new Set(Array.from(criticalRequests).filter(
-    (r) => r.endTime < firstAdRequest.startTime || r == firstAdRequest));
+    (r) => r.endTime < firstAdRequest.startTime));
   return result;
 }
 
