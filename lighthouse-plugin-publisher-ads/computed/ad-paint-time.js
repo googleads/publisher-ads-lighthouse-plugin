@@ -69,8 +69,8 @@ class LanternAdPaintTime extends AdLanternMetric {
     const {nodeTimings} = simulationResult;
     const {iframes} = extras;
     const adFrameIds = new Set(iframes.map(
-        /** @param {Artifacts['IFrameElement']} s */
-          (s) => s.frame && s.frame.id));
+      /** @param {Artifacts['IFrameElement']} s */
+      (s) => s.frame && s.frame.id));
     const adResponseMs = AdLanternMetric.findNetworkTiming(
       nodeTimings, isGptAdRequest).endTime;
     // TODO: filter out pixels from resources

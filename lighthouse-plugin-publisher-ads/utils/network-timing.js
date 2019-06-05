@@ -17,8 +17,8 @@ const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-nod
 // @ts-ignore
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
 // @ts-ignore
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
+const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, isImplTag} = require('./resource-classification');
 const {URL} = require('url');
 

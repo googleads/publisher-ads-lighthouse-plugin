@@ -94,7 +94,7 @@ class AdLanternMetric extends LanternMetric {
    */
   static getPessimisticGraph(graph) {
     // The pessimistic graph is the whole graph.
-    const pessimisticGraph = graph.cloneWithRelationships(_ => true);
+    const pessimisticGraph = graph.cloneWithRelationships((_) => true);
     linkBidAndAdRequests(pessimisticGraph);
     return pessimisticGraph;
   }
