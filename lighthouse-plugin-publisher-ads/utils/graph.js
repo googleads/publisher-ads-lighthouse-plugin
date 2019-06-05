@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const AdLanternMetric = require('../computed/ad-lantern-metric');
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 const {flatten} = require('./array');

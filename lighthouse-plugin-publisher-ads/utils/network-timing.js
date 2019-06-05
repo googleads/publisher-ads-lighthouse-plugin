@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const AdLanternMetric = require('../computed/ad-lantern-metric');
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // @ts-ignore
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
@@ -87,12 +88,7 @@ async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
     const documentNode =
       // @ts-ignore Property 'request' does not appear on PageDependencyGraph
       await PageDependencyGraph.request({trace, devtoolsLog}, context);
-    const releventGraph = documentNode.cloneWithRelationships(
-      (node) => {
-        if (node instanceof CpuNode) return false;
-        return node.hasRenderBlockingPriority() ||
-            networkRecords.has(node.record);
-      });
+    const releventGraph = AdLanternMetric.getOptimisticGraph(documentNode);
     const simulator = await LoadSimulator.request(
       {devtoolsLog, settings: context.settings}, context);
     const {nodeTimings} = simulator.simulate(releventGraph, {});

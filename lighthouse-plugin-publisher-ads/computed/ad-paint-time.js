@@ -44,6 +44,18 @@ function getMinEventTime(eventName, traceEvents, adFrameIds) {
   return times.length ? Math.min(...times) : 0;
 }
 
+/**
+ * @param {MetricComputationData} data
+ * @return {Artifacts['IFrameElement']}
+ */
+function getAdIframes(data) {
+  const {iframeElements} = data;
+  if (!iframeElements) {
+    return [];
+  }
+  return iframeElements.filter(isGptIframe);
+}
+
 /** Computes simulated first ad request time using Lantern. */
 class LanternAdPaintTime extends AdLanternMetric {
   /**
@@ -54,8 +66,8 @@ class LanternAdPaintTime extends AdLanternMetric {
    */
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
-    const {slots} = extras;
-    const adFrameIds = new Set(slots.map(
+    const {iframes} = extras;
+    const adFrameIds = new Set(iframes.map(
         /** @param {Artifacts['IFrameElement']} s */
           (s) => s.frame && s.frame.id));
     const adResponseMs = AdLanternMetric.findNetworkTiming(
@@ -82,8 +94,8 @@ class AdPaintTime extends ComputedMetric {
    * @override
    */
   static async computeSimulatedMetric(data, context) {
-    // @ts-ignore request does not exist on LanternAdPaintTime
-    return LanternAdPaintTime.request(data, context);
+    const iframes = getAdIframes(data);
+    return LanternAdPaintTime.computeMetricWithGraphs(data, context, {iframes});
   }
 
   /**
@@ -93,17 +105,13 @@ class AdPaintTime extends ComputedMetric {
    * @override
    */
   static async computeObservedMetric(data, context) {
-    const {iframeElements, trace: {traceEvents}} = data;
-    if (!iframeElements) {
+    const iframes = getAdIframes(data);
+    if (!iframes.length) {
       return Promise.resolve({timing: -1});
     }
+    const adFrameIds = new Set(iframes.map((s) => s.frame && s.frame.id));
 
-    const slots = iframeElements.filter(isGptIframe);
-    if (!slots.length) {
-      return Promise.resolve({timing: -1});
-    }
-    const adFrameIds = new Set(slots.map((s) => s.frame && s.frame.id));
-
+    const {trace: {traceEvents}} = data;
     const adPaintTime =
         getMinEventTime('firstContentfulPaint', traceEvents, adFrameIds) ||
         getMinEventTime('firstPaint', traceEvents, adFrameIds);
