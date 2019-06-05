@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// eslint-disable-next-line no-unused-vars
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');

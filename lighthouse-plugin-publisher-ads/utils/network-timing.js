@@ -13,10 +13,11 @@
 // limitations under the License.
 
 const AdLanternMetric = require('../computed/ad-lantern-metric');
+// eslint-disable-next-line no-unused-vars
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // @ts-ignore
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
-// @ts-ignore
+// eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, isImplTag} = require('./resource-classification');

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// eslint-disable-next-line no-unused-vars
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js');
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // @ts-ignore Remove request() below after importing the type.
