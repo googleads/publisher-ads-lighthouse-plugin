@@ -5,19 +5,38 @@
       "failureTitle": "Avoid long tasks that block ad-related network requests",
       "description": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more](https://pub-ads-audits.appspot.com/#long-tasks).",
       "displayValue": "",
-      "failureDisplayValue": "%s long task%s"
+      "failureDisplayValue": "%s long task%s",
+      "headings": {
+        "script": "Attributable URL",
+        "startTime": "Start",
+        "endTime": "End",
+        "duration": "Duration"
+      }
     },
     "ad-render-blocking-resources": {
       "title": "Minimal render-blocking resources found",
       "failureTitle": "Avoid render-blocking resources",
       "description": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously or loading the tag earlier in the head. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).",
-      "failureDisplayValue": "Up to %s s tag load time improvement"
+      "failureDisplayValue": "Up to %s s tag load time improvement",
+      "headings": {
+        "url": "Resource",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "duration": "Duration"
+      }
     },
     "ad-request-critical-path": {
       "title": "Minimal requests found in ad critical path",
       "failureTitle": "Reduce critical path for ad loading",
       "description": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more](https://pub-ads-audits.appspot.com/#blocking-resouces).",
-      "displayValue": "%s serial resource%s, %s total resource%s"
+      "displayValue": "%s serial resource%s, %s total resource%s",
+      "headings": {
+        "url": "Request",
+        "type": "Type",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "duration": "Duration"
+      }
     },
     "ad-request-from-page-start": {
       "title": "Latency of first ad request",
@@ -36,14 +55,20 @@
       "failureTitle": "Move the top ad further down the page",
       "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://pub-ads-audits.appspot.com/#top-of-viewport).",
       "displayValue": "",
-      "failureDisplayValue": "A scroll of %s px would hide half of your topmost ad"
+      "failureDisplayValue": "A scroll of %s px would hide half of your topmost ad",
+      "headings": {
+        "slot": "Top Slot ID"
+      }
     },
     "ads-in-viewport": {
       "title": "Few or no ads loaded outside viewport",
       "failureTitle": "Avoid loading ads until they are nearly on-screen",
       "description": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://pub-ads-audits.appspot.com/#eager-ads).",
       "displayValue": "",
-      "failureDisplayValue": "%s ad%s out of view"
+      "failureDisplayValue": "%s ad%s out of view",
+      "headings": {
+        "slot": "Slots Outside Viewport"
+      }
     },
     "async-ad-tags": {
       "title": "GPT tag is loaded asynchronously",
@@ -55,7 +80,12 @@
       "failureTitle": "Load tags only once per frame",
       "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://pub-ads-audits.appspot.com/#duplicate-tags).",
       "displayValue": "",
-      "failureDisplayValue": "%s duplicate tag%s"
+      "failureDisplayValue": "%s duplicate tag%s",
+      "headings": {
+        "url": "Script",
+        "numReqs": "Duplicate Requests",
+        "frameId": "Frame ID"
+      }
     },
     "first-ad-paint": {
       "title": "Latency of first ad render",
@@ -74,7 +104,22 @@
       "title": "[Experimental] Network is efficiently utilized before ad requests",
       "failureTitle": "[Experimental] Reduce network idle time before ad requests",
       "description": "Moments of network idleness in the critical path to ad loading present opportunities to improve speed. Consider eliminating long tasks, timeouts, waiting on load events, or synchronous resources to avoid idleness. Chrome DevTools can be used to discover what is causing network idleness. [Learn more](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference).",
-      "displayValue": "%s s spent idle in critical path"
+      "displayValue": "%s s spent idle in critical path",
+      "headings": {
+        "cause": "Suspected Cause",
+        "url": "Attributable URL",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "duration": "Duration"
+      },
+      "causes": {
+        "domContentLoaded": "DOMContentLoaded Event",
+        "loadEvent": "Load Event",
+        "longTask": "Long Task",
+        "renderBlockingResource": "Blocking Resource",
+        "timeout": "Timeout",
+        "other": "Other"
+      }
     },
     "loads-gpt-from-sgdn": {
       "title": "GPT tag is loaded from recommended host",
@@ -91,18 +136,35 @@
     "script-injected-tags": {
       "title": "No script-injected tags found",
       "failureTitle": "Avoid script-injected tags",
-      "description": "Load scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. This allows the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)."
+      "description": "Load scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. This allows the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/).",
+      "headings": {
+        "request": "Request",
+        "startTime": "Start Time",
+        "duration": "Duration",
+        "lineNumber": "Source Line Number"
+      }
     },
     "serial-header-bidding": {
       "title": "Header bidding is parallelized",
       "failureTitle": "Parallelize bid requests",
-      "description": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more](https://pub-ads-audits.appspot.com/#serial-header-bidding)."
+      "description": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more](https://pub-ads-audits.appspot.com/#serial-header-bidding).",
+      "headings": {
+        "bidder": "Bidder",
+        "url": "URL",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "duration": "Duration"
+      }
     },
     "static-ad-tags": {
       "title": "GPT tag is loaded statically",
       "failureTitle": "Load GPT tag statically",
       "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://pub-ads-audits.appspot.com/#dynamic-tag).",
-      "failureDisplayValue": "Up to %s s tag load time improvement"
+      "failureDisplayValue": "Up to %s s tag load time improvement",
+      "headings": {
+        "url": "Initiator",
+        "lineNumber": "Line Number"
+      }
     },
     "tag-load-time": {
       "title": "Tag load time",
@@ -138,5 +200,10 @@
   "ERRORS": {
     "AREA_LARGER_THAN_VIEWPORT": "Calculated ad area is larger than viewport",
     "VIEWPORT_AREA_ZERO": "Viewport area is zero"
+  },
+  "GROUPS": {
+    "METRICS": "Metrics",
+    "ADS_PERFORMANCE": "Ad Speed",
+    "ADS_BEST_PRACTICES": "Tag Best Practices"
   }
 }

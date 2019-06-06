@@ -26,6 +26,7 @@ const {
   title,
   failureTitle,
   description,
+  headings,
 } = AUDITS[id];
 
 /**
@@ -36,24 +37,24 @@ const HEADINGS = [
   {
     key: 'request',
     itemType: 'url',
-    text: 'Request',
+    text: headings.request,
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: 'Start Time',
+    text: headings.startTime,
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: 'Duration',
+    text: headings.duration,
     granularity: 1,
   },
   {
     key: 'lineNumber',
     itemType: 'numeric',
-    text: 'Source Line Number',
+    text: headings.lineNumber,
     granularity: 1,
   },
 ];

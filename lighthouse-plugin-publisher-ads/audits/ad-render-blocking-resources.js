@@ -23,6 +23,15 @@ const {getPageStartTime} = require('../utils/network-timing');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
+const id = 'ad-render-blocking-resources';
+const {
+  title,
+  failureTitle,
+  failureDisplayValue,
+  description,
+  headings,
+} = AUDITS[id];
+
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
@@ -31,35 +40,27 @@ const HEADINGS = [
   {
     key: 'url',
     itemType: 'url',
-    text: 'Resource',
+    text: headings.url,
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: 'Start Time',
+    text: headings.startTime,
     granularity: 1,
   },
   {
     key: 'endTime',
     itemType: 'ms',
-    text: 'End Time',
+    text: headings.endTime,
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: 'Duration',
+    text: headings.duration,
     granularity: 1,
   },
 ];
-
-const id = 'ad-render-blocking-resources';
-const {
-  title,
-  failureTitle,
-  failureDisplayValue,
-  description,
-} = AUDITS[id];
 
 /** Audits for render blocking resources */
 class AdRenderBlockingResources extends RenderBlockingResources {

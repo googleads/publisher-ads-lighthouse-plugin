@@ -24,14 +24,24 @@ const {getAdCriticalGraph} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
 
+const id = 'idle-network-times';
+const {
+  title,
+  failureTitle,
+  description,
+  displayValue,
+  headings,
+  causes,
+} = AUDITS[id];
+
 /** @enum {string} */
 const Cause = {
-  DOM_CONTENT_LOADED: 'DOMContentLoaded Event',
-  LOAD_EVENT: 'Load Event',
-  LONG_TASK: 'Long Task',
-  RENDER_BLOCKING_RESOURCE: 'Blocking Resource',
-  TIMEOUT: 'Timeout',
-  OTHER: 'Other',
+  DOM_CONTENT_LOADED: causes.domContentLoaded,
+  LOAD_EVENT: causes.loadEvent,
+  LONG_TASK: causes.longTask,
+  RENDER_BLOCKING_RESOURCE: causes.renderBlockingResource,
+  TIMEOUT: causes.timeout,
+  OTHER: causes.other,
 };
 
 /**
@@ -51,29 +61,29 @@ const HEADINGS = [
   {
     key: 'cause',
     itemType: 'text',
-    text: 'Suspected Cause',
+    text: headings.cause,
   },
   {
     key: 'url',
     itemType: 'url',
-    text: 'Attributable URL',
+    text: headings.url,
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: 'Start Time',
+    text: headings.startTime,
     granularity: 1,
   },
   {
     key: 'endTime',
     itemType: 'ms',
-    text: 'End Time',
+    text: headings.endTime,
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: 'Duration',
+    text: headings.duration,
     granularity: 1,
   },
 ];
@@ -215,14 +225,6 @@ function determineCause(
       checkIfTagIsBlocking(idlePeriod, blockingTags, pageStartTime) ||
       checkIfLoadIsBlocking(idlePeriod, timings);
 }
-
-const id = 'idle-network-times';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-} = AUDITS[id];
 
 /**
  * Audit to check the length of the critical path to load ads.
