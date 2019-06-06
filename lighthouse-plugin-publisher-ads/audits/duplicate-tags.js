@@ -26,6 +26,7 @@ const {
   description,
   displayValue,
   failureDisplayValue,
+  headings,
 } = AUDITS[id];
 
 const tags = [
@@ -40,9 +41,9 @@ const tags = [
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'url', itemType: 'url', text: 'Script'},
-  {key: 'numReqs', itemType: 'text', text: 'Duplicate Requests'},
-  {key: 'frameId', itemType: 'text', text: 'Frame ID'},
+  {key: 'url', itemType: 'url', text: headings.url},
+  {key: 'numReqs', itemType: 'text', text: headings.numReqs},
+  {key: 'frameId', itemType: 'text', text: headings.frameId},
 ];
 /**
  * Simple audit that checks if any specified tags are duplicated within the same

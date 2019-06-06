@@ -26,6 +26,7 @@ const {
   title,
   failureTitle,
   description,
+  headings,
 } = AUDITS[id];
 
 // Min record duration (s) to be considered a bid.
@@ -45,11 +46,11 @@ const MIN_BID_DURATION = .05;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'bidder', itemType: 'text', text: 'Bidder'},
-  {key: 'url', itemType: 'url', text: 'URL'},
-  {key: 'startTime', itemType: 'ms', text: 'Start Time'},
-  {key: 'endTime', itemType: 'ms', text: 'End Time'},
-  {key: 'duration', itemType: 'ms', text: 'Duration'},
+  {key: 'bidder', itemType: 'text', text: headings.bidder},
+  {key: 'url', itemType: 'url', text: headings.url},
+  {key: 'startTime', itemType: 'ms', text: headings.startTime},
+  {key: 'endTime', itemType: 'ms', text: headings.endTime},
+  {key: 'duration', itemType: 'ms', text: headings.duration},
 ];
 
 /**
