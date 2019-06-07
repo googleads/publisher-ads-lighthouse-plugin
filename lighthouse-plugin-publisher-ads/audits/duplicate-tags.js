@@ -18,6 +18,7 @@ const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
+const {URL} = require('url');
 
 const id = 'duplicate-tags';
 const {
@@ -31,6 +32,7 @@ const {
 
 const tags = [
   'googletagservices.com/tag/js/gpt.js',
+  'securepubads.g.doubleclick.net/tag/js/gpt.js',
   'pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
   'imasdk.googleapis.com/js/sdkloader/ima3.js',
   'google-analytics.com/analytics.js',
@@ -41,7 +43,7 @@ const tags = [
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'url', itemType: 'url', text: headings.url},
+  {key: 'script', itemType: 'url', text: headings.url},
   {key: 'numReqs', itemType: 'text', text: headings.numReqs},
   {key: 'frameId', itemType: 'text', text: headings.frameId},
 ];
@@ -82,22 +84,23 @@ class DuplicateTags extends Audit {
     const tagsByFrame = {};
     tagReqs.forEach((record) => {
       const frameId = record.frameId || '';
-      // Ignores protocol, is tested in other audit.
-      const url = record.url.split('://')[1];
+      // Groups by path to account for scripts hosted on multiple domains.
+      const script = new URL(record.url).pathname;
+      console.log(script);
       if (!tagsByFrame[frameId]) {
         tagsByFrame[frameId] = {};
       }
-      tagsByFrame[frameId][url] =
-          tagsByFrame[frameId][url] ? tagsByFrame[frameId][url] + 1 : 1;
+      tagsByFrame[frameId][script] =
+          tagsByFrame[frameId][script] ? tagsByFrame[frameId][script] + 1 : 1;
     });
 
     /** @type {LH.Audit.Details.Table['items']} */
     const dups = [];
     for (const frameId of Object.keys(tagsByFrame)) {
-      for (const url of Object.keys(tagsByFrame[frameId])) {
-        const numReqs = tagsByFrame[frameId][url];
+      for (const script of Object.keys(tagsByFrame[frameId])) {
+        const numReqs = tagsByFrame[frameId][script];
         if (numReqs > 1) {
-          dups.push({url, numReqs, frameId});
+          dups.push({script, numReqs, frameId});
         }
       }
     }
