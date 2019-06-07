@@ -14,7 +14,7 @@
 
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptIframe} = require('../utils/resource-classification');
 
@@ -76,6 +76,7 @@ class FirstAdPaint extends Audit {
     const {traceEvents} = artifacts.traces[Audit.DEFAULT_PASS];
     const slots = artifacts.IFrameElements.filter(isGptIframe);
     if (slots.length == 0) {
+      context.LighthouseRunWarnings.push(WARNINGS.NO_AD_RENDERED);
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
     }
 
