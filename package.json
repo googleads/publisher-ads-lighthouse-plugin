@@ -1,6 +1,6 @@
 {
   "name": "lighthouse-plugin-publisher-ads-wrapper",
-  "version": "0.0.3.7",
+  "version": "0.0.3.8",
   "description": "Wrapper for Publisher Ads Lighthouse Plugin.",
   "license": "Apache-2.0",
   "main": "index.js",
