@@ -203,7 +203,7 @@
   },
   "WARNINGS": {
     "NO_ADS": "No ads were requested when fetching this page.",
-    "NO_AD_RENDERED": "No ads were rendered when fetching this page.",
+    "NO_AD_RENDERED": "No ads were painted when rendering this page.",
     "NO_TAG": "The GPT tag was not requested."
   },
   "GROUPS": {
