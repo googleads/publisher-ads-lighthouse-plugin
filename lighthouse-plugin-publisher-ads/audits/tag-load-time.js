@@ -15,7 +15,7 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getPageResponseTime, getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 
@@ -64,6 +64,7 @@ class TagLoadTime extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
     }
     if (tagEndTime < 0) {
+      context.LighthouseRunWarnings.push(WARNINGS.NO_TAG);
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
