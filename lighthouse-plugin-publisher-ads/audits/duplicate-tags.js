@@ -43,7 +43,7 @@ const tags = [
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'script', itemType: 'url', text: headings.url},
+  {key: 'script', itemType: 'url', text: headings.script},
   {key: 'numReqs', itemType: 'text', text: headings.numReqs},
   {key: 'frameId', itemType: 'text', text: headings.frameId},
 ];
@@ -86,7 +86,6 @@ class DuplicateTags extends Audit {
       const frameId = record.frameId || '';
       // Groups by path to account for scripts hosted on multiple domains.
       const script = new URL(record.url).pathname;
-      console.log(script);
       if (!tagsByFrame[frameId]) {
         tagsByFrame[frameId] = {};
       }
