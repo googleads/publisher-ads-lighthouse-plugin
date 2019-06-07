@@ -82,7 +82,7 @@
       "displayValue": "",
       "failureDisplayValue": "%s duplicate tag%s",
       "headings": {
-        "url": "Script",
+        "script": "Script",
         "numReqs": "Duplicate Requests",
         "frameId": "Frame ID"
       }
