@@ -201,6 +201,11 @@
     "AREA_LARGER_THAN_VIEWPORT": "Calculated ad area is larger than viewport",
     "VIEWPORT_AREA_ZERO": "Viewport area is zero"
   },
+  "WARNINGS": {
+    "NO_ADS": "No ads were requested when fetching this page.",
+    "NO_AD_RENDERED": "No ads were painted when rendering this page.",
+    "NO_TAG": "The GPT tag was not requested."
+  },
   "GROUPS": {
     "METRICS": "Metrics",
     "ADS_PERFORMANCE": "Ad Speed",

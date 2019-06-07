@@ -56,7 +56,10 @@ describe('TagLoadTime', async () => {
       of testCases) {
       it(`${desc} with a load time of ${expectedLoadTime}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
-        const results = await TagLoadTime.audit({devtoolsLogs: {}}, {});
+        const results = await TagLoadTime.audit(
+          {devtoolsLogs: {}},
+          {LighthouseRunWarnings: []}
+        );
         if (!expectedNotAppl) {
           expect(results).to.have.property('numericValue', expectedLoadTime);
         } else {
