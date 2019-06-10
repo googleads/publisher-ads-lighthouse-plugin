@@ -93,11 +93,11 @@ class ScriptInjectedTags extends Audit {
 
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
     if (!closure.requests.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
+      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
     }
     const injectedBlockingRequests = closure.requests
-        .filter((r) => r.resourceType == 'Script')
-        .filter((r) => r.initiator.type == 'script')
+        .filter((r) =>
+          r.resourceType == 'Script' && r.initiator.type == 'script')
         .filter((r) =>
           r.initiatorRequest && r.initiatorRequest.url == r.documentURL);
 

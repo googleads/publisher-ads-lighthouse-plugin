@@ -18,7 +18,6 @@ const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-n
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const {assert} = require('./asserts');
-const {flatten} = require('./array');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
 
@@ -33,14 +32,11 @@ const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
  */
 
 /**
- * Returns all requests and CPU tasks in the loading graph of the target
- * requests.
  * @param {BaseNode.Node} root The root node of the DAG.
  * @param {(req: NetworkRequest) => boolean} isTargetRequest
- * @return {{requests: NetworkRequest[], traceEvents: TraceEvent[]}}
+ * @return {?NetworkNode}
  */
-function getTransitiveClosure(root, isTargetRequest) {
-  const closure = new Set();
+function findTargetRequest(root, isTargetRequest) {
   /** @type {?NetworkNode} */
   let firstTarget = null;
   root.traverse((node) => {
@@ -50,9 +46,29 @@ function getTransitiveClosure(root, isTargetRequest) {
     }
     firstTarget = node;
   });
+  return firstTarget;
+}
+
+/**
+ * Returns all requests and CPU tasks in the loading graph of the target
+ * requests.
+ * @param {BaseNode.Node} root The root node of the DAG.
+ * @param {(req: NetworkRequest) => boolean} isTargetRequest
+ * @return {{requests: NetworkRequest[], traceEvents: TraceEvent[]}}
+ */
+function getTransitiveClosure(root, isTargetRequest) {
+  /** @type {Set<BaseNode.Node>} */
+  const closure = new Set();
+  /** @type {?NetworkNode} */
+  const firstTarget = findTargetRequest(root, isTargetRequest);
+
+  /** @type {NetworkRequest[]} */
+  const requests = [];
+  /** @type {TraceEvent[]} */
+  const traceEvents = [];
 
   if (firstTarget == null) {
-    return {requests: [], traceEvents: []};
+    return {requests, traceEvents};
   }
 
   /** @type {BaseNode.Node[]} */ const stack = [firstTarget];
@@ -84,15 +100,18 @@ function getTransitiveClosure(root, isTargetRequest) {
     stack.push(...node.getDependents());
   }
 
-  const requests = Array.from(closure)
-      .filter((r) => r instanceof NetworkNode)
-      .filter((r) => r.endTime < assert(firstTarget).startTime);
-  const cpu = Array.from(closure)
-      .filter((n) => n instanceof CpuNode)
-      .filter((n) => n.event.ts < assert(firstTarget).startTime * 1000 * 1000)
-      .map((n) => [n.event, ...n.childEvents]);
 
-  const traceEvents = flatten(cpu);
+  for (const node of closure) {
+    if (node instanceof NetworkNode) {
+      if (node.endTime < assert(firstTarget).startTime) {
+        requests.push(node.record);
+      }
+    } else if (node instanceof CpuNode) {
+      if (node.event.ts < assert(firstTarget).startTime * 1e6) {
+        traceEvents.push(node.event, ...node.childEvents);
+      }
+    }
+  }
   return {requests, traceEvents};
 }
 
