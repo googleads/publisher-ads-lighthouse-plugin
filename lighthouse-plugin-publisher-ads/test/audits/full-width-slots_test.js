@@ -39,6 +39,7 @@ describe('FullWidthSlots', async () => {
         ],
       },
     },
+    resourceType: 'XHR',
   });
 
 

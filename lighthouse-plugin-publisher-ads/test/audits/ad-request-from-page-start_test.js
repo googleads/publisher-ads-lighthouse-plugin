@@ -46,6 +46,7 @@ describe('AdRequestFromPageStart', async () => {
                 ],
               },
             },
+            resourceType: 'XHR',
           },
         ],
         expectedTime: 0.25,
@@ -69,7 +70,8 @@ describe('AdRequestFromPageStart', async () => {
       it(`${desc} with a load time of ${expectedTime}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results =
-        await AdRequestFromPageStart.audit({devtoolsLogs: {}}, {});
+        await AdRequestFromPageStart.audit(
+          {devtoolsLogs: {}}, {LighthouseRunWarnings: []});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
