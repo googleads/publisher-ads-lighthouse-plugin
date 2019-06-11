@@ -13,7 +13,6 @@
 // limitations under the License.
 
 const bidderPatterns = require('./bidder-patterns');
-const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {URL} = require('url');
 
 /**
@@ -72,17 +71,13 @@ function containsAnySubstring(str, substrings) {
  * @return {boolean}
  */
 function isGptAdRequest(request) {
+  if (!request) return false;
   const url = new URL(request.url);
-  if (!request || url.pathname !== '/gampad/ads') {
-    return false;
-  }
-
-  for (const initUrl of getNetworkInitiators(request)) {
-    if (isImplTag(new URL(initUrl))) {
-      return true;
-    }
-  }
-  return false;
+  return (
+    url.pathname === '/gampad/ads' &&
+    url.host === 'securepubads.g.doubleclick.net' &&
+    request.resourceType === 'XHR'
+  );
 }
 
 /**

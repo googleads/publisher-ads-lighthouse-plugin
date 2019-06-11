@@ -46,6 +46,7 @@ describe('AdRequestFromTagLoad', async () => {
                 ],
               },
             },
+            resourceType: 'XHR',
           },
         ],
         expectedTime: 0.25,
