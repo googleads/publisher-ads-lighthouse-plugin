@@ -8,7 +8,7 @@ We are currently in beta and still in the development process. In order to help 
 
 ## Web App
 
-We currently have a web app version of Publisher Ads Lighthouse Plugin. It is currently in beta and can be accessed at [pub-ads-audits.appspot.com](http://pub-ads-audits.appspot.com).
+We currently have a web app version of Publisher Ads Lighthouse Plugin. It is currently in beta and can be accessed at [developers.google.com/publisher-ads-audits](https://developers.google.com/publisher-ads-audits/).
 
 ## Setup
 

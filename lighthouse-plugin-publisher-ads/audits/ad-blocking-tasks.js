@@ -29,6 +29,7 @@ const {
   description,
   displayValue,
   failureDisplayValue,
+  headings,
 } = AUDITS[id];
 
 /**
@@ -41,10 +42,10 @@ const LONG_TASK_DUR_MS = 100;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'script', itemType: 'url', text: 'Attributable URL'},
-  {key: 'startTime', itemType: 'ms', text: 'Start', granularity: 1},
-  {key: 'endTime', itemType: 'ms', text: 'End', granularity: 1},
-  {key: 'duration', itemType: 'ms', text: 'Duration', granularity: 1},
+  {key: 'script', itemType: 'url', text: headings.script},
+  {key: 'startTime', itemType: 'ms', text: headings.startTime, granularity: 1},
+  {key: 'endTime', itemType: 'ms', text: headings.endTime, granularity: 1},
+  {key: 'duration', itemType: 'ms', text: headings.duration, granularity: 1},
 ];
 
 /**

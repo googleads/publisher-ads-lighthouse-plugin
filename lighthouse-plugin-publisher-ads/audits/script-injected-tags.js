@@ -26,6 +26,7 @@ const {
   title,
   failureTitle,
   description,
+  headings,
 } = AUDITS[id];
 
 /**
@@ -36,24 +37,24 @@ const HEADINGS = [
   {
     key: 'request',
     itemType: 'url',
-    text: 'Request',
+    text: headings.request,
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: 'Start Time',
+    text: headings.startTime,
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: 'Duration',
+    text: headings.duration,
     granularity: 1,
   },
   {
     key: 'lineNumber',
     itemType: 'numeric',
-    text: 'Source Line Number',
+    text: headings.lineNumber,
     granularity: 1,
   },
 ];
@@ -92,11 +93,11 @@ class ScriptInjectedTags extends Audit {
 
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
     if (!closure.requests.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
+      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
     }
     const injectedBlockingRequests = closure.requests
-        .filter((r) => r.resourceType == 'Script')
-        .filter((r) => r.initiator.type == 'script')
+        .filter((r) =>
+          r.resourceType == 'Script' && r.initiator.type == 'script')
         .filter((r) =>
           r.initiatorRequest && r.initiatorRequest.url == r.documentURL);
 

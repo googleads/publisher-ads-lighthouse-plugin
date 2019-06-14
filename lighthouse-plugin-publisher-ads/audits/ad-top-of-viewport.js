@@ -25,6 +25,7 @@ const {
   description,
   displayValue,
   failureDisplayValue,
+  headings,
 } = AUDITS[id];
 
 const SCROLL_PX_THRESHOLD = 100;
@@ -34,7 +35,7 @@ const SCROLL_PX_THRESHOLD = 100;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'slot', itemType: 'text', text: 'Top Slot ID'},
+  {key: 'slot', itemType: 'text', text: headings.slot},
 ];
 
 
