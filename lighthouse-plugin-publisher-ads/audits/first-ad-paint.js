@@ -15,7 +15,7 @@
 const AdPaintTime = require('../computed/ad-paint-time');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 
 const id = 'first-ad-paint';
@@ -65,14 +65,14 @@ class FirstAdPaint extends Audit {
       iframeElements: artifacts.IFrameElements,
       settings: context.settings,
     };
-
     const {timing} = await AdPaintTime.request(metricData, context);
-    const adPaintTimeSec = timing / 1000;
 
-    if (adPaintTimeSec < 0) {
+    if (!(timing > 0)) { // Handle NaN, etc.
+      context.LighthouseRunWarnings.push(WARNINGS.NO_AD_RENDERED);
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
     }
 
+    const adPaintTimeSec = timing / 1000;
     let normalScore =
         Audit.computeLogNormalScore(adPaintTimeSec, PODR, MEDIAN);
     if (normalScore >= 0.9) normalScore = 1;

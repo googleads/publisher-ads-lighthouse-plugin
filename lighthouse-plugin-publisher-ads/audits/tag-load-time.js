@@ -15,7 +15,7 @@
 const ComputedTagLoadTime = require('../computed/tag-load-time');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 
 const id = 'tag-load-time';
@@ -60,7 +60,8 @@ class TagLoadTime extends Audit {
     const metricData = {trace, devtoolsLog, settings: context.settings};
 
     const {timing} = await ComputedTagLoadTime.request(metricData, context);
-    if (timing < 0) {
+    if (!(timing > 0)) { // Handle NaN, etc.
+      context.LighthouseRunWarnings.push(WARNINGS.NO_TAG);
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 

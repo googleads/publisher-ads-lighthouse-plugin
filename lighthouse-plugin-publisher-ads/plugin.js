@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const {GROUPS} = require('./messages/messages.js');
+
 const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';
 
 /** @type {LH.Config.Plugin} */
@@ -39,13 +41,13 @@ module.exports = {
   ],
   groups: {
     'metrics': {
-      title: 'Metrics',
+      title: GROUPS.METRICS,
     },
     'ads-performance': {
-      title: 'Ad Speed',
+      title: GROUPS.ADS_PERFORMANCE,
     },
     'ads-best-practices': {
-      title: 'Tag Best Practices',
+      title: GROUPS.ADS_BEST_PRACTICES,
     },
   },
   category: {

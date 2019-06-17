@@ -64,7 +64,7 @@ describe('resource-classification', () => {
   });
 
   describe('#isGptAdRequest', () => {
-    it('should return true for /gampad/ads in the request path and pubads_impl in the initiator stack', () => {
+    it('should return true for /gampad/ads in the request path', () => {
       const record = {
         url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar=baz',
         initiator: {
@@ -80,28 +80,9 @@ describe('resource-classification', () => {
             ],
           },
         },
+        resourceType: 'XHR',
       };
       expect(isGptAdRequest(record)).to.be.true;
-    });
-
-    it('should return false if pubads_impl not in the initiator stack', () => {
-      const record = {
-        url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar=baz',
-        initiator: {
-          type: 'script',
-          stack: {
-            callFrames: [
-              {
-                url: 'https://google.com',
-              },
-              {
-                url: 'https://gmail.com',
-              },
-            ],
-          },
-        },
-      };
-      expect(isGptAdRequest(record)).to.be.false;
     });
 
     it('should return false for any other ad request path', () => {

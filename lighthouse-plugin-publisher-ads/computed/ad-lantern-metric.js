@@ -82,6 +82,7 @@ class AdLanternMetric extends LanternMetric {
   static get COEFFICIENTS() {
     return {
       intercept: 0,
+      // We only have one graph so put all the weight on it.
       optimistic: 1,
       pessimistic: 0,
     };
@@ -132,7 +133,8 @@ class AdLanternMetric extends LanternMetric {
    * @override
    */
   static getEstimateFromSimulation(simulationResult, extras) {
-    throw new Error('Not implemented');
+    throw new Error(
+      'getEstimateFromSimulation not implemented by ' + this.name);
   }
 
   /**
