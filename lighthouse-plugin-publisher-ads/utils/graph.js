@@ -105,14 +105,12 @@ function getTransitiveClosure(root, isTargetRequest) {
 
   for (const node of closure) {
     if (node.type === BaseNode.TYPES.NETWORK) {
-      const networkNode = /** @type {NetworkNode} */ (node);
-      if (networkNode.endTime < assert(firstTarget).startTime) {
-        requests.push(networkNode.record);
+      if (node.endTime < assert(firstTarget).startTime) {
+        requests.push(node.record);
       }
     } else if (node.type === BaseNode.TYPES.CPU) {
-      const cpuNode = /** @type {CpuNode} */ (node);
-      if (cpuNode.event.ts < assert(firstTarget).startTime * 1e6) {
-        traceEvents.push(cpuNode.event, ...cpuNode.childEvents);
+      if (node.event.ts < assert(firstTarget).startTime * 1e6) {
+        traceEvents.push(node.event, ...node.childEvents);
       }
     }
   }
