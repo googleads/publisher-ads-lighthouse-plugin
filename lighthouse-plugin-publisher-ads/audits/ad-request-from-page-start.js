@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const ComputedAdRequestTime = require('../computed/ad-request-time');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getAdStartTime, getPageResponseTime, getPageStartTime} = require('../utils/network-timing');
 
 const id = 'ad-request-from-page-start';
 const {
@@ -29,7 +28,7 @@ const {
 
 // Point of diminishing returns.
 const PODR = 1.5; // seconds, 1 second beyond tag load time PODR
-const MEDIAN = 2.5; // seconds
+const MEDIAN = 3.5; // seconds
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -47,7 +46,7 @@ class AdRequestFromPageStart extends Audit {
       description,
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
@@ -57,34 +56,28 @@ class AdRequestFromPageStart extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
-    const adStartTime = getAdStartTime(networkRecords);
-    const pageStartTime = getPageStartTime(networkRecords);
-    const pageResponseTime = getPageResponseTime(networkRecords);
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const metricData = {trace, devtoolsLog, settings: context.settings};
 
-    if (pageStartTime < 0) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
-    }
-    if (adStartTime < 0) {
+    const {timing} = await ComputedAdRequestTime.request(metricData, context);
+    if (!(timing > 0)) { // Handle NaN, etc.
       context.LighthouseRunWarnings.push(WARNINGS.NO_ADS);
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
 
-
-    let normalScore = Audit.computeLogNormalScore(
-      adStartTime - pageResponseTime, PODR, MEDIAN);
+    const adReqTimeSec = timing / 1000;
+    let normalScore = Audit.computeLogNormalScore(adReqTimeSec, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
       normalScore = 1;
     }
 
-    const adReqTime = (adStartTime - pageStartTime);
     return {
-      numericValue: adReqTime,
+      numericValue: adReqTimeSec,
       score: normalScore,
-      displayValue: util.format(displayValue, adReqTime.toFixed(2)),
+      displayValue: util.format(displayValue, adReqTimeSec.toFixed(2)),
     };
   }
 }
