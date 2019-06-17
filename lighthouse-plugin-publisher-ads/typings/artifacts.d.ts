@@ -27,4 +27,7 @@ declare global {
     IFrameElements: Array<Artifacts.IFrameElement>;
     StaticAdTags: Array<LH.Crdp.DOM.Node>;
   }
+  export interface MetricComputationData extends LH.Artifacts.MetricComputationData {
+    iframeElements: Artifacts.IFrameElement[]|undefined
+  }
 }
