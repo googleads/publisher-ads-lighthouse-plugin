@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// eslint-disable-next-line no-unused-vars
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node');
+// eslint-disable-next-line no-unused-vars
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
+// eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const {assert} = require('./asserts');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
@@ -39,7 +40,9 @@ function findTargetRequest(root, isTargetRequest) {
   /** @type {?NetworkNode} */
   let firstTarget = null;
   root.traverse((node) => {
-    if (node instanceof CpuNode || !isTargetRequest(node.record)) return;
+    if (node.type === BaseNode.TYPES.CPU || !isTargetRequest(node.record)) {
+      return;
+    }
     if (firstTarget && firstTarget.startTime < node.startTime) {
       return;
     }
@@ -101,11 +104,11 @@ function getTransitiveClosure(root, isTargetRequest) {
 
 
   for (const node of closure) {
-    if (node instanceof NetworkNode) {
+    if (node.type === BaseNode.TYPES.NETWORK) {
       if (node.endTime < assert(firstTarget).startTime) {
         requests.push(node.record);
       }
-    } else if (node instanceof CpuNode) {
+    } else if (node.type === BaseNode.TYPES.CPU) {
       if (node.event.ts < assert(firstTarget).startTime * 1e6) {
         traceEvents.push(node.event, ...node.childEvents);
       }
