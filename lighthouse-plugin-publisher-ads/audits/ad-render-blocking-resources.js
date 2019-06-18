@@ -15,9 +15,8 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
 const RenderBlockingResources = require('lighthouse/lighthouse-core/audits/byte-efficiency/render-blocking-resources.js');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGptTag} = require('../utils/resource-classification');
@@ -113,7 +112,7 @@ class AdRenderBlockingResources extends RenderBlockingResources {
     const opportunity = Math.max(...tableView.map((r) => r.duration)) / 1000;
     let displayValue = '';
     if (results.length > 0 && opportunity > 0) {
-      displayValue = util.format(failureDisplayValue, opportunity.toFixed(2));
+      displayValue = formatMessage(failureDisplayValue, {opportunity});
     }
 
     return {

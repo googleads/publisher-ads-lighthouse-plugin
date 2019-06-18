@@ -15,7 +15,7 @@
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, format: formatMessage} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');

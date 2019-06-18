@@ -15,9 +15,8 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {format} = require('util');
 const {getPageStartTime} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
 const {isGptAdRequest} = require('../utils/resource-classification');
@@ -117,7 +116,7 @@ class ScriptInjectedTags extends Audit {
     return {
       numericValue: tableView.length,
       score: failed ? 0 : 1,
-      displayValue: format(tableView.length, displayValue),
+      displayValue: formatMessage(displayValue, {numTags: tableView.length}),
       details: ScriptInjectedTags.makeTableDetails(HEADINGS, tableView),
     };
   }

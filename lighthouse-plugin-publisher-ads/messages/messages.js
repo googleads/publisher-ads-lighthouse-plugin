@@ -17,7 +17,7 @@ const Messages = require('./en-US.json');
 
 module.exports = Messages;
 
-module.exports.format = (msg, vars) => {
+module.exports.formatMessage = (msg, vars) => {
   // TODO: Implement locale picking.
   const formatter = new IntlMessageFormat(msg, 'en-us');
   return formatter.format(vars);

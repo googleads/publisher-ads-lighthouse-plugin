@@ -17,7 +17,7 @@
       "title": "Minimal render-blocking resources found",
       "failureTitle": "Avoid render-blocking resources",
       "description": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously or loading the tag earlier in the head. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).",
-      "failureDisplayValue": "Up to %s s tag load time improvement",
+      "failureDisplayValue": "Up to {opportunity, number, seconds}s tag load time improvement",
       "headings": {
         "url": "Resource",
         "startTime": "Start Time",
@@ -137,7 +137,7 @@
       "title": "No script-injected tags found",
       "failureTitle": "Avoid script-injected tags",
       "description": "Load scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. This allows the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/).",
-      "displayValue": "%s script-injected resource(s)",
+      "displayValue": "{numTags} script-injected {numTags, plural, =1 {resources} other {resources}}",
       "headings": {
         "request": "Request",
         "startTime": "Start Time",
