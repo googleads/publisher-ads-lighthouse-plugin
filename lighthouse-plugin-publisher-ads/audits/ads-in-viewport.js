@@ -73,13 +73,12 @@ class AdsInViewport extends Audit {
         .sort((a, b) => a.slot.localeCompare(b.slot));
 
     const visibleCount = slots.length - nonvisible.length;
-    const pluralEnding = nonvisible.length == 1 ? '' : 's';
 
     return {
       numericValue: visibleCount / slots.length,
       score: nonvisible.length > 3 ? 0 : 1,
       displayValue: nonvisible.length ?
-        util.format(failureDisplayValue, nonvisible.length, pluralEnding) :
+        util.format(failureDisplayValue, nonvisible.length) :
         displayValue,
       details: AdsInViewport.makeTableDetails(HEADINGS, nonvisible),
     };

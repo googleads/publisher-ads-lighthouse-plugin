@@ -199,12 +199,10 @@ class AdBlockingTasks extends Audit {
           .sort((a, b) => a.startTime - b.startTime);
     }
 
-    const pluralEnding = blocking.length == 1 ? '' : 's';
-
     return {
       score: Number(blocking.length == 0),
       displayValue: blocking.length ?
-        util.format(failureDisplayValue, blocking.length, pluralEnding) :
+        util.format(failureDisplayValue, blocking.length) :
         displayValue,
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };

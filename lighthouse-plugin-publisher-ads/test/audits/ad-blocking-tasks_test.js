@@ -224,7 +224,7 @@ describe('AdBlockingTasks', async () => {
         await AdBlockingTasks.audit(artifacts);
 
       expect(score).to.equal(0);
-      expect(displayValue).to.match(/2 long tasks/);
+      expect(displayValue).to.match(/2 long task.?s/);
     });
   });
 });

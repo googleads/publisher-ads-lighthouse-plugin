@@ -104,13 +104,12 @@ class DuplicateTags extends Audit {
       }
     }
 
-    const pluralEnding = dups.length == 1 ? '' : 's';
     return {
       numericValue: dups.length,
       score: dups.length ? 0 : 1,
       details: DuplicateTags.makeTableDetails(HEADINGS, dups),
       displayValue: dups.length ?
-        util.format(failureDisplayValue, dups.length, pluralEnding) :
+        util.format(failureDisplayValue, dups.length) :
         displayValue,
     };
   }
