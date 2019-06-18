@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// eslint-disable-next-line no-unused-vars
 const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js');
+// eslint-disable-next-line no-unused-vars
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // @ts-ignore Remove request() below after importing the type.
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
+// eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const {isBidRequest, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -56,12 +57,12 @@ function getCpuNodeUrls(cpuNode) {
 function linkBidAndAdRequests(graph) {
   /** @type {NetworkNode[]} */ const adRequestNodes = [];
   graph.traverse((node) => {
-    if (node instanceof NetworkNode && isGptAdRequest(node.record)) {
+    if (node.type === BaseNode.TYPES.NETWORK && isGptAdRequest(node.record)) {
       adRequestNodes.push(node);
     }
   });
   graph.traverse((node) => {
-    if (node instanceof NetworkNode && isBidRequest(node.record)) {
+    if (node.type === BaseNode.TYPES.NETWORK && isBidRequest(node.record)) {
       for (const adNode of adRequestNodes) {
         // TODO(warrengm): Check for false positives. We don't worry too much
         // since we're focussing on the first few requests.
@@ -113,7 +114,7 @@ class AdLanternMetric extends LanternMetric {
     const pessimisticGraph = AdLanternMetric.getPessimisticGraph(graph);
     // Filter the pessimistic graph.
     const optimisticGraph = pessimisticGraph.cloneWithRelationships((node) => {
-      if (node instanceof CpuNode) {
+      if (node.type === BaseNode.TYPES.CPU) {
         return !!getCpuNodeUrls(node).find(isBidRequest) ||
           !!getFrame(node.event) && getFrame(node.event) !== mainFrame;
       }
@@ -161,7 +162,8 @@ class AdLanternMetric extends LanternMetric {
   static findNetworkTiming(nodeTimings, isTargetRequest) {
     return this.findTiming(
       nodeTimings,
-      (node) => node instanceof NetworkNode && isTargetRequest(node.record));
+      (node) =>
+        node.type === BaseNode.TYPES.NETWORK && isTargetRequest(node.record));
   }
 }
 
