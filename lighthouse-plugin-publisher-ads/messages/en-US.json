@@ -41,13 +41,13 @@
     "ad-request-from-page-start": {
       "title": "Latency of first ad request",
       "failureTitle": "Reduce latency of first ad request",
-      "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
+      "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
       "displayValue": "%s s"
     },
     "ad-request-from-tag-load": {
       "title": "Latency of first ad request, from tag load",
       "failureTitle": "Reduce latency of first ad request (from tag load)",
-      "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
+      "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
       "displayValue": "%s s"
     },
     "ad-top-of-viewport": {
@@ -90,7 +90,7 @@
     "first-ad-paint": {
       "title": "Latency of first ad render",
       "failureTitle": "Reduce time to render first ad",
-      "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
+      "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
       "displayValue": "%s s"
     },
     "full-width-slots": {
@@ -169,7 +169,7 @@
     "tag-load-time": {
       "title": "Tag load time",
       "failureTitle": "Reduce tag load time",
-      "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
+      "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
       "displayValue": "%s s"
     },
     "viewport-ad-density": {
