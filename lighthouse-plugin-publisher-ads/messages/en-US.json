@@ -3,7 +3,7 @@
     "ad-blocking-tasks": {
       "title": "No long tasks blocking ad-related network requests",
       "failureTitle": "Avoid long tasks that block ad-related network requests",
-      "description": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#long_tasks_are_blocking_ad-related_network_requests).",
+      "description": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-blocking-tasks).",
       "displayValue": "",
       "failureDisplayValue": "%s long task%s",
       "headings": {
@@ -28,7 +28,7 @@
     "ad-request-critical-path": {
       "title": "Minimal requests found in ad critical path",
       "failureTitle": "Reduce critical path for ad loading",
-      "description": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#there_are_resources_blocking_the_first_ad_request).",
+      "description": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-critical-path).",
       "displayValue": "%s serial resource%s, %s total resource%s",
       "headings": {
         "url": "Request",
@@ -41,19 +41,19 @@
     "ad-request-from-page-start": {
       "title": "Latency of first ad request",
       "failureTitle": "Reduce latency of first ad request",
-      "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
+      "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
       "displayValue": "%s s"
     },
     "ad-request-from-tag-load": {
       "title": "Latency of first ad request, from tag load",
       "failureTitle": "Reduce latency of first ad request (from tag load)",
-      "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
+      "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
       "displayValue": "%s s"
     },
     "ad-top-of-viewport": {
       "title": "No ad found at the very top of the viewport",
       "failureTitle": "Move the top ad further down the page",
-      "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#top_ad_is_too_high_in_viewport).",
+      "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-top-of-viewport).",
       "displayValue": "",
       "failureDisplayValue": "A scroll of %s px would hide half of your topmost ad",
       "headings": {
@@ -63,7 +63,7 @@
     "ads-in-viewport": {
       "title": "Few or no ads loaded outside viewport",
       "failureTitle": "Avoid loading ads until they are nearly on-screen",
-      "description": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#there_are_eager_ads_loaded_outside_viewport).",
+      "description": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ads-in-viewport).",
       "displayValue": "",
       "failureDisplayValue": "%s ad%s out of view",
       "headings": {
@@ -73,12 +73,12 @@
     "async-ad-tags": {
       "title": "GPT tag is loaded asynchronously",
       "failureTitle": "Load GPT asynchronously",
-      "description": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#gpt_tag_is_loaded_synchronously)."
+      "description": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags)."
     },
     "duplicate-tags": {
       "title": "No duplicate tags found in any frame",
       "failureTitle": "Load tags only once per frame",
-      "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#there_are_duplicate_tags_loaded_in_the_same_frame).",
+      "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags).",
       "displayValue": "",
       "failureDisplayValue": "%s duplicate tag%s",
       "headings": {
@@ -90,7 +90,7 @@
     "first-ad-paint": {
       "title": "Latency of first ad render",
       "failureTitle": "Reduce time to render first ad",
-      "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
+      "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
       "displayValue": "%s s"
     },
     "full-width-slots": {
@@ -124,12 +124,12 @@
     "loads-gpt-from-sgdn": {
       "title": "GPT tag is loaded from recommended host",
       "failureTitle": "Load GPT from recommended host",
-      "description": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load time. By loading GPT from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#load_gpt_from_recommended_host)."
+      "description": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load time. By loading GPT from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-sgdn)."
     },
     "loads-gpt-over-https": {
       "title": "GPT tag is loaded over HTTPS",
       "failureTitle": "Load GPT over HTTPS",
-      "description": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#gpt_tag_is_loaded_insecurely).",
+      "description": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-over-https).",
       "displayValue": "",
       "failureDisplayValue": "%s unsafe request%s"
     },
@@ -147,7 +147,7 @@
     "serial-header-bidding": {
       "title": "Header bidding is parallelized",
       "failureTitle": "Parallelize bid requests",
-      "description": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#there_are_serial_header_bidding_requests).",
+      "description": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/serial-header-bidding).",
       "headings": {
         "bidder": "Bidder",
         "url": "URL",
@@ -159,7 +159,7 @@
     "static-ad-tags": {
       "title": "GPT tag is loaded statically",
       "failureTitle": "Load GPT tag statically",
-      "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#gpt_tag_is_loaded_dynamically).",
+      "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags).",
       "failureDisplayValue": "Up to %s s tag load time improvement",
       "headings": {
         "url": "Initiator",
@@ -169,13 +169,13 @@
     "tag-load-time": {
       "title": "Tag load time",
       "failureTitle": "Reduce tag load time",
-      "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
+      "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
       "displayValue": "%s s"
     },
     "viewport-ad-density": {
       "title": "Ad density in initial viewport is within recommended range",
       "failureTitle": "Reduce ad density in initial viewport",
-      "description": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#ad_density_inside_viewport_is_higher_than_recommended).",
+      "description": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density).",
       "displayValue": "",
       "failureDisplayValue": "%s%% covered by ads"
     }
