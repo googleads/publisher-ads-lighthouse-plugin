@@ -16,6 +16,7 @@
   },
   "author": "",
   "dependencies": {
+    "intl-messageformat": "^1.6.8",
     "yargs": "^11.0.0"
   },
   "peerDependencies": {

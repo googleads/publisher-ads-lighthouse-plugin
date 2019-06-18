@@ -14,9 +14,8 @@
 
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, format: formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');
@@ -199,10 +198,11 @@ class AdBlockingTasks extends Audit {
           .sort((a, b) => a.startTime - b.startTime);
     }
 
+    const numTasks = blocking.length;
     return {
       score: Number(blocking.length == 0),
       displayValue: blocking.length ?
-        util.format(failureDisplayValue, blocking.length) :
+        formatMessage(failureDisplayValue, {numTasks}) :
         displayValue,
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };

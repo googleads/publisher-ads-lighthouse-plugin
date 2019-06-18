@@ -12,6 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const IntlMessageFormat = require('intl-messageformat');
 const Messages = require('./en-US.json');
 
 module.exports = Messages;
+
+module.exports.format = (msg, vars) => {
+  // TODO: Implement locale picking.
+  const formatter = new IntlMessageFormat(msg, 'en-us');
+  return formatter.format(vars);
+};

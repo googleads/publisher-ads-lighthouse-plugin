@@ -5,7 +5,7 @@
       "failureTitle": "Avoid long tasks that block ad-related network requests",
       "description": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#long_tasks_are_blocking_ad-related_network_requests).",
       "displayValue": "",
-      "failureDisplayValue": "%s long task(s)",
+      "failureDisplayValue": "{numTasks} long {numTasks, plural, =1 {task} other {tasks}}",
       "headings": {
         "script": "Attributable URL",
         "startTime": "Start",
