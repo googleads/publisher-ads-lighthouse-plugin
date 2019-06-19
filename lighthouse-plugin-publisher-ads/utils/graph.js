@@ -254,7 +254,7 @@ function getAdCriticalGraph(networkRecords, traceEvents) {
     getCriticalGraph(summary, req, criticalRequests);
   }
   const result = new Set(Array.from(criticalRequests).filter(
-    (r) => r.endTime < firstAdRequest.startTime));
+    (r) => r.endTime < firstAdRequest.startTime || r == firstAdRequest));
   return result;
 }
 
