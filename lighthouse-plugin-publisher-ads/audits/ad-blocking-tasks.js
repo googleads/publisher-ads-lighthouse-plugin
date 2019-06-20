@@ -77,68 +77,66 @@ class AdBlockingTasks extends Audit {
     let longTasks = [];
     try {
       longTasks = await LongTasks.request(metricData, context);
+    } catch (e) {
+      return auditNotApplicable(NOT_APPLICABLE.INVALID_TIMING);
+    }
 
-      if (!longTasks.length) {
-        return auditNotApplicable(NOT_APPLICABLE.NO_TASKS);
-      }
+    if (!longTasks.length) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_TASKS);
+    }
 
-      const {timing: endTime} =
+    const {timing: endTime} =
         await AdRequestTime.request(metricData, context);
 
-      if (!(endTime > 0)) { // Handle NaN, etc.
-        return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
-      }
+    if (!(endTime > 0)) { // Handle NaN, etc.
+      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
+    }
 
-      let blocking = [];
-      for (const longTask of longTasks) {
-        if (longTask.startTime > endTime ||
+    let blocking = [];
+    for (const longTask of longTasks) {
+      if (longTask.startTime > endTime ||
           longTask.duration < LONG_TASK_DUR_MS) {
-          continue;
-        }
-        const scriptUrl = getAttributableUrl(longTask);
-        if (scriptUrl && isGpt(new URL(scriptUrl))) {
-          continue;
-        }
-
-        const url = scriptUrl && new URL(scriptUrl);
-        const displayUrl = url && (url.origin + url.pathname);
-
-        blocking.push({
-        // TODO(warrengm): Format the display URL so it fits on one line
-          script: displayUrl,
-          startTime: longTask.startTime,
-          endTime: longTask.endTime,
-          duration: longTask.duration,
-          isTopLevel: !longTask.parent,
-        });
+        continue;
+      }
+      const scriptUrl = getAttributableUrl(longTask);
+      if (scriptUrl && isGpt(new URL(scriptUrl))) {
+        continue;
       }
 
-      const taskLimit = 10;
-      if (blocking.length > taskLimit) {
+      const url = scriptUrl && new URL(scriptUrl);
+      const displayUrl = url && (url.origin + url.pathname);
+
+      blocking.push({
+        // TODO(warrengm): Format the display URL so it fits on one line
+        script: displayUrl,
+        startTime: longTask.startTime,
+        endTime: longTask.endTime,
+        duration: longTask.duration,
+        isTopLevel: !longTask.parent,
+      });
+    }
+
+    const taskLimit = 10;
+    if (blocking.length > taskLimit) {
       // For the sake of brevity, we show at most 5 long tasks. If needed we
       // will filter tasks that are less actionable (child tasks or ones missing
       // attributable URLs).
-        blocking = blocking.filter((b) => b.script && b.isTopLevel)
-        // Only show the longest tasks.
-            .sort((a, b) => b.duration - a.duration)
-            .splice(0, taskLimit)
-            .sort((a, b) => a.startTime - b.startTime);
-      }
-
-      const pluralEnding = blocking.length == 1 ? '' : 's';
-
-      return {
-        score: Number(blocking.length == 0),
-        displayValue: blocking.length ?
-          util.format(failureDisplayValue, blocking.length, pluralEnding) :
-          displayValue,
-        details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
-      };
-    } catch (e) {
-      console.log('ERROR');
-      console.log(e);
-      return auditNotApplicable(NOT_APPLICABLE.INVALID_TIMING);
+      blocking = blocking.filter((b) => b.script && b.isTopLevel)
+      // Only show the longest tasks.
+          .sort((a, b) => b.duration - a.duration)
+          .splice(0, taskLimit)
+          .sort((a, b) => a.startTime - b.startTime);
     }
+
+    const pluralEnding = blocking.length == 1 ? '' : 's';
+
+    return {
+      score: Number(blocking.length == 0),
+      displayValue: blocking.length ?
+        util.format(failureDisplayValue, blocking.length, pluralEnding) :
+        displayValue,
+      details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
+    };
   }
 }
 
