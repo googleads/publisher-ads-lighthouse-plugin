@@ -17,9 +17,12 @@ const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-de
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
-const {getPageStartTime} = require('../utils/network-timing');
+const {getTimingsByRecord} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
 const {isGptAdRequest} = require('../utils/resource-classification');
+
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 const id = 'script-injected-tags';
 const {
@@ -101,12 +104,12 @@ class ScriptInjectedTags extends Audit {
         .filter((r) =>
           r.initiatorRequest && r.initiatorRequest.url == r.documentURL);
 
-    const pageStartTime = getPageStartTime(networkRecords);
+    /** @type {Map<NetworkRequest, NodeTiming>} */
+    const timings = await getTimingsByRecord(
+      trace, devtoolsLog, new Set(networkRecords), context);
     const tableView = injectedBlockingRequests.map((req) =>
-      ({
+      Object.assign({}, timings.get(req), {
         request: req.url,
-        startTime: (req.startTime - pageStartTime) * 1000,
-        duration: (req.endTime - req.startTime) * 1000,
         lineNumber: req.initiator.stack.callFrames[0].lineNumber,
       }));
     tableView.sort((a, b) => a.startTime - b.startTime);
