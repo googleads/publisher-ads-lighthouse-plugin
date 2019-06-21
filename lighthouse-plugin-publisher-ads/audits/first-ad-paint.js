@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const AdPaintTime = require('../computed/ad-paint-time');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {formatMessage} = require('../messages/format');
-const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'first-ad-paint';
 const {
@@ -29,22 +29,6 @@ const {
 // Point of diminishing returns.
 const PODR = 3.0; // seconds
 const MEDIAN = 4.0; // seconds
-
-/**
- * Returns the first timestamp of the given event for ad iframes, or 0 if no
- * relevant timing is found.
- * @param {string} eventName
- * @param {LH.TraceEvent[]} traceEvents
- * @param {Set<string>} adFrameIds
- * @return {number}
- */
-function getMinEventTime(eventName, traceEvents, adFrameIds) {
-  const times = traceEvents
-      .filter((e) => e.name == eventName)
-      .filter((e) => adFrameIds.has(e.args.frame || ''))
-      .map((e) => e.ts);
-  return times.length ? Math.min(...times) : 0;
-}
 
 /**
  * Measures the first ad paint time.
@@ -73,36 +57,31 @@ class FirstAdPaint extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const {traceEvents} = artifacts.traces[Audit.DEFAULT_PASS];
-    const slots = artifacts.IFrameElements.filter(isGptIframe);
-    if (slots.length == 0) {
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const metricData = {
+      devtoolsLog,
+      trace,
+      iframeElements: artifacts.IFrameElements,
+      settings: context.settings,
+    };
+    const {timing} = await AdPaintTime.request(metricData, context);
+
+    if (!(timing > 0)) { // Handle NaN, etc.
       context.LighthouseRunWarnings.push(WARNINGS.NO_AD_RENDERED);
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
     }
 
-    const adFrameIds = new Set(slots.map((s) => s.frame && s.frame.id));
-
-    const adPaintTime =
-        getMinEventTime('firstContentfulPaint', traceEvents, adFrameIds) ||
-        getMinEventTime('firstPaint', traceEvents, adFrameIds);
-    if (!adPaintTime) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
-    }
-
-    const {ts: pageNavigationStart} =
-      traceEvents.find((e) => e.name == 'navigationStart') || {ts: 0};
-    const firstAdPaintMicros = adPaintTime - pageNavigationStart;
-
-    const firstAdPaintSec = firstAdPaintMicros * 1e-6;
+    const adPaintTimeSec = timing / 1000;
     let normalScore =
-        Audit.computeLogNormalScore(firstAdPaintSec, PODR, MEDIAN);
+        Audit.computeLogNormalScore(adPaintTimeSec, PODR, MEDIAN);
     if (normalScore >= 0.9) normalScore = 1;
 
     return {
-      numericValue: firstAdPaintSec,
+      numericValue: adPaintTimeSec,
       score: normalScore,
       displayValue:
-        formatMessage(displayValue, {firstAdPaint: firstAdPaintSec}),
+        formatMessage(displayValue, {firstAdPaint: adPaintTimeSec}),
     };
   }
 }

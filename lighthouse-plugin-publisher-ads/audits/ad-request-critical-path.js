@@ -18,7 +18,7 @@ const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {formatMessage} = require('../messages/format');
 const {getAdCriticalGraph} = require('../utils/graph');
-const {getPageStartTime} = require('../utils/network-timing');
+const {getTimingsByRecord} = require('../utils/network-timing');
 const {URL} = require('url');
 
 const id = 'ad-request-critical-path';
@@ -207,10 +207,11 @@ class AdRequestCriticalPath extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-
     const criticalRequests = getAdCriticalGraph(
       networkRecords, trace.traceEvents);
 
+    const timingsByRecord =
+        await getTimingsByRecord(trace, devtoolsLog, criticalRequests, context);
     const REQUEST_TYPES = ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'];
     const blockingRequests = Array.from(criticalRequests)
         .filter((r) => REQUEST_TYPES.includes(r.resourceType))
@@ -219,16 +220,19 @@ class AdRequestCriticalPath extends Audit {
     if (!blockingRequests.length) {
       return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
     }
-    const pageStartTime = getPageStartTime(networkRecords);
-    let tableView = blockingRequests.map((req) => ({
-      url: trimUrl(req.url),
-      abbreviatedUrl: getAbbreviatedUrl(req.url),
-      type: req.resourceType,
-      startTime: (req.startTime - pageStartTime) * 1000,
-      endTime: (req.endTime - pageStartTime) * 1000,
-      duration: (req.endTime - req.startTime) * 1000,
-    })).filter((r) => r.duration > 30 && r.startTime > 0);
-    tableView = computeSummaries(tableView);
+    let tableView = blockingRequests.map((req) => {
+      const {startTime, endTime} = timingsByRecord.get(req) || req;
+      return {
+        startTime,
+        endTime,
+        duration: endTime - startTime,
+        url: trimUrl(req.url),
+        abbreviatedUrl: getAbbreviatedUrl(req.url),
+        type: req.resourceType,
+      };
+    });
+    tableView = computeSummaries(tableView)
+        .filter((r) => r.duration > 30 && r.startTime > 0);
 
     const depth = computeDepth(tableView);
     const failed = depth > 3;

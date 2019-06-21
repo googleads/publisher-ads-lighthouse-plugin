@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const ComputedTagLoadTime = require('../computed/tag-load-time');
 const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {formatMessage} = require('../messages/format');
-const {getPageResponseTime, getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 
 const id = 'tag-load-time';
 const {
@@ -29,7 +28,8 @@ const {
 
 // Point of diminishing returns.
 const PODR = 1; // seconds
-const MEDIAN = 1.5; // seconds
+const MEDIAN = 2; // seconds
+
 /**
  * Audit to determine time for tag to load relative to page start.
  */
@@ -46,7 +46,7 @@ class TagLoadTime extends Audit {
       description,
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
   /**
@@ -55,34 +55,31 @@ class TagLoadTime extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
-    const pageStartTime = getPageStartTime(networkRecords);
-    const pageResponseTime = getPageResponseTime(networkRecords);
-    const tagEndTime = getTagEndTime(networkRecords);
-    if (pageStartTime < 0) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
-    }
-    if (tagEndTime < 0) {
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const metricData = {trace, devtoolsLog, settings: context.settings};
+
+    const {timing} = await ComputedTagLoadTime.request(metricData, context);
+    if (!(timing > 0)) { // Handle NaN, etc.
       context.LighthouseRunWarnings.push(WARNINGS.NO_TAG);
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
+    const tagLoadTimeSec = timing * 1e-3;
+
     // NOTE: score is relative to page response time to avoid counting time for
     // first party rendering.
-    let normalScore = Audit.computeLogNormalScore(
-      tagEndTime - pageResponseTime, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(tagLoadTimeSec, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
       normalScore = 1;
     }
 
-    const tagLoadTime = (tagEndTime - pageStartTime);
     return {
-      numericValue: tagLoadTime,
+      numericValue: tagLoadTimeSec,
       score: normalScore,
-      displayValue: formatMessage(displayValue, {tagLoadTime}),
+      displayValue: formatMessage(displayValue, {tagLoadTime: tagLoadTimeSec}),
     };
   }
 }
