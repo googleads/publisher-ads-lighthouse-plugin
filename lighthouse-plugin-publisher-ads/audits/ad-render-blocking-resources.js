@@ -16,8 +16,9 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 // @ts-ignore
 const RenderBlockingResources = require('lighthouse/lighthouse-core/audits/byte-efficiency/render-blocking-resources.js');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');

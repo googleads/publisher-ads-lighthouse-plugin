@@ -17,8 +17,9 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 // @ts-ignore
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');

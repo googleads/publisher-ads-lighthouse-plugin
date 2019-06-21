@@ -14,7 +14,7 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');

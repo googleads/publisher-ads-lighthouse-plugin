@@ -14,8 +14,9 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS, formatMessage} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {getPageResponseTime, getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 
 const id = 'tag-load-time';

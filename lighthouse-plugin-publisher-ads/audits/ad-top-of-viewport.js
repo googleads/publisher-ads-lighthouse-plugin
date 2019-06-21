@@ -13,8 +13,9 @@
 // limitations under the License.
 
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'ad-top-of-viewport';

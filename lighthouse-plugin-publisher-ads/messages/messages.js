@@ -14,15 +14,4 @@
 
 const Messages = require('./en-US.json');
 
-/**
- * Formats an ICU message.
- * @param {string} msg
- * @param {Object} vars A dictionary to inflate the ICU template.
- */
-Messages.formatMessage = (msg, vars) => {
-  // TODO: Implement locale picking.
-  const formatter = new IntlMessageFormat(msg, 'en-us');
-  return formatter.format(vars);
-};
-
 module.exports = Messages;

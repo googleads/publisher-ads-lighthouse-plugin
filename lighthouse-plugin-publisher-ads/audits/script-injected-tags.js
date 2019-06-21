@@ -15,8 +15,9 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {getPageStartTime} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
 const {isGptAdRequest} = require('../utils/resource-classification');
