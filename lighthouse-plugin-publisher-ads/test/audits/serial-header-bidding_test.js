@@ -104,7 +104,8 @@ describe('SerialHeaderBidding', async () => {
       desc, networkRecords, expectedScore, expectedNotAppl} of testCases) {
       it(`${desc} with score of ${expectedScore}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
-        const results = await SerialHeaderBidding.audit({devtoolsLogs: {}}, {});
+        const results = await SerialHeaderBidding.audit(
+          {devtoolsLogs: {}, traces: {}}, {settings: {}});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
@@ -179,14 +180,16 @@ describe('SerialHeaderBidding', async () => {
         expectedAdsRecords: [],
         expectedHeaderBiddingRecords: [
           {
-            startTime: 15,
-            endTime: 25,
+            startTime: 15000,
+            endTime: 25000,
+            duration: 10000,
             url: 'https://aax.amazon-adsystem.com/e/dtb/bid',
             type: 'bid',
           },
           {
-            startTime: 26,
-            endTime: 30,
+            startTime: 26000,
+            endTime: 30000,
+            duration: 4000,
             url: 'https://bidder.criteo.com/cdb/',
             type: 'bid',
           },
@@ -225,22 +228,25 @@ describe('SerialHeaderBidding', async () => {
         ],
         expectedAdsRecords: [
           {
-            startTime: 20,
-            endTime: 30,
+            startTime: 20000,
+            endTime: 30000,
+            duration: 10000,
             url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo',
             type: 'ad',
           },
         ],
         expectedHeaderBiddingRecords: [
           {
-            startTime: 15,
-            endTime: 25,
+            startTime: 15000,
+            endTime: 25000,
+            duration: 10000,
             url: 'https://bidder.criteo.com/cdb/',
             type: 'bid',
           },
           {
-            startTime: 30,
-            endTime: 40,
+            startTime: 30000,
+            endTime: 40000,
+            duration: 10000,
             url: 'https://aax.amazon-adsystem.com/e/dtb/bid',
             type: 'bid',
           },
@@ -289,8 +295,9 @@ describe('SerialHeaderBidding', async () => {
         ],
         expectedAdsRecords: [
           {
-            startTime: 30,
-            endTime: 40,
+            startTime: 30000,
+            endTime: 40000,
+            duration: 10000,
             url: 'https://securepubads.g.doubleclick.net/gampad/ads?foo',
             type: 'ad',
           },
@@ -298,13 +305,15 @@ describe('SerialHeaderBidding', async () => {
         expectedHeaderBiddingRecords: [
           {
             startTime: 0,
-            endTime: 20,
+            endTime: 20000,
+            duration: 20000,
             url: 'https://aax.amazon-adsystem.com/e/dtb/bid',
             type: 'bid',
           },
           {
-            startTime: 25,
-            endTime: 35,
+            startTime: 25000,
+            endTime: 35000,
+            duration: 10000,
             url: 'https://bidder.criteo.com/cdb/',
             type: 'bid',
           },
@@ -347,28 +356,32 @@ describe('SerialHeaderBidding', async () => {
         ],
         expectedAdsRecords: [
           {
-            startTime: 55,
-            endTime: 60,
+            startTime: 55000,
+            endTime: 60000,
+            duration: 5000,
             url: 'https://securepubads.g.doubleclick.net/gampad/ads?bar',
             type: 'ad',
           },
           {
-            startTime: 65,
-            endTime: 70,
+            startTime: 65000,
+            endTime: 70000,
+            duration: 5000,
             url: 'https://googlesyndication.com/gpt/',
             type: 'ad',
           },
         ],
         expectedHeaderBiddingRecords: [
           {
-            startTime: 25,
-            endTime: 30,
+            startTime: 25000,
+            endTime: 30000,
+            duration: 5000,
             url: 'https://aax.amazon-adsystem.com/e/dtb/bid',
             type: 'bid',
           },
           {
-            startTime: 35,
-            endTime: 45,
+            startTime: 35000,
+            endTime: 45000,
+            duration: 10000,
             url: 'http://contextual.media.net/bidexchange.js',
             type: 'bid',
           },
@@ -380,7 +393,8 @@ describe('SerialHeaderBidding', async () => {
       expectedHeaderBiddingRecords, expectedNotAppl} of testCases) {
       it(`should have ${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
-        const results = await SerialHeaderBidding.audit({devtoolsLogs: {}}, {});
+        const results = await SerialHeaderBidding.audit(
+          {devtoolsLogs: {}, traces: {}}, {settings: {}});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {

@@ -80,12 +80,10 @@ function constructRecords(records, recordType, timings) {
   for (const record of records) {
     const timing = timings.get(record);
     if (!timing) continue;
-    results.push({
-      startTime: timing.startTime,
-      endTime: timing.endTime,
+    results.push(Object.assign({}, timing, {
       url: record.url,
       type: recordType,
-    });
+    }));
   }
   return results;
 }
@@ -183,9 +181,7 @@ class SerialHeaderBidding extends Audit {
     } else {
       let previousHost = '';
       for (const record of headerBiddingRecords) {
-        const startTime = record.startTime * 1000;
-        const endTime = record.endTime * 1000;
-        const duration = endTime - startTime;
+        const {startTime, endTime, duration} = record;
         const url = new URL(record.url);
         const protocol = url.protocol;
         const host = url.host;
