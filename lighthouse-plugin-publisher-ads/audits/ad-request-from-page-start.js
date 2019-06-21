@@ -13,9 +13,8 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getAdStartTime, getPageResponseTime, getPageStartTime} = require('../utils/network-timing');
 
@@ -84,7 +83,7 @@ class AdRequestFromPageStart extends Audit {
     return {
       numericValue: adReqTime,
       score: normalScore,
-      displayValue: util.format(displayValue, adReqTime.toFixed(2)),
+      displayValue: formatMessage(displayValue, {adReqTime}),
     };
   }
 }

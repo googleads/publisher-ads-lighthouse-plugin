@@ -13,9 +13,8 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {getPageResponseTime, getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 
@@ -82,7 +81,7 @@ class TagLoadTime extends Audit {
     return {
       numericValue: tagLoadTime,
       score: normalScore,
-      displayValue: util.format(displayValue, tagLoadTime.toFixed(2)),
+      displayValue: formatMessage(displayValue, {tagLoadTime}),
     };
   }
 }

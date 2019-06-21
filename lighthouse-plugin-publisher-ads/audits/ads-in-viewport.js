@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isBoxInViewport} = require('../utils/geometry');
 const {isGptIframe} = require('../utils/resource-classification');
@@ -78,7 +77,7 @@ class AdsInViewport extends Audit {
       numericValue: visibleCount / slots.length,
       score: nonvisible.length > 3 ? 0 : 1,
       displayValue: nonvisible.length ?
-        util.format(failureDisplayValue, nonvisible.length) :
+        formatMessage(failureDisplayValue, {hiddenAds: nonvisible.length}) :
         displayValue,
       details: AdsInViewport.makeTableDetails(HEADINGS, nonvisible),
     };

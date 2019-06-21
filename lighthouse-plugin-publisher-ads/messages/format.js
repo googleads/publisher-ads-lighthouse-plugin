@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const Messages = require('./en-US.json');
+const IntlMessageFormat = require('intl-messageformat');
 
 /**
  * Formats an ICU message.
  * @param {string} msg
  * @param {Object} vars A dictionary to inflate the ICU template.
  */
-Messages.formatMessage = (msg, vars) => {
+module.exports.formatMessage = (msg, vars) => {
   // TODO: Implement locale picking.
   const formatter = new IntlMessageFormat(msg, 'en-us');
   return formatter.format(vars);
 };
-
-module.exports = Messages;

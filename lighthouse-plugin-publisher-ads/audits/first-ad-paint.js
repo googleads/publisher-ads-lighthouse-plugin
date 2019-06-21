@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptIframe} = require('../utils/resource-classification');
 
@@ -101,7 +100,8 @@ class FirstAdPaint extends Audit {
     return {
       numericValue: firstAdPaintSec,
       score: normalScore,
-      displayValue: util.format(displayValue, firstAdPaintSec.toFixed(2)),
+      displayValue:
+        formatMessage(displayValue, {firstAdPaint: firstAdPaintSec}),
     };
   }
 }

@@ -29,7 +29,7 @@
       "title": "Minimal requests found in ad critical path",
       "failureTitle": "Reduce critical path for ad loading",
       "description": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#there_are_resources_blocking_the_first_ad_request).",
-      "displayValue": "%s serial resource%s, %s total resource(s)",
+      "displayValue": "{serialResources, number} serial {serialResources, plural, =1 {resource} other {resources}}, {totalResources, number} total {totalResources, plural, =1 {resource} other {resources}}",
       "headings": {
         "url": "Request",
         "type": "Type",
@@ -42,20 +42,20 @@
       "title": "Latency of first ad request",
       "failureTitle": "Reduce latency of first ad request",
       "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
-      "displayValue": "%s s"
+      "displayValue": "{adReqTime, number, seconds} s"
     },
     "ad-request-from-tag-load": {
       "title": "Latency of first ad request, from tag load",
       "failureTitle": "Reduce latency of first ad request (from tag load)",
       "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
-      "displayValue": "%s s"
+      "displayValue": "{adReqTime, number, seconds} s"
     },
     "ad-top-of-viewport": {
       "title": "No ad found at the very top of the viewport",
       "failureTitle": "Move the top ad further down the page",
       "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#top_ad_is_too_high_in_viewport).",
       "displayValue": "",
-      "failureDisplayValue": "A scroll of %s px would hide half of your topmost ad",
+      "failureDisplayValue": "A scroll of {valueInPx, number} px would hide half of your topmost ad",
       "headings": {
         "slot": "Top Slot ID"
       }
@@ -65,7 +65,7 @@
       "failureTitle": "Avoid loading ads until they are nearly on-screen",
       "description": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#there_are_eager_ads_loaded_outside_viewport).",
       "displayValue": "",
-      "failureDisplayValue": "%s ad%s out of view",
+      "failureDisplayValue": "{hiddenAds, number} {hiddenAds, plural, =1 {ad} other {ads}} out of view",
       "headings": {
         "slot": "Slots Outside Viewport"
       }
@@ -80,7 +80,7 @@
       "failureTitle": "Load tags only once per frame",
       "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#there_are_duplicate_tags_loaded_in_the_same_frame).",
       "displayValue": "",
-      "failureDisplayValue": "%s duplicate tag(s)",
+      "failureDisplayValue": "{duplicateTags, number} duplicate {duplicateTags, plural, =1 {tag} other {tags}}",
       "headings": {
         "script": "Script",
         "numReqs": "Duplicate Requests",
@@ -91,20 +91,20 @@
       "title": "Latency of first ad render",
       "failureTitle": "Reduce time to render first ad",
       "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
-      "displayValue": "%s s"
+      "displayValue": "{firstAdPaint, number, seconds} s"
     },
     "full-width-slots": {
       "title": "Ad slots effectively use horizontal space",
       "failureTitle": "Increase the width of ad slots",
       "description": "Ad slots that utilize most of the page width generally experience increased click-through rate over smaller ad sizes. We recommend leaving no more than 25% of the viewport width unutilized on mobile devices.",
       "displayValue": "",
-      "failureDisplayValue": "%s%% of viewport width is underutilized"
+      "failureDisplayValue": "{percentUnused, number, percent} of viewport width is underutilized"
     },
     "idle-network-times": {
       "title": "[Experimental] Network is efficiently utilized before ad requests",
       "failureTitle": "[Experimental] Reduce network idle time before ad requests",
       "description": "Moments of network idleness in the critical path to ad loading present opportunities to improve speed. Consider eliminating long tasks, timeouts, waiting on load events, or synchronous resources to avoid idleness. Chrome DevTools can be used to discover what is causing network idleness. [Learn more](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference).",
-      "displayValue": "%s s spent idle in critical path",
+      "displayValue": "{idleTime, number, seconds} s spent idle in critical path",
       "headings": {
         "cause": "Suspected Cause",
         "url": "Attributable URL",
@@ -161,7 +161,7 @@
       "title": "GPT tag is loaded statically",
       "failureTitle": "Load GPT tag statically",
       "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#gpt_tag_is_loaded_dynamically).",
-      "failureDisplayValue": "Up to %s s tag load time improvement",
+      "failureDisplayValue": "Up to {opportunity, number, seconds} s tag load time improvement",
       "headings": {
         "url": "Initiator",
         "lineNumber": "Line Number"
@@ -171,14 +171,13 @@
       "title": "Tag load time",
       "failureTitle": "Reduce tag load time",
       "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#reduce_tag_load_time_latency_of_first_ad_request_measurements).",
-      "displayValue": "%s s"
+      "displayValue": "{tagLoadTime, number, seconds} s"
     },
     "viewport-ad-density": {
       "title": "Ad density in initial viewport is within recommended range",
       "failureTitle": "Reduce ad density in initial viewport",
       "description": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits#ad_density_inside_viewport_is_higher_than_recommended).",
-      "displayValue": "",
-      "failureDisplayValue": "%s%% covered by ads"
+      "displayValue": "{adDensity, number, percent} covered by ads"
     }
   },
   "NOT_APPLICABLE": {

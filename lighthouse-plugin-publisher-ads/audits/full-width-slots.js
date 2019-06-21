@@ -13,9 +13,8 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -92,7 +91,7 @@ class FullWidthSlots extends Audit {
       // No displayValue if passing, no changes to be made.
       displayValue: score ?
         displayValue :
-        util.format(failureDisplayValue, Math.round(pctUnoccupied * 100)),
+        formatMessage(failureDisplayValue, {percentUnused: pctUnoccupied}),
     };
   }
 }

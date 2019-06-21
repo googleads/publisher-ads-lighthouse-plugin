@@ -14,9 +14,8 @@
 
 const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, formatMessage} = require('../messages/messages.js');
 const {Audit} = require('lighthouse');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -122,10 +121,9 @@ class StaticAdTags extends Audit {
     const failed = numStatic < numTags;
     let displayValue = '';
     if (failed) {
-      const opportunitySec = quantifyOpportunitySec(tagReqs[0], networkRecords);
-      if (opportunitySec > 0.1) {
-        displayValue =
-            util.format(failureDisplayValue, opportunitySec.toFixed(2));
+      const opportunity = quantifyOpportunitySec(tagReqs[0], networkRecords);
+      if (opportunity > 0.1) {
+        displayValue = formatMessage(failureDisplayValue, {opportunity});
       }
     }
 
