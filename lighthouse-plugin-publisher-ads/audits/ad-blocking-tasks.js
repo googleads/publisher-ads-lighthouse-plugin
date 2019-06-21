@@ -33,6 +33,15 @@ const {
 } = AUDITS[id];
 
 /**
+ * @typedef {Object} TaskDetails
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ * @property {string} script
+ * @property {boolean} isTopLevel
+ */
+
+/**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
  */
 const LONG_TASK_DUR_MS = 100;
@@ -163,7 +172,7 @@ class AdBlockingTasks extends Audit {
     // TODO(warrengm): End on ad load rather than ad request end.
     const endTime = fixTime(Math.min(...adNetworkReqs.map((r) => r.endTime)));
 
-    let blocking = [];
+    /** @type {TaskDetails[]} */ let blocking = [];
     for (const longTask of longTasks) {
       // Handle cases without any overlap.
       if (longTask.startTime > endTime) {

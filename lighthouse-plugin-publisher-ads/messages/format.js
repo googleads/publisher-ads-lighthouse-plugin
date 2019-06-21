@@ -21,6 +21,7 @@ const IntlMessageFormat = require('intl-messageformat');
  */
 module.exports.formatMessage = (msg, vars) => {
   // TODO: Implement locale picking.
+  // @ts-ignore Cannot use 'new'
   const formatter = new IntlMessageFormat(msg, 'en-us');
   return formatter.format(vars);
 };
