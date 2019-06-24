@@ -33,7 +33,8 @@ const {
 } = AUDITS[id];
 
 /**
- * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
+ * Threshold to show long tasks in the report. We don't show shorter long tasks
+ * since they each have a smaller impact on blocking ads.
  */
 const LONG_TASK_DUR_MS = 100;
 
