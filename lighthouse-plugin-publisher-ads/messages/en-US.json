@@ -17,7 +17,7 @@
       "title": "Minimal render-blocking resources found",
       "failureTitle": "Avoid render-blocking resources",
       "description": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously or loading the tag earlier in the head. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).",
-      "failureDisplayValue": "Up to {opportunity, number, seconds}s tag load time improvement",
+      "failureDisplayValue": "Up to {opportunity, number, seconds} s tag load time improvement",
       "headings": {
         "url": "Resource",
         "startTime": "Start Time",
