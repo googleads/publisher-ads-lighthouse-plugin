@@ -13,10 +13,10 @@
 // limitations under the License.
 
 const ComputedTagLoadTime = require('../computed/tag-load-time');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 
 const id = 'tag-load-time';
 const {
@@ -79,7 +79,7 @@ class TagLoadTime extends Audit {
     return {
       numericValue: tagLoadTimeSec,
       score: normalScore,
-      displayValue: util.format(displayValue, tagLoadTimeSec.toFixed(2)),
+      displayValue: formatMessage(displayValue, {tagLoadTime: tagLoadTimeSec}),
     };
   }
 }

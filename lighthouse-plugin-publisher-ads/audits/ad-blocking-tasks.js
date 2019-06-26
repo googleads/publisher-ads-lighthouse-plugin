@@ -14,10 +14,10 @@
 
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isGoogleAds, isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -31,6 +31,15 @@ const {
   failureDisplayValue,
   headings,
 } = AUDITS[id];
+
+/**
+ * @typedef {Object} TaskDetails
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ * @property {string} script
+ * @property {boolean} isTopLevel
+ */
 
 /**
  * Threshold for long task duration (ms), from https://github.com/w3c/longtasks.
@@ -163,7 +172,7 @@ class AdBlockingTasks extends Audit {
     // TODO(warrengm): End on ad load rather than ad request end.
     const endTime = fixTime(Math.min(...adNetworkReqs.map((r) => r.endTime)));
 
-    let blocking = [];
+    /** @type {TaskDetails[]} */ let blocking = [];
     for (const longTask of longTasks) {
       // Handle cases without any overlap.
       if (longTask.startTime > endTime) {
@@ -199,12 +208,11 @@ class AdBlockingTasks extends Audit {
           .sort((a, b) => a.startTime - b.startTime);
     }
 
-    const pluralEnding = blocking.length == 1 ? '' : 's';
-
+    const numTasks = blocking.length;
     return {
       score: Number(blocking.length == 0),
       displayValue: blocking.length ?
-        util.format(failureDisplayValue, blocking.length, pluralEnding) :
+        formatMessage(failureDisplayValue, {numTasks}) :
         displayValue,
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };

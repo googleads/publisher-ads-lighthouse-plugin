@@ -14,10 +14,10 @@
 
 const ComputedAdRequestTime = require('../computed/ad-request-time');
 const ComputedTagLoadTime = require('../computed/tag-load-time');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 
 const id = 'ad-request-from-tag-load';
 const {
@@ -85,7 +85,7 @@ class AdRequestFromTagLoad extends Audit {
     return {
       numericValue: adReqTimeSec,
       score: normalScore,
-      displayValue: util.format(displayValue, adReqTimeSec.toFixed(2)),
+      displayValue: formatMessage(displayValue, {adReqTime: adReqTimeSec}),
     };
   }
 }
