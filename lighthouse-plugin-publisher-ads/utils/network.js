@@ -39,17 +39,18 @@ function isCacheable(req) {
     return false;
   }
   const cacheControlHeader = getHeader(req, 'cache-control');
-  if (!cacheControlHeader) {
-    return !!getHeader(req, 'expires') || !!getHeader(req, 'last-modified');
+  if (cacheControlHeader) {
+    try {
+      const cacheControl = parseCacheControl(cacheControlHeader.value);
+      if (cacheControl.noStore || cacheControl.noCache ||
+          cacheControl.maxAge === 0) {
+        return false;
+      }
+    } catch (e) {/* Ignore parsing errors or missing headers. */}
+    return true;
   }
-  try {
-    const cacheControl = parseCacheControl(cacheControlHeader.value);
-    if (cacheControl.noStore || cacheControl.noCache ||
-        cacheControl.maxAge === 0) {
-      return false;
-    }
-  } catch (e) {/* ignore parsing errors */}
-  return true;
+  // Check for other cacheable headers.
+  return !!getHeader(req, 'expires') || !!getHeader(req, 'last-modified');
 }
 
 module.exports = {
