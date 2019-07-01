@@ -18,6 +18,7 @@ const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
+const {isCacheable} = require('../utils/network');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
 
@@ -109,10 +110,11 @@ function checkRecordType(record) {
  * @param {LH.Artifacts.NetworkRequest} rec
  * @return {boolean}
  */
-function isValidRecord(rec) {
+function isPossibleBid(rec) {
   return (rec.resourceSize == null || rec.resourceSize > 0) &&
       (rec.resourceType != 'Image') &&
-      (rec.endTime - rec.startTime >= MIN_BID_DURATION);
+      (rec.endTime - rec.startTime >= MIN_BID_DURATION) &&
+      !isCacheable(rec);
 }
 
 /**
@@ -147,7 +149,7 @@ class SerialHeaderBidding extends Audit {
     // Filter out requests without responses, image responses, and responses
     // taking less than 50ms.
     const networkRecords = unfilteredNetworkRecords
-        .filter(isValidRecord);
+        .filter(isPossibleBid);
 
     // We filter for URLs that are related to header bidding.
     // Then we create shallow copies of each record. This is because the records
