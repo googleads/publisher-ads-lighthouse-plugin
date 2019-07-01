@@ -21,6 +21,9 @@ const {getAdCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {URL} = require('url');
 
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
+
 const id = 'ad-request-critical-path';
 const {
   title,
@@ -210,6 +213,7 @@ class AdRequestCriticalPath extends Audit {
     const criticalRequests = getAdCriticalGraph(
       networkRecords, trace.traceEvents);
 
+    /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =
         await getTimingsByRecord(trace, devtoolsLog, criticalRequests, context);
     const REQUEST_TYPES = ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'];

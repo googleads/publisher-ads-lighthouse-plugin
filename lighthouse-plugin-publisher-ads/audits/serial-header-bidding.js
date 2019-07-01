@@ -17,9 +17,12 @@ const {auditNotApplicable} = require('../utils/builder');
 const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
-const {getPageStartTime} = require('../utils/network-timing');
+const {getTimingsByRecord} = require('../utils/network-timing');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
+
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 const id = 'serial-header-bidding';
 const {
@@ -68,18 +71,21 @@ const RequestType = {
  * Makes shallow copy of records.
  * @param {Array<LH.Artifacts.NetworkRequest>} records
  * @param {string} recordType
- * @param {number} originTime
+ * @param {Map<NetworkRequest, NodeTiming>} timings
  * @return {Array<NetworkDetails.RequestRecord>}
  */
-function constructRecords(records, recordType, originTime) {
-  return records.map((record) => ({
-    // We offset the start time so that the origin can be relative.
-    // Previously, it was at an extremely high value.
-    startTime: record.startTime - originTime,
-    endTime: record.endTime - originTime,
-    url: record.url,
-    type: recordType,
-  }));
+function constructRecords(records, recordType, timings) {
+  /** @type {NetworkDetails.RequestRecord[]} */
+  const results = [];
+  for (const record of records) {
+    const timing = timings.get(record);
+    if (!timing) continue;
+    results.push(Object.assign({}, timing, {
+      url: record.url,
+      type: recordType,
+    }));
+  }
+  return results;
 }
 
 /**
@@ -123,7 +129,7 @@ class SerialHeaderBidding extends Audit {
       title,
       failureTitle,
       description,
-      requiredArtifacts: ['devtoolsLogs'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
@@ -133,9 +139,10 @@ class SerialHeaderBidding extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const unfilteredNetworkRecords =
-    await NetworkRecords.request(devtoolsLogs, context);
+    await NetworkRecords.request(devtoolsLog, context);
 
     // Filter out requests without responses, image responses, and responses
     // taking less than 50ms.
@@ -154,15 +161,16 @@ class SerialHeaderBidding extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
     }
 
-    // networkRecords are sorted by start time. We use this to offset
-    // the visualized records.
-    const timeOffset = getPageStartTime(unfilteredNetworkRecords, 0);
+    /** @type {Map<NetworkRequest, NodeTiming>} */
+    const timingsByRecord = await getTimingsByRecord(
+      trace, devtoolsLog, new Set(networkRecords), context);
 
     // Construct shallow copies of records. If no records are found, return [].
     const adsRecords = constructRecords(
-      recordsByType.get(RequestType.AD) || [], RequestType.AD, timeOffset);
+      recordsByType.get(RequestType.AD) || [], RequestType.AD, timingsByRecord);
     const headerBiddingRecords = constructRecords(
-      recordsByType.get(RequestType.BID) || [], RequestType.BID, timeOffset);
+      recordsByType.get(RequestType.BID) || [], RequestType.BID,
+      timingsByRecord);
     /** @type {Object<string, BidRequest>} */
     const bidRequests = {};
 
@@ -173,9 +181,7 @@ class SerialHeaderBidding extends Audit {
     } else {
       let previousHost = '';
       for (const record of headerBiddingRecords) {
-        const startTime = record.startTime * 1000;
-        const endTime = record.endTime * 1000;
-        const duration = endTime - startTime;
+        const {startTime, endTime, duration} = record;
         const url = new URL(record.url);
         const protocol = url.protocol;
         const host = url.host;
