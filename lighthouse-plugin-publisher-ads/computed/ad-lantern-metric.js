@@ -51,6 +51,27 @@ function getCpuNodeUrls(cpuNode) {
 }
 
 /**
+ * Checks if the given CPU node is related to bidding.
+ * @param {CpuNode} cpuNode
+ * @return {boolean}
+ */
+function isAdTask(cpuNode) {
+  return !!getCpuNodeUrls(cpuNode).find(
+    (url) => isBidRequest(url) || isGoogleAds(new URL(url)));
+}
+
+/**
+ * Checks if the given CPU node is a long task.
+ * @param {CpuNode} cpuNode
+ * @return {boolean}
+ */
+function isLongTask(cpuNode) {
+  // TODO(warrengm): Consider scaling 50 ms based on current processor speed
+  // so that we include tasks that will be long on slower processors.
+  return cpuNode.event.dur > 50 * 1000;
+}
+
+/**
  * Inserts edges between bid requests and ad requests.
  * @param {BaseNode} graph
  */
@@ -115,8 +136,10 @@ class AdLanternMetric extends LanternMetric {
     // Filter the pessimistic graph.
     const optimisticGraph = pessimisticGraph.cloneWithRelationships((node) => {
       if (node.type === BaseNode.TYPES.CPU) {
-        return !!getCpuNodeUrls(node).find(isBidRequest) ||
-          !!getFrame(node.event) && getFrame(node.event) !== mainFrame;
+        return (
+          isLongTask(node) ||
+          isAdTask(node) ||
+          !!getFrame(node.event) && getFrame(node.event) !== mainFrame);
       }
       if (node.hasRenderBlockingPriority()) {
         return true;
