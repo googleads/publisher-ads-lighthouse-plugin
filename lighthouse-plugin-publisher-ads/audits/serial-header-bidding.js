@@ -163,7 +163,7 @@ class SerialHeaderBidding extends Audit {
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord = await getTimingsByRecord(
-      trace, devtoolsLog, new Set(networkRecords), context);
+      trace, devtoolsLog, context);
 
     // Construct shallow copies of records. If no records are found, return [].
     const adsRecords = constructRecords(

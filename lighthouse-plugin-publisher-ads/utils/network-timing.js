@@ -19,6 +19,7 @@ const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-nod
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
 // eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, isImplTag} = require('./resource-classification');
 const {URL} = require('url');
@@ -76,14 +77,13 @@ function getPageResponseTime(networkRecords, defaultValue = -1) {
 /**
  * @param {LH.Trace} trace
  * @param {LH.DevtoolsLog} devtoolsLog
- * @param {Set<NetworkRequest>} networkRecords
  * @param {LH.Audit.Context} context
  * @return {Promise<Map<NetworkRequest, NodeTiming>>}
  */
-async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
+async function getTimingsByRecord(trace, devtoolsLog, context) {
   /** @type {Map<NetworkRequest, NodeTiming>} */
   const timingsByRecord = new Map();
-
+  const networkRecords = await NetworkRecords.request(devtoolsLog, context);
   if (context.settings.throttlingMethod == 'simulate') {
     /** @type {NetworkNode} */
     const documentNode =
@@ -98,7 +98,7 @@ async function getTimingsByRecord(trace, devtoolsLog, networkRecords, context) {
       timingsByRecord.set(record, timing);
     }
   } else {
-    const pageStartTime = getPageStartTime(Array.from(networkRecords));
+    const pageStartTime = getPageStartTime(networkRecords);
     for (const record of networkRecords) {
       timingsByRecord.set(record, {
         startTime: (record.startTime - pageStartTime) * 1000,
