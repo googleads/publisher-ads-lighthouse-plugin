@@ -1,8 +1,3 @@
-// Copyright 2018 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
 //
 //      http://www.apache.org/licenses/LICENSE-2.0
 //
@@ -14,10 +9,10 @@
 
 const AdRequestTime = require('../computed/ad-request-time');
 const LongTasks = require('../computed/long-tasks');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -31,6 +26,15 @@ const {
   failureDisplayValue,
   headings,
 } = AUDITS[id];
+
+/**
+ * @typedef {Object} TaskDetails
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ * @property {string} script
+ * @property {boolean} isTopLevel
+ */
 
 /**
  * Threshold to show long tasks in the report. We don't show shorter long tasks
@@ -93,7 +97,7 @@ class AdBlockingTasks extends Audit {
       return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
     }
 
-    let blocking = [];
+    /** @type {TaskDetails[]} */ let blocking = [];
     for (const longTask of longTasks) {
       if (longTask.startTime > endTime ||
           longTask.duration < LONG_TASK_DUR_MS) {
@@ -129,12 +133,11 @@ class AdBlockingTasks extends Audit {
           .sort((a, b) => a.startTime - b.startTime);
     }
 
-    const pluralEnding = blocking.length == 1 ? '' : 's';
-
+    const numTasks = blocking.length;
     return {
       score: Number(blocking.length == 0),
       displayValue: blocking.length ?
-        util.format(failureDisplayValue, blocking.length, pluralEnding) :
+        formatMessage(failureDisplayValue, {numTasks}) :
         displayValue,
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };

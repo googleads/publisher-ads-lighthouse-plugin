@@ -13,10 +13,10 @@
 // limitations under the License.
 
 const ComputedAdRequestTime = require('../computed/ad-request-time');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 
 const id = 'ad-request-from-page-start';
 const {
@@ -77,7 +77,7 @@ class AdRequestFromPageStart extends Audit {
     return {
       numericValue: adReqTimeSec,
       score: normalScore,
-      displayValue: util.format(displayValue, adReqTimeSec.toFixed(2)),
+      displayValue: formatMessage(displayValue, {adReqTime: adReqTimeSec}),
     };
   }
 }

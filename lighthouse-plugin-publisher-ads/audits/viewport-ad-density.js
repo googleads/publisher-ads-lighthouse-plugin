@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, ERRORS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, ERRORS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
+const {formatMessage} = require('../messages/format');
 const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'viewport-ad-density';
@@ -25,7 +25,6 @@ const {
   failureTitle,
   description,
   displayValue,
-  failureDisplayValue,
 } = AUDITS[id];
 
 /** @inheritDoc */
@@ -69,14 +68,12 @@ class ViewportAdDensity extends Audit {
     if (adArea > viewArea) {
       throw new Error(ERRORS.AREA_LARGER_THAN_VIEWPORT);
     }
-    const score = adArea / viewArea > 0.3 ? 0 : 1;
+    const adDensity = adArea / viewArea;
+    const score = adDensity > 0.3 ? 0 : 1;
     return {
       score,
       numericValue: adArea / viewArea,
-      // No displayValue if passing, no changes to be made.
-      displayValue: score ?
-        displayValue :
-        util.format(failureDisplayValue, Math.floor(100 * adArea / viewArea)),
+      displayValue: formatMessage(displayValue, {adDensity}),
     };
   }
 }

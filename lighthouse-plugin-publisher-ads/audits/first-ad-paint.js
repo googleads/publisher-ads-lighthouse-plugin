@@ -13,10 +13,10 @@
 // limitations under the License.
 
 const AdPaintTime = require('../computed/ad-paint-time');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 
 const id = 'first-ad-paint';
 const {
@@ -80,7 +80,8 @@ class FirstAdPaint extends Audit {
     return {
       numericValue: adPaintTimeSec,
       score: normalScore,
-      displayValue: util.format(displayValue, adPaintTimeSec.toFixed(2)),
+      displayValue:
+        formatMessage(displayValue, {firstAdPaint: adPaintTimeSec}),
     };
   }
 }

@@ -17,9 +17,9 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 // @ts-ignore
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
-const {format} = require('util');
+const {formatMessage} = require('../messages/format');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
@@ -314,11 +314,11 @@ class IdleNetworkTimes extends Audit {
     const failed = maxIdleTime > FAILING_IDLE_GAP_MS ||
       totalIdleTime > FAILING_TOTAL_IDLE_TIME_MS;
 
-    const displayTime = (totalIdleTime * 1e-3).toFixed(2);
     return {
       numericValue: maxIdleTime,
       score: failed ? 0 : 1,
-      displayValue: format(displayValue, displayTime),
+      displayValue:
+        formatMessage(displayValue, {idleTime: (totalIdleTime / 1000)}),
       details: IdleNetworkTimes.makeTableDetails(HEADINGS, idleTimes),
     };
   }

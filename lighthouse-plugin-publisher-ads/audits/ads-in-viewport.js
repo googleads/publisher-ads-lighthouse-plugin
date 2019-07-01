@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {isBoxInViewport} = require('../utils/geometry');
 const {isGptIframe} = require('../utils/resource-classification');
 
@@ -73,13 +73,12 @@ class AdsInViewport extends Audit {
         .sort((a, b) => a.slot.localeCompare(b.slot));
 
     const visibleCount = slots.length - nonvisible.length;
-    const pluralEnding = nonvisible.length == 1 ? '' : 's';
 
     return {
       numericValue: visibleCount / slots.length,
       score: nonvisible.length > 3 ? 0 : 1,
       displayValue: nonvisible.length ?
-        util.format(failureDisplayValue, nonvisible.length, pluralEnding) :
+        formatMessage(failureDisplayValue, {hiddenAds: nonvisible.length}) :
         displayValue,
       details: AdsInViewport.makeTableDetails(HEADINGS, nonvisible),
     };

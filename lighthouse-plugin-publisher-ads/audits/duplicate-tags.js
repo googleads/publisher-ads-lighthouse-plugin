@@ -13,11 +13,11 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
+const {formatMessage} = require('../messages/format');
 const {URL} = require('url');
 
 const id = 'duplicate-tags';
@@ -104,13 +104,12 @@ class DuplicateTags extends Audit {
       }
     }
 
-    const pluralEnding = dups.length == 1 ? '' : 's';
     return {
       numericValue: dups.length,
       score: dups.length ? 0 : 1,
       details: DuplicateTags.makeTableDetails(HEADINGS, dups),
       displayValue: dups.length ?
-        util.format(failureDisplayValue, dups.length, pluralEnding) :
+        formatMessage(failureDisplayValue, {duplicateTags: dups.length}) :
         displayValue,
     };
   }

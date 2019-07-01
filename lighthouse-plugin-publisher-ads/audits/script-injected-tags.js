@@ -15,17 +15,22 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
-const {getPageStartTime} = require('../utils/network-timing');
+const {formatMessage} = require('../messages/format');
+const {getTimingsByRecord} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
 const {isGptAdRequest} = require('../utils/resource-classification');
+
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 const id = 'script-injected-tags';
 const {
   title,
   failureTitle,
   description,
+  displayValue,
   headings,
 } = AUDITS[id];
 
@@ -101,22 +106,21 @@ class ScriptInjectedTags extends Audit {
         .filter((r) =>
           r.initiatorRequest && r.initiatorRequest.url == r.documentURL);
 
-    const pageStartTime = getPageStartTime(networkRecords);
+    /** @type {Map<NetworkRequest, NodeTiming>} */
+    const timings = await getTimingsByRecord(
+      trace, devtoolsLog, new Set(networkRecords), context);
     const tableView = injectedBlockingRequests.map((req) =>
-      ({
+      Object.assign({}, timings.get(req), {
         request: req.url,
-        startTime: (req.startTime - pageStartTime) * 1000,
-        duration: (req.endTime - req.startTime) * 1000,
         lineNumber: req.initiator.stack.callFrames[0].lineNumber,
       }));
     tableView.sort((a, b) => a.startTime - b.startTime);
 
     const failed = tableView.length > 0;
-    const plural = tableView.length == 1 ? '' : 's';
     return {
       numericValue: tableView.length,
       score: failed ? 0 : 1,
-      displayValue: `${tableView.length} script-injected resource${plural}`,
+      displayValue: formatMessage(displayValue, {numTags: tableView.length}),
       details: ScriptInjectedTags.makeTableDetails(HEADINGS, tableView),
     };
   }

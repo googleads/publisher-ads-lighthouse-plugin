@@ -28,6 +28,7 @@ declare global {
     export interface RequestRecord {
       startTime: number;
       endTime: number;
+      duration: number,
       url: string;
       type: string;
       abbreviatedUrl?: string;
