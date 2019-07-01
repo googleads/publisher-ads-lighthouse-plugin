@@ -15,7 +15,7 @@
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
@@ -81,12 +81,11 @@ class LoadsGptOverHttps extends Audit {
       return returnVal;
     }
 
-    const pluralEnding = details.numGptHttpReqs == 1 ? '' : 's';
     return {
       numericValue: details.numGptHttpReqs,
       score: details.numGptHttpReqs ? 0 : 1,
       displayValue: details.numGptHttpReqs ?
-        util.format(failureDisplayValue, details.numGptHttpReqs, pluralEnding) :
+        util.format(failureDisplayValue, details.numGptHttpReqs) :
         displayValue,
       details,
     };

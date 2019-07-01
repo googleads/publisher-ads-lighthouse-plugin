@@ -13,10 +13,10 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {URL} = require('url');
@@ -241,19 +241,15 @@ class AdRequestCriticalPath extends Audit {
     const depth = computeDepth(tableView);
     const failed = depth > 3;
 
-    const serialPluralEnding = depth != 1 ? 's' : '';
-    const totalPluralEnding = tableView.length != 1 ? 's' : '';
-
     return {
       numericValue: depth,
       score: failed ? 0 : 1,
-      displayValue: util.format(
+      displayValue: formatMessage(
         displayValue,
-        depth,
-        serialPluralEnding,
-        tableView.length,
-        totalPluralEnding
-      ),
+        {
+          serialResources: depth,
+          totalResources: tableView.length,
+        }),
       details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
     };
   }

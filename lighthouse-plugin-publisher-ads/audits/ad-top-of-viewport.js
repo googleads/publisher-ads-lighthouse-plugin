@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages.js');
+const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
+const {formatMessage} = require('../messages/format');
 const {isGptIframe} = require('../utils/resource-classification');
 
 const id = 'ad-top-of-viewport';
@@ -88,7 +88,7 @@ class AdTopOfViewport extends Audit {
       numericValue: topSlot.midpoint,
       // No displayValue if passing, no changes to be made.
       displayValue: score ? displayValue :
-        util.format(failureDisplayValue, Math.round(topSlot.midpoint)),
+        formatMessage(failureDisplayValue, {valueInPx: topSlot.midpoint}),
       details: AdTopOfViewport.makeTableDetails(
         HEADINGS,
         score ? [] : [{slot: topSlot.id}]
