@@ -1,6 +1,6 @@
 {
   "name": "lighthouse-plugin-publisher-ads",
-  "version": "0.0.3.9",
+  "version": "0.0.3.10",
   "description": "Ad-aware plugin for Lighthouse.",
   "license": "Apache-2.0",
   "main": "plugin.js",
