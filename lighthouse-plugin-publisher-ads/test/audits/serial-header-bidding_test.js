@@ -389,8 +389,7 @@ describe('SerialHeaderBidding', async () => {
       },
     ];
 
-    for (const {desc, networkRecords, expectedAdsRecords,
-      expectedHeaderBiddingRecords, expectedNotAppl} of testCases) {
+    for (const {desc, networkRecords, expectedNotAppl} of testCases) {
       it(`should have ${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await SerialHeaderBidding.audit(
@@ -398,10 +397,7 @@ describe('SerialHeaderBidding', async () => {
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
-          expect(results).with.property('extendedInfo')
-              .property('adsRecords').eql(expectedAdsRecords);
-          expect(results).with.property('extendedInfo')
-              .property('headerBiddingRecords').eql(expectedHeaderBiddingRecords);
+          expect(results).to.not.have.property('notApplicable');
         }
       });
     }

@@ -53,8 +53,8 @@ const MIN_BID_DURATION = .05;
 const HEADINGS = [
   {key: 'bidder', itemType: 'text', text: headings.bidder},
   {key: 'url', itemType: 'url', text: headings.url},
-  {key: 'initiator', itemType: 'url', text: headings.initiator},
   {key: 'startTime', itemType: 'ms', text: headings.startTime},
+  {key: 'endTime', itemType: 'ms', text: headings.endTime},
   {key: 'duration', itemType: 'ms', text: headings.duration},
 ];
 
@@ -84,7 +84,6 @@ function constructRecords(records, recordType, timings) {
     if (!timing) continue;
     results.push(Object.assign({}, timing, {
       url: record.url,
-      initiator: record.initiatorRequest ? record.initiatorRequest.url : '',
       type: recordType,
     }));
   }
@@ -119,6 +118,11 @@ function isPossibleBid(rec) {
       !isCacheable(rec);
 }
 
+/**
+ * Returns a copy of the given urls with the query string removed, if present.
+ * @param {string} url
+ * @return {string}
+ */
 function clearQueryString(url) {
   const u = new URL(url);
   delete u.search;
@@ -179,21 +183,14 @@ class SerialHeaderBidding extends Audit {
     const headerBiddingRecords = constructRecords(
       recordsByType.get(RequestType.BID) || [], RequestType.BID,
       timingsByRecord);
-    let serialBids = [];
+    /** @type {NetworkDetails.RequestRecord[]} */ let serialBids = [];
     let previousBid;
 
     for (const record of headerBiddingRecords) {
-      const isSerialRequest =
-        previousBid && record.startTime >= previousBid.endTime;
-
       record.bidder = getHeaderBidder(record.url);
-      //record.url = clearQueryString(record.url);
-      if (record.initiator) {
-        record.initiator = clearQueryString(record.initiator);
-      } else if (isSerialRequest) {
-        console.log(record)
-      }
-      if (isSerialRequest) {
+      record.url = clearQueryString(record.url);
+
+      if (previousBid && record.startTime >= previousBid.endTime) {
         serialBids.push(previousBid);
         serialBids.push(record);
       }
