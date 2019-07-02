@@ -40,7 +40,6 @@ const MIN_BID_DURATION = .05;
  * @typedef {Object} BidRequest
  * @property {string | boolean} bidder
  * @property {string} url
- * @property {string} initiator
  * @property {number} startTime
  * @property {number} endTime
  * @property {number} duration

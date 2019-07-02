@@ -20,7 +20,6 @@
       "failureDisplayValue": "Up to {opportunity, number, seconds} s tag load time improvement",
       "headings": {
         "url": "Resource",
-        "initiator": "Initiatior",
         "startTime": "Start Time",
         "endTime": "End Time",
         "duration": "Duration"
@@ -153,7 +152,6 @@
       "headings": {
         "bidder": "Bidder",
         "url": "URL",
-        "initiator": "Initiatior",
         "startTime": "Start Time",
         "endTime": "End Time",
         "duration": "Duration"
