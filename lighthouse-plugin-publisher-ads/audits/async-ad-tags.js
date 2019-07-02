@@ -13,22 +13,29 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
+const common = require('../messages/common-strings');
 // @ts-ignore
 const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'async-ad-tags';
-const {
-  title,
-  failureTitle,
-  description,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'GPT tag is loaded asynchronously',
+  failureTitle: 'Load GPT asynchronously',
+  description: 'Loading the GPT tag synchronously blocks content rendering ' +
+  'until the tag is fetched and loaded. Consider using the `async` attribute ' +
+  'to load gpt.js asynchronously. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags' +
+  ').',
+};
 
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
 /**
  * @param {LH.Artifacts.NetworkRequest} tagReq
  * @return {boolean}
@@ -49,10 +56,10 @@ class AsyncAdTags extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'async-ad-tags',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs', 'URL'],
     };
   }
@@ -72,7 +79,7 @@ class AsyncAdTags extends Audit {
         .filter((req) => req.frameId === mainResource.frameId);
 
     if (!tagReqs.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_TAG));
     }
 
     const numAsync = array.count(tagReqs, isAsync);
@@ -84,3 +91,4 @@ class AsyncAdTags extends Audit {
 }
 
 module.exports = AsyncAdTags;
+module.exports.UIStrings = UIStrings;

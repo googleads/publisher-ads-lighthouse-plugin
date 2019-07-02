@@ -12,22 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const common = require('../messages/common-strings');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
+
 const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'full-width-slots';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  failureDisplayValue,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Ad slots effectively use horizontal space',
+  failureTitle: 'Increase the width of ad slots',
+  description: 'Ad slots that utilize most of the page width generally ' +
+  'experience increased click-through rate over smaller ad sizes. We ' +
+  'recommend leaving no more than 25% of the viewport width unutilized on ' +
+  'mobile devices.',
+  failureDisplayValue: '{percentUnused, number, percent} of viewport width ' +
+  'is underutilized',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
 
 /** @inheritDoc */
 class FullWidthSlots extends Audit {
@@ -37,10 +44,10 @@ class FullWidthSlots extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'full-width-slots',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['ViewportDimensions', 'devtoolsLogs'],
     };
   }
@@ -62,7 +69,7 @@ class FullWidthSlots extends Audit {
         .map((record) => new URL(record.url));
 
     if (!adRequestUrls.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
+      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_ADS));
     }
 
     const sizeArrs = adRequestUrls.map((url) =>
@@ -76,7 +83,8 @@ class FullWidthSlots extends Audit {
         .filter((w) => w <= vpWidth && w > 1);
 
     if (!widths.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_VALID_AD_WIDTHS);
+      return auditNotApplicable(
+        str_(common.UIStrings.NOT_APPLICABLE__NO_VALID_AD_WIDTHS));
     }
 
     const maxWidth = Math.max(...widths);
@@ -91,10 +99,11 @@ class FullWidthSlots extends Audit {
       numericValue: pctUnoccupied,
       // No displayValue if passing, no changes to be made.
       displayValue: score ?
-        displayValue :
-        formatMessage(failureDisplayValue, {percentUnused: pctUnoccupied}),
+        '' :
+        str_(UIStrings.failureDisplayValue, {percentUnused: pctUnoccupied}),
     };
   }
 }
 
 module.exports = FullWidthSlots;
+module.exports.UIStrings = UIStrings;

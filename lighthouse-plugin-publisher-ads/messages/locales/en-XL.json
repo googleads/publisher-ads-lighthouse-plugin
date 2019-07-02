@@ -1,0 +1,386 @@
+{
+  "audits/ad-blocking-tasks.js | columnDuration": {
+    "message": "D̂úr̂át̂íôń"
+  },
+  "audits/ad-blocking-tasks.js | columnEndTime": {
+    "message": "Êńd̂"
+  },
+  "audits/ad-blocking-tasks.js | columnScript": {
+    "message": "Ât́t̂ŕîb́ût́âb́l̂é ÛŔL̂"
+  },
+  "audits/ad-blocking-tasks.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂"
+  },
+  "audits/ad-blocking-tasks.js | description": {
+    "message": "T̂áŝḱŝ b́l̂óĉḱîńĝ t́ĥé m̂áîń t̂h́r̂éâd́ ĉán̂ d́êĺâý âd́ r̂éq̂úêśt̂ś âńd̂ ćâúŝé â ṕôór̂ úŝér̂ éx̂ṕêŕîén̂ćê. Ćôńŝíd̂ér̂ ŕêḿôv́îńĝ ĺôńĝ b́l̂óĉḱîńĝ t́âśk̂ś ôŕ m̂óv̂ín̂ǵ t̂h́êḿ ôf́f̂ óf̂ t́ĥé m̂áîń t̂h́r̂éâd́. T̂h́êśê t́âśk̂ś ĉán̂ b́ê éŝṕêćîál̂ĺŷ d́êt́r̂ím̂én̂t́âĺ t̂ó p̂ér̂f́ôŕm̂án̂ćê ón̂ ĺêśŝ ṕôẃêŕf̂úl̂ d́êv́îćêś. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-b̂ĺôćk̂ín̂ǵ-t̂áŝḱŝ)."
+  },
+  "audits/ad-blocking-tasks.js | failureDisplayValue": {
+    "message": "{numTasks} l̂ón̂ǵ {numTasks, plural, =1 {t̂áŝḱ} other {t̂áŝḱŝ}}"
+  },
+  "audits/ad-blocking-tasks.js | failureTitle": {
+    "message": "Âv́ôíd̂ ĺôńĝ t́âśk̂ś t̂h́ât́ b̂ĺôćk̂ ád̂-ŕêĺât́êd́ n̂ét̂ẃôŕk̂ ŕêq́ûéŝt́ŝ"
+  },
+  "audits/ad-blocking-tasks.js | title": {
+    "message": "N̂ó l̂ón̂ǵ t̂áŝḱŝ b́l̂óĉḱîńĝ ád̂-ŕêĺât́êd́ n̂ét̂ẃôŕk̂ ŕêq́ûéŝt́ŝ"
+  },
+  "audits/ad-request-critical-path.js | columnDuration": {
+    "message": "D̂úr̂át̂íôń"
+  },
+  "audits/ad-request-critical-path.js | columnEndTime": {
+    "message": "Êńd̂ T́îḿê"
+  },
+  "audits/ad-request-critical-path.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂ T́îḿê"
+  },
+  "audits/ad-request-critical-path.js | columnType": {
+    "message": "T̂ýp̂é"
+  },
+  "audits/ad-request-critical-path.js | columnUrl": {
+    "message": "R̂éq̂úêśt̂"
+  },
+  "audits/ad-request-critical-path.js | description": {
+    "message": "Ĉón̂śîd́êŕ r̂éd̂úĉín̂ǵ t̂h́ê ńûḿb̂ér̂ óf̂ ŕêśôúr̂ćêś, l̂óâd́îńĝ ḿûĺt̂íp̂ĺê ŕêśôúr̂ćêś ŝím̂úl̂t́âńêóûśl̂ý, ôŕ l̂óâd́îńĝ ŕêśôúr̂ćêś êár̂ĺîér̂ t́ô ím̂ṕr̂óv̂é âd́ ŝṕêéd̂. Ŕêq́ûéŝt́ŝ t́ĥát̂ b́l̂óĉḱ âd́ l̂óâd́îńĝ ćâń b̂é f̂óûńd̂ b́êĺôẃ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-r̂éq̂úêśt̂-ćr̂ít̂íĉál̂-ṕât́ĥ)."
+  },
+  "audits/ad-request-critical-path.js | displayValue": {
+    "message": "{serialResources, number} ŝér̂íâĺ {serialResources, plural, =1 {r̂éŝóûŕĉé} other {r̂éŝóûŕĉéŝ}}, {totalResources, number} t́ôt́âĺ {totalResources, plural, =1 {r̂éŝóûŕĉé} other {r̂éŝóûŕĉéŝ}}"
+  },
+  "audits/ad-request-critical-path.js | failureTitle": {
+    "message": "R̂éd̂úĉé ĉŕît́îćâĺ p̂át̂h́ f̂ór̂ ád̂ ĺôád̂ín̂ǵ"
+  },
+  "audits/ad-request-critical-path.js | title": {
+    "message": "M̂ín̂ím̂ál̂ ŕêq́ûéŝt́ŝ f́ôún̂d́ îń âd́ ĉŕît́îćâĺ p̂át̂h́"
+  },
+  "audits/ad-request-from-page-start.js | description": {
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ t̂h́ê śt̂ár̂t́ ôf́ p̂áĝé l̂óâd́ ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. D̂él̂áŷéd̂ ád̂ ŕêq́ûéŝt́ŝ ẃîĺl̂ d́êćr̂éâśê ím̂ṕr̂éŝśîón̂ś âńd̂ v́îéŵáb̂íl̂ít̂ý, âńd̂ h́âv́ê á n̂éĝát̂ív̂é îḿp̂áĉt́ ôń âd́ r̂év̂én̂úê. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+  },
+  "audits/ad-request-from-page-start.js | displayValue": {
+    "message": "{adReqTime, number, seconds} ŝ"
+  },
+  "audits/ad-request-from-page-start.js | failureTitle": {
+    "message": "R̂éd̂úĉé l̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂éq̂úêśt̂"
+  },
+  "audits/ad-request-from-page-start.js | title": {
+    "message": "L̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂éq̂úêśt̂"
+  },
+  "audits/ad-request-from-tag-load.js | description": {
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ ŵh́êń t̂h́ê Ǵôóĝĺê Ṕûb́l̂íŝh́êŕ T̂áĝ ĺôád̂ś ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/m̂ét̂ŕîćŝ)."
+  },
+  "audits/ad-request-from-tag-load.js | displayValue": {
+    "message": "{adReqTime, number, seconds} ŝ"
+  },
+  "audits/ad-request-from-tag-load.js | failureTitle": {
+    "message": "R̂éd̂úĉé l̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂éq̂úêśt̂ (f́r̂óm̂ t́âǵ l̂óâd́)"
+  },
+  "audits/ad-request-from-tag-load.js | title": {
+    "message": "L̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂éq̂úêśt̂, f́r̂óm̂ t́âǵ l̂óâd́"
+  },
+  "audits/ad-top-of-viewport.js | columnSlot": {
+    "message": "T̂óp̂ Śl̂ót̂ ÍD̂"
+  },
+  "audits/ad-top-of-viewport.js | description": {
+    "message": "Ôv́êŕ 10% ôf́ âd́ŝ ár̂é n̂év̂ér̂ v́îéŵéd̂ b́êćâúŝé ûśêŕŝ śĉŕôĺl̂ ṕâśt̂ t́ĥém̂ b́êf́ôŕê t́ĥéŷ b́êćôḿê v́îéŵáb̂ĺê. B́ŷ ḿôv́îńĝ ád̂ śl̂ót̂ś âẃâý f̂ŕôḿ t̂h́ê v́êŕŷ t́ôṕ ôf́ t̂h́ê v́îéŵṕôŕt̂, úŝér̂ś âŕê ḿôŕê ĺîḱêĺŷ t́ô śêé âd́ŝ b́êf́ôŕê śĉŕôĺl̂ín̂ǵ âẃâý. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-t̂óp̂-óf̂-v́îéŵṕôŕt̂)."
+  },
+  "audits/ad-top-of-viewport.js | failureDisplayValue": {
+    "message": "Â śĉŕôĺl̂ óf̂ {valueInPx, number} ṕx̂ ẃôúl̂d́ ĥíd̂é ĥál̂f́ ôf́ ŷóûŕ t̂óp̂ḿôśt̂ ád̂"
+  },
+  "audits/ad-top-of-viewport.js | failureTitle": {
+    "message": "M̂óv̂é t̂h́ê t́ôṕ âd́ f̂úr̂t́ĥér̂ d́ôẃn̂ t́ĥé p̂áĝé"
+  },
+  "audits/ad-top-of-viewport.js | title": {
+    "message": "N̂ó âd́ f̂óûńd̂ át̂ t́ĥé v̂ér̂ý t̂óp̂ óf̂ t́ĥé v̂íêẃp̂ór̂t́"
+  },
+  "audits/ads-in-viewport.js | columnSlot": {
+    "message": "Ŝĺôt́ŝ Óût́ŝíd̂é V̂íêẃp̂ór̂t́"
+  },
+  "audits/ads-in-viewport.js | description": {
+    "message": "T̂óô ḿâńŷ ád̂ś l̂óâd́êd́ ôút̂śîd́ê t́ĥé v̂íêẃp̂ór̂t́ l̂óŵér̂ś v̂íêẃâb́îĺît́ŷ ŕât́êś âńd̂ ím̂ṕâćt̂ś ûśêŕ êx́p̂ér̂íêńĉé. Ĉón̂śîd́êŕ l̂óâd́îńĝ ád̂ś b̂él̂óŵ t́ĥé f̂ól̂d́ l̂áẑíl̂ý âś t̂h́ê úŝér̂ śĉŕôĺl̂ś d̂óŵń. Ĉón̂śîd́êŕ ûśîńĝ ǴP̂T́'ŝ [Ĺâźŷ Ĺôád̂ín̂ǵ ÂṔÎ](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/d́ôúb̂ĺêćl̂íĉḱ-ĝṕt̂/ŕêf́êŕêńĉé#ĝóôǵl̂ét̂áĝ.Ṕûb́Âd́ŝŚêŕv̂íĉé_êńâb́l̂éL̂áẑýL̂óâd́). [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́ŝ-ín̂-v́îéŵṕôŕt̂)."
+  },
+  "audits/ads-in-viewport.js | failureDisplayValue": {
+    "message": "{hiddenAds, number} {hiddenAds, plural, =1 {âd́} other {âd́ŝ}} óût́ ôf́ v̂íêẃ"
+  },
+  "audits/ads-in-viewport.js | failureTitle": {
+    "message": "Âv́ôíd̂ ĺôád̂ín̂ǵ âd́ŝ ún̂t́îĺ t̂h́êý âŕê ńêár̂ĺŷ ón̂-śĉŕêén̂"
+  },
+  "audits/ads-in-viewport.js | title": {
+    "message": "F̂éŵ ór̂ ńô ád̂ś l̂óâd́êd́ ôút̂śîd́ê v́îéŵṕôŕt̂"
+  },
+  "audits/async-ad-tags.js | description": {
+    "message": "L̂óâd́îńĝ t́ĥé ĜṔT̂ t́âǵ ŝýn̂ćĥŕôńôúŝĺŷ b́l̂óĉḱŝ ćôńt̂én̂t́ r̂én̂d́êŕîńĝ ún̂t́îĺ t̂h́ê t́âǵ îś f̂ét̂ćĥéd̂ án̂d́ l̂óâd́êd́. Ĉón̂śîd́êŕ ûśîńĝ t́ĥé `âśŷńĉ` át̂t́r̂íb̂út̂é t̂ó l̂óâd́ ĝṕt̂.j́ŝ áŝýn̂ćĥŕôńôúŝĺŷ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/áŝýn̂ć-âd́-t̂áĝś)."
+  },
+  "audits/async-ad-tags.js | failureTitle": {
+    "message": "L̂óâd́ ĜṔT̂ áŝýn̂ćĥŕôńôúŝĺŷ"
+  },
+  "audits/async-ad-tags.js | title": {
+    "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ âśŷńĉh́r̂ón̂óûśl̂ý"
+  },
+  "audits/duplicate-tags.js | columnFrameId": {
+    "message": "F̂ŕâḿê ÍD̂"
+  },
+  "audits/duplicate-tags.js | columnNumReqs": {
+    "message": "D̂úp̂ĺîćât́ê Ŕêq́ûéŝt́ŝ"
+  },
+  "audits/duplicate-tags.js | columnScript": {
+    "message": "Ŝćr̂íp̂t́"
+  },
+  "audits/duplicate-tags.js | description": {
+    "message": "L̂óâd́îńĝ á t̂áĝ ḿôŕê t́ĥán̂ ón̂ćê ín̂ t́ĥé ŝám̂é f̂ŕâḿê íŝ ŕêd́ûńd̂án̂t́ âńd̂ ád̂d́ŝ óv̂ér̂h́êád̂ ẃît́ĥóût́ b̂én̂éf̂ít̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/d́ûṕl̂íĉát̂é-t̂áĝś)."
+  },
+  "audits/duplicate-tags.js | failureDisplayValue": {
+    "message": "{duplicateTags, number} d̂úp̂ĺîćât́ê {duplicateTags, plural, =1 {t́âǵ} other {t̂áĝś}}"
+  },
+  "audits/duplicate-tags.js | failureTitle": {
+    "message": "L̂óâd́ t̂áĝś ôńl̂ý ôńĉé p̂ér̂ f́r̂ám̂é"
+  },
+  "audits/duplicate-tags.js | title": {
+    "message": "N̂ó d̂úp̂ĺîćât́ê t́âǵŝ f́ôún̂d́ îń âńŷ f́r̂ám̂é"
+  },
+  "audits/first-ad-paint.js | description": {
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê f́îŕŝt́ âd́ îf́r̂ám̂é t̂ó p̂áîńt̂ f́r̂óm̂ ṕâǵê ńâv́îǵât́îón̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+  },
+  "audits/first-ad-paint.js | displayValue": {
+    "message": "{firstAdPaint, number, seconds} ŝ"
+  },
+  "audits/first-ad-paint.js | failureTitle": {
+    "message": "R̂éd̂úĉé t̂ím̂é t̂ó r̂én̂d́êŕ f̂ír̂śt̂ ád̂"
+  },
+  "audits/first-ad-paint.js | title": {
+    "message": "L̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂én̂d́êŕ"
+  },
+  "audits/full-width-slots.js | description": {
+    "message": "Âd́ ŝĺôt́ŝ t́ĥát̂ út̂íl̂íẑé m̂óŝt́ ôf́ t̂h́ê ṕâǵê ẃîd́t̂h́ ĝén̂ér̂ál̂ĺŷ éx̂ṕêŕîén̂ćê ín̂ćr̂éâśêd́ ĉĺîćk̂-t́ĥŕôúĝh́ r̂át̂é ôv́êŕ ŝḿâĺl̂ér̂ ád̂ śîźêś. Ŵé r̂éĉóm̂ḿêńd̂ ĺêáv̂ín̂ǵ n̂ó m̂ór̂é t̂h́âń 25% ôf́ t̂h́ê v́îéŵṕôŕt̂ ẃîd́t̂h́ ûńût́îĺîźêd́ ôń m̂ób̂íl̂é d̂év̂íĉéŝ."
+  },
+  "audits/full-width-slots.js | failureDisplayValue": {
+    "message": "{percentUnused, number, percent} ôf́ v̂íêẃp̂ór̂t́ ŵíd̂t́ĥ íŝ ún̂d́êŕût́îĺîźêd́"
+  },
+  "audits/full-width-slots.js | failureTitle": {
+    "message": "Îńĉŕêáŝé t̂h́ê ẃîd́t̂h́ ôf́ âd́ ŝĺôt́ŝ"
+  },
+  "audits/full-width-slots.js | title": {
+    "message": "Âd́ ŝĺôt́ŝ éf̂f́êćt̂ív̂él̂ý ûśê h́ôŕîźôńt̂ál̂ śp̂áĉé"
+  },
+  "audits/idle-network-times.js | causeDomContentLoaded": {
+    "message": "D̂ÓM̂Ćôńt̂én̂t́L̂óâd́êd́ Êv́êńt̂"
+  },
+  "audits/idle-network-times.js | causeLoadEvent": {
+    "message": "L̂óâd́ Êv́êńt̂"
+  },
+  "audits/idle-network-times.js | causeLongTask": {
+    "message": "L̂ón̂ǵ T̂áŝḱ"
+  },
+  "audits/idle-network-times.js | causeOther": {
+    "message": "Ôt́ĥér̂"
+  },
+  "audits/idle-network-times.js | causeRenderBlockingResource": {
+    "message": "B̂ĺôćk̂ín̂ǵ R̂éŝóûŕĉé"
+  },
+  "audits/idle-network-times.js | causeTimeout": {
+    "message": "T̂ím̂éôút̂"
+  },
+  "audits/idle-network-times.js | columnCause": {
+    "message": "Ŝúŝṕêćt̂éd̂ Ćâúŝé"
+  },
+  "audits/idle-network-times.js | columnDuration": {
+    "message": "D̂úr̂át̂íôń"
+  },
+  "audits/idle-network-times.js | columnEndTime": {
+    "message": "Êńd̂ T́îḿê"
+  },
+  "audits/idle-network-times.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂ T́îḿê"
+  },
+  "audits/idle-network-times.js | columnUrl": {
+    "message": "Ât́t̂ŕîb́ût́âb́l̂é ÛŔL̂"
+  },
+  "audits/idle-network-times.js | description": {
+    "message": "M̂óm̂én̂t́ŝ óf̂ ńêt́ŵór̂ḱ îd́l̂én̂éŝś îń t̂h́ê ćr̂ít̂íĉál̂ ṕât́ĥ t́ô ád̂ ĺôád̂ín̂ǵ p̂ŕêśêńt̂ óp̂ṕôŕt̂ún̂ít̂íêś t̂ó îḿp̂ŕôv́ê śp̂éêd́. Ĉón̂śîd́êŕ êĺîḿîńât́îńĝ ĺôńĝ t́âśk̂ś, t̂ím̂éôút̂ś, ŵáît́îńĝ ón̂ ĺôád̂ év̂én̂t́ŝ, ór̂ śŷńĉh́r̂ón̂óûś r̂éŝóûŕĉéŝ t́ô áv̂óîd́ îd́l̂én̂éŝś. Ĉh́r̂óm̂é D̂év̂T́ôól̂ś ĉán̂ b́ê úŝéd̂ t́ô d́îśĉóv̂ér̂ ẃĥát̂ íŝ ćâúŝín̂ǵ n̂ét̂ẃôŕk̂ íd̂ĺêńêśŝ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/ŵéb̂/t́ôól̂ś/ĉh́r̂óm̂é-d̂év̂t́ôól̂ś/êv́âĺûát̂é-p̂ér̂f́ôŕm̂án̂ćê/ŕêf́êŕêńĉé)."
+  },
+  "audits/idle-network-times.js | displayValue": {
+    "message": "{idleTime, number, seconds} ŝ śp̂én̂t́ îd́l̂é îń ĉŕît́îćâĺ p̂át̂h́"
+  },
+  "audits/idle-network-times.js | failureTitle": {
+    "message": "[Êx́p̂ér̂ím̂én̂t́âĺ] R̂éd̂úĉé n̂ét̂ẃôŕk̂ íd̂ĺê t́îḿê b́êf́ôŕê ád̂ ŕêq́ûéŝt́ŝ"
+  },
+  "audits/idle-network-times.js | title": {
+    "message": "[Êx́p̂ér̂ím̂én̂t́âĺ] N̂ét̂ẃôŕk̂ íŝ éf̂f́îćîén̂t́l̂ý ût́îĺîźêd́ b̂éf̂ór̂é âd́ r̂éq̂úêśt̂ś"
+  },
+  "audits/loads-gpt-from-sgdn.js | description": {
+    "message": "L̂óâd́ ĜṔT̂ f́r̂óm̂ 'śêćûŕêṕûb́âd́ŝ.ǵ.d̂óûb́l̂éĉĺîćk̂.ńêt́' t̂ó r̂éd̂úĉé ĜṔT̂ ĺôád̂ t́îḿê. B́ŷ ĺôád̂ín̂ǵ ĜṔT̂ f́r̂óm̂ t́ĥé ŝám̂é ĥóŝt́ âś âd́ r̂éq̂úêśt̂ś, b̂ŕôẃŝér̂ś ĉán̂ áv̂óîd́ âń âd́d̂ít̂íôńâĺ D̂ŃŜ ĺôók̂úp̂ án̂d́ ĤT́T̂Ṕ ĉón̂ńêćt̂íôń. Êx́âḿp̂ĺê:`<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=\"h́t̂t́p̂ś://ŝéĉúr̂ép̂úb̂ád̂ś.ĝ.d́ôúb̂ĺêćl̂íĉḱ.n̂ét̂/t́âǵ/ĵś/ĝṕt̂.j́ŝ\">`. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ĺôád̂ś-ĝṕt̂-f́r̂óm̂-śĝd́n̂)."
+  },
+  "audits/loads-gpt-from-sgdn.js | failureTitle": {
+    "message": "L̂óâd́ ĜṔT̂ f́r̂óm̂ ŕêćôḿm̂én̂d́êd́ ĥóŝt́"
+  },
+  "audits/loads-gpt-from-sgdn.js | title": {
+    "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ f̂ŕôḿ r̂éĉóm̂ḿêńd̂éd̂ h́ôśt̂"
+  },
+  "audits/loads-gpt-over-https.js | description": {
+    "message": "F̂ór̂ ṕr̂ív̂áĉý âńd̂ śêćûŕît́ŷ, ál̂ẃâýŝ ĺôád̂ ǴP̂T́ ôv́êŕ ĤT́T̂ṔŜ. Ín̂śêćûŕê ṕâǵêś ŝh́ôúl̂d́ êx́p̂ĺîćît́l̂ý r̂éq̂úêśt̂ t́ĥé ĜṔT̂ śĉŕîṕt̂ śêćûŕêĺŷ. Éx̂ám̂ṕl̂é:`<ŝćr̂íp̂t́ âśŷńĉ śr̂ć=\"ĥt́t̂ṕŝ://śêćûŕêṕûb́âd́ŝ.ǵ.d̂óûb́l̂éĉĺîćk̂.ńêt́/t̂áĝ/j́ŝ/ǵp̂t́.ĵś\">`. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/l̂óâd́ŝ-ǵp̂t́-ôv́êŕ-ĥt́t̂ṕŝ)."
+  },
+  "audits/loads-gpt-over-https.js | failureDisplayValue": {
+    "message": "L̂óâd́ ĝṕt̂.j́ŝ óv̂ér̂ H́T̂T́P̂Ś"
+  },
+  "audits/loads-gpt-over-https.js | failureTitle": {
+    "message": "L̂óâd́ ĜṔT̂ óv̂ér̂ H́T̂T́P̂Ś"
+  },
+  "audits/loads-gpt-over-https.js | title": {
+    "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ ôv́êŕ ĤT́T̂ṔŜ"
+  },
+  "audits/script-injected-tags.js | columnDuration": {
+    "message": "D̂úr̂át̂íôń"
+  },
+  "audits/script-injected-tags.js | columnLineNumber": {
+    "message": "Ŝóûŕĉé L̂ín̂é N̂úm̂b́êŕ"
+  },
+  "audits/script-injected-tags.js | columnRequest": {
+    "message": "R̂éŝóûŕĉé"
+  },
+  "audits/script-injected-tags.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂ T́îḿê"
+  },
+  "audits/script-injected-tags.js | description": {
+    "message": "L̂óâd́ ŝćr̂íp̂t́ŝ d́îŕêćt̂ĺŷ ẃît́ĥ `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=...>` ín̂śt̂éâd́ ôf́ îńĵéĉt́îńĝ śĉŕîṕt̂ś ŵít̂h́ Ĵáv̂áŜćr̂íp̂t́. T̂h́îś âĺl̂óŵś t̂h́ê b́r̂óŵśêŕ f̂ét̂ćĥ t́ĥé ŝćr̂íp̂t́ ŝóôńêŕ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://ŵẃŵ.íĝv́ît́â.ćôḿ/2014/05/20/ŝćr̂íp̂t́-îńĵéĉt́êd́-âśŷńĉ-śĉŕîṕt̂ś-ĉón̂śîd́êŕêd́-ĥár̂ḿf̂úl̂/)."
+  },
+  "audits/script-injected-tags.js | displayValue": {
+    "message": "{numTags} ŝćr̂íp̂t́-îńĵéĉt́êd́ {numTags, plural, =1 {r̂éŝóûŕĉéŝ} other {ŕêśôúr̂ćêś}}"
+  },
+  "audits/script-injected-tags.js | failureTitle": {
+    "message": "Âv́ôíd̂ śĉŕîṕt̂-ín̂j́êćt̂éd̂ t́âǵŝ"
+  },
+  "audits/script-injected-tags.js | title": {
+    "message": "N̂ó ŝćr̂íp̂t́-îńĵéĉt́êd́ t̂áĝś f̂óûńd̂"
+  },
+  "audits/serial-header-bidding.js | columnBidder": {
+    "message": "B̂íd̂d́êŕ"
+  },
+  "audits/serial-header-bidding.js | columnDuration": {
+    "message": "D̂úr̂át̂íôń"
+  },
+  "audits/serial-header-bidding.js | columnEndTime": {
+    "message": "Êńd̂ T́îḿê"
+  },
+  "audits/serial-header-bidding.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂ T́îḿê"
+  },
+  "audits/serial-header-bidding.js | columnUrl": {
+    "message": "ÛŔL̂"
+  },
+  "audits/serial-header-bidding.js | description": {
+    "message": "Ŝén̂d́ ĥéâd́êŕ b̂íd̂d́îńĝ ŕêq́ûéŝt́ŝ śîḿûĺt̂án̂éôúŝĺŷ, ŕât́ĥér̂ t́ĥán̂ śêŕîál̂ĺŷ, t́ô ŕêt́r̂íêv́ê b́îd́ŝ ḿôŕê q́ûíĉḱl̂ý. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/ŝér̂íâĺ-ĥéâd́êŕ-b̂íd̂d́îńĝ)."
+  },
+  "audits/serial-header-bidding.js | failureTitle": {
+    "message": "P̂ár̂ál̂ĺêĺîźê b́îd́ r̂éq̂úêśt̂ś"
+  },
+  "audits/serial-header-bidding.js | title": {
+    "message": "Ĥéâd́êŕ b̂íd̂d́îńĝ íŝ ṕâŕâĺl̂él̂íẑéd̂"
+  },
+  "audits/static-ad-tags.js | columnLineNumber": {
+    "message": "L̂ín̂é N̂úm̂b́êŕ"
+  },
+  "audits/static-ad-tags.js | columnUrl": {
+    "message": "Îńît́îát̂ór̂"
+  },
+  "audits/static-ad-tags.js | description": {
+    "message": "T̂áĝś l̂óâd́êd́ d̂ýn̂ám̂íĉál̂ĺŷ ár̂é n̂ót̂ v́îśîb́l̂é t̂ó t̂h́ê b́r̂óŵśêŕ p̂ŕêĺôád̂ér̂. Ćôńŝíd̂ér̂ úŝín̂ǵ â śt̂át̂íĉ t́âǵ ôŕ `<l̂ín̂ḱ r̂él̂=\"ṕr̂él̂óâd́\">` ŝó t̂h́ê b́r̂óŵśêŕ m̂áŷ ĺôád̂ ǴP̂T́ ŝóôńêŕ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/ŝt́ât́îć-âd́-t̂áĝś)."
+  },
+  "audits/static-ad-tags.js | failureDisplayValue": {
+    "message": "Ûṕ t̂ó {opportunity, number, seconds} ŝ t́âǵ l̂óâd́ t̂ím̂é îḿp̂ŕôv́êḿêńt̂"
+  },
+  "audits/static-ad-tags.js | failureTitle": {
+    "message": "L̂óâd́ ĜṔT̂ t́âǵ ŝt́ât́îćâĺl̂ý"
+  },
+  "audits/static-ad-tags.js | title": {
+    "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ ŝt́ât́îćâĺl̂ý"
+  },
+  "audits/tag-load-time.js | description": {
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê Ǵôóĝĺê Ṕûb́l̂íŝh́êŕ T̂áĝ'ś îḿp̂ĺêḿêńt̂át̂íôń ŝćr̂íp̂t́ (p̂úb̂ád̂ś_îḿp̂ĺ.ĵś) t̂ó l̂óâd́ âf́t̂ér̂ t́ĥé p̂áĝé l̂óâd́ŝ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+  },
+  "audits/tag-load-time.js | displayValue": {
+    "message": "{tagLoadTime, number, seconds} ŝ"
+  },
+  "audits/tag-load-time.js | failureTitle": {
+    "message": "R̂éd̂úĉé t̂áĝ ĺôád̂ t́îḿê"
+  },
+  "audits/tag-load-time.js | title": {
+    "message": "T̂áĝ ĺôád̂ t́îḿê"
+  },
+  "audits/viewport-ad-density.js | description": {
+    "message": "T̂h́ê ád̂ś-t̂ó-ĉón̂t́êńt̂ ŕât́îó îńŝíd̂é t̂h́ê v́îéŵṕôŕt̂ ćâń ĥáv̂é âń îḿp̂áĉt́ ôń ûśêŕ êx́p̂ér̂íêńĉé âńd̂ úl̂t́îḿât́êĺŷ úŝér̂ ŕêt́êńt̂íôń. T̂h́ê B́êt́t̂ér̂ Ád̂ś Ŝt́âńd̂ár̂d́ [r̂éĉóm̂ḿêńd̂ś ĥáv̂ín̂ǵ âń âd́ d̂én̂śît́ŷ b́êĺôẃ 30%](ĥt́t̂ṕŝ://ẃŵẃ.b̂ét̂t́êŕâd́ŝ.ór̂ǵ/m̂ób̂íl̂é-âd́-d̂én̂śît́ŷ-h́îǵĥér̂-t́ĥán̂-30/). [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/v́îéŵṕôŕt̂-ád̂-d́êńŝít̂ý)."
+  },
+  "audits/viewport-ad-density.js | displayValue": {
+    "message": "{adDensity, number, percent} ĉóv̂ér̂éd̂ b́ŷ ád̂ś"
+  },
+  "audits/viewport-ad-density.js | failureTitle": {
+    "message": "R̂éd̂úĉé âd́ d̂én̂śît́ŷ ín̂ ín̂ít̂íâĺ v̂íêẃp̂ór̂t́"
+  },
+  "audits/viewport-ad-density.js | title": {
+    "message": "Âd́ d̂én̂śît́ŷ ín̂ ín̂ít̂íâĺ v̂íêẃp̂ór̂t́ îś ŵít̂h́îń r̂éĉóm̂ḿêńd̂éd̂ ŕâńĝé"
+  },
+  "messages/common-strings.js | ERRORS__AREA_LARGER_THAN_VIEWPORT": {
+    "message": "Ĉál̂ćûĺât́êd́ âd́ âŕêá îś l̂ár̂ǵêŕ t̂h́âń v̂íêẃp̂ór̂t́"
+  },
+  "messages/common-strings.js | ERRORS__VIEWPORT_AREA_ZERO": {
+    "message": "V̂íêẃp̂ór̂t́ âŕêá îś ẑér̂ó"
+  },
+  "messages/common-strings.js | GROUPS__ADS_BEST_PRACTICES": {
+    "message": "T̂áĝ B́êśt̂ Ṕr̂áĉt́îćêś"
+  },
+  "messages/common-strings.js | GROUPS__ADS_PERFORMANCE": {
+    "message": "Âd́ Ŝṕêéd̂"
+  },
+  "messages/common-strings.js | GROUPS__METRICS": {
+    "message": "M̂ét̂ŕîćŝ"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__DEFAULT": {
+    "message": "Âúd̂ít̂ ńôt́ âṕp̂ĺîćâb́l̂é"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__INVALID_TIMING": {
+    "message": "Îńv̂ál̂íd̂ t́îḿîńĝ t́âśk̂ d́ât́â"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_AD_RELATED_REQ": {
+    "message": "N̂ó âd́-r̂él̂át̂éd̂ ŕêq́ûéŝt́ŝ"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_AD_RENDERED": {
+    "message": "N̂ó âd́ŝ ŕêńd̂ér̂éd̂"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_ADS": {
+    "message": "N̂ó âd́ŝ ŕêq́ûéŝt́êd́"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_ADS_VIEWPORT": {
+    "message": "N̂ó âd́ŝ ín̂ v́îéŵṕôŕt̂"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_BIDS": {
+    "message": "N̂ó b̂íd̂ś d̂ét̂éĉt́êd́"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_EVENT_MATCHING_REQ": {
+    "message": "N̂ó êv́êńt̂ ḿât́ĉh́êś n̂ét̂ẃôŕk̂ ŕêćôŕd̂ś"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_GPT": {
+    "message": "ĜṔT̂ ńôt́ r̂éq̂úêśt̂éd̂"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_RECORDS": {
+    "message": "N̂ó ŝúĉćêśŝf́ûĺ n̂ét̂ẃôŕk̂ ŕêćôŕd̂ś"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_TAG": {
+    "message": "N̂ó t̂áĝ ŕêq́ûéŝt́êd́"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_TAGS": {
+    "message": "N̂ó t̂áĝś r̂éq̂úêśt̂éd̂"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_TASKS": {
+    "message": "N̂ó t̂áŝḱŝ t́ô ćôḿp̂ár̂é"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_VALID_AD_WIDTHS": {
+    "message": "N̂ó r̂éq̂úêśt̂éd̂ ád̂ś ĉón̂t́âín̂ ád̂ś ôf́ v̂ál̂íd̂ ẃîd́t̂h́"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_VISIBLE_SLOTS": {
+    "message": "N̂ó v̂íŝíb̂ĺê śl̂ót̂ś"
+  },
+  "messages/common-strings.js | WARNINGS__NO_AD_RENDERED": {
+    "message": "N̂ó âd́ŝ ẃêŕê ṕâín̂t́êd́ ŵh́êń r̂én̂d́êŕîńĝ t́ĥíŝ ṕâǵê."
+  },
+  "messages/common-strings.js | WARNINGS__NO_ADS": {
+    "message": "N̂ó âd́ŝ ẃêŕê ŕêq́ûéŝt́êd́ ŵh́êń f̂ét̂ćĥín̂ǵ t̂h́îś p̂áĝé."
+  },
+  "messages/common-strings.js | WARNINGS__NO_TAG": {
+    "message": "T̂h́ê ǴP̂T́ t̂áĝ ẃâś n̂ót̂ ŕêq́ûéŝt́êd́."
+  }
+}

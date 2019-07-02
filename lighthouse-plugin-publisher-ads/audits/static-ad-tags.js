@@ -13,23 +13,35 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
+const common = require('../messages/common-strings');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
+
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'static-ad-tags';
-const {
-  title,
-  failureTitle,
-  failureDisplayValue,
-  description,
-  headings,
-} = AUDITS[id];
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
+const UIStrings = {
+  title: 'GPT tag is loaded statically',
+  failureTitle: 'Load GPT tag statically',
+  description: 'Tags loaded dynamically are not visible to the browser ' +
+  'preloader. Consider using a static tag or `<link rel=\"preload\">` so the ' +
+  'browser may load GPT sooner. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags' +
+  ').',
+  failureDisplayValue: 'Up to {opportunity, number, seconds} s tag load time ' +
+  'improvement',
+  columnUrl: 'Initiator',
+  columnLineNumber: 'Line Number',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
@@ -38,12 +50,12 @@ const HEADINGS = [
   {
     key: 'url',
     itemType: 'url',
-    text: headings.url,
+    text: str_(UIStrings.columnUrl),
   },
   {
     key: 'lineNumber',
     itemType: 'numeric',
-    text: headings.lineNumber,
+    text: str_(UIStrings.columnLineNumber),
     granularity: 1,
   },
 ];
@@ -90,10 +102,10 @@ class StaticAdTags extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'static-ad-tags',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -110,7 +122,7 @@ class StaticAdTags extends Audit {
         .filter((req) => isGptTag(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_TAG));
     }
 
     const numStatic = array.count(tagReqs, isStaticRequest);
@@ -124,7 +136,7 @@ class StaticAdTags extends Audit {
     if (failed) {
       const opportunity = quantifyOpportunitySec(tagReqs[0], networkRecords);
       if (opportunity > 0.1) {
-        displayValue = formatMessage(failureDisplayValue, {opportunity});
+        displayValue = str_(UIStrings.failureDisplayValue, {opportunity});
       }
     }
 
@@ -137,3 +149,4 @@ class StaticAdTags extends Audit {
 }
 
 module.exports = StaticAdTags;
+module.exports.UIStrings = UIStrings;

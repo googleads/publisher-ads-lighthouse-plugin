@@ -12,25 +12,36 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const common = require('../messages/common-strings');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
-const id = 'serial-header-bidding';
-const {
-  title,
-  failureTitle,
-  description,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Header bidding is parallelized',
+  failureTitle: 'Parallelize bid requests',
+  description: 'Send header bidding requests simultaneously, rather than ' +
+  'serially, to retrieve bids more quickly. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/serial-header-bidding' +
+  ').',
+  columnBidder: 'Bidder',
+  columnUrl: 'URL',
+  columnStartTime: 'Start Time',
+  columnEndTime: 'End Time',
+  columnDuration: 'Duration',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
 
 // Min record duration (s) to be considered a bid.
 const MIN_BID_DURATION = .05;
@@ -49,11 +60,11 @@ const MIN_BID_DURATION = .05;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'bidder', itemType: 'text', text: headings.bidder},
-  {key: 'url', itemType: 'url', text: headings.url},
-  {key: 'startTime', itemType: 'ms', text: headings.startTime},
-  {key: 'endTime', itemType: 'ms', text: headings.endTime},
-  {key: 'duration', itemType: 'ms', text: headings.duration},
+  {key: 'bidder', itemType: 'text', text: str_(UIStrings.columnBidder)},
+  {key: 'url', itemType: 'url', text: str_(UIStrings.columnUrl)},
+  {key: 'startTime', itemType: 'ms', text: str_(UIStrings.columnStartTime)},
+  {key: 'endTime', itemType: 'ms', text: str_(UIStrings.columnEndTime)},
+  {key: 'duration', itemType: 'ms', text: str_(UIStrings.columnDuration)},
 ];
 
 /**
@@ -125,10 +136,10 @@ class SerialHeaderBidding extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'serial-header-bidding',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
@@ -158,7 +169,7 @@ class SerialHeaderBidding extends Audit {
     const recordsByType = bucket(networkRecords, checkRecordType);
 
     if (!recordsByType.has(RequestType.BID)) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
+      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_BIDS));
     }
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
@@ -223,3 +234,4 @@ class SerialHeaderBidding extends Audit {
 }
 
 module.exports = SerialHeaderBidding;
+module.exports.UIStrings = UIStrings;

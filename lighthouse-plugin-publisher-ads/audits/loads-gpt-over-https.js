@@ -12,22 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const common = require('../messages/common-strings');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const util = require('util');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'loads-gpt-over-https';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  failureDisplayValue,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'GPT tag is loaded over HTTPS',
+  failureTitle: 'Load GPT over HTTPS',
+  description: 'For privacy and security, always load GPT over HTTPS. ' +
+  'Insecure pages should explicitly request the GPT script securely. Example:' +
+  '`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\"' +
+  '>`. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-over-https' +
+  ').',
+  failureDisplayValue: 'Load gpt.js over HTTPS',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
+
 
 /**
  * Simple audit that checks if gpt is loaded over https.
@@ -41,10 +50,10 @@ class LoadsGptOverHttps extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'loads-gpt-over-https',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -60,7 +69,8 @@ class LoadsGptOverHttps extends Audit {
 
     const pageReq = networkRecords.find((record) => record.statusCode == 200);
     if (!pageReq) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
+      return auditNotApplicable(
+        str_(common.UIStrings.NOT_APPLICABLE__NO_RECORDS));
     }
 
     const gptRequests = networkRecords
@@ -76,7 +86,8 @@ class LoadsGptOverHttps extends Audit {
     };
 
     if (!gptRequests.length) {
-      const returnVal = auditNotApplicable(NOT_APPLICABLE.NO_GPT);
+      const returnVal = auditNotApplicable(
+        str_(common.UIStrings.NOT_APPLICABLE__NO_GPT));
       returnVal.details = details;
       return returnVal;
     }
@@ -85,11 +96,13 @@ class LoadsGptOverHttps extends Audit {
       numericValue: details.numGptHttpReqs,
       score: details.numGptHttpReqs ? 0 : 1,
       displayValue: details.numGptHttpReqs ?
-        util.format(failureDisplayValue, details.numGptHttpReqs) :
-        displayValue,
+        util.format(
+          str_(UIStrings.failureDisplayValue), details.numGptHttpReqs) :
+        '',
       details,
     };
   }
 }
 
 module.exports = LoadsGptOverHttps;
+module.exports.UIStrings = UIStrings;

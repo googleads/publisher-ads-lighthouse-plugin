@@ -12,19 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const common = require('../messages/common-strings');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'loads-gpt-from-sgdn';
-const {
-  title,
-  failureTitle,
-  description,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'GPT tag is loaded from recommended host',
+  failureTitle: 'Load GPT from recommended host',
+  description: 'Load GPT from \'securepubads.g.doubleclick.net\' to reduce ' +
+  'GPT load time. By loading GPT from the same host as ad requests, browsers ' +
+  'can avoid an additional DNS lookup and HTTP connection. Example:`' +
+  '<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">' +
+  '`. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-sgdn' +
+  ').',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
 
 /**
  * Simple audit that checks if gpt is loaded over from updated host.
@@ -36,10 +46,10 @@ class LoadsGptFromSgdn extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'loads-gpt-from-sgdn',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -54,7 +64,7 @@ class LoadsGptFromSgdn extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const gptUrl = networkRecords.map((r) => new URL(r.url)).find(isGptTag);
     if (!gptUrl) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_GPT);
+      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_GPT));
     }
     return {
       score: Number(gptUrl.host === 'securepubads.g.doubleclick.net'),
@@ -63,3 +73,4 @@ class LoadsGptFromSgdn extends Audit {
 }
 
 module.exports = LoadsGptFromSgdn;
+module.exports.UIStrings = UIStrings;

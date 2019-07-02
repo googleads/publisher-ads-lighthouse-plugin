@@ -12,14 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {NOT_APPLICABLE} = require('../messages/messages');
+const {UIStrings} = require('../messages/common-strings');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * Returns object for a notApplicable audit given a message string
  * @param {string} message
  * @return {Object}
  */
-function auditNotApplicable(message = NOT_APPLICABLE.DEFAULT) {
+function auditNotApplicable(message = str_(UIStrings.NOT_APPLICABLE__DEFAULT)) {
   return {
     notApplicable: true,
     score: 1,

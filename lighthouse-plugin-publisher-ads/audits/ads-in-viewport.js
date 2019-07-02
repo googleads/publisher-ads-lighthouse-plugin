@@ -12,29 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const common = require('../messages/common-strings');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
+
 const {isBoxInViewport} = require('../utils/geometry');
 const {isGptIframe} = require('../utils/resource-classification');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'ads-in-viewport';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  failureDisplayValue,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Few or no ads loaded outside viewport',
+  failureTitle: 'Avoid loading ads until they are nearly on-screen',
+  description: 'Too many ads loaded outside the viewport lowers viewability ' +
+  'rates and impacts user experience. Consider loading ads below the fold ' +
+  'lazily as the user scrolls down. Consider using GPT\'s [Lazy Loading API](' +
+  'https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad' +
+  '). [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ads-in-viewport' +
+  ').',
+  failureDisplayValue: '{hiddenAds, number} {hiddenAds, plural, =1 {ad} ' +
+  'other {ads}} out of view',
+  columnSlot: 'Slots Outside Viewport',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
+
 
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'slot', itemType: 'text', text: headings.slot},
+  {key: 'slot', itemType: 'text', text: str_(UIStrings.columnSlot)},
 ];
 
 /** @inheritDoc */
@@ -45,10 +56,10 @@ class AdsInViewport extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'ads-in-viewport',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
@@ -63,7 +74,8 @@ class AdsInViewport extends Audit {
         .filter((iframe) => isGptIframe(iframe) && iframe.isVisible);
 
     if (!slots.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
+      return auditNotApplicable(
+        str_(common.UIStrings.NOT_APPLICABLE__NO_VISIBLE_SLOTS));
     }
 
     /** @type {Array<{slot: string}>} */
@@ -78,11 +90,12 @@ class AdsInViewport extends Audit {
       numericValue: visibleCount / slots.length,
       score: nonvisible.length > 3 ? 0 : 1,
       displayValue: nonvisible.length ?
-        formatMessage(failureDisplayValue, {hiddenAds: nonvisible.length}) :
-        displayValue,
+        str_(UIStrings.failureDisplayValue, {hiddenAds: nonvisible.length}) :
+        '',
       details: AdsInViewport.makeTableDetails(HEADINGS, nonvisible),
     };
   }
 }
 
 module.exports = AdsInViewport;
+module.exports.UIStrings = UIStrings;

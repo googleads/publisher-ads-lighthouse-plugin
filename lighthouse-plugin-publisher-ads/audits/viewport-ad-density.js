@@ -12,20 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const common = require('../messages/common-strings');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, ERRORS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
-const {formatMessage} = require('../messages/format');
 const {isGptIframe} = require('../utils/resource-classification');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'viewport-ad-density';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Ad density in initial viewport is within recommended range',
+  failureTitle: 'Reduce ad density in initial viewport',
+  description: 'The ads-to-content ratio inside the viewport can have an ' +
+  'impact on user experience and ultimately user retention. The Better Ads ' +
+  'Standard [recommends having an ad density below 30%]' +
+  '(https://www.betterads.org/mobile-ad-density-higher-than-30/). ' +
+  '[Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density' +
+  ').',
+  displayValue: '{adDensity, number, percent} covered by ads',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
 
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
@@ -35,10 +44,10 @@ class ViewportAdDensity extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'viewport-ad-density',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
@@ -54,7 +63,8 @@ class ViewportAdDensity extends Audit {
       (slot) => isGptIframe(slot) && slot.isVisible);
 
     if (!slots.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
+      return auditNotApplicable(
+        str_(common.UIStrings.NOT_APPLICABLE__NO_VISIBLE_SLOTS));
     }
 
     const adArea = slots.reduce((sum, slot) =>
@@ -63,19 +73,20 @@ class ViewportAdDensity extends Audit {
     const viewArea = viewport.innerWidth * viewport.innerHeight;
 
     if (viewArea <= 0) {
-      throw new Error(ERRORS.VIEWPORT_AREA_ZERO);
+      throw new Error(str_(common.UIStrings.ERRORS__VIEWPORT_AREA_ZERO));
     }
     if (adArea > viewArea) {
-      throw new Error(ERRORS.AREA_LARGER_THAN_VIEWPORT);
+      throw new Error(common.UIStrings.ERRORS__AREA_LARGER_THAN_VIEWPORT);
     }
     const adDensity = adArea / viewArea;
     const score = adDensity > 0.3 ? 0 : 1;
     return {
       score,
       numericValue: adArea / viewArea,
-      displayValue: formatMessage(displayValue, {adDensity}),
+      displayValue: str_(UIStrings.displayValue, {adDensity}),
     };
   }
 }
 
 module.exports = ViewportAdDensity;
+module.exports.UIStrings = UIStrings;

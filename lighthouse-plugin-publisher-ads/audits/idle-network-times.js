@@ -12,36 +12,54 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const common = require('../messages/common-strings');
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
+// @ts-ignore
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const id = 'idle-network-times';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  headings,
-  causes,
-} = AUDITS[id];
+const UIStrings = {
+  title: '[Experimental] Network is efficiently utilized before ad requests',
+  failureTitle: '[Experimental] Reduce network idle time before ad requests',
+  description: 'Moments of network idleness in the critical path to ad ' +
+  'loading present opportunities to improve speed. Consider eliminating long ' +
+  'tasks, timeouts, waiting on load events, or synchronous resources to avoid ' +
+  'idleness. Chrome DevTools can be used to discover what is causing network ' +
+  'idleness. [Learn more](' +
+  'https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference' +
+  ').',
+  displayValue: '{idleTime, number, seconds} s spent idle in critical path',
+  columnCause: 'Suspected Cause',
+  columnUrl: 'Attributable URL',
+  columnStartTime: 'Start Time',
+  columnEndTime: 'End Time',
+  columnDuration: 'Duration',
+  causeDomContentLoaded: 'DOMContentLoaded Event',
+  causeLoadEvent: 'Load Event',
+  causeLongTask: 'Long Task',
+  causeRenderBlockingResource: 'Blocking Resource',
+  causeTimeout: 'Timeout',
+  causeOther: 'Other',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename,
+  Object.assign(UIStrings, common.UIStrings));
 
 /** @enum {string} */
 const Cause = {
-  DOM_CONTENT_LOADED: causes.domContentLoaded,
-  LOAD_EVENT: causes.loadEvent,
-  LONG_TASK: causes.longTask,
-  RENDER_BLOCKING_RESOURCE: causes.renderBlockingResource,
-  TIMEOUT: causes.timeout,
-  OTHER: causes.other,
+  DOM_CONTENT_LOADED: str_(UIStrings.causeDomContentLoaded),
+  LOAD_EVENT: str_(UIStrings.causeLoadEvent),
+  LONG_TASK: str_(UIStrings.causeLongTask),
+  RENDER_BLOCKING_RESOURCE: str_(UIStrings.causeRenderBlockingResource),
+  TIMEOUT: str_(UIStrings.causeTimeout),
+  OTHER: str_(UIStrings.causeOther),
 };
 
 /**
@@ -61,29 +79,29 @@ const HEADINGS = [
   {
     key: 'cause',
     itemType: 'text',
-    text: headings.cause,
+    text: str_(UIStrings.columnCause),
   },
   {
     key: 'url',
     itemType: 'url',
-    text: headings.url,
+    text: str_(UIStrings.columnUrl),
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: headings.startTime,
+    text: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'endTime',
     itemType: 'ms',
-    text: headings.endTime,
+    text: str_(UIStrings.columnEndTime),
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: headings.duration,
+    text: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -237,10 +255,10 @@ class IdleNetworkTimes extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'idle-network-times',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs', 'traces', 'TagsBlockingFirstPaint'],
     };
   }
@@ -280,7 +298,8 @@ class IdleNetworkTimes extends Audit {
         .sort((a, b) => a.startTime - b.startTime);
 
     if (!blockingRequests.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
+      return auditNotApplicable(
+        str_(common.UIStrings.NOT_APPLICABLE__NO_AD_RELATED_REQ));
     }
 
     let maxEndSoFar = Infinity;
@@ -318,10 +337,11 @@ class IdleNetworkTimes extends Audit {
       numericValue: maxIdleTime,
       score: failed ? 0 : 1,
       displayValue:
-        formatMessage(displayValue, {idleTime: (totalIdleTime / 1000)}),
+        str_(UIStrings.displayValue, {idleTime: (totalIdleTime / 1000)}),
       details: IdleNetworkTimes.makeTableDetails(HEADINGS, idleTimes),
     };
   }
 }
 
 module.exports = IdleNetworkTimes;
+module.exports.UIStrings = UIStrings;
