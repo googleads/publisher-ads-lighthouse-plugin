@@ -182,9 +182,11 @@ class SerialHeaderBidding extends Audit {
     const headerBiddingRecords = constructRecords(
       recordsByType.get(RequestType.BID) || [], RequestType.BID,
       timingsByRecord);
-    /** @type {NetworkDetails.RequestRecord[]} */ let serialBids = [];
+    /** @type {NetworkDetails.RequestRecord[]} */
+    let serialBids = [];
     let previousBid;
 
+    // Iterate forward in order of start time.
     for (const record of headerBiddingRecords) {
       record.bidder = getHeaderBidder(record.url);
       record.url = clearQueryString(record.url);
@@ -193,7 +195,9 @@ class SerialHeaderBidding extends Audit {
         serialBids.push(previousBid);
         serialBids.push(record);
       }
+      // Point previousBid to the most the one with the earliest end time.
       if (!previousBid || record.endTime < previousBid.endTime ||
+          // But move on if this bid does not overlap with the previous one.
           record.startTime >= previousBid.endTime) {
         previousBid = record;
       }
