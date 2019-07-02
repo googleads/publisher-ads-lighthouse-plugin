@@ -83,6 +83,15 @@ describe('SerialHeaderBidding', async () => {
         expectedScore: 0,
       },
       {
+        desc: 'should fail for records that are mutually serial',
+        networkRecords: [
+          {url: 'https://aax.amazon-adsystem.com/e/dtb/bid', startTime: 11, endTime: 16},
+          {url: 'http://contextual.media.net/bidexchange.js', startTime: 12, endTime: 13},
+          {url: 'http://as.casalemedia.com/cygnus', startTime: 14, endTime: 15},
+        ],
+        expectedScore: 0,
+      },
+      {
         desc: 'should ignore resources with 0 resource size',
         networkRecords: [
           {url: 'https://aax.amazon-adsystem.com/e/dtb/bid', startTime: 5, endTime: 10, resourceSize: 100},
