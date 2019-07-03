@@ -47,13 +47,17 @@ function isImplTag(url) {
 
 /**
  * Checks if the url is loading a gpt.js script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isGptTag(url) {
-  return (url.host === 'www.googletagservices.com' || url.host === 'securepubads.g.doubleclick.net') &&
-      (url.pathname === '/tag/js/gpt.js' ||
-      url.pathname === '/tag/js/gpt_mobile.js');
+  const {host, pathname} = toURL(url);
+  const matchesHost = [
+    'www.googletagservices.com',
+    'securepubads.g.doubleclick.net'].includes(host);
+  const matchesPath =
+    ['/tag/js/gpt.js', '/tag/js/gpt_mobile.js'].includes(pathname);
+  return matchesHost && matchesPath;
 }
 
 /**

@@ -8,18 +8,17 @@
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or pubadsImplied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
-const {bucket} = require('../utils/array');
 const {getCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
-const {isImplTag, isBidRequest} = require('../utils/resource-classification');
+const {isGptTag, isImplTag, isBidRequest, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -29,8 +28,25 @@ const id = 'gpt-bids-parallel';
 const UIStrings = {
   title: 'GPT and bids loaded in parallel',
   failureTitle: 'Load GPT and bids in parallel',
-  description: 'TODO',
+  description: 'To optimize ad loading, bid requests should not wait on GPT to load. This issue can often be fixed by making sure that bid requests do not wait on <code>googletag.pubadsReady</code> or <code>googletag.cmd.push</code>.',
+  headings: {
+    bidder: 'Bidder',
+    url: 'URL',
+    startTime: 'Start time',
+    duration: 'Duration',
+  },
 };
+
+/**
+ * Table headings for audits details sections.
+ * @type {LH.Audit.Details.Table['headings']}
+ */
+const HEADINGS = [
+  {key: 'bidder', itemType: 'text', text: UIStrings.headings.bidder},
+  {key: 'url', itemType: 'url', text: UIStrings.headings.url},
+  {key: 'startTime', itemType: 'ms', text: UIStrings.headings.startTime},
+  {key: 'duration', itemType: 'ms', text: UIStrings.headings.duration},
+];
 
 /**
  * Audit to check if serial header bidding occurs
@@ -57,26 +73,39 @@ class GptBidsInParallel extends Audit {
    */
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const {traceEvents} = artifacts.traces[Audit.DEFAULT_PASS];
+    const  trace = artifacts.traces[Audit.DEFAULT_PASS];
     const network = await NetworkRecords.request(devtoolsLog, context);
 
     const bids = network.filter(isBidRequest);
-    const blockedRequests = [];
-    for (const bid of bids) {
-      console.log(bid.url);
-      const dependencies = getCriticalGraph(network, traceEvents, bid);
-      console.log(dependencies.size)
-      console.log(Array.from(dependencies).map(r => r.url.substr(0, 100) + ', ' + isImplTag(r.url)))
-      if (Array.from(dependencies).find((r) => isImplTag(r.url))) {
-        blockedRequests.push(bid);
-      }
+    if (!bids.length) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
+    }
+    const pubadsImpl = network.find((r) => isImplTag(r.url));
+    if (!pubadsImpl) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
     }
 
-    console.log(blockedRequests.map(r => r.url));
-
+    /** @type {Map<NetworkRequest, NodeTiming>} */
+    const timingsByRecord = await getTimingsByRecord(
+      trace, devtoolsLog, context);
+    const tableView = [];
+    for (const bid of bids) {
+      if (getCriticalGraph(network, trace.traceEvents, bid).has(pubadsImpl)) {
+        const {startTime, endTime} = timingsByRecord.get(bid) || bid;
+        tableView.push({
+          bidder: getHeaderBidder(bid.url),
+          url: bid.url,
+          startTime,
+          duration: endTime - startTime,
+        });
+      }
+    }
+    const failed = tableView.length > 0;
     return {
-      numericValue: 0,
-      score: 0,
+      numericValue: failed ? 0 : 1,
+      score: failed ? 0 : 1,
+      details: failed ?
+        GptBidsInParallel.makeTableDetails(HEADINGS, tableView) : undefined,
     };
   }
 }
