@@ -109,18 +109,38 @@ class AdPaintTime extends ComputedMetric {
    */
   static async computeObservedMetric(data, context) {
     const iframes = getAdIframes(data);
-    if (!iframes.length) {
+    const {trace: {traceEvents}} = data;
+    const {ts: pageNavigationStart} =
+      traceEvents.find((e) => e.name == 'navigationStart') || {ts: 0};
+
+    if (!iframes.length || !pageNavigationStart) {
       return Promise.resolve({timing: -1});
     }
     const adFrameIds = new Set(iframes.map((s) => s.frame && s.frame.id));
-
-    const {trace: {traceEvents}} = data;
     const adPaintTime =
         getMinEventTime('firstContentfulPaint', traceEvents, adFrameIds) ||
         getMinEventTime('firstPaint', traceEvents, adFrameIds);
-    const {ts: pageNavigationStart} =
-      traceEvents.find((e) => e.name == 'navigationStart') || {ts: 0};
-    const timingMs = (adPaintTime - pageNavigationStart) * 1e-3;
+
+    let timingMs = 0;
+    if (adPaintTime) {
+      timingMs = (adPaintTime - pageNavigationStart) / 1000;
+    } else {
+      // If we don't find a first paint event in the trace, then fall back to
+      // the time of the first request.
+      // TODO(warrengm): Search child iframes if there is no paint event in the
+      // top frame.
+      const {networkRecords} = data;
+      // Note that we don't really care about whether this request is paintable
+      // or not. This is for two reasons:
+      // - Reduce variability due to which ad served.
+      // - Not consider factors that are outside the publisher's control.
+      //   That is, developers don't choose which ad served.
+      const firstRequest = networkRecords.find(
+        (r) => adFrameIds.has(r.frameId) && r.resourceType != 'Document');
+      if (firstRequest) {
+        timingMs = firstRequest.endTime - (pageNavigationStart / 1e6);
+      }
+    }
     return Promise.resolve({timing: timingMs});
   }
 }
