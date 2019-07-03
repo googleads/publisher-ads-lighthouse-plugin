@@ -26,6 +26,13 @@ const {URL} = require('url');
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 const id = 'serial-header-bidding';
+
+const UIStrings = {
+  title: 'GPT and bids loaded in parallel',
+  failureTitle: 'Load GPT and bids in parallel',
+  description: 'TODO',
+}
+
 const {
   title,
   failureTitle,

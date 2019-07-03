@@ -13,7 +13,18 @@
 // limitations under the License.
 
 const bidderPatterns = require('./bidder-patterns');
+const {isCacheable} = require('../utils/network');
 const {URL} = require('url');
+
+/**
+ * Converts the given url to a URL, if it's not already a URL. Otherwise returns
+ * the same URL object (not a copy).
+ * @param {URL|string} urlOrStr
+ * @return {URL)
+ */
+function toURL(urlOrStr) {
+  return (typeof urlOrStr === 'string') ? new URL(urlOrStr) : urlOrStr;
+}
 
 /**
  * Checks if the url is from a Google ads host.
@@ -27,12 +38,11 @@ function isGoogleAds(url) {
 
 /**
  * Checks if the url is for pubads implementation tag.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isImplTag(url) {
-  return /(^\/gpt\/pubads_impl_\d+.js)/
-      .test(url.pathname);
+  return /(^\/gpt\/pubads_impl_\d+.js)/.test(toURL(url).pathname);
 }
 
 /**
@@ -107,15 +117,35 @@ function getHeaderBidder(url) {
 }
 
 /**
- * Checks whether the given request is a bid request.
+ * Checks whether the given request is a bid request or related to bidding (e.g.
+ * a bidding script).
  * @param {LH.Artifacts.NetworkRequest|string} requestOrUrl
  * @return {boolean}
  */
-function isBidRequest(requestOrUrl) {
+function isBidRelatedRequest(requestOrUrl) {
   return !!getHeaderBidder(
     typeof requestOrUrl == 'string' ? requestOrUrl : requestOrUrl.url);
 }
 
+/**
+ * Checks the request to see if it meets requirements for bid requests.
+ * @param {LH.Artifacts.NetworkRequest} req
+ * @return {boolean}
+ */
+function isPossibleBidRequest(req) {
+  return (req.resourceSize == null || req.resourceSize > 0) &&
+      (req.resourceType != 'Image') &&
+      !isCacheable(req);
+}
+
+/**
+ * Checks the request to see if it's a bid request.
+ * @param {LH.Artifacts.NetworkRequest} req
+ * @return {boolean}
+ */
+function isBidRequest(req) {
+  return isBidRelatedRequest(req) && isPossibleBidRequest(req);
+}
 
 /**
  * @param {LH.Artifacts.NetworkRequest} request
@@ -135,6 +165,7 @@ function isGptIframe(iframe) {
 }
 
 module.exports = {
+  isBidRelatedRequest,
   isBidRequest,
   isGoogleAds,
   isGptAdRequest,

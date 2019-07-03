@@ -19,7 +19,7 @@ const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-nod
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 // eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
-const {isBidRequest, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
+const {isBidRelatedRequest, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Gatherer.Simulation.GraphNode} GraphNode */
@@ -57,7 +57,7 @@ function getCpuNodeUrls(cpuNode) {
  */
 function isAdTask(cpuNode) {
   return !!getCpuNodeUrls(cpuNode).find(
-    (url) => isBidRequest(url) || isGoogleAds(new URL(url)));
+    (url) => isBidRelatedRequest(url) || isGoogleAds(new URL(url)));
 }
 
 /**
@@ -83,7 +83,8 @@ function linkBidAndAdRequests(graph) {
     }
   });
   graph.traverse((node) => {
-    if (node.type === BaseNode.TYPES.NETWORK && isBidRequest(node.record)) {
+    if (node.type === BaseNode.TYPES.NETWORK &&
+      isBidRelatedRequest(node.record)) {
       for (const adNode of adRequestNodes) {
         // TODO(warrengm): Check for false positives. We don't worry too much
         // since we're focussing on the first few requests.
@@ -145,7 +146,7 @@ class AdLanternMetric extends LanternMetric {
         return true;
       }
       const /** string */ url = node.record.url;
-      return isBidRequest(url) || isGoogleAds(new URL(url));
+      return isBidRelatedRequest(url) || isGoogleAds(new URL(url));
     });
     return optimisticGraph;
   }
