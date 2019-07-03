@@ -27,11 +27,6 @@ const {URL} = require('url');
 
 const id = 'serial-header-bidding';
 
-const UIStrings = {
-  title: 'GPT and bids loaded in parallel',
-  failureTitle: 'Load GPT and bids in parallel',
-  description: 'TODO',
-}
 
 const {
   title,
@@ -119,7 +114,7 @@ function checkRecordType(record) {
  */
 function isPossibleBid(rec) {
   return (rec.resourceSize == null || rec.resourceSize > 0) &&
-      (rec.resourceType != 'Image') &&
+      (rec.resourceType != 'Image't &&
       (rec.endTime - rec.startTime >= MIN_BID_DURATION) &&
       !isCacheable(rec);
 }

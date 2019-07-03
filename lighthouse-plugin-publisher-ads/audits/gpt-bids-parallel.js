@@ -28,7 +28,7 @@ const id = 'gpt-bids-parallel';
 const UIStrings = {
   title: 'GPT and bids loaded in parallel',
   failureTitle: 'Load GPT and bids in parallel',
-  description: 'To optimize ad loading, bid requests should not wait on GPT to load. This issue can often be fixed by making sure that bid requests do not wait on <code>googletag.pubadsReady</code> or <code>googletag.cmd.push</code>.',
+  description: 'To optimize ad loading, bid requests should not wait on GPT to load. This issue can often be fixed by making sure that bid requests do not wait on <pre>googletag.pubadsReady</pre> or <pre>googletag.cmd.push</pre>.',
   headings: {
     bidder: 'Bidder',
     url: 'URL',
