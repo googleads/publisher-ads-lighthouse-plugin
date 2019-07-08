@@ -91,7 +91,7 @@ function hasImpressionPath(url) {
 }
 
 /**
- * Returns header bidder or false if not a bid.
+ * Returns header bidder or undefined if not a bid.
  * @param {string} url
  * @return {string|undefined}
  */
