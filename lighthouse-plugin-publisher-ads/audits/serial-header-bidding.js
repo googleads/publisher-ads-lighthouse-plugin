@@ -114,7 +114,7 @@ function checkRecordType(record) {
  */
 function isPossibleBid(rec) {
   return (rec.resourceSize == null || rec.resourceSize > 0) &&
-      (rec.resourceType != 'Image't &&
+      (rec.resourceType != 'Image') &&
       (rec.endTime - rec.startTime >= MIN_BID_DURATION) &&
       !isCacheable(rec);
 }
