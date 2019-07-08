@@ -70,12 +70,6 @@ const HEADINGS = [
     text: headings.endTime,
     granularity: 1,
   },
-  {
-    key: 'duration',
-    itemType: 'ms',
-    text: headings.duration,
-    granularity: 1,
-  },
 ];
 
 /**

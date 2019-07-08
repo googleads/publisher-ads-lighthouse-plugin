@@ -75,12 +75,6 @@ const HEADINGS = [
     granularity: 1,
   },
   {
-    key: 'endTime',
-    itemType: 'ms',
-    text: headings.endTime,
-    granularity: 1,
-  },
-  {
     key: 'duration',
     itemType: 'ms',
     text: headings.duration,
