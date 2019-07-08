@@ -20,7 +20,7 @@ const {URL} = require('url');
  * Converts the given url to a URL, if it's not already a URL. Otherwise returns
  * the same URL object (not a copy).
  * @param {URL|string} urlOrStr
- * @return {URL)
+ * @return {URL}
  */
 function toURL(urlOrStr) {
   return (typeof urlOrStr === 'string') ? new URL(urlOrStr) : urlOrStr;

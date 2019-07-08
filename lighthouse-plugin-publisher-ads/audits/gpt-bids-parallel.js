@@ -8,18 +8,17 @@
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or pubadsImplied.
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../utils/builder');
-const {NOT_APPLICABLE} = require('../messages/messages');
 const {Audit} = require('lighthouse');
 const {getCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
-const {isGptTag, isImplTag, isBidRequest, getHeaderBidder} = require('../utils/resource-classification');
-const {URL} = require('url');
+const {isImplTag, isBidRequest, getHeaderBidder} = require('../utils/resource-classification');
+const {NOT_APPLICABLE} = require('../messages/messages');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -73,7 +72,7 @@ class GptBidsInParallel extends Audit {
    */
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const  trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const network = await NetworkRecords.request(devtoolsLog, context);
 
     const bids = network.filter(isBidRequest);
