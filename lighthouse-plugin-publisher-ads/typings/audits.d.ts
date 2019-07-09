@@ -30,6 +30,7 @@ declare global {
       endTime: number;
       duration: number,
       url: string;
+      bidder?: string;
       type: string;
       abbreviatedUrl?: string;
     }
