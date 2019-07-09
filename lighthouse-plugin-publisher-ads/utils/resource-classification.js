@@ -168,6 +168,34 @@ function isGptIframe(iframe) {
   return /(^google_ads_iframe_)/.test(iframe.id);
 }
 
+/**
+ * Removes the query string from the URL.
+ * @param {string} url
+ * @return {string}
+ */
+function trimUrl(url) {
+  const u = new URL(url);
+  const PATH_MAX = 60;
+  const path = u.pathname.length > PATH_MAX ?
+    u.pathname.substr(0, PATH_MAX) + '...' : u.pathname;
+  return u.origin + path;
+}
+
+/**
+ * Returns an abbreviated version of the URL, with a shortened path and no query
+ * string.
+ * @param {string} url
+ * @return {string}
+ */
+function getAbbreviatedUrl(url) {
+  const u = new URL(trimUrl(url));
+  const parts = u.pathname.split('/');
+  if (parts.length > 4) {
+    u.pathname = [...parts.splice(0, 4), '...'].join('/');
+  }
+  return u.toString();
+}
+
 module.exports = {
   isBidRelatedRequest,
   isBidRequest,
@@ -181,4 +209,6 @@ module.exports = {
   getHeaderBidder,
   isStaticRequest,
   isGptIframe,
+  getAbbreviatedUrl,
+  trimUrl,
 };

@@ -17,7 +17,7 @@ const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
-const {isImplTag, isBidRequest, getHeaderBidder} = require('../utils/resource-classification');
+const {isImplTag, isBidRequest, getAbbreviatedUrl, getHeaderBidder} = require('../utils/resource-classification');
 const {NOT_APPLICABLE} = require('../messages/messages');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -93,7 +93,7 @@ class GptBidsInParallel extends Audit {
         const {startTime, endTime} = timingsByRecord.get(bid) || bid;
         tableView.push({
           bidder: getHeaderBidder(bid.url),
-          url: bid.url,
+          url: getAbbreviatedUrl(bid.url),
           startTime,
           duration: endTime - startTime,
         });

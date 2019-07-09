@@ -19,7 +19,7 @@ const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isCacheable} = require('../utils/network');
-const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
+const {isGoogleAds, getHeaderBidder, getAbbreviatedUrl} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -186,9 +186,7 @@ class SerialHeaderBidding extends Audit {
       for (const record of headerBiddingRecords) {
         const {startTime, endTime, duration} = record;
         const url = new URL(record.url);
-        const protocol = url.protocol;
         const host = url.host;
-        const path = url.pathname;
 
         const isSerialRequest = !previousHost.length ||
           startTime >= bidRequests[previousHost].endTime;
@@ -196,7 +194,7 @@ class SerialHeaderBidding extends Audit {
         if (!bidRequests[host] && isSerialRequest) {
           bidRequests[host] = {
             bidder: getHeaderBidder(record.url),
-            url: protocol + '//' + host + path,
+            url: getAbbreviatedUrl(record.url),
             startTime,
             endTime,
             duration,
