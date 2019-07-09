@@ -49,7 +49,6 @@ const LONG_TASK_DUR_MS = 100;
 const HEADINGS = [
   {key: 'script', itemType: 'url', text: headings.script},
   {key: 'startTime', itemType: 'ms', text: headings.startTime, granularity: 1},
-  {key: 'endTime', itemType: 'ms', text: headings.endTime, granularity: 1},
   {key: 'duration', itemType: 'ms', text: headings.duration, granularity: 1},
 ];
 
