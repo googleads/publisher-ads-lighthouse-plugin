@@ -83,6 +83,15 @@ describe('SerialHeaderBidding', async () => {
         expectedScore: 0,
       },
       {
+        desc: 'should fail for records that are mutually serial',
+        networkRecords: [
+          {url: 'https://aax.amazon-adsystem.com/e/dtb/bid', startTime: 11, endTime: 16},
+          {url: 'http://contextual.media.net/bidexchange.js', startTime: 12, endTime: 13},
+          {url: 'http://as.casalemedia.com/cygnus', startTime: 14, endTime: 15},
+        ],
+        expectedScore: 0,
+      },
+      {
         desc: 'should ignore resources with 0 resource size',
         networkRecords: [
           {url: 'https://aax.amazon-adsystem.com/e/dtb/bid', startTime: 5, endTime: 10, resourceSize: 100},
@@ -389,8 +398,7 @@ describe('SerialHeaderBidding', async () => {
       },
     ];
 
-    for (const {desc, networkRecords, expectedAdsRecords,
-      expectedHeaderBiddingRecords, expectedNotAppl} of testCases) {
+    for (const {desc, networkRecords, expectedNotAppl} of testCases) {
       it(`should have ${desc}`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
         const results = await SerialHeaderBidding.audit(
@@ -398,10 +406,7 @@ describe('SerialHeaderBidding', async () => {
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
-          expect(results).with.property('extendedInfo')
-              .property('adsRecords').eql(expectedAdsRecords);
-          expect(results).with.property('extendedInfo')
-              .property('headerBiddingRecords').eql(expectedHeaderBiddingRecords);
+          expect(results).to.not.have.property('notApplicable');
         }
       });
     }
