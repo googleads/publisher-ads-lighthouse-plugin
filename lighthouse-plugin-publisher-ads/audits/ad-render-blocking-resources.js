@@ -35,7 +35,7 @@ const UIStrings = {
   failureDisplayValue: 'Up to {opportunity, number, seconds} s tag load time ' +
   'improvement',
   columnUrl: 'Resource',
-  columnStartTime: 'Start Time',
+  columnStartTime: 'Start',
   columnDuration: 'Duration',
 };
 

@@ -38,7 +38,7 @@ const UIStrings = {
   displayValue: '{idleTime, number, seconds} s spent idle in critical path',
   columnCause: 'Suspected Cause',
   columnUrl: 'Attributable URL',
-  columnStartTime: 'Start Time',
+  columnStartTime: 'Start',
   columnDuration: 'Duration',
   causeDomContentLoaded: 'DOMContentLoaded Event',
   causeLoadEvent: 'Load Event',

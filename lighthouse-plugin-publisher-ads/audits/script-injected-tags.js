@@ -36,7 +36,7 @@ const UIStrings = {
   displayValue: '{numTags} script-injected {numTags, plural, =1 {resources} ' +
   'other {resources}}',
   columnRequest: 'Resource',
-  columnStartTime: 'Start Time',
+  columnStartTime: 'Start',
   columnDuration: 'Duration',
   columnLineNumber: 'Source Line Number',
 };

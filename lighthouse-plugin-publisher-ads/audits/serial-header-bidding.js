@@ -36,8 +36,7 @@ const UIStrings = {
   ').',
   columnBidder: 'Bidder',
   columnUrl: 'URL',
-  columnStartTime: 'Start Time',
-  columnEndTime: 'End Time',
+  columnStartTime: 'Start',
   columnDuration: 'Duration',
 };
 

@@ -39,8 +39,8 @@ const UIStrings = {
   'other {resources}}',
   columnUrl: 'Request',
   columnType: 'Type',
-  columnStartTime: 'Start Time',
-  columnEndTime: 'End Time',
+  columnStartTime: 'Start',
+  columnEndTime: 'End',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename,
