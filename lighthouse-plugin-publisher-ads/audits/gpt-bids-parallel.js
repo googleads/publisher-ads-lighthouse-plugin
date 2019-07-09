@@ -94,11 +94,11 @@ class GptBidsInParallel extends Audit {
     for (const bid of bids) {
       if (getCriticalGraph(network, trace.traceEvents, bid).has(pubadsImpl)) {
         const {startTime, endTime} = timingsByRecord.get(bid) || bid;
-        const bidder = getHeaderBidder(bid.url);
+        const bidder = getHeaderBidder(bid.url) || '';
         if (seen.has(bidder)) {
           // Don't include multiple requests from the same bidder in the results
           // table.
-          // continue;
+          continue;
         }
         seen.add(bidder);
         tableView.push({

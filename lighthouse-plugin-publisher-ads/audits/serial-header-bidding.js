@@ -82,7 +82,7 @@ function constructRecords(records, recordType, timings) {
     const timing = timings.get(record);
     if (!timing) continue;
     results.push(Object.assign({}, timing, {
-      url: record.url,
+      url: getAbbreviatedUrl(record.url),
       type: recordType,
     }));
   }
@@ -116,6 +116,18 @@ function isPossibleBid(rec) {
       (rec.endTime - rec.startTime >= MIN_BID_DURATION) &&
       !isCacheable(rec);
 }
+
+/**
+ * Returns a copy of the given urls with the query string removed, if present.
+ * @param {string} url
+ * @return {string}
+ */
+function clearQueryString(url) {
+  const u = new URL(url);
+  delete u.search;
+  return u.toString();
+}
+
 
 /**
  * Audit to check if serial header bidding occurs
@@ -172,57 +184,40 @@ class SerialHeaderBidding extends Audit {
     const timingsByRecord = await getTimingsByRecord(
       trace, devtoolsLog, context);
 
-    // Construct shallow copies of records. If no records are found, return [].
-    const adsRecords = constructRecords(
-      recordsByType.get(RequestType.AD) || [], RequestType.AD, timingsByRecord);
     const headerBiddingRecords = constructRecords(
       recordsByType.get(RequestType.BID) || [], RequestType.BID,
       timingsByRecord);
-    /** @type {Object<string, BidRequest>} */
-    const bidRequests = {};
+    /** @type {NetworkDetails.RequestRecord[]} */
+    let serialBids = [];
+    let previousBid;
 
-    let hasSerialHeaderBidding;
-    const validHeaderBiddingRecords = [];
-    if (headerBiddingRecords.length <= 1) {
-      hasSerialHeaderBidding = false;
-    } else {
-      let previousHost = '';
-      for (const record of headerBiddingRecords) {
-        const {startTime, endTime, duration} = record;
-        const url = new URL(record.url);
-        const host = url.host;
+    // Iterate forward in order of start time.
+    for (const record of headerBiddingRecords) {
+      record.bidder = getHeaderBidder(record.url);
+      record.url = clearQueryString(record.url);
 
-        const isSerialRequest = !previousHost.length ||
-          startTime >= bidRequests[previousHost].endTime;
-
-        if (!bidRequests[host] && isSerialRequest) {
-          bidRequests[host] = {
-            bidder: getHeaderBidder(record.url),
-            url: getAbbreviatedUrl(record.url),
-            startTime,
-            endTime,
-            duration,
-          };
-          previousHost = host;
-          validHeaderBiddingRecords.push(record);
-        }
+      if (previousBid && record.startTime >= previousBid.endTime) {
+        serialBids.push(previousBid);
+        serialBids.push(record);
       }
-
-      // This means that at least 2 requests to different hosts occurred
-      // serially.
-      hasSerialHeaderBidding = Object.keys(bidRequests).length > 1;
+      // Point previousBid to the most the one with the earliest end time.
+      if (!previousBid || record.endTime < previousBid.endTime ||
+          // But move on if this bid does not overlap with the previous one.
+          record.startTime >= previousBid.endTime) {
+        previousBid = record;
+      }
     }
 
+    // De-dupe bid requests.
+    serialBids = Array.from(new Set(serialBids));
+
+    // At least two bids must be serial w.r.t. each other.
+    const hasSerialHeaderBidding = serialBids.length > 1;
     return {
       numericValue: Number(hasSerialHeaderBidding),
       score: hasSerialHeaderBidding ? 0 : 1,
-      details: SerialHeaderBidding.makeTableDetails(
-        HEADINGS, Object.values(bidRequests)),
-      extendedInfo: {
-        adsRecords,
-        headerBiddingRecords:
-          hasSerialHeaderBidding ? validHeaderBiddingRecords : [],
-      },
+      details: hasSerialHeaderBidding ?
+        SerialHeaderBidding.makeTableDetails(HEADINGS, serialBids) : undefined,
     };
   }
 }
