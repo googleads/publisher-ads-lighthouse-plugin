@@ -27,7 +27,6 @@ const {URL} = require('url');
 
 const id = 'serial-header-bidding';
 
-
 const {
   title,
   failureTitle,
@@ -145,12 +144,17 @@ class SerialHeaderBidding extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const unfilteredNetworkRecords =
-    await NetworkRecords.request(devtoolsLog, context);
+      await NetworkRecords.request(devtoolsLog, context);
+    if (!unfilteredNetworkRecords.length) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
+    }
+    const mainFrameId = unfilteredNetworkRecords[0].frameId;
 
     // Filter out requests without responses, image responses, and responses
     // taking less than 50ms.
     const networkRecords = unfilteredNetworkRecords
-        .filter(isPossibleBid);
+        .filter(isPossibleBid)
+        .filter((r) => r.frameId == mainFrameId);
 
     // We filter for URLs that are related to header bidding.
     // Then we create shallow copies of each record. This is because the records

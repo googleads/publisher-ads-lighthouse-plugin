@@ -75,24 +75,34 @@ class GptBidsInParallel extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const network = await NetworkRecords.request(devtoolsLog, context);
 
-    const bids = network.filter(isBidRequest);
-    if (!bids.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
-    }
     const pubadsImpl = network.find((r) => isImplTag(r.url));
     if (!pubadsImpl) {
       return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+    }
+
+    const bids = network.filter(isBidRequest)
+        .filter((b) => b.frameId == pubadsImpl.frameId);
+    if (!bids.length) {
+      return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
     }
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord = await getTimingsByRecord(
       trace, devtoolsLog, context);
     const tableView = [];
+    /** @type {Set<string>} */ const seen = new Set();
     for (const bid of bids) {
       if (getCriticalGraph(network, trace.traceEvents, bid).has(pubadsImpl)) {
         const {startTime, endTime} = timingsByRecord.get(bid) || bid;
+        const bidder = getHeaderBidder(bid.url);
+        if (seen.has(bidder)) {
+          // Don't include multiple requests from the same bidder in the results
+          // table.
+          // continue;
+        }
+        seen.add(bidder);
         tableView.push({
-          bidder: getHeaderBidder(bid.url),
+          bidder,
           url: getAbbreviatedUrl(bid.url),
           startTime,
           duration: endTime - startTime,
