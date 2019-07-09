@@ -41,7 +41,6 @@ const UIStrings = {
   columnType: 'Type',
   columnStartTime: 'Start Time',
   columnEndTime: 'End Time',
-  columnDuration: 'Duration',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename,
@@ -82,12 +81,6 @@ const HEADINGS = [
     key: 'endTime',
     itemType: 'ms',
     text: str_(UIStrings.columnEndTime),
-    granularity: 1,
-  },
-  {
-    key: 'duration',
-    itemType: 'ms',
-    text: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -229,10 +222,11 @@ class AdRequestCriticalPath extends Audit {
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =
-        await getTimingsByRecord(trace, devtoolsLog, criticalRequests, context);
-    const REQUEST_TYPES = ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'];
+        await getTimingsByRecord(trace, devtoolsLog, context);
+    const REQUEST_TYPES = new Set([
+      'Script', 'XHR', 'Fetch', 'EventStream', 'Document', undefined]);
     const blockingRequests = Array.from(criticalRequests)
-        .filter((r) => REQUEST_TYPES.includes(r.resourceType))
+        .filter((r) => REQUEST_TYPES.has(r.resourceType))
         .filter((r) => r.mimeType != 'text/css');
 
     if (!blockingRequests.length) {

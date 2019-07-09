@@ -91,9 +91,9 @@ function hasImpressionPath(url) {
 }
 
 /**
- * Returns header bidder or false if not a bid.
+ * Returns header bidder or undefined if not a bid.
  * @param {string} url
- * @return {string | boolean}
+ * @return {string|undefined}
  */
 function getHeaderBidder(url) {
   for (const def of bidderPatterns) {
@@ -103,7 +103,7 @@ function getHeaderBidder(url) {
       }
     }
   }
-  return false;
+  return undefined;
 }
 
 /**

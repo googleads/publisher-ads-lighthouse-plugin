@@ -39,7 +39,6 @@ const UIStrings = {
   columnCause: 'Suspected Cause',
   columnUrl: 'Attributable URL',
   columnStartTime: 'Start Time',
-  columnEndTime: 'End Time',
   columnDuration: 'Duration',
   causeDomContentLoaded: 'DOMContentLoaded Event',
   causeLoadEvent: 'Load Event',
@@ -90,12 +89,6 @@ const HEADINGS = [
     key: 'startTime',
     itemType: 'ms',
     text: str_(UIStrings.columnStartTime),
-    granularity: 1,
-  },
-  {
-    key: 'endTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnEndTime),
     granularity: 1,
   },
   {

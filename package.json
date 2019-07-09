@@ -1,6 +1,6 @@
 {
   "name": "lighthouse-plugin-publisher-ads-wrapper",
-  "version": "0.0.3.9",
+  "version": "0.0.3.10",
   "description": "Wrapper for Publisher Ads Lighthouse Plugin.",
   "license": "Apache-2.0",
   "main": "index.js",
@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@types/esprima": "^4.0.2",
+    "@tusbar/cache-control": "^0.3.1",
     "lighthouse": "^5.1.0",
     "yargs": "^11.0.0"
   },

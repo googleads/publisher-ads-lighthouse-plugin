@@ -32,7 +32,6 @@ const UIStrings = {
   '{tasks}}',
   columnScript: 'Attributable URL',
   columnStartTime: 'Start',
-  columnEndTime: 'End',
   columnDuration: 'Duration',
 };
 
@@ -67,12 +66,6 @@ const HEADINGS = [
     key: 'startTime',
     itemType: 'ms',
     text: str_(UIStrings.columnStartTime),
-    granularity: 1,
-  },
-  {
-    key: 'endTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnEndTime),
     granularity: 1,
   },
   {

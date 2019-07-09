@@ -13,7 +13,6 @@
 // limitations under the License.
 
 const common = require('../messages/common-strings');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
@@ -102,7 +101,6 @@ class ScriptInjectedTags extends Audit {
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     // @ts-ignore
     const mainDocumentNode = await PageDependencyGraph.request(
       {trace, devtoolsLog}, context);
@@ -120,7 +118,7 @@ class ScriptInjectedTags extends Audit {
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timings = await getTimingsByRecord(
-      trace, devtoolsLog, new Set(networkRecords), context);
+      trace, devtoolsLog, context);
     const tableView = injectedBlockingRequests.map((req) =>
       Object.assign({}, timings.get(req), {
         request: req.url,
