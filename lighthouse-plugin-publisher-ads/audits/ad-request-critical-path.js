@@ -210,9 +210,10 @@ class AdRequestCriticalPath extends Audit {
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =
         await getTimingsByRecord(trace, devtoolsLog, context);
-    const REQUEST_TYPES = ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'];
+    const REQUEST_TYPES = new Set([
+      'Script', 'XHR', 'Fetch', 'EventStream', 'Document', undefined]);
     const blockingRequests = Array.from(criticalRequests)
-        .filter((r) => REQUEST_TYPES.includes(r.resourceType))
+        .filter((r) => REQUEST_TYPES.has(r.resourceType))
         .filter((r) => r.mimeType != 'text/css');
 
     if (!blockingRequests.length) {
