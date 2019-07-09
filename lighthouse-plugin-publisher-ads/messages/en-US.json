@@ -9,7 +9,6 @@
       "headings": {
         "script": "Attributable URL",
         "startTime": "Start",
-        "endTime": "End",
         "duration": "Duration"
       }
     },
@@ -20,8 +19,7 @@
       "failureDisplayValue": "Up to {opportunity, number, seconds} s tag load time improvement",
       "headings": {
         "url": "Resource",
-        "startTime": "Start Time",
-        "endTime": "End Time",
+        "startTime": "Start",
         "duration": "Duration"
       }
     },
@@ -33,8 +31,8 @@
       "headings": {
         "url": "Request",
         "type": "Type",
-        "startTime": "Start Time",
-        "endTime": "End Time",
+        "startTime": "Start",
+        "endTime": "End",
         "duration": "Duration"
       }
     },
@@ -108,8 +106,7 @@
       "headings": {
         "cause": "Suspected Cause",
         "url": "Attributable URL",
-        "startTime": "Start Time",
-        "endTime": "End Time",
+        "startTime": "Start",
         "duration": "Duration"
       },
       "causes": {
@@ -140,7 +137,7 @@
       "displayValue": "{numTags} script-injected {numTags, plural, =1 {resources} other {resources}}",
       "headings": {
         "request": "Request",
-        "startTime": "Start Time",
+        "startTime": "Start",
         "duration": "Duration",
         "lineNumber": "Source Line Number"
       }
@@ -152,8 +149,7 @@
       "headings": {
         "bidder": "Bidder",
         "url": "URL",
-        "startTime": "Start Time",
-        "endTime": "End Time",
+        "startTime": "Start",
         "duration": "Duration"
       }
     },
