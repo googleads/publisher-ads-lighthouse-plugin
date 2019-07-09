@@ -55,7 +55,6 @@ const HEADINGS = [
   {key: 'bidder', itemType: 'text', text: headings.bidder},
   {key: 'url', itemType: 'url', text: headings.url},
   {key: 'startTime', itemType: 'ms', text: headings.startTime},
-  {key: 'endTime', itemType: 'ms', text: headings.endTime},
   {key: 'duration', itemType: 'ms', text: headings.duration},
 ];
 

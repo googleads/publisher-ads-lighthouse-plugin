@@ -16,490 +16,497 @@ module.exports = [
   {
     label: 'Prebid JS',
     patterns: [
-      `^http[s]?://([^.]*.)?prebid[.]org/.*`,
-      '^http[s]?://acdn[.]adnxs[.]com/prebid/.*',
+      `^https?://([^.]*.)?prebid[.]org/.*`,
+      '^https?://acdn[.]adnxs[.]com/prebid/.*',
     ],
   },
   {
-    label: 'Media.net',
+    label: '33Across',
     patterns: [
-      '^http[s]?://contextual[.]media[.]net/bidexchange.*',
+      '^https?://ssc[.]33across.com/api/.*',
     ],
   },
   {
     label: 'AppNexus',
     patterns: [
-      '^http[s]?://ib[.]adnxs[.]com/jpt.*',
+      '^https?://ib[.]adnxs[.]com/.*',
     ],
   },
   {
     label: 'Amazon',
     patterns: [
-      '^http[s]?://[a-z-_.]*[.]amazon-adsystem[.]com/.*bid.*',
+      '^https?://[a-z-_.]*[.]amazon-adsystem[.]com/.*bid.*',
     ],
   },
   {
     label: 'AdTechus (AOL)',
     patterns: [
-      '^http[s]?://([^.]*.)?adserver[.]adtechus[.]com/.*',
+      '^https?://([^.]*.)?adserver[.]adtechus[.]com/.*',
     ],
   },
   {
     label: 'Aardvark',
     patterns: [
-      '^http[s]?://thor[.]rtk[.]io/.*',
+      '^https?://thor[.]rtk[.]io/.*',
     ],
   },
   {
     label: 'AdBlade',
     patterns: [
-      '^http[s]?://rtb[.]adblade[.]com/prebidjs/bid.*',
+      '^https?://rtb[.]adblade[.]com/prebidjs/bid.*',
     ],
   },
   {
     label: 'AdBund',
     patterns: [
-      '^http[s]?://us-east-engine[.]adbund[.]xyz/prebid/ad/get.*',
-      '^http[s]?://us-west-engine[.]adbund[.]xyz/prebid/ad/get.*',
+      '^https?://us-east-engine[.]adbund[.]xyz/prebid/ad/get.*',
+      '^https?://us-west-engine[.]adbund[.]xyz/prebid/ad/get.*',
     ],
   },
   {
     label: 'AdButler',
     patterns: [
-      '^http[s]?://servedbyadbutler[.]com/adserve.*',
+      '^https?://servedbyadbutler[.]com/adserve.*',
     ],
   },
   {
     label: 'Adequant',
     patterns: [
-      '^http[s]?://rex[.]adequant[.]com/rex/c2s_prebid.*',
+      '^https?://rex[.]adequant[.]com/rex/c2s_prebid.*',
     ],
   },
   {
     label: 'AdForm',
     patterns: [
-      '^http[s]?://adx[.]adform[.]net/adx.*',
+      '^https?://adx[.]adform[.]net/adx.*',
     ],
   },
   {
     label: 'AdMedia',
     patterns: [
-      '^http[s]?://b[.]admedia[.]com/banner/prebid/bidder.*',
+      '^https?://b[.]admedia[.]com/banner/prebid/bidder.*',
     ],
   },
   {
     label: 'AdMixer',
     patterns: [
-      '^http[s]?://inv-nets[.]admixer[.]net/prebid[.]aspx.*',
-      '^http[s]?://inv-nets[.]admixer[.]net/videoprebid[.]aspx.*',
+      '^https?://inv-nets[.]admixer[.]net/prebid[.]aspx.*',
+      '^https?://inv-nets[.]admixer[.]net/videoprebid[.]aspx.*',
     ],
   },
   {
     label: 'AOL',
     patterns: [
-      '^http[s]?://adserver-us[.]adtech[.]advertising[.]com.*',
-      '^http[s]?://adserver-eu[.]adtech[.]advertising[.]com.*',
-      '^http[s]?://adserver-as[.]adtech[.]advertising[.]com.*',
-      '^http[s]?://adserver[.]adtech[.]de/pubapi/.*',
-    ],
-  },
-  {
-    label: 'Facebook',
-    patterns: [
-      '^http[s]?://an[.]facebook[.]com/v2/placementbid[.]json.*',
+      '^https?://adserver-us[.]adtech[.]advertising[.]com.*',
+      '^https?://adserver-eu[.]adtech[.]advertising[.]com.*',
+      '^https?://adserver-as[.]adtech[.]advertising[.]com.*',
+      '^https?://adserver[.]adtech[.]de/pubapi/.*',
     ],
   },
   {
     label: 'Beachfront',
     patterns: [
-      '^http[s]?://reachms[.]bfmio[.]com/bid[.]json?exchange_id=.*',
+      '^https?://reachms[.]bfmio[.]com/bid[.]json?exchange_id=.*',
     ],
   },
   {
     label: 'Bidfluence',
     patterns: [
-      '^http[s]?://cdn[.]bidfluence[.]com/forge[.]js.*',
+      '^https?://cdn[.]bidfluence[.]com/forge[.]js.*',
     ],
   },
   {
     label: 'Brightcom',
     patterns: [
-      '^http[s]?://hb[.]iselephant[.]com/auc/ortb.*',
+      '^https?://hb[.]iselephant[.]com/auc/ortb.*',
     ],
   },
   {
     label: 'C1x',
     patterns: [
-      '^http[s]?://ht-integration[.]c1exchange[.]com:9000/ht.*',
+      '^https?://ht-integration[.]c1exchange[.]com:9000/ht.*',
     ],
   },
   {
     label: 'CentroBid',
     patterns: [
-      '^http[s]?://t[.]brand-server[.]com/hb.*',
+      '^https?://t[.]brand-server[.]com/hb.*',
     ],
   },
   {
     label: 'Conversant',
     patterns: [
-      '^http[s]?://media[.]msg[.]dotomi[.]com/s2s/.*',
+      '^https?://media[.]msg[.]dotomi[.]com/s2s/.*',
     ],
   },
   {
     label: 'Criteo',
     patterns: [
-      '^http[s]?://static[.]criteo[.]net/js/ld/publishertag[.]js.*',
-      '^http[s]?://([^.]*.)?bidder[.]criteo[.]com/cdb.*',
-      '^http[s]?://([^.]*.)?rtax[.]criteo[.]com/delivery/rta.*',
-      '^http[s]?://([^.]*.)?rtax[.]eu[.]criteo[.]com/delivery/rta.*',
+      '^https?://static[.]criteo[.]net/js/ld/publishertag[.]js.*',
+      '^https?://([^.]*.)?bidder[.]criteo[.]com/cdb.*',
+      '^https?://([^.]*.)?rtax[.]criteo[.]com/delivery/rta.*',
+      '^https?://([^.]*.)?rtax[.]eu[.]criteo[.]com/delivery/rta.*',
     ],
   },
   {
     label: 'Districtm',
     patterns: [
-      '^http[s]?://prebid[.]districtm[.]ca/lib[.]js.*',
+      '^https?://prebid[.]districtm[.]ca/lib[.]js.*',
     ],
   },
   {
     label: 'E-Planning',
     patterns: [
-      '^http[s]?://ads[.]us[.]e-planning[.]net.*',
+      '^https?://ads[.]us[.]e-planning[.]net.*',
     ],
   },
   {
     label: 'Essens',
     patterns: [
-      '^http[s]?://bid[.]essrtb[.]com/bid/prebid_call.*',
+      '^https?://bid[.]essrtb[.]com/bid/prebid_call.*',
+    ],
+  },
+  {
+    label: 'Facebook',
+    patterns: [
+      '^https?://an[.]facebook[.]com/v2/placementbid[.]json.*',
     ],
   },
   {
     label: 'FeatureForward',
     patterns: [
-      '^http[s]?://prmbdr[.]featureforward[.]com/newbidder/.*',
+      '^https?://prmbdr[.]featureforward[.]com/newbidder/.*',
     ],
   },
   {
     label: 'Fidelity',
     patterns: [
-      '^http[s]?://x[.]fidelity-media[.]com.*',
+      '^https?://x[.]fidelity-media[.]com.*',
     ],
   },
   {
     label: 'GetIntent',
     patterns: [
-      '^http[s]?://px[.]adhigh[.]net/rtb/direct_banner.*',
-      '^http[s]?://px[.]adhigh[.]net/rtb/direct_vast.*',
+      '^https?://px[.]adhigh[.]net/rtb/direct_banner.*',
+      '^https?://px[.]adhigh[.]net/rtb/direct_vast.*',
     ],
   },
   {
     label: 'GumGum',
     patterns: [
-      '^http[s]?://g2[.]gumgum[.]com/hbid/imp.*',
+      '^https?://g2[.]gumgum[.]com/hbid/imp.*',
     ],
   },
   {
     label: 'Hiromedia',
     patterns: [
-      '^http[s]?://hb-rtb[.]ktdpublishers[.]com/bid/get.*',
+      '^https?://hb-rtb[.]ktdpublishers[.]com/bid/get.*',
     ],
   },
   {
     label: 'Imonomy',
     patterns: [
-      '^http[s]?://b[.]imonomy[.]com/openrtb/hb/.*',
+      '^https?://b[.]imonomy[.]com/openrtb/hb/.*',
     ],
   },
   {
     label: 'ImproveDigital',
     patterns: [
-      '^http[s]?://ad[.]360yield[.]com/hb.*',
+      '^https?://ad[.]360yield[.]com/hb.*',
     ],
   },
   {
     label: 'IndexExchange',
     patterns: [
-      '^http[s]?://as(-sec)?[.]casalemedia[.]com/(cygnus|headertag).*',
-      '^http[s]?://js(-sec)?[.]indexww[.]com/ht/.*',
+      '^https?://as(-sec)?[.]casalemedia[.]com/(cygnus|headertag).*',
+      '^https?://js(-sec)?[.]indexww[.]com/ht/.*',
     ],
   },
   {
     label: 'InnerActive',
     patterns: [
-      '^http[s]?://ad-tag[.]inner-active[.]mobi/simpleM2M/requestJsonAd.*',
+      '^https?://ad-tag[.]inner-active[.]mobi/simpleM2M/requestJsonAd.*',
     ],
   },
   {
     label: 'Innity',
     patterns: [
-      '^http[s]?://as[.]innity[.]com/synd/.*',
+      '^https?://as[.]innity[.]com/synd/.*',
     ],
   },
   {
     label: 'JCM',
     patterns: [
-      '^http[s]?://media[.]adfrontiers[.]com/pq.*',
+      '^https?://media[.]adfrontiers[.]com/pq.*',
     ],
   },
   {
     label: 'JustPremium',
     patterns: [
-      '^http[s]?://pre[.]ads[.]justpremium[.]com/v/.*',
+      '^https?://pre[.]ads[.]justpremium[.]com/v/.*',
     ],
   },
   {
     label: 'Kargo',
     patterns: [
-      '^http[s]?://krk[.]kargo[.]com/api/v1/bid.*',
+      '^https?://krk[.]kargo[.]com/api/v1/bid.*',
     ],
   },
   {
     label: 'Komoona',
     patterns: [
-      '^http[s]?://bidder[.]komoona[.]com/v1/GetSBids.*',
+      '^https?://bidder[.]komoona[.]com/v1/GetSBids.*',
     ],
   },
   {
     label: 'KruxLink',
     patterns: [
-      '^http[s]?://link[.]krxd[.]net/hb.*',
+      '^https?://link[.]krxd[.]net/hb.*',
     ],
   },
   {
     label: 'Kumma',
     patterns: [
-      '^http[s]?://cdn[.]kumma[.]com/pb_ortb[.]js.*',
+      '^https?://cdn[.]kumma[.]com/pb_ortb[.]js.*',
     ],
   },
   {
     label: 'Mantis',
     patterns: [
-      '^http[s]?://mantodea[.]mantisadnetwork[.]com/website/prebid.*',
+      '^https?://mantodea[.]mantisadnetwork[.]com/website/prebid.*',
     ],
   },
   {
     label: 'MarsMedia',
     patterns: [
-      '^http[s]?://bid306[.]rtbsrv[.]com:9306/bidder.*',
+      '^https?://bid306[.]rtbsrv[.]com:9306/bidder.*',
+    ],
+  },
+  {
+    label: 'Media.net',
+    patterns: [
+      '^https?://contextual[.]media[.]net/bidexchange.*',
     ],
   },
   {
     label: 'MemeGlobal',
     patterns: [
-      '^http[s]?://stinger[.]memeglobal[.]com/api/v1/services/prebid.*',
+      '^https?://stinger[.]memeglobal[.]com/api/v1/services/prebid.*',
     ],
   },
   {
     label: 'MobFox',
     patterns: [
-      '^http[s]?://my[.]mobfox[.]com/request[.]php.*',
+      '^https?://my[.]mobfox[.]com/request[.]php.*',
     ],
   },
   {
     label: 'NanoInteractive',
     patterns: [
-      '^http[s]?://tmp[.]audiencemanager[.]de/hb.*',
+      '^https?://tmp[.]audiencemanager[.]de/hb.*',
     ],
   },
   {
     label: 'OpenX',
     patterns: [
-      '^http[s]?://([^.]*.)?d[.]openx[.]net/w/1[.]0/arj.*',
-      '^http[s]?://([^.]*.)?servedbyopenx[.]com/.*',
+      '^https?://([^.]*.)?d[.]openx[.]net/w/1[.]0/arj.*',
+      '^https?://([^.]*.)?servedbyopenx[.]com/.*',
     ],
   },
   {
     label: 'Piximedia',
     patterns: [
-      '^http[s]?://static[.]adserver[.]pm/prebid.*',
+      '^https?://static[.]adserver[.]pm/prebid.*',
     ],
   },
   {
     label: 'Platformio',
     patterns: [
-      '^http[s]?://piohbdisp[.]hb[.]adx1[.]com.*',
+      '^https?://piohbdisp[.]hb[.]adx1[.]com.*',
     ],
   },
   {
     label: 'Pollux',
     patterns: [
-      '^http[s]?://adn[.]plxnt[.]com/prebid.*',
+      '^https?://adn[.]plxnt[.]com/prebid.*',
     ],
   },
   {
     label: 'PubGears',
     patterns: [
-      '^http[s]?://c[.]pubgears[.]com/tags.*',
+      '^https?://c[.]pubgears[.]com/tags.*',
     ],
   },
   {
     label: 'Pubmatic',
     patterns: [
-      '^http[s]?://ads[.]pubmatic[.]com/AdServer/js/gshowad[.]js.*',
-      '^http[s]?://([^.]*.)?gads.pubmatic[.]com/.*',
+      '^https?://ads[.]pubmatic[.]com/AdServer/js/gshowad[.]js.*',
+      '^https?://([^.]*.)?gads.pubmatic[.]com/.*',
+      '^https?://hbopenbid.pubmatic[.]com/.*',
     ],
   },
   {
     label: 'Pulsepoint',
     patterns: [
-      '^http[s]?://bid[.]contextweb[.]com/header/tag.*',
+      '^https?://bid[.]contextweb[.]com/header/tag.*',
     ],
   },
   {
     label: 'Quantcast',
     patterns: [
-      '^http[s]?://global[.]qc[.]rtb[.]quantserve[.]com:8080/qchb.*',
+      '^https?://global[.]qc[.]rtb[.]quantserve[.]com:8080/qchb.*',
     ],
   },
   {
     label: 'Rhythmone',
     patterns: [
-      '^http[s]?://tag[.]1rx[.]io/rmp/.*',
+      '^https?://tag[.]1rx[.]io/rmp/.*',
     ],
   },
   {
     label: 'Roxot',
     patterns: [
-      '^http[s]?://r[.]rxthdr[.]com.*',
+      '^https?://r[.]rxthdr[.]com.*',
     ],
   },
   {
     label: 'Rubicon',
     patterns: [
-      '^http[s]?://([^.]*.)?(fastlane|optimized-by|anvil)[.]rubiconproject[.]com/a/api.*',
-      '^http[s]?://fastlane-adv[.]rubiconproject[.]com/v1/auction/video.*',
+      '^https?://([^.]*.)?(fastlane|optimized-by|anvil)[.]rubiconproject[.]com/a/api.*',
+      '^https?://fastlane-adv[.]rubiconproject[.]com/v1/auction/video.*',
     ],
   },
   {
     label: 'Sekindo',
     patterns: [
-      '^http[s]?://hb[.]sekindo[.]com/live/liveView[.]php.*',
+      '^https?://hb[.]sekindo[.]com/live/liveView[.]php.*',
     ],
   },
   {
     label: 'ShareThrough',
     patterns: [
-      '^http[s]?://btlr[.]sharethrough[.]com/header-bid/.*',
+      '^https?://btlr[.]sharethrough[.]com/header-bid/.*',
     ],
   },
   {
     label: 'Smart AdServer',
     patterns: [
-      '^http[s]?://prg[.]smartadserver[.]com/prebid.*',
+      '^https?://prg[.]smartadserver[.]com/prebid.*',
     ],
   },
   {
     label: 'Sonobi',
     patterns: [
-      '^http[s]?://apex[.]go[.]sonobi[.]com/trinity[.]js.*',
+      '^https?://apex[.]go[.]sonobi[.]com/trinity[.]js.*',
     ],
   },
   {
     label: 'Sovrn',
     patterns: [
-      '^http[s]?://ap[.]lijit[.]com/rtb/bid.*',
+      '^https?://ap[.]lijit[.]com/rtb/bid.*',
     ],
   },
   {
     label: 'SpringServe',
     patterns: [
-      '^http[s]?://bidder[.]springserve[.]com/display/hbid.*',
+      '^https?://bidder[.]springserve[.]com/display/hbid.*',
     ],
   },
   {
     label: 'StickyAds',
     patterns: [
-      '^http[s]?://cdn[.]stickyadstv[.]com/mustang/mustang[.]min[.]js.*',
-      '^http[s]?://cdn[.]stickyadstv[.]com/prime-time/.*',
+      '^https?://cdn[.]stickyadstv[.]com/mustang/mustang[.]min[.]js.*',
+      '^https?://cdn[.]stickyadstv[.]com/prime-time/.*',
     ],
   },
   {
     label: 'TapSense3',
     patterns: [
-      '^http[s]?://ads04[.]tapsense[.]com/ads/headerad.*',
+      '^https?://ads04[.]tapsense[.]com/ads/headerad.*',
     ],
   },
   {
     label: 'ThoughtLeadr',
     patterns: [
-      '^http[s]?://a[.]thoughtleadr[.]com/v4/.*',
+      '^https?://a[.]thoughtleadr[.]com/v4/.*',
     ],
   },
   {
     label: 'TremorBid',
     patterns: [
-      '^http[s]?://([^.]*.)?ads[.]tremorhub[.]com/ad/tag.*',
+      '^https?://([^.]*.)?ads[.]tremorhub[.]com/ad/tag.*',
     ],
   },
   {
     label: 'Trion',
     patterns: [
-      '^http[s]?://in-appadvertising[.]com/api/bidRequest.*',
+      '^https?://in-appadvertising[.]com/api/bidRequest.*',
     ],
   },
   {
     label: 'TripleLift',
     patterns: [
-      '^http[s]?://tlx[.]3lift[.]com/header/auction.*',
+      '^https?://tlx[.]3lift[.]com/header/auction.*',
     ],
   },
   {
     label: 'TrustX',
     patterns: [
-      '^http[s]?://sofia[.]trustx[.]org/hb.*',
+      '^https?://sofia[.]trustx[.]org/hb.*',
     ],
   },
   {
     label: 'UCFunnel',
     patterns: [
-      '^http[s]?://agent[.]aralego[.]com/header.*',
+      '^https?://agent[.]aralego[.]com/header.*',
     ],
   },
   {
     label: 'Underdog Media',
     patterns: [
-      '^http[s]?://udmserve[.]net/udm/img[.]fetch.*',
+      '^https?://udmserve[.]net/udm/img[.]fetch.*',
     ],
   },
   {
     label: 'UnRuly',
     patterns: [
-      '^http[s]?://targeting[.]unrulymedia[.]com/prebid.*',
+      '^https?://targeting[.]unrulymedia[.]com/prebid.*',
     ],
   },
   {
     label: 'VertaMedia',
     patterns: [
-      '^http[s]?://rtb[.]vertamedia[.]com/hb/.*',
+      '^https?://rtb[.]vertamedia[.]com/hb/.*',
     ],
   },
   {
     label: 'Vertoz',
     patterns: [
-      '^http[s]?://hb[.]vrtzads[.]com/vzhbidder/bid.*',
+      '^https?://hb[.]vrtzads[.]com/vzhbidder/bid.*',
     ],
   },
   {
     label: 'WideOrbig',
     patterns: [
-      '^http[s]?://([^.]*.)?atemda[.]com/JSAdservingMP[.]ashx.*',
+      '^https?://([^.]*.)?atemda[.]com/JSAdservingMP[.]ashx.*',
     ],
   },
   {
     label: 'WideSpace',
     patterns: [
-      '^http[s]?://engine[.]widespace[.]com/map/engine/hb/.*',
+      '^https?://engine[.]widespace[.]com/map/engine/hb/.*',
     ],
   },
   {
     label: 'YieldBot',
     patterns: [
-      '^http[s]?://cdn[.]yldbt[.]com/js/yieldbot[.]intent[.]js.*',
+      '^https?://cdn[.]yldbt[.]com/js/yieldbot[.]intent[.]js.*',
     ],
   },
   {
     label: 'YieldMo',
     patterns: [
-      '^http[s]?://ads[.]yieldmo[.]com/exchange/prebid.*',
+      '^https?://ads[.]yieldmo[.]com/exchange/prebid.*',
     ],
   },
 ];
