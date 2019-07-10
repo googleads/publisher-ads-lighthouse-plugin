@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
 const ComputedAdRequestTime = require('../computed/ad-request-time');
 const ComputedTagLoadTime = require('../computed/tag-load-time');
-const {auditNotApplicable} = require('../utils/builder');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'Latency of first ad request, from tag load',
@@ -30,8 +28,7 @@ const UIStrings = {
   displayValue: '{adReqTime, number, seconds} s',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 // Point of diminishing returns.
 const PODR = 0.3; // seconds
 const MEDIAN = 1; // seconds
@@ -69,13 +66,13 @@ class AdRequestFromTagLoad extends Audit {
     const {timing: tagEndTime} =
         await ComputedTagLoadTime.request(metricData, context);
     if (!(tagEndTime > 0)) { // Handle NaN, etc.
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_TAG));
+      return auditNotApplicable.NoTag;
     }
 
     const {timing: adStartTime} =
         await ComputedAdRequestTime.request(metricData, context);
     if (!(adStartTime > 0)) { // Handle NaN, etc.
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_ADS));
+      return auditNotApplicable.NoAds;
     }
 
     const adReqTimeSec = (adStartTime - tagEndTime) / 1000;

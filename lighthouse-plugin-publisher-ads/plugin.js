@@ -12,12 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {UIStrings} = require('./messages/common-strings.js');
-
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const {group} = require('./messages/common-strings');
 
 const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';
 
@@ -46,13 +41,13 @@ module.exports = {
   ],
   groups: {
     'metrics': {
-      title: str_(UIStrings.GROUPS__METRICS),
+      title: group.Metrics,
     },
     'ads-performance': {
-      title: str_(UIStrings.GROUPS__ADS_PERFORMANCE),
+      title: group.AdsPerformance,
     },
     'ads-best-practices': {
-      title: str_(UIStrings.GROUPS__ADS_BEST_PRACTICES),
+      title: group.AdsBestPractices,
     },
   },
   category: {

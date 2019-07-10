@@ -40,7 +40,11 @@ const ignoredPathComponents = [
   'collect-strings.js',
 ];
 
-// @ts-ignore - @types/esprima lacks all of these
+/**
+ * @param {*} ast
+ * @param {*} property
+ * @param {*} startRange
+ */
 function computeDescription(ast, property, startRange) {
   const endRange = property.range[0];
   for (const comment of ast.comments || []) {

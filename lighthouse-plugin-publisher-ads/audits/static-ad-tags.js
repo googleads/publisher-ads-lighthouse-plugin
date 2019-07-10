@@ -13,15 +13,13 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
-const common = require('../messages/common-strings');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -40,8 +38,7 @@ const UIStrings = {
   columnLineNumber: 'Line Number',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
@@ -122,7 +119,7 @@ class StaticAdTags extends Audit {
         .filter((req) => isGptTag(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_TAG));
+      return auditNotApplicable.NoTag;
     }
 
     const numStatic = array.count(tagReqs, isStaticRequest);

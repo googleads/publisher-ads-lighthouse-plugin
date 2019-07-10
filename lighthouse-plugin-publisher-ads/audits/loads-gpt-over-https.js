@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const util = require('util');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'GPT tag is loaded over HTTPS',
@@ -34,8 +32,7 @@ const UIStrings = {
   failureDisplayValue: 'Load gpt.js over HTTPS',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 
 /**
@@ -69,8 +66,7 @@ class LoadsGptOverHttps extends Audit {
 
     const pageReq = networkRecords.find((record) => record.statusCode == 200);
     if (!pageReq) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_RECORDS));
+      return auditNotApplicable.NoRecords;
     }
 
     const gptRequests = networkRecords
@@ -86,8 +82,7 @@ class LoadsGptOverHttps extends Audit {
     };
 
     if (!gptRequests.length) {
-      const returnVal = auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_GPT));
+      const returnVal = auditNotApplicable.NoGpt;
       returnVal.details = details;
       return returnVal;
     }

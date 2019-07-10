@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'GPT tag is loaded from recommended host',
@@ -33,8 +31,7 @@ const UIStrings = {
   ').',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * Simple audit that checks if gpt is loaded over from updated host.
@@ -64,7 +61,7 @@ class LoadsGptFromSgdn extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const gptUrl = networkRecords.map((r) => new URL(r.url)).find(isGptTag);
     if (!gptUrl) {
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_GPT));
+      return auditNotApplicable.NoGpt;
     }
     return {
       score: Number(gptUrl.host === 'securepubads.g.doubleclick.net'),

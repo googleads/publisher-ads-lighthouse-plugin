@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
-const {auditNotApplicable} = require('../utils/builder');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isGptIframe} = require('../utils/resource-classification');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'No ad found at the very top of the viewport',
@@ -32,8 +30,7 @@ const UIStrings = {
   columnSlot: 'Top Slot ID',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 
 const SCROLL_PX_THRESHOLD = 100;
@@ -78,8 +75,7 @@ class AdTopOfViewport extends Audit {
         }));
 
     if (!slots.length) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_VISIBLE_SLOTS));
+      return auditNotApplicable.NoVisibleSlots;
     }
 
     const topSlot = slots.reduce((a, b) => (a.midpoint < b.midpoint) ? a : b);
@@ -87,8 +83,7 @@ class AdTopOfViewport extends Audit {
     const inViewport = topSlot.midpoint < viewport.innerHeight;
 
     if (!inViewport) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_ADS_VIEWPORT));
+      return auditNotApplicable.NoAdsViewport;
     }
 
     const score = inViewport && topSlot.midpoint < SCROLL_PX_THRESHOLD ? 0 : 1;

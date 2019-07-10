@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
 const {isGptAdRequest} = require('../utils/resource-classification');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -41,8 +39,7 @@ const UIStrings = {
   columnLineNumber: 'Source Line Number',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -107,8 +104,7 @@ class ScriptInjectedTags extends Audit {
 
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
     if (!closure.requests.length) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_AD_RELATED_REQ));
+      return auditNotApplicable.NoAdRelatedReq;
     }
     const injectedBlockingRequests = closure.requests
         .filter((r) =>

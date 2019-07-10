@@ -12,15 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -43,8 +41,7 @@ const UIStrings = {
   columnEndTime: 'End',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * @typedef {Object} SimpleRequest
@@ -230,7 +227,7 @@ class AdRequestCriticalPath extends Audit {
         .filter((r) => r.mimeType != 'text/css');
 
     if (!blockingRequests.length) {
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_ADS));
+      return auditNotApplicable.NoAds;
     }
     let tableView = blockingRequests.map((req) => {
       const {startTime, endTime} = timingsByRecord.get(req) || req;

@@ -12,15 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-
 const {isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'Ad slots effectively use horizontal space',
@@ -33,8 +30,7 @@ const UIStrings = {
   'is underutilized',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /** @inheritDoc */
 class FullWidthSlots extends Audit {
@@ -69,7 +65,7 @@ class FullWidthSlots extends Audit {
         .map((record) => new URL(record.url));
 
     if (!adRequestUrls.length) {
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_ADS));
+      return auditNotApplicable.NoAds;
     }
 
     const sizeArrs = adRequestUrls.map((url) =>
@@ -83,8 +79,7 @@ class FullWidthSlots extends Audit {
         .filter((w) => w <= vpWidth && w > 1);
 
     if (!widths.length) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_VALID_AD_WIDTHS));
+      return auditNotApplicable.NoValidAdWidths;
     }
 
     const maxWidth = Math.max(...widths);

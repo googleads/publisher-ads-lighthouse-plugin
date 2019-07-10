@@ -2,9 +2,6 @@
   "audits/ad-blocking-tasks.js | columnDuration": {
     "message": "D̂úr̂át̂íôń"
   },
-  "audits/ad-blocking-tasks.js | columnEndTime": {
-    "message": "Êńd̂"
-  },
   "audits/ad-blocking-tasks.js | columnScript": {
     "message": "Ât́t̂ŕîb́ût́âb́l̂é ÛŔL̂"
   },
@@ -23,14 +20,32 @@
   "audits/ad-blocking-tasks.js | title": {
     "message": "N̂ó l̂ón̂ǵ t̂áŝḱŝ b́l̂óĉḱîńĝ ád̂-ŕêĺât́êd́ n̂ét̂ẃôŕk̂ ŕêq́ûéŝt́ŝ"
   },
-  "audits/ad-request-critical-path.js | columnDuration": {
+  "audits/ad-render-blocking-resources.js | columnDuration": {
     "message": "D̂úr̂át̂íôń"
   },
+  "audits/ad-render-blocking-resources.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂"
+  },
+  "audits/ad-render-blocking-resources.js | columnUrl": {
+    "message": "R̂éŝóûŕĉé"
+  },
+  "audits/ad-render-blocking-resources.js | description": {
+    "message": "R̂én̂d́êŕ-b̂ĺôćk̂ín̂ǵ r̂éŝóûŕĉéŝ śl̂óŵ d́ôẃn̂ t́âǵ l̂óâd́ t̂ím̂éŝ. Ćôńŝíd̂ér̂ ĺôád̂ín̂ǵ ĉŕît́îćâĺ ĴŚ/ĈŚŜ ín̂ĺîńê ór̂ ĺôád̂ín̂ǵ ŝćr̂íp̂t́ŝ áŝýn̂ćĥŕôńôúŝĺŷ ór̂ ĺôád̂ín̂ǵ t̂h́ê t́âǵ êár̂ĺîér̂ ín̂ t́ĥé ĥéâd́. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ẃêb́/t̂óôĺŝ/ĺîǵĥt́ĥóûśê/áûd́ît́ŝ/b́l̂óĉḱîńĝ-ŕêśôúr̂ćêś)."
+  },
+  "audits/ad-render-blocking-resources.js | failureDisplayValue": {
+    "message": "Ûṕ t̂ó {opportunity, number, seconds} ŝ t́âǵ l̂óâd́ t̂ím̂é îḿp̂ŕôv́êḿêńt̂"
+  },
+  "audits/ad-render-blocking-resources.js | failureTitle": {
+    "message": "Âv́ôíd̂ ŕêńd̂ér̂-b́l̂óĉḱîńĝ ŕêśôúr̂ćêś"
+  },
+  "audits/ad-render-blocking-resources.js | title": {
+    "message": "M̂ín̂ím̂ál̂ ŕêńd̂ér̂-b́l̂óĉḱîńĝ ŕêśôúr̂ćêś f̂óûńd̂"
+  },
   "audits/ad-request-critical-path.js | columnEndTime": {
-    "message": "Êńd̂ T́îḿê"
+    "message": "Êńd̂"
   },
   "audits/ad-request-critical-path.js | columnStartTime": {
-    "message": "Ŝt́âŕt̂ T́îḿê"
+    "message": "Ŝt́âŕt̂"
   },
   "audits/ad-request-critical-path.js | columnType": {
     "message": "T̂ýp̂é"
@@ -182,11 +197,8 @@
   "audits/idle-network-times.js | columnDuration": {
     "message": "D̂úr̂át̂íôń"
   },
-  "audits/idle-network-times.js | columnEndTime": {
-    "message": "Êńd̂ T́îḿê"
-  },
   "audits/idle-network-times.js | columnStartTime": {
-    "message": "Ŝt́âŕt̂ T́îḿê"
+    "message": "Ŝt́âŕt̂"
   },
   "audits/idle-network-times.js | columnUrl": {
     "message": "Ât́t̂ŕîb́ût́âb́l̂é ÛŔL̂"
@@ -234,7 +246,7 @@
     "message": "R̂éŝóûŕĉé"
   },
   "audits/script-injected-tags.js | columnStartTime": {
-    "message": "Ŝt́âŕt̂ T́îḿê"
+    "message": "Ŝt́âŕt̂"
   },
   "audits/script-injected-tags.js | description": {
     "message": "L̂óâd́ ŝćr̂íp̂t́ŝ d́îŕêćt̂ĺŷ ẃît́ĥ `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=...>` ín̂śt̂éâd́ ôf́ îńĵéĉt́îńĝ śĉŕîṕt̂ś ŵít̂h́ Ĵáv̂áŜćr̂íp̂t́. T̂h́îś âĺl̂óŵś t̂h́ê b́r̂óŵśêŕ f̂ét̂ćĥ t́ĥé ŝćr̂íp̂t́ ŝóôńêŕ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://ŵẃŵ.íĝv́ît́â.ćôḿ/2014/05/20/ŝćr̂íp̂t́-îńĵéĉt́êd́-âśŷńĉ-śĉŕîṕt̂ś-ĉón̂śîd́êŕêd́-ĥár̂ḿf̂úl̂/)."
@@ -254,11 +266,8 @@
   "audits/serial-header-bidding.js | columnDuration": {
     "message": "D̂úr̂át̂íôń"
   },
-  "audits/serial-header-bidding.js | columnEndTime": {
-    "message": "Êńd̂ T́îḿê"
-  },
   "audits/serial-header-bidding.js | columnStartTime": {
-    "message": "Ŝt́âŕt̂ T́îḿê"
+    "message": "Ŝt́âŕt̂"
   },
   "audits/serial-header-bidding.js | columnUrl": {
     "message": "ÛŔL̂"

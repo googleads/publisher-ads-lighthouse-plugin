@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
-const {auditNotApplicable} = require('../utils/builder');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable, auditError} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
 const {isGptIframe} = require('../utils/resource-classification');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'Ad density in initial viewport is within recommended range',
@@ -33,8 +31,7 @@ const UIStrings = {
   displayValue: '{adDensity, number, percent} covered by ads',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
@@ -63,8 +60,7 @@ class ViewportAdDensity extends Audit {
       (slot) => isGptIframe(slot) && slot.isVisible);
 
     if (!slots.length) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_VISIBLE_SLOTS));
+      return auditNotApplicable.NoVisibleSlots;
     }
 
     const adArea = slots.reduce((sum, slot) =>
@@ -73,10 +69,10 @@ class ViewportAdDensity extends Audit {
     const viewArea = viewport.innerWidth * viewport.innerHeight;
 
     if (viewArea <= 0) {
-      throw new Error(str_(common.UIStrings.ERRORS__VIEWPORT_AREA_ZERO));
+      throw new Error(auditError.ViewportAreaZero);
     }
     if (adArea > viewArea) {
-      throw new Error(common.UIStrings.ERRORS__AREA_LARGER_THAN_VIEWPORT);
+      throw new Error(auditError.AreaLargerThanViewport);
     }
     const adDensity = adArea / viewArea;
     const score = adDensity > 0.3 ? 0 : 1;

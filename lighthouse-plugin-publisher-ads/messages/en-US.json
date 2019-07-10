@@ -3,10 +3,6 @@
     "message": "Duration",
     "description": ""
   },
-  "audits/ad-blocking-tasks.js | columnEndTime": {
-    "message": "End",
-    "description": ""
-  },
   "audits/ad-blocking-tasks.js | columnScript": {
     "message": "Attributable URL",
     "description": ""
@@ -31,16 +27,40 @@
     "message": "No long tasks blocking ad-related network requests",
     "description": "Title of the audit"
   },
-  "audits/ad-request-critical-path.js | columnDuration": {
+  "audits/ad-render-blocking-resources.js | columnDuration": {
     "message": "Duration",
     "description": ""
   },
+  "audits/ad-render-blocking-resources.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | columnUrl": {
+    "message": "Resource",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | description": {
+    "message": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously or loading the tag earlier in the head. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | failureDisplayValue": {
+    "message": "Up to {opportunity, number, seconds} s tag load time improvement",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | failureTitle": {
+    "message": "Avoid render-blocking resources",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | title": {
+    "message": "Minimal render-blocking resources found",
+    "description": ""
+  },
   "audits/ad-request-critical-path.js | columnEndTime": {
-    "message": "End Time",
+    "message": "End",
     "description": ""
   },
   "audits/ad-request-critical-path.js | columnStartTime": {
-    "message": "Start Time",
+    "message": "Start",
     "description": ""
   },
   "audits/ad-request-critical-path.js | columnType": {
@@ -243,12 +263,8 @@
     "message": "Duration",
     "description": ""
   },
-  "audits/idle-network-times.js | columnEndTime": {
-    "message": "End Time",
-    "description": ""
-  },
   "audits/idle-network-times.js | columnStartTime": {
-    "message": "Start Time",
+    "message": "Start",
     "description": ""
   },
   "audits/idle-network-times.js | columnUrl": {
@@ -312,7 +328,7 @@
     "description": ""
   },
   "audits/script-injected-tags.js | columnStartTime": {
-    "message": "Start Time",
+    "message": "Start",
     "description": ""
   },
   "audits/script-injected-tags.js | description": {
@@ -339,12 +355,8 @@
     "message": "Duration",
     "description": ""
   },
-  "audits/serial-header-bidding.js | columnEndTime": {
-    "message": "End Time",
-    "description": ""
-  },
   "audits/serial-header-bidding.js | columnStartTime": {
-    "message": "Start Time",
+    "message": "Start",
     "description": ""
   },
   "audits/serial-header-bidding.js | columnUrl": {

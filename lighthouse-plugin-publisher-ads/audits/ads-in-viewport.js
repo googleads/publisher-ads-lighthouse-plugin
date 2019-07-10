@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {isBoxInViewport} = require('../utils/geometry');
 const {isGptIframe} = require('../utils/resource-classification');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'Few or no ads loaded outside viewport',
@@ -36,9 +34,7 @@ const UIStrings = {
   columnSlot: 'Slots Outside Viewport',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
-
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -74,8 +70,7 @@ class AdsInViewport extends Audit {
         .filter((iframe) => isGptIframe(iframe) && iframe.isVisible);
 
     if (!slots.length) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_VISIBLE_SLOTS));
+      return auditNotApplicable.NoVisibleSlots;
     }
 
     /** @type {Array<{slot: string}>} */

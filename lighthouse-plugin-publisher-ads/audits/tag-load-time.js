@@ -12,12 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
 const ComputedTagLoadTime = require('../computed/tag-load-time');
-const {auditNotApplicable} = require('../utils/builder');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'Tag load time',
@@ -30,8 +28,7 @@ const UIStrings = {
   displayValue: '{tagLoadTime, number, seconds} s',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
 const PODR = 1; // seconds
@@ -68,9 +65,8 @@ class TagLoadTime extends Audit {
 
     const {timing} = await ComputedTagLoadTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(
-        str_(common.UIStrings.WARNINGS__NO_TAG));
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_TAG));
+      context.LighthouseRunWarnings.push(runWarning.NoTag);
+      return auditNotApplicable.NoTag;
     }
 
     const tagLoadTimeSec = timing * 1e-3;

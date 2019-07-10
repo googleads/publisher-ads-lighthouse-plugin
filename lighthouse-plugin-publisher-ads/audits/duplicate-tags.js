@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'No duplicate tags found in any frame',
@@ -35,8 +33,7 @@ const UIStrings = {
   columnFrameId: 'Frame ID',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 const tags = [
   'googletagservices.com/tag/js/gpt.js',
@@ -86,7 +83,7 @@ class DuplicateTags extends Audit {
         .filter((record) => containsAnySubstring(record.url, tags));
 
     if (!tagReqs.length) {
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_TAGS));
+      return auditNotApplicable.NoTags;
     }
     /** @type {Object<string, Object<string, number>>} */
     const tagsByFrame = {};

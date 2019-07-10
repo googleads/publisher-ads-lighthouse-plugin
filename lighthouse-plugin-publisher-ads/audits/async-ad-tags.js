@@ -13,16 +13,14 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 // @ts-ignore
 const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'GPT tag is loaded asynchronously',
@@ -34,8 +32,7 @@ const UIStrings = {
   ').',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * @param {LH.Artifacts.NetworkRequest} tagReq
  * @return {boolean}
@@ -79,7 +76,7 @@ class AsyncAdTags extends Audit {
         .filter((req) => req.frameId === mainResource.frameId);
 
     if (!tagReqs.length) {
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_TAG));
+      return auditNotApplicable.NoTag;
     }
 
     const numAsync = array.count(tagReqs, isAsync);

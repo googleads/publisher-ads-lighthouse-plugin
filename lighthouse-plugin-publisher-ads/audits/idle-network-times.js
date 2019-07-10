@@ -12,18 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: '[Experimental] Network is efficiently utilized before ad requests',
@@ -48,8 +46,7 @@ const UIStrings = {
   causeOther: 'Other',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /** @enum {string} */
 const Cause = {
@@ -291,8 +288,7 @@ class IdleNetworkTimes extends Audit {
         .sort((a, b) => a.startTime - b.startTime);
 
     if (!blockingRequests.length) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_AD_RELATED_REQ));
+      return auditNotApplicable.NoAdRelatedReq;
     }
 
     let maxEndSoFar = Infinity;

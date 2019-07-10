@@ -8,15 +8,13 @@
 // limitations under the License.
 
 const AdRequestTime = require('../computed/ad-request-time');
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const LongTasks = require('../computed/long-tasks');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   /* Title of the audit */
@@ -35,8 +33,7 @@ const UIStrings = {
   columnDuration: 'Duration',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * @typedef {Object} TaskDetails
  * @property {number} startTime
@@ -106,21 +103,18 @@ class AdBlockingTasks extends Audit {
     try {
       longTasks = await LongTasks.request(metricData, context);
     } catch (e) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__INVALID_TIMING));
+      return auditNotApplicable.InvalidTiming;
     }
 
     if (!longTasks.length) {
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_TASKS));
+      return auditNotApplicable.NoTasks;
     }
 
     const {timing: endTime} =
         await AdRequestTime.request(metricData, context);
 
     if (!(endTime > 0)) { // Handle NaN, etc.
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_AD_RELATED_REQ));
+      return auditNotApplicable.NoAdRelatedReq;
     }
 
     /** @type {TaskDetails[]} */ let blocking = [];

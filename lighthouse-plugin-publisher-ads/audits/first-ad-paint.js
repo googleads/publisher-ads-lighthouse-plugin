@@ -13,11 +13,9 @@
 // limitations under the License.
 
 const AdPaintTime = require('../computed/ad-paint-time');
-const common = require('../messages/common-strings');
-const {auditNotApplicable} = require('../utils/builder');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const UIStrings = {
   title: 'Latency of first ad render',
@@ -29,8 +27,7 @@ const UIStrings = {
   displayValue: '{firstAdPaint, number, seconds} s',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
 const PODR = 3.0; // seconds
@@ -74,10 +71,8 @@ class FirstAdPaint extends Audit {
     const {timing} = await AdPaintTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(
-        str_(common.UIStrings.WARNINGS__NO_AD_RENDERED));
-      return auditNotApplicable(
-        str_(common.UIStrings.NOT_APPLICABLE__NO_AD_RENDERED));
+      context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
+      return auditNotApplicable.NoAdRendered;
     }
 
     const adPaintTimeSec = timing / 1000;

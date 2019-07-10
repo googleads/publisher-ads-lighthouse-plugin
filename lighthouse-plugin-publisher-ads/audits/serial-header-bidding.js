@@ -12,17 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const common = require('../messages/common-strings');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isCacheable} = require('../utils/network');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
-// @ts-ignore
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -40,8 +38,7 @@ const UIStrings = {
   columnDuration: 'Duration',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename,
-  Object.assign(UIStrings, common.UIStrings));
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Min record duration (s) to be considered a bid.
 const MIN_BID_DURATION = .05;
@@ -181,7 +178,7 @@ class SerialHeaderBidding extends Audit {
     const recordsByType = bucket(networkRecords, checkRecordType);
 
     if (!recordsByType.has(RequestType.BID)) {
-      return auditNotApplicable(str_(common.UIStrings.NOT_APPLICABLE__NO_BIDS));
+      return auditNotApplicable.NoBids;
     }
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
