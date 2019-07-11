@@ -26,14 +26,14 @@ const UIStrings = {
   'revenue. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
   ').',
-  displayValue: '{adReqTime, number, seconds} s',
+  displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
-const PODR = 1.5; // seconds, 1 second beyond tag load time PODR
-const MEDIAN = 3.5; // seconds
+const PODR = 1500; // ms, 1 second beyond tag load time PODR
+const MEDIAN = 3500; // ms
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -71,8 +71,7 @@ class AdRequestFromPageStart extends Audit {
       return auditNotApplicable.NoAds;
     }
 
-    const adReqTimeSec = timing / 1000;
-    let normalScore = Audit.computeLogNormalScore(adReqTimeSec, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
@@ -80,9 +79,9 @@ class AdRequestFromPageStart extends Audit {
     }
 
     return {
-      numericValue: adReqTimeSec,
+      numericValue: timing * 1e-3,
       score: normalScore,
-      displayValue: str_(UIStrings.displayValue, {adReqTime: adReqTimeSec}),
+      displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
 }

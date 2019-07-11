@@ -33,7 +33,7 @@ const UIStrings = {
   'idleness. [Learn more](' +
   'https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference' +
   ').',
-  displayValue: '{idleTime, number, seconds} s spent idle in critical path',
+  displayValue: '{timeInMs, number, seconds} s spent idle in critical path',
   columnCause: 'Suspected Cause',
   columnUrl: 'Attributable URL',
   columnStartTime: 'Start',
@@ -326,7 +326,7 @@ class IdleNetworkTimes extends Audit {
       numericValue: maxIdleTime,
       score: failed ? 0 : 1,
       displayValue:
-        str_(UIStrings.displayValue, {idleTime: (totalIdleTime / 1000)}),
+        str_(UIStrings.displayValue, {timeInMs: (totalIdleTime)}),
       details: IdleNetworkTimes.makeTableDetails(HEADINGS, idleTimes),
     };
   }

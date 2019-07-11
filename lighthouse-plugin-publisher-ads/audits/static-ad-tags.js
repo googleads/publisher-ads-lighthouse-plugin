@@ -32,7 +32,7 @@ const UIStrings = {
   'browser may load GPT sooner. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags' +
   ').',
-  failureDisplayValue: 'Up to {opportunity, number, seconds} s tag load time ' +
+  failureDisplayValue: 'Up to {timeInMs, number, seconds} s tag load time ' +
   'improvement',
   columnUrl: 'Initiator',
   columnLineNumber: 'Line Number',
@@ -80,7 +80,7 @@ function getDetailsTable(dynamicReq) {
  * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {number}
  */
-function quantifyOpportunitySec(tagRequest, networkRecords) {
+function quantifyOpportunityMs(tagRequest, networkRecords) {
   // The first HTML-initiated request is the best possible load time.
   const firstResource = networkRecords.find((r) =>
     ['parser', 'preload'].includes(r.initiator.type) ||
@@ -88,7 +88,7 @@ function quantifyOpportunitySec(tagRequest, networkRecords) {
   if (!firstResource) {
     return 0;
   }
-  return tagRequest.startTime - firstResource.startTime;
+  return (tagRequest.startTime - firstResource.startTime) * 1e3;
 }
 
 /** @inheritDoc */
@@ -131,9 +131,10 @@ class StaticAdTags extends Audit {
     const failed = numStatic < numTags;
     let displayValue = '';
     if (failed) {
-      const opportunity = quantifyOpportunitySec(tagReqs[0], networkRecords);
-      if (opportunity > 0.1) {
-        displayValue = str_(UIStrings.failureDisplayValue, {opportunity});
+      const opportunity = quantifyOpportunityMs(tagReqs[0], networkRecords);
+      if (opportunity > 100) {
+        displayValue = str_(
+          UIStrings.failureDisplayValue, {timeInMs: opportunity});
       }
     }
 

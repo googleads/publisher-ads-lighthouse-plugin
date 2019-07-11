@@ -25,13 +25,13 @@ const UIStrings = {
   'Publisher Tag loads until the first ad request is made. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
   ').',
-  displayValue: '{adReqTime, number, seconds} s',
+  displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 // Point of diminishing returns.
-const PODR = 0.3; // seconds
-const MEDIAN = 1; // seconds
+const PODR = 300; // ms
+const MEDIAN = 1000; // ms
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -75,9 +75,9 @@ class AdRequestFromTagLoad extends Audit {
       return auditNotApplicable.NoAds;
     }
 
-    const adReqTimeSec = (adStartTime - tagEndTime) / 1000;
+    const adReqTimeMs = (adStartTime - tagEndTime);
 
-    let normalScore = Audit.computeLogNormalScore(adReqTimeSec, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
@@ -85,9 +85,9 @@ class AdRequestFromTagLoad extends Audit {
     }
 
     return {
-      numericValue: adReqTimeSec,
+      numericValue: adReqTimeMs * 1e-3,
       score: normalScore,
-      displayValue: str_(UIStrings.displayValue, {adReqTime: adReqTimeSec}),
+      displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }
 }

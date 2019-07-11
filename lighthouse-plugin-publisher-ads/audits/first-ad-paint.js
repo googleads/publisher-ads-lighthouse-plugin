@@ -24,14 +24,14 @@ const UIStrings = {
   'paint from page navigation. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
   ').',
-  displayValue: '{firstAdPaint, number, seconds} s',
+  displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
-const PODR = 3.0; // seconds
-const MEDIAN = 4.0; // seconds
+const PODR = 3000; // ms
+const MEDIAN = 4000; // ms
 
 /**
  * Measures the first ad paint time.
@@ -75,16 +75,15 @@ class FirstAdPaint extends Audit {
       return auditNotApplicable.NoAdRendered;
     }
 
-    const adPaintTimeSec = timing / 1000;
     let normalScore =
-        Audit.computeLogNormalScore(adPaintTimeSec, PODR, MEDIAN);
+        Audit.computeLogNormalScore(timing, PODR, MEDIAN);
     if (normalScore >= 0.9) normalScore = 1;
 
     return {
-      numericValue: adPaintTimeSec,
+      numericValue: timing * 1e-3,
       score: normalScore,
       displayValue:
-        str_(UIStrings.displayValue, {firstAdPaint: adPaintTimeSec}),
+        str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
 }
