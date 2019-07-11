@@ -29,8 +29,8 @@ const UIStrings = {
   '). [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/ads-in-viewport' +
   ').',
-  failureDisplayValue: '{hiddenAds, number} {hiddenAds, plural, =1 {ad} ' +
-  'other {ads}} out of view',
+  failureDisplayValue: '{hiddenAds, plural, =1 {1 ad} ' +
+  'other {# ads}} out of view',
   columnSlot: 'Slots Outside Viewport',
 };
 

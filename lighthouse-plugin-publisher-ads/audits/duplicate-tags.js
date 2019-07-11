@@ -26,8 +26,7 @@ const UIStrings = {
   'and adds overhead without benefit. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags' +
   ').',
-  failureDisplayValue: '{duplicateTags, number} duplicate ' +
-  '{duplicateTags, plural, =1 {tag} other {tags}}',
+  failureDisplayValue: '{duplicateTags, plural, =1 {1 duplicate tag} other {# duplicate tags}}',
   columnScript: 'Script',
   columnNumReqs: 'Duplicate Requests',
   columnFrameId: 'Frame ID',

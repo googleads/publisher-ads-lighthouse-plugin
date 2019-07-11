@@ -31,10 +31,8 @@ const UIStrings = {
   'speed. Requests that block ad loading can be found below. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-critical-path' +
   ').',
-  displayValue: '{serialResources, number} serial ' +
-  '{serialResources, plural, =1 {resource} other {resources}}, ' +
-  '{totalResources, number} total {totalResources, plural, =1 {resource} ' +
-  'other {resources}}',
+  displayValue: '{serialResources, plural, =1 {1 serial resource} other {# serial resources}}, ' +
+  '{totalResources, plural, =1 {1 total resource} other {# total resources}}',
   columnUrl: 'Request',
   columnType: 'Type',
   columnStartTime: 'Start',

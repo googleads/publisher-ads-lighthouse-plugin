@@ -25,14 +25,14 @@ const UIStrings = {
   'loads. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
   ').',
-  displayValue: '{tagLoadTime, number, seconds} s',
+  displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
-const PODR = 1; // seconds
-const MEDIAN = 2; // seconds
+const PODR = 1000; // ms
+const MEDIAN = 2000; // ms
 
 /**
  * Audit to determine time for tag to load relative to page start.
@@ -69,11 +69,9 @@ class TagLoadTime extends Audit {
       return auditNotApplicable.NoTag;
     }
 
-    const tagLoadTimeSec = timing * 1e-3;
-
     // NOTE: score is relative to page response time to avoid counting time for
     // first party rendering.
-    let normalScore = Audit.computeLogNormalScore(tagLoadTimeSec, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
@@ -81,9 +79,9 @@ class TagLoadTime extends Audit {
     }
 
     return {
-      numericValue: tagLoadTimeSec,
+      numericValue: timing * 1e-3, // seconds
       score: normalScore,
-      displayValue: str_(UIStrings.displayValue, {tagLoadTime: tagLoadTimeSec}),
+      displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
 }

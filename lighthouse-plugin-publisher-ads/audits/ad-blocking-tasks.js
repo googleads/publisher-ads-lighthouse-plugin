@@ -26,8 +26,8 @@ const UIStrings = {
   'performance on less powerful devices. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/ad-blocking-tasks' +
   ').',
-  failureDisplayValue: '{numTasks} long {numTasks, plural, =1 {task} other ' +
-  '{tasks}}',
+  failureDisplayValue: '{numTasks, plural, =1 {1 long task} other ' +
+  '{# long tasks}}',
   columnScript: 'Attributable URL',
   columnStartTime: 'Start',
   columnDuration: 'Duration',

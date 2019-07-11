@@ -30,7 +30,7 @@ const UIStrings = {
   'loading the tag earlier in the head. [Learn more](' +
   'https://developers.google.com/web/tools/lighthouse/audits/blocking-resources' +
   ').',
-  failureDisplayValue: 'Up to {opportunity, number, seconds} s tag load time ' +
+  failureDisplayValue: 'Up to {timeInMs, number, seconds} s tag load time ' +
   'improvement',
   columnUrl: 'Resource',
   columnStartTime: 'Start',
@@ -111,10 +111,11 @@ class AdRenderBlockingResources extends RenderBlockingResources {
         }));
 
     // @ts-ignore
-    const opportunity = Math.max(...tableView.map((r) => r.duration)) / 1000;
+    const opportunity = Math.max(...tableView.map((r) => r.duration));
     let displayValue = '';
     if (results.length > 0 && opportunity > 0) {
-      displayValue = str_(UIStrings.failureDisplayValue, {opportunity});
+      displayValue = str_(
+        UIStrings.failureDisplayValue, {timeInMs: opportunity});
     }
 
     return {
