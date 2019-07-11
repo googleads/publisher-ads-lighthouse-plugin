@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const {assert} = require('../utils/asserts');
 const {auditNotApplicable} = require('../utils/builder');
 const {Audit} = require('lighthouse');
 const {getCriticalGraph} = require('../utils/graph');
@@ -28,12 +29,10 @@ const UIStrings = {
   title: 'GPT and bids loaded in parallel',
   failureTitle: 'Load GPT and bids in parallel',
   description: 'To optimize ad loading, bid requests should not wait on GPT to load. This issue can often be fixed by making sure that bid requests do not wait on `googletag.pubadsReady` or `googletag.cmd.push`.',
-  headings: {
-    bidder: 'Bidder',
-    url: 'URL',
-    startTime: 'Start time',
-    duration: 'Duration',
-  },
+  columnBidder: 'Bidder',
+  columnUrl: 'URL',
+  columnStartTime: 'Start',
+  columnDuration: 'Duration',
 };
 
 /**
@@ -41,10 +40,10 @@ const UIStrings = {
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'bidder', itemType: 'text', text: UIStrings.headings.bidder},
-  {key: 'url', itemType: 'url', text: UIStrings.headings.url},
-  {key: 'startTime', itemType: 'ms', text: UIStrings.headings.startTime},
-  {key: 'duration', itemType: 'ms', text: UIStrings.headings.duration},
+  {key: 'bidder', itemType: 'text', text: UIStrings.columnBidder},
+  {key: 'url', itemType: 'url', text: UIStrings.columnUrl},
+  {key: 'startTime', itemType: 'ms', text: UIStrings.columnStartTime},
+  {key: 'duration', itemType: 'ms', text: UIStrings.columnDuration},
 ];
 
 /**
@@ -94,7 +93,7 @@ class GptBidsInParallel extends Audit {
     for (const bid of bids) {
       if (getCriticalGraph(network, trace.traceEvents, bid).has(pubadsImpl)) {
         const {startTime, endTime} = timingsByRecord.get(bid) || bid;
-        const bidder = getHeaderBidder(bid.url) || '';
+        const bidder = assert(getHeaderBidder(bid.url));
         if (seen.has(bidder)) {
           // Don't include multiple requests from the same bidder in the results
           // table.
