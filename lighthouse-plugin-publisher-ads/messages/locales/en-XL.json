@@ -12,7 +12,7 @@
     "message": "T̂áŝḱŝ b́l̂óĉḱîńĝ t́ĥé m̂áîń t̂h́r̂éâd́ ĉán̂ d́êĺâý âd́ r̂éq̂úêśt̂ś âńd̂ ćâúŝé â ṕôór̂ úŝér̂ éx̂ṕêŕîén̂ćê. Ćôńŝíd̂ér̂ ŕêḿôv́îńĝ ĺôńĝ b́l̂óĉḱîńĝ t́âśk̂ś ôŕ m̂óv̂ín̂ǵ t̂h́êḿ ôf́f̂ óf̂ t́ĥé m̂áîń t̂h́r̂éâd́. T̂h́êśê t́âśk̂ś ĉán̂ b́ê éŝṕêćîál̂ĺŷ d́êt́r̂ím̂én̂t́âĺ t̂ó p̂ér̂f́ôŕm̂án̂ćê ón̂ ĺêśŝ ṕôẃêŕf̂úl̂ d́êv́îćêś. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-b̂ĺôćk̂ín̂ǵ-t̂áŝḱŝ)."
   },
   "audits/ad-blocking-tasks.js | failureDisplayValue": {
-    "message": "{numTasks} l̂ón̂ǵ {numTasks, plural, =1 {t̂áŝḱ} other {t̂áŝḱŝ}}"
+    "message": "{numTasks, plural, =1 {1 l̂ón̂ǵ t̂áŝḱ} other {# l̂ón̂ǵ t̂áŝḱŝ}}"
   },
   "audits/ad-blocking-tasks.js | failureTitle": {
     "message": "Âv́ôíd̂ ĺôńĝ t́âśk̂ś t̂h́ât́ b̂ĺôćk̂ ád̂-ŕêĺât́êd́ n̂ét̂ẃôŕk̂ ŕêq́ûéŝt́ŝ"
@@ -57,7 +57,7 @@
     "message": "Ĉón̂śîd́êŕ r̂éd̂úĉín̂ǵ t̂h́ê ńûḿb̂ér̂ óf̂ ŕêśôúr̂ćêś, l̂óâd́îńĝ ḿûĺt̂íp̂ĺê ŕêśôúr̂ćêś ŝím̂úl̂t́âńêóûśl̂ý, ôŕ l̂óâd́îńĝ ŕêśôúr̂ćêś êár̂ĺîér̂ t́ô ím̂ṕr̂óv̂é âd́ ŝṕêéd̂. Ŕêq́ûéŝt́ŝ t́ĥát̂ b́l̂óĉḱ âd́ l̂óâd́îńĝ ćâń b̂é f̂óûńd̂ b́êĺôẃ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-r̂éq̂úêśt̂-ćr̂ít̂íĉál̂-ṕât́ĥ)."
   },
   "audits/ad-request-critical-path.js | displayValue": {
-    "message": "{serialResources, number} ŝér̂íâĺ {serialResources, plural, =1 {r̂éŝóûŕĉé} other {r̂éŝóûŕĉéŝ}}, {totalResources, number} t́ôt́âĺ {totalResources, plural, =1 {r̂éŝóûŕĉé} other {r̂éŝóûŕĉéŝ}}"
+    "message": "{serialResources, plural, =1 {1 ŝér̂íâĺ r̂éŝóûŕĉé} other {# ŝér̂íâĺ r̂éŝóûŕĉéŝ}}, {totalResources, plural, =1 {1 t́ôt́âĺ r̂éŝóûŕĉé} other {# t̂ót̂ál̂ ŕêśôúr̂ćêś}}"
   },
   "audits/ad-request-critical-path.js | failureTitle": {
     "message": "R̂éd̂úĉé ĉŕît́îćâĺ p̂át̂h́ f̂ór̂ ád̂ ĺôád̂ín̂ǵ"
@@ -111,7 +111,7 @@
     "message": "T̂óô ḿâńŷ ád̂ś l̂óâd́êd́ ôút̂śîd́ê t́ĥé v̂íêẃp̂ór̂t́ l̂óŵér̂ś v̂íêẃâb́îĺît́ŷ ŕât́êś âńd̂ ím̂ṕâćt̂ś ûśêŕ êx́p̂ér̂íêńĉé. Ĉón̂śîd́êŕ l̂óâd́îńĝ ád̂ś b̂él̂óŵ t́ĥé f̂ól̂d́ l̂áẑíl̂ý âś t̂h́ê úŝér̂ śĉŕôĺl̂ś d̂óŵń. Ĉón̂śîd́êŕ ûśîńĝ ǴP̂T́'ŝ [Ĺâźŷ Ĺôád̂ín̂ǵ ÂṔÎ](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/d́ôúb̂ĺêćl̂íĉḱ-ĝṕt̂/ŕêf́êŕêńĉé#ĝóôǵl̂ét̂áĝ.Ṕûb́Âd́ŝŚêŕv̂íĉé_êńâb́l̂éL̂áẑýL̂óâd́). [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́ŝ-ín̂-v́îéŵṕôŕt̂)."
   },
   "audits/ads-in-viewport.js | failureDisplayValue": {
-    "message": "{hiddenAds, number} {hiddenAds, plural, =1 {âd́} other {âd́ŝ}} óût́ ôf́ v̂íêẃ"
+    "message": "{hiddenAds, plural, =1 {1 âd́} other {# âd́ŝ}} óût́ ôf́ v̂íêẃ"
   },
   "audits/ads-in-viewport.js | failureTitle": {
     "message": "Âv́ôíd̂ ĺôád̂ín̂ǵ âd́ŝ ún̂t́îĺ t̂h́êý âŕê ńêár̂ĺŷ ón̂-śĉŕêén̂"
@@ -141,7 +141,7 @@
     "message": "L̂óâd́îńĝ á t̂áĝ ḿôŕê t́ĥán̂ ón̂ćê ín̂ t́ĥé ŝám̂é f̂ŕâḿê íŝ ŕêd́ûńd̂án̂t́ âńd̂ ád̂d́ŝ óv̂ér̂h́êád̂ ẃît́ĥóût́ b̂én̂éf̂ít̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/d́ûṕl̂íĉát̂é-t̂áĝś)."
   },
   "audits/duplicate-tags.js | failureDisplayValue": {
-    "message": "{duplicateTags, number} d̂úp̂ĺîćât́ê {duplicateTags, plural, =1 {t́âǵ} other {t̂áĝś}}"
+    "message": "{duplicateTags, plural, =1 {1 d̂úp̂ĺîćât́ê t́âǵ} other {# d̂úp̂ĺîćât́ê t́âǵŝ}}"
   },
   "audits/duplicate-tags.js | failureTitle": {
     "message": "L̂óâd́ t̂áĝś ôńl̂ý ôńĉé p̂ér̂ f́r̂ám̂é"
@@ -252,7 +252,7 @@
     "message": "L̂óâd́ ŝćr̂íp̂t́ŝ d́îŕêćt̂ĺŷ ẃît́ĥ `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=...>` ín̂śt̂éâd́ ôf́ îńĵéĉt́îńĝ śĉŕîṕt̂ś ŵít̂h́ Ĵáv̂áŜćr̂íp̂t́. T̂h́îś âĺl̂óŵś t̂h́ê b́r̂óŵśêŕ f̂ét̂ćĥ t́ĥé ŝćr̂íp̂t́ ŝóôńêŕ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://ŵẃŵ.íĝv́ît́â.ćôḿ/2014/05/20/ŝćr̂íp̂t́-îńĵéĉt́êd́-âśŷńĉ-śĉŕîṕt̂ś-ĉón̂śîd́êŕêd́-ĥár̂ḿf̂úl̂/)."
   },
   "audits/script-injected-tags.js | displayValue": {
-    "message": "{numTags} ŝćr̂íp̂t́-îńĵéĉt́êd́ {numTags, plural, =1 {r̂éŝóûŕĉéŝ} other {ŕêśôúr̂ćêś}}"
+    "message": "{numTags, plural, =1 {1 ŝćr̂íp̂t́-îńĵéĉt́êd́ r̂éŝóûŕĉé} other {# ŝćr̂íp̂t́-îńĵéĉt́êd́ r̂éŝóûŕĉéŝ}}"
   },
   "audits/script-injected-tags.js | failureTitle": {
     "message": "Âv́ôíd̂ śĉŕîṕt̂-ín̂j́êćt̂éd̂ t́âǵŝ"

@@ -16,7 +16,7 @@
     "description": ""
   },
   "audits/ad-blocking-tasks.js | failureDisplayValue": {
-    "message": "{numTasks} long {numTasks, plural, =1 {task} other {tasks}}",
+    "message": "{numTasks, plural, =1 {1 long task} other {# long tasks}}",
     "description": ""
   },
   "audits/ad-blocking-tasks.js | failureTitle": {
@@ -76,7 +76,7 @@
     "description": ""
   },
   "audits/ad-request-critical-path.js | displayValue": {
-    "message": "{serialResources, number} serial {serialResources, plural, =1 {resource} other {resources}}, {totalResources, number} total {totalResources, plural, =1 {resource} other {resources}}",
+    "message": "{serialResources, plural, =1 {1 serial resource} other {# serial resources}}, {totalResources, plural, =1 {1 total resource} other {# total resources}}",
     "description": ""
   },
   "audits/ad-request-critical-path.js | failureTitle": {
@@ -148,7 +148,7 @@
     "description": ""
   },
   "audits/ads-in-viewport.js | failureDisplayValue": {
-    "message": "{hiddenAds, number} {hiddenAds, plural, =1 {ad} other {ads}} out of view",
+    "message": "{hiddenAds, plural, =1 {1 ad} other {# ads}} out of view",
     "description": ""
   },
   "audits/ads-in-viewport.js | failureTitle": {
@@ -188,7 +188,7 @@
     "description": ""
   },
   "audits/duplicate-tags.js | failureDisplayValue": {
-    "message": "{duplicateTags, number} duplicate {duplicateTags, plural, =1 {tag} other {tags}}",
+    "message": "{duplicateTags, plural, =1 {1 duplicate tag} other {# duplicate tags}}",
     "description": ""
   },
   "audits/duplicate-tags.js | failureTitle": {
@@ -336,7 +336,7 @@
     "description": ""
   },
   "audits/script-injected-tags.js | displayValue": {
-    "message": "{numTags} script-injected {numTags, plural, =1 {resources} other {resources}}",
+    "message": "{numTags, plural, =1 {1 script-injected resource} other {# script-injected resources}}",
     "description": ""
   },
   "audits/script-injected-tags.js | failureTitle": {
