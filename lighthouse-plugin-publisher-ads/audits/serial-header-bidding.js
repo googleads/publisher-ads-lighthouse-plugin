@@ -164,7 +164,7 @@ class SerialHeaderBidding extends Audit {
     const unfilteredNetworkRecords =
       await NetworkRecords.request(devtoolsLog, context);
     if (!unfilteredNetworkRecords.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_RECORDS);
+      return auditNotApplicable.NoRecords;
     }
     const mainFrameId = unfilteredNetworkRecords[0].frameId;
 

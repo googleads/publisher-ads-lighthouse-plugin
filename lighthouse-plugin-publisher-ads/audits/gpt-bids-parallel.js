@@ -14,12 +14,11 @@
 
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {assert} = require('../utils/asserts');
-const {auditNotApplicable} = require('../utils/builder');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isImplTag, isBidRequest, getAbbreviatedUrl, getHeaderBidder} = require('../utils/resource-classification');
-const {NOT_APPLICABLE} = require('../messages/messages');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -76,13 +75,13 @@ class GptBidsInParallel extends Audit {
 
     const pubadsImpl = network.find((r) => isImplTag(r.url));
     if (!pubadsImpl) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+      return auditNotApplicable.NoTag;
     }
 
     const bids = network.filter(isBidRequest)
         .filter((b) => b.frameId == pubadsImpl.frameId);
     if (!bids.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
+      return auditNotApplicable.NoBids;
     }
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
