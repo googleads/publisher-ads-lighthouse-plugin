@@ -13,22 +13,25 @@
 // limitations under the License.
 
 const AdPaintTime = require('../computed/ad-paint-time');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 
-const id = 'first-ad-paint';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Latency of first ad render',
+  failureTitle: 'Reduce time to render first ad',
+  description: 'This metric measures the time for the first ad iframe to ' +
+  'paint from page navigation. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  ').',
+  displayValue: '{timeInMs, number, seconds} s',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
-const PODR = 3.0; // seconds
-const MEDIAN = 4.0; // seconds
+const PODR = 3000; // ms
+const MEDIAN = 4000; // ms
 
 /**
  * Measures the first ad paint time.
@@ -41,10 +44,10 @@ class FirstAdPaint extends Audit {
   static get meta() {
     // @ts-ignore
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'first-ad-paint',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       // @ts-ignore
@@ -68,21 +71,21 @@ class FirstAdPaint extends Audit {
     const {timing} = await AdPaintTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(WARNINGS.NO_AD_RENDERED);
-      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RENDERED);
+      context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
+      return auditNotApplicable.NoAdRendered;
     }
 
-    const adPaintTimeSec = timing / 1000;
     let normalScore =
-        Audit.computeLogNormalScore(adPaintTimeSec, PODR, MEDIAN);
+        Audit.computeLogNormalScore(timing, PODR, MEDIAN);
     if (normalScore >= 0.9) normalScore = 1;
 
     return {
-      numericValue: adPaintTimeSec,
+      numericValue: timing * 1e-3,
       score: normalScore,
       displayValue:
-        formatMessage(displayValue, {firstAdPaint: adPaintTimeSec}),
+        str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
 }
 module.exports = FirstAdPaint;
+module.exports.UIStrings = UIStrings;

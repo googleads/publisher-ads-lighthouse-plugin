@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 const {getAbbreviatedUrl, trimUrl} = require('../utils/resource-classification');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
@@ -24,14 +23,23 @@ const {getTimingsByRecord} = require('../utils/network-timing');
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
-const id = 'ad-request-critical-path';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Minimal requests found in ad critical path',
+  failureTitle: 'Reduce critical path for ad loading',
+  description: 'Consider reducing the number of resources, loading multiple ' +
+  'resources simultaneously, or loading resources earlier to improve ad ' +
+  'speed. Requests that block ad loading can be found below. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-critical-path' +
+  ').',
+  displayValue: '{serialResources, plural, =1 {1 serial resource} other {# serial resources}}, ' +
+  '{totalResources, plural, =1 {1 total resource} other {# total resources}}',
+  columnUrl: 'Request',
+  columnType: 'Type',
+  columnStartTime: 'Start',
+  columnEndTime: 'End',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * @typedef {Object} SimpleRequest
@@ -51,23 +59,23 @@ const HEADINGS = [
   {
     key: 'url',
     itemType: 'url',
-    text: headings.url,
+    text: str_(UIStrings.columnUrl),
   },
   {
     key: 'type',
     itemType: 'text',
-    text: headings.type,
+    text: str_(UIStrings.columnType),
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: headings.startTime,
+    text: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'endTime',
     itemType: 'ms',
-    text: headings.endTime,
+    text: str_(UIStrings.columnEndTime),
     granularity: 1,
   },
 ];
@@ -160,10 +168,10 @@ class AdRequestCriticalPath extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'ad-request-critical-path',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
@@ -190,7 +198,7 @@ class AdRequestCriticalPath extends Audit {
         .filter((r) => r.mimeType != 'text/css');
 
     if (!blockingRequests.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
+      return auditNotApplicable.NoAds;
     }
     let tableView = blockingRequests.map((req) => {
       const {startTime, endTime} = timingsByRecord.get(req) || req;
@@ -212,8 +220,7 @@ class AdRequestCriticalPath extends Audit {
     return {
       numericValue: depth,
       score: failed ? 0 : 1,
-      displayValue: formatMessage(
-        displayValue,
+      displayValue: str_(UIStrings.displayValue,
         {
           serialResources: depth,
           totalResources: tableView.length,
@@ -224,3 +231,4 @@ class AdRequestCriticalPath extends Audit {
 }
 
 module.exports = AdRequestCriticalPath;
+module.exports.UIStrings = UIStrings;

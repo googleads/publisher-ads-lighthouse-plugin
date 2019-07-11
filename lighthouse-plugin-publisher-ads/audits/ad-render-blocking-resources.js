@@ -12,25 +12,32 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
 const RenderBlockingResources = require('lighthouse/lighthouse-core/audits/byte-efficiency/render-blocking-resources.js');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 const {getPageStartTime} = require('../utils/network-timing');
 const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
-const id = 'ad-render-blocking-resources';
-const {
-  title,
-  failureTitle,
-  failureDisplayValue,
-  description,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Minimal render-blocking resources found',
+  failureTitle: 'Avoid render-blocking resources',
+  description: 'Render-blocking resources slow down tag load times. Consider ' +
+  'loading critical JS/CSS inline or loading scripts asynchronously or ' +
+  'loading the tag earlier in the head. [Learn more](' +
+  'https://developers.google.com/web/tools/lighthouse/audits/blocking-resources' +
+  ').',
+  failureDisplayValue: 'Up to {timeInMs, number, seconds} s tag load time ' +
+  'improvement',
+  columnUrl: 'Resource',
+  columnStartTime: 'Start',
+  columnDuration: 'Duration',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -40,18 +47,18 @@ const HEADINGS = [
   {
     key: 'url',
     itemType: 'url',
-    text: headings.url,
+    text: str_(UIStrings.columnUrl),
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: headings.startTime,
+    text: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: headings.duration,
+    text: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -64,11 +71,11 @@ class AdRenderBlockingResources extends RenderBlockingResources {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
+      id: 'ad-render-blocking-resources',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
       scoreDisplayMode: 'numeric',
-      description,
+      description: str_(UIStrings.description),
       requiredArtifacts: RenderBlockingResources.meta.requiredArtifacts,
     };
   }
@@ -83,7 +90,7 @@ class AdRenderBlockingResources extends RenderBlockingResources {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const hasTag = !!networkRecords.find((req) => isGptTag(new URL(req.url)));
     if (!hasTag) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+      return auditNotApplicable.NoTag;
     }
 
     const {results} = await RenderBlockingResources.computeResults(
@@ -104,10 +111,11 @@ class AdRenderBlockingResources extends RenderBlockingResources {
         }));
 
     // @ts-ignore
-    const opportunity = Math.max(...tableView.map((r) => r.duration)) / 1000;
+    const opportunity = Math.max(...tableView.map((r) => r.duration));
     let displayValue = '';
     if (results.length > 0 && opportunity > 0) {
-      displayValue = formatMessage(failureDisplayValue, {opportunity});
+      displayValue = str_(
+        UIStrings.failureDisplayValue, {timeInMs: opportunity});
     }
 
     return {
@@ -120,3 +128,4 @@ class AdRenderBlockingResources extends RenderBlockingResources {
 }
 
 module.exports = AdRenderBlockingResources;
+module.exports.UIStrings = UIStrings;

@@ -14,22 +14,31 @@
 
 const array = require('../utils/array.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
+
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
-const id = 'static-ad-tags';
-const {
-  title,
-  failureTitle,
-  failureDisplayValue,
-  description,
-  headings,
-} = AUDITS[id];
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
+const UIStrings = {
+  title: 'GPT tag is loaded statically',
+  failureTitle: 'Load GPT tag statically',
+  description: 'Tags loaded dynamically are not visible to the browser ' +
+  'preloader. Consider using a static tag or `<link rel=\"preload\">` so the ' +
+  'browser may load GPT sooner. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags' +
+  ').',
+  failureDisplayValue: 'Up to {timeInMs, number, seconds} s tag load time ' +
+  'improvement',
+  columnUrl: 'Initiator',
+  columnLineNumber: 'Line Number',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
@@ -38,12 +47,12 @@ const HEADINGS = [
   {
     key: 'url',
     itemType: 'url',
-    text: headings.url,
+    text: str_(UIStrings.columnUrl),
   },
   {
     key: 'lineNumber',
     itemType: 'numeric',
-    text: headings.lineNumber,
+    text: str_(UIStrings.columnLineNumber),
     granularity: 1,
   },
 ];
@@ -71,7 +80,7 @@ function getDetailsTable(dynamicReq) {
  * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {number}
  */
-function quantifyOpportunitySec(tagRequest, networkRecords) {
+function quantifyOpportunityMs(tagRequest, networkRecords) {
   // The first HTML-initiated request is the best possible load time.
   const firstResource = networkRecords.find((r) =>
     ['parser', 'preload'].includes(r.initiator.type) ||
@@ -79,7 +88,7 @@ function quantifyOpportunitySec(tagRequest, networkRecords) {
   if (!firstResource) {
     return 0;
   }
-  return tagRequest.startTime - firstResource.startTime;
+  return (tagRequest.startTime - firstResource.startTime) * 1e3;
 }
 
 /** @inheritDoc */
@@ -90,10 +99,10 @@ class StaticAdTags extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'static-ad-tags',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -110,7 +119,7 @@ class StaticAdTags extends Audit {
         .filter((req) => isGptTag(new URL(req.url)));
 
     if (!tagReqs.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+      return auditNotApplicable.NoTag;
     }
 
     const numStatic = array.count(tagReqs, isStaticRequest);
@@ -122,9 +131,10 @@ class StaticAdTags extends Audit {
     const failed = numStatic < numTags;
     let displayValue = '';
     if (failed) {
-      const opportunity = quantifyOpportunitySec(tagReqs[0], networkRecords);
-      if (opportunity > 0.1) {
-        displayValue = formatMessage(failureDisplayValue, {opportunity});
+      const opportunity = quantifyOpportunityMs(tagReqs[0], networkRecords);
+      if (opportunity > 100) {
+        displayValue = str_(
+          UIStrings.failureDisplayValue, {timeInMs: opportunity});
       }
     }
 
@@ -137,3 +147,4 @@ class StaticAdTags extends Audit {
 }
 
 module.exports = StaticAdTags;
+module.exports.UIStrings = UIStrings;
