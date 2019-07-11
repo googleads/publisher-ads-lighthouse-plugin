@@ -41,6 +41,7 @@ const {
  * @property {number} startTime
  * @property {number} endTime
  * @property {number} duration
+ * @property {number|undefined} selfTime
  */
 
 /**
@@ -54,9 +55,9 @@ const HEADINGS = [
     text: headings.url,
   },
   {
-    key: 'type',
-    itemType: 'text',
-    text: headings.type,
+    key: 'selfTime',
+    itemType: 'ms',
+    text: 'Self Time',
   },
   {
     key: 'startTime',
@@ -86,6 +87,42 @@ function areSimilarRequests(r1, r2) {
     return false;
   }
   return r1.abbreviatedUrl == r2.abbreviatedUrl;
+}
+
+/**
+ * Computes self time for each request
+ * @param {SimpleRequest[]} requests A pre-sorted list of requests by start
+ *   time.
+ */
+function computeSelfTime(requests) {
+  let bottlneckRequest = requests[0];
+  bottlneckRequest.selfTime = bottlneckRequest.duration;
+
+  let scanEnd = bottlneckRequest.startTime;
+  for (let i = 1; i < requests.length - 1; i++) {
+    const current = requests[i];
+    if (current.endTime < scanEnd) {
+      // Overlaps with previous requests, skip to avoid double counting.
+      continue;
+    }
+    const left = Math.max(scanEnd, current.startTime);
+    const right = Math.min(bottlneckRequest.endTime, current.endTime);
+    if (left < right) {
+      // @ts-ignore selfTime is initialized elsewhere, so it won't be undefined.
+      bottlneckRequest.selfTime -= (right - left);
+    }
+    scanEnd = Math.max(scanEnd, right);
+    if (current.endTime > bottlneckRequest.endTime) {
+      // The next request is a potential bottleneck.
+      current.selfTime = current.endTime - left;
+      bottlneckRequest = current;
+    }
+  }
+  for (const request of requests) {
+    if (request.selfTime < 100) {
+      delete request.selfTime;
+    }
+  }
 }
 
 /**
@@ -127,6 +164,7 @@ function computeSummaries(requests) {
     result.push(current);
   }
   result.sort((a, b) => a.startTime - b.startTime);
+  computeSelfTime(result);
   return result;
 }
 
