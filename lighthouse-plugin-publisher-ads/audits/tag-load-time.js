@@ -13,18 +13,22 @@
 // limitations under the License.
 
 const ComputedTagLoadTime = require('../computed/tag-load-time');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 
-const id = 'tag-load-time';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Tag load time',
+  failureTitle: 'Reduce tag load time',
+  description: 'This metric measures the time for the Google Publisher ' +
+  'Tag\'s implementation script (pubads_impl.js) to load after the page ' +
+  'loads. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  ').',
+  displayValue: '{tagLoadTime, number, seconds} s',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
 const PODR = 1; // seconds
@@ -40,10 +44,10 @@ class TagLoadTime extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'tag-load-time',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs', 'traces'],
@@ -61,8 +65,8 @@ class TagLoadTime extends Audit {
 
     const {timing} = await ComputedTagLoadTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(WARNINGS.NO_TAG);
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+      context.LighthouseRunWarnings.push(runWarning.NoTag);
+      return auditNotApplicable.NoTag;
     }
 
     const tagLoadTimeSec = timing * 1e-3;
@@ -79,8 +83,9 @@ class TagLoadTime extends Audit {
     return {
       numericValue: tagLoadTimeSec,
       score: normalScore,
-      displayValue: formatMessage(displayValue, {tagLoadTime: tagLoadTimeSec}),
+      displayValue: str_(UIStrings.displayValue, {tagLoadTime: tagLoadTimeSec}),
     };
   }
 }
 module.exports = TagLoadTime;
+module.exports.UIStrings = UIStrings;

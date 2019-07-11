@@ -12,23 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
-const {formatMessage} = require('../messages/format');
 const {URL} = require('url');
 
-const id = 'duplicate-tags';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  failureDisplayValue,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'No duplicate tags found in any frame',
+  failureTitle: 'Load tags only once per frame',
+  description: 'Loading a tag more than once in the same frame is redundant ' +
+  'and adds overhead without benefit. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags' +
+  ').',
+  failureDisplayValue: '{duplicateTags, number} duplicate ' +
+  '{duplicateTags, plural, =1 {tag} other {tags}}',
+  columnScript: 'Script',
+  columnNumReqs: 'Duplicate Requests',
+  columnFrameId: 'Frame ID',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 const tags = [
   'googletagservices.com/tag/js/gpt.js',
@@ -43,9 +48,9 @@ const tags = [
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'script', itemType: 'url', text: headings.script},
-  {key: 'numReqs', itemType: 'text', text: headings.numReqs},
-  {key: 'frameId', itemType: 'text', text: headings.frameId},
+  {key: 'script', itemType: 'url', text: str_(UIStrings.columnScript)},
+  {key: 'numReqs', itemType: 'text', text: str_(UIStrings.columnNumReqs)},
+  {key: 'frameId', itemType: 'text', text: str_(UIStrings.columnFrameId)},
 ];
 /**
  * Simple audit that checks if any specified tags are duplicated within the same
@@ -58,10 +63,10 @@ class DuplicateTags extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'duplicate-tags',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs'],
     };
   }
@@ -78,7 +83,7 @@ class DuplicateTags extends Audit {
         .filter((record) => containsAnySubstring(record.url, tags));
 
     if (!tagReqs.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAGS);
+      return auditNotApplicable.NoTags;
     }
     /** @type {Object<string, Object<string, number>>} */
     const tagsByFrame = {};
@@ -109,10 +114,11 @@ class DuplicateTags extends Audit {
       score: dups.length ? 0 : 1,
       details: DuplicateTags.makeTableDetails(HEADINGS, dups),
       displayValue: dups.length ?
-        formatMessage(failureDisplayValue, {duplicateTags: dups.length}) :
-        displayValue,
+        str_(UIStrings.failureDisplayValue, {duplicateTags: dups.length}) :
+        '',
     };
   }
 }
 
 module.exports = DuplicateTags;
+module.exports.UIStrings = UIStrings;

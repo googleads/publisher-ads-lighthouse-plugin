@@ -16,6 +16,7 @@
     }
   },
   "dependencies": {
+    "@types/esprima": "^4.0.2",
     "@tusbar/cache-control": "^0.3.1",
     "lighthouse": "^5.1.0",
     "yargs": "^11.0.0"

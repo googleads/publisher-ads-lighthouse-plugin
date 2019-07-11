@@ -92,3 +92,7 @@ declare module 'lighthouse/lighthouse-core/computed/page-dependency-graph' {
 declare module 'lighthouse/lighthouse-core/computed/main-thread-tasks' {
   export function request(trace: LH.Trace, context: LH.Audit.Context): Promise<Array<TaskNode>>;
 }
+
+declare module 'lighthouse/lighthouse-core/lib/i18n/i18n'; {
+  export function createMessageInstanceIdFn(filename: string, fileStrings: Record<string, string>);
+}

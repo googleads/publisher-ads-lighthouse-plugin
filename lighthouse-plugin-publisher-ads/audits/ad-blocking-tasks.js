@@ -8,25 +8,32 @@
 // limitations under the License.
 
 const AdRequestTime = require('../computed/ad-request-time');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const LongTasks = require('../computed/long-tasks');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isGpt} = require('../utils/resource-classification');
 const {URL} = require('url');
 
-const id = 'ad-blocking-tasks';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  failureDisplayValue,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  /* Title of the audit */
+  title: 'No long tasks blocking ad-related network requests',
+  failureTitle: 'Avoid long tasks that block ad-related network requests',
+  description: 'Tasks blocking the main thread can delay ad requests and cause ' +
+  'a poor user experience. Consider removing long blocking tasks or moving ' +
+  'them off of the main thread. These tasks can be especially detrimental to ' +
+  'performance on less powerful devices. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-blocking-tasks' +
+  ').',
+  failureDisplayValue: '{numTasks} long {numTasks, plural, =1 {task} other ' +
+  '{tasks}}',
+  columnScript: 'Attributable URL',
+  columnStartTime: 'Start',
+  columnDuration: 'Duration',
+};
 
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * @typedef {Object} TaskDetails
  * @property {number} startTime
@@ -47,9 +54,23 @@ const LONG_TASK_DUR_MS = 100;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'script', itemType: 'url', text: headings.script},
-  {key: 'startTime', itemType: 'ms', text: headings.startTime, granularity: 1},
-  {key: 'duration', itemType: 'ms', text: headings.duration, granularity: 1},
+  {
+    key: 'script',
+    itemType: 'url',
+    text: str_(UIStrings.columnScript),
+  },
+  {
+    key: 'startTime',
+    itemType: 'ms',
+    text: str_(UIStrings.columnStartTime),
+    granularity: 1,
+  },
+  {
+    key: 'duration',
+    itemType: 'ms',
+    text: str_(UIStrings.columnDuration),
+    granularity: 1,
+  },
 ];
 
 /** @inheritDoc */
@@ -60,10 +81,10 @@ class AdBlockingTasks extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'ad-blocking-tasks',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['traces', 'devtoolsLogs'],
     };
   }
@@ -82,18 +103,18 @@ class AdBlockingTasks extends Audit {
     try {
       longTasks = await LongTasks.request(metricData, context);
     } catch (e) {
-      return auditNotApplicable(NOT_APPLICABLE.INVALID_TIMING);
+      return auditNotApplicable.InvalidTiming;
     }
 
     if (!longTasks.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_TASKS);
+      return auditNotApplicable.NoTasks;
     }
 
     const {timing: endTime} =
         await AdRequestTime.request(metricData, context);
 
     if (!(endTime > 0)) { // Handle NaN, etc.
-      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
+      return auditNotApplicable.NoAdRelatedReq;
     }
 
     /** @type {TaskDetails[]} */ let blocking = [];
@@ -136,11 +157,12 @@ class AdBlockingTasks extends Audit {
     return {
       score: Number(blocking.length == 0),
       displayValue: blocking.length ?
-        formatMessage(failureDisplayValue, {numTasks}) :
-        displayValue,
+        str_(UIStrings.failureDisplayValue, {numTasks}) :
+        '',
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };
   }
 }
 
 module.exports = AdBlockingTasks;
+module.exports.UIStrings = UIStrings;

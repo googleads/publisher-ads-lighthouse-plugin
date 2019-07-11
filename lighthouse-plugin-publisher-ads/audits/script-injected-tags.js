@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {getTransitiveClosure} = require('../utils/graph');
 const {isGptAdRequest} = require('../utils/resource-classification');
@@ -24,14 +23,23 @@ const {isGptAdRequest} = require('../utils/resource-classification');
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
-const id = 'script-injected-tags';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'No script-injected tags found',
+  failureTitle: 'Avoid script-injected tags',
+  description: 'Load scripts directly with `<script async src=...>` instead ' +
+  'of injecting scripts with JavaScript. This allows the browser fetch the ' +
+  'script sooner. [Learn more](' +
+  'https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/' +
+  ').',
+  displayValue: '{numTags} script-injected {numTags, plural, =1 {resources} ' +
+  'other {resources}}',
+  columnRequest: 'Resource',
+  columnStartTime: 'Start',
+  columnDuration: 'Duration',
+  columnLineNumber: 'Source Line Number',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -41,24 +49,24 @@ const HEADINGS = [
   {
     key: 'request',
     itemType: 'url',
-    text: headings.request,
+    text: str_(UIStrings.columnRequest),
   },
   {
     key: 'startTime',
     itemType: 'ms',
-    text: headings.startTime,
+    text: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'duration',
     itemType: 'ms',
-    text: headings.duration,
+    text: str_(UIStrings.columnDuration),
     granularity: 1,
   },
   {
     key: 'lineNumber',
     itemType: 'numeric',
-    text: headings.lineNumber,
+    text: str_(UIStrings.columnLineNumber),
     granularity: 1,
   },
 ];
@@ -74,10 +82,10 @@ class ScriptInjectedTags extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'script-injected-tags',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
@@ -96,7 +104,7 @@ class ScriptInjectedTags extends Audit {
 
     const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
     if (!closure.requests.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_AD_RELATED_REQ);
+      return auditNotApplicable.NoAdRelatedReq;
     }
     const injectedBlockingRequests = closure.requests
         .filter((r) =>
@@ -118,10 +126,11 @@ class ScriptInjectedTags extends Audit {
     return {
       numericValue: tableView.length,
       score: failed ? 0 : 1,
-      displayValue: formatMessage(displayValue, {numTags: tableView.length}),
+      displayValue: str_(UIStrings.displayValue, {numTags: tableView.length}),
       details: ScriptInjectedTags.makeTableDetails(HEADINGS, tableView),
     };
   }
 }
 
 module.exports = ScriptInjectedTags;
+module.exports.UIStrings = UIStrings;

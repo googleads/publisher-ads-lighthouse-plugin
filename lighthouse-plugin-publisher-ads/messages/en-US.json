@@ -1,210 +1,526 @@
 {
-  "AUDITS": {
-    "ad-blocking-tasks": {
-      "title": "No long tasks blocking ad-related network requests",
-      "failureTitle": "Avoid long tasks that block ad-related network requests",
-      "description": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-blocking-tasks).",
-      "displayValue": "",
-      "failureDisplayValue": "{numTasks} long {numTasks, plural, =1 {task} other {tasks}}",
-      "headings": {
-        "script": "Attributable URL",
-        "startTime": "Start",
-        "duration": "Duration"
-      }
-    },
-    "ad-render-blocking-resources": {
-      "title": "Minimal render-blocking resources found",
-      "failureTitle": "Avoid render-blocking resources",
-      "description": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously or loading the tag earlier in the head. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).",
-      "failureDisplayValue": "Up to {opportunity, number, seconds} s tag load time improvement",
-      "headings": {
-        "url": "Resource",
-        "startTime": "Start",
-        "duration": "Duration"
-      }
-    },
-    "ad-request-critical-path": {
-      "title": "Minimal requests found in ad critical path",
-      "failureTitle": "Reduce critical path for ad loading",
-      "description": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-critical-path).",
-      "displayValue": "{serialResources, number} serial {serialResources, plural, =1 {resource} other {resources}}, {totalResources, number} total {totalResources, plural, =1 {resource} other {resources}}",
-      "headings": {
-        "url": "Request",
-        "type": "Type",
-        "startTime": "Start",
-        "endTime": "End",
-        "duration": "Duration"
-      }
-    },
-    "ad-request-from-page-start": {
-      "title": "Latency of first ad request",
-      "failureTitle": "Reduce latency of first ad request",
-      "description": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
-      "displayValue": "{adReqTime, number, seconds} s"
-    },
-    "ad-request-from-tag-load": {
-      "title": "Latency of first ad request, from tag load",
-      "failureTitle": "Reduce latency of first ad request (from tag load)",
-      "description": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
-      "displayValue": "{adReqTime, number, seconds} s"
-    },
-    "ad-top-of-viewport": {
-      "title": "No ad found at the very top of the viewport",
-      "failureTitle": "Move the top ad further down the page",
-      "description": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-top-of-viewport).",
-      "displayValue": "",
-      "failureDisplayValue": "A scroll of {valueInPx, number} px would hide half of your topmost ad",
-      "headings": {
-        "slot": "Top Slot ID"
-      }
-    },
-    "ads-in-viewport": {
-      "title": "Few or no ads loaded outside viewport",
-      "failureTitle": "Avoid loading ads until they are nearly on-screen",
-      "description": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ads-in-viewport).",
-      "displayValue": "",
-      "failureDisplayValue": "{hiddenAds, number} {hiddenAds, plural, =1 {ad} other {ads}} out of view",
-      "headings": {
-        "slot": "Slots Outside Viewport"
-      }
-    },
-    "async-ad-tags": {
-      "title": "GPT tag is loaded asynchronously",
-      "failureTitle": "Load GPT asynchronously",
-      "description": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags)."
-    },
-    "duplicate-tags": {
-      "title": "No duplicate tags found in any frame",
-      "failureTitle": "Load tags only once per frame",
-      "description": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags).",
-      "displayValue": "",
-      "failureDisplayValue": "{duplicateTags, number} duplicate {duplicateTags, plural, =1 {tag} other {tags}}",
-      "headings": {
-        "script": "Script",
-        "numReqs": "Duplicate Requests",
-        "frameId": "Frame ID"
-      }
-    },
-    "first-ad-paint": {
-      "title": "Latency of first ad render",
-      "failureTitle": "Reduce time to render first ad",
-      "description": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
-      "displayValue": "{firstAdPaint, number, seconds} s"
-    },
-    "full-width-slots": {
-      "title": "Ad slots effectively use horizontal space",
-      "failureTitle": "Increase the width of ad slots",
-      "description": "Ad slots that utilize most of the page width generally experience increased click-through rate over smaller ad sizes. We recommend leaving no more than 25% of the viewport width unutilized on mobile devices.",
-      "displayValue": "",
-      "failureDisplayValue": "{percentUnused, number, percent} of viewport width is underutilized"
-    },
-    "idle-network-times": {
-      "title": "[Experimental] Network is efficiently utilized before ad requests",
-      "failureTitle": "[Experimental] Reduce network idle time before ad requests",
-      "description": "Moments of network idleness in the critical path to ad loading present opportunities to improve speed. Consider eliminating long tasks, timeouts, waiting on load events, or synchronous resources to avoid idleness. Chrome DevTools can be used to discover what is causing network idleness. [Learn more](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference).",
-      "displayValue": "{idleTime, number, seconds} s spent idle in critical path",
-      "headings": {
-        "cause": "Suspected Cause",
-        "url": "Attributable URL",
-        "startTime": "Start",
-        "duration": "Duration"
-      },
-      "causes": {
-        "domContentLoaded": "DOMContentLoaded Event",
-        "loadEvent": "Load Event",
-        "longTask": "Long Task",
-        "renderBlockingResource": "Blocking Resource",
-        "timeout": "Timeout",
-        "other": "Other"
-      }
-    },
-    "loads-gpt-from-sgdn": {
-      "title": "GPT tag is loaded from recommended host",
-      "failureTitle": "Load GPT from recommended host",
-      "description": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load time. By loading GPT from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-sgdn)."
-    },
-    "loads-gpt-over-https": {
-      "title": "GPT tag is loaded over HTTPS",
-      "failureTitle": "Load GPT over HTTPS",
-      "description": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-over-https).",
-      "displayValue": "",
-      "failureDisplayValue": "Load gpt.js over HTTPS"
-    },
-    "script-injected-tags": {
-      "title": "No script-injected tags found",
-      "failureTitle": "Avoid script-injected tags",
-      "description": "Load scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. This allows the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/).",
-      "displayValue": "{numTags} script-injected {numTags, plural, =1 {resources} other {resources}}",
-      "headings": {
-        "request": "Request",
-        "startTime": "Start",
-        "duration": "Duration",
-        "lineNumber": "Source Line Number"
-      }
-    },
-    "serial-header-bidding": {
-      "title": "Header bidding is parallelized",
-      "failureTitle": "Parallelize bid requests",
-      "description": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/serial-header-bidding).",
-      "headings": {
-        "bidder": "Bidder",
-        "url": "URL",
-        "startTime": "Start",
-        "duration": "Duration"
-      }
-    },
-    "static-ad-tags": {
-      "title": "GPT tag is loaded statically",
-      "failureTitle": "Load GPT tag statically",
-      "description": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags).",
-      "failureDisplayValue": "Up to {opportunity, number, seconds} s tag load time improvement",
-      "headings": {
-        "url": "Initiator",
-        "lineNumber": "Line Number"
-      }
-    },
-    "tag-load-time": {
-      "title": "Tag load time",
-      "failureTitle": "Reduce tag load time",
-      "description": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
-      "displayValue": "{tagLoadTime, number, seconds} s"
-    },
-    "viewport-ad-density": {
-      "title": "Ad density in initial viewport is within recommended range",
-      "failureTitle": "Reduce ad density in initial viewport",
-      "description": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density).",
-      "displayValue": "{adDensity, number, percent} covered by ads"
-    }
+  "audits/ad-blocking-tasks.js | columnDuration": {
+    "message": "Duration",
+    "description": ""
   },
-  "NOT_APPLICABLE": {
-    "DEFAULT": "Audit not applicable",
-    "INVALID_TIMING": "Invalid timing task data",
-    "NO_AD_RELATED_REQ": "No ad-related requests",
-    "NO_AD_RENDERED": "No ads rendered",
-    "NO_ADS_VIEWPORT": "No ads in viewport",
-    "NO_ADS": "No ads requested",
-    "NO_BIDS": "No bids detected",
-    "NO_EVENT_MATCHING_REQ": "No event matches network records",
-    "NO_GPT": "GPT not requested",
-    "NO_RECORDS": "No successful network records",
-    "NO_VISIBLE_SLOTS": "No visible slots",
-    "NO_TAG": "No tag requested",
-    "NO_TAGS": "No tags requested",
-    "NO_TASKS": "No tasks to compare",
-    "NO_VALID_AD_WIDTHS": "No requested ads contain ads of valid width"
+  "audits/ad-blocking-tasks.js | columnScript": {
+    "message": "Attributable URL",
+    "description": ""
   },
-  "ERRORS": {
-    "AREA_LARGER_THAN_VIEWPORT": "Calculated ad area is larger than viewport",
-    "VIEWPORT_AREA_ZERO": "Viewport area is zero"
+  "audits/ad-blocking-tasks.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
   },
-  "WARNINGS": {
-    "NO_ADS": "No ads were requested when fetching this page.",
-    "NO_AD_RENDERED": "No ads were painted when rendering this page.",
-    "NO_TAG": "The GPT tag was not requested."
+  "audits/ad-blocking-tasks.js | description": {
+    "message": "Tasks blocking the main thread can delay ad requests and cause a poor user experience. Consider removing long blocking tasks or moving them off of the main thread. These tasks can be especially detrimental to performance on less powerful devices. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-blocking-tasks).",
+    "description": ""
   },
-  "GROUPS": {
-    "METRICS": "Metrics",
-    "ADS_PERFORMANCE": "Ad Speed",
-    "ADS_BEST_PRACTICES": "Tag Best Practices"
+  "audits/ad-blocking-tasks.js | failureDisplayValue": {
+    "message": "{numTasks} long {numTasks, plural, =1 {task} other {tasks}}",
+    "description": ""
+  },
+  "audits/ad-blocking-tasks.js | failureTitle": {
+    "message": "Avoid long tasks that block ad-related network requests",
+    "description": ""
+  },
+  "audits/ad-blocking-tasks.js | title": {
+    "message": "No long tasks blocking ad-related network requests",
+    "description": "Title of the audit"
+  },
+  "audits/ad-render-blocking-resources.js | columnDuration": {
+    "message": "Duration",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | columnUrl": {
+    "message": "Resource",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | description": {
+    "message": "Render-blocking resources slow down tag load times. Consider loading critical JS/CSS inline or loading scripts asynchronously or loading the tag earlier in the head. [Learn more](https://developers.google.com/web/tools/lighthouse/audits/blocking-resources).",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | failureDisplayValue": {
+    "message": "Up to {opportunity, number, seconds} s tag load time improvement",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | failureTitle": {
+    "message": "Avoid render-blocking resources",
+    "description": ""
+  },
+  "audits/ad-render-blocking-resources.js | title": {
+    "message": "Minimal render-blocking resources found",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | columnEndTime": {
+    "message": "End",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | columnType": {
+    "message": "Type",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | columnUrl": {
+    "message": "Request",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | description": {
+    "message": "Consider reducing the number of resources, loading multiple resources simultaneously, or loading resources earlier to improve ad speed. Requests that block ad loading can be found below. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-critical-path).",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | displayValue": {
+    "message": "{serialResources, number} serial {serialResources, plural, =1 {resource} other {resources}}, {totalResources, number} total {totalResources, plural, =1 {resource} other {resources}}",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | failureTitle": {
+    "message": "Reduce critical path for ad loading",
+    "description": ""
+  },
+  "audits/ad-request-critical-path.js | title": {
+    "message": "Minimal requests found in ad critical path",
+    "description": ""
+  },
+  "audits/ad-request-from-page-start.js | description": {
+    "message": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "description": ""
+  },
+  "audits/ad-request-from-page-start.js | displayValue": {
+    "message": "{adReqTime, number, seconds} s",
+    "description": ""
+  },
+  "audits/ad-request-from-page-start.js | failureTitle": {
+    "message": "Reduce latency of first ad request",
+    "description": ""
+  },
+  "audits/ad-request-from-page-start.js | title": {
+    "message": "Latency of first ad request",
+    "description": ""
+  },
+  "audits/ad-request-from-tag-load.js | description": {
+    "message": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "description": ""
+  },
+  "audits/ad-request-from-tag-load.js | displayValue": {
+    "message": "{adReqTime, number, seconds} s",
+    "description": ""
+  },
+  "audits/ad-request-from-tag-load.js | failureTitle": {
+    "message": "Reduce latency of first ad request (from tag load)",
+    "description": ""
+  },
+  "audits/ad-request-from-tag-load.js | title": {
+    "message": "Latency of first ad request, from tag load",
+    "description": ""
+  },
+  "audits/ad-top-of-viewport.js | columnSlot": {
+    "message": "Top Slot ID",
+    "description": ""
+  },
+  "audits/ad-top-of-viewport.js | description": {
+    "message": "Over 10% of ads are never viewed because users scroll past them before they become viewable. By moving ad slots away from the very top of the viewport, users are more likely to see ads before scrolling away. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-top-of-viewport).",
+    "description": ""
+  },
+  "audits/ad-top-of-viewport.js | failureDisplayValue": {
+    "message": "A scroll of {valueInPx, number} px would hide half of your topmost ad",
+    "description": ""
+  },
+  "audits/ad-top-of-viewport.js | failureTitle": {
+    "message": "Move the top ad further down the page",
+    "description": ""
+  },
+  "audits/ad-top-of-viewport.js | title": {
+    "message": "No ad found at the very top of the viewport",
+    "description": ""
+  },
+  "audits/ads-in-viewport.js | columnSlot": {
+    "message": "Slots Outside Viewport",
+    "description": ""
+  },
+  "audits/ads-in-viewport.js | description": {
+    "message": "Too many ads loaded outside the viewport lowers viewability rates and impacts user experience. Consider loading ads below the fold lazily as the user scrolls down. Consider using GPT's [Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ads-in-viewport).",
+    "description": ""
+  },
+  "audits/ads-in-viewport.js | failureDisplayValue": {
+    "message": "{hiddenAds, number} {hiddenAds, plural, =1 {ad} other {ads}} out of view",
+    "description": ""
+  },
+  "audits/ads-in-viewport.js | failureTitle": {
+    "message": "Avoid loading ads until they are nearly on-screen",
+    "description": ""
+  },
+  "audits/ads-in-viewport.js | title": {
+    "message": "Few or no ads loaded outside viewport",
+    "description": ""
+  },
+  "audits/async-ad-tags.js | description": {
+    "message": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags).",
+    "description": ""
+  },
+  "audits/async-ad-tags.js | failureTitle": {
+    "message": "Load GPT asynchronously",
+    "description": ""
+  },
+  "audits/async-ad-tags.js | title": {
+    "message": "GPT tag is loaded asynchronously",
+    "description": ""
+  },
+  "audits/duplicate-tags.js | columnFrameId": {
+    "message": "Frame ID",
+    "description": ""
+  },
+  "audits/duplicate-tags.js | columnNumReqs": {
+    "message": "Duplicate Requests",
+    "description": ""
+  },
+  "audits/duplicate-tags.js | columnScript": {
+    "message": "Script",
+    "description": ""
+  },
+  "audits/duplicate-tags.js | description": {
+    "message": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags).",
+    "description": ""
+  },
+  "audits/duplicate-tags.js | failureDisplayValue": {
+    "message": "{duplicateTags, number} duplicate {duplicateTags, plural, =1 {tag} other {tags}}",
+    "description": ""
+  },
+  "audits/duplicate-tags.js | failureTitle": {
+    "message": "Load tags only once per frame",
+    "description": ""
+  },
+  "audits/duplicate-tags.js | title": {
+    "message": "No duplicate tags found in any frame",
+    "description": ""
+  },
+  "audits/first-ad-paint.js | description": {
+    "message": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "description": ""
+  },
+  "audits/first-ad-paint.js | displayValue": {
+    "message": "{firstAdPaint, number, seconds} s",
+    "description": ""
+  },
+  "audits/first-ad-paint.js | failureTitle": {
+    "message": "Reduce time to render first ad",
+    "description": ""
+  },
+  "audits/first-ad-paint.js | title": {
+    "message": "Latency of first ad render",
+    "description": ""
+  },
+  "audits/full-width-slots.js | description": {
+    "message": "Ad slots that utilize most of the page width generally experience increased click-through rate over smaller ad sizes. We recommend leaving no more than 25% of the viewport width unutilized on mobile devices.",
+    "description": ""
+  },
+  "audits/full-width-slots.js | failureDisplayValue": {
+    "message": "{percentUnused, number, percent} of viewport width is underutilized",
+    "description": ""
+  },
+  "audits/full-width-slots.js | failureTitle": {
+    "message": "Increase the width of ad slots",
+    "description": ""
+  },
+  "audits/full-width-slots.js | title": {
+    "message": "Ad slots effectively use horizontal space",
+    "description": ""
+  },
+  "audits/idle-network-times.js | causeDomContentLoaded": {
+    "message": "DOMContentLoaded Event",
+    "description": ""
+  },
+  "audits/idle-network-times.js | causeLoadEvent": {
+    "message": "Load Event",
+    "description": ""
+  },
+  "audits/idle-network-times.js | causeLongTask": {
+    "message": "Long Task",
+    "description": ""
+  },
+  "audits/idle-network-times.js | causeOther": {
+    "message": "Other",
+    "description": ""
+  },
+  "audits/idle-network-times.js | causeRenderBlockingResource": {
+    "message": "Blocking Resource",
+    "description": ""
+  },
+  "audits/idle-network-times.js | causeTimeout": {
+    "message": "Timeout",
+    "description": ""
+  },
+  "audits/idle-network-times.js | columnCause": {
+    "message": "Suspected Cause",
+    "description": ""
+  },
+  "audits/idle-network-times.js | columnDuration": {
+    "message": "Duration",
+    "description": ""
+  },
+  "audits/idle-network-times.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/idle-network-times.js | columnUrl": {
+    "message": "Attributable URL",
+    "description": ""
+  },
+  "audits/idle-network-times.js | description": {
+    "message": "Moments of network idleness in the critical path to ad loading present opportunities to improve speed. Consider eliminating long tasks, timeouts, waiting on load events, or synchronous resources to avoid idleness. Chrome DevTools can be used to discover what is causing network idleness. [Learn more](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference).",
+    "description": ""
+  },
+  "audits/idle-network-times.js | displayValue": {
+    "message": "{idleTime, number, seconds} s spent idle in critical path",
+    "description": ""
+  },
+  "audits/idle-network-times.js | failureTitle": {
+    "message": "[Experimental] Reduce network idle time before ad requests",
+    "description": ""
+  },
+  "audits/idle-network-times.js | title": {
+    "message": "[Experimental] Network is efficiently utilized before ad requests",
+    "description": ""
+  },
+  "audits/loads-gpt-from-sgdn.js | description": {
+    "message": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load time. By loading GPT from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-sgdn).",
+    "description": ""
+  },
+  "audits/loads-gpt-from-sgdn.js | failureTitle": {
+    "message": "Load GPT from recommended host",
+    "description": ""
+  },
+  "audits/loads-gpt-from-sgdn.js | title": {
+    "message": "GPT tag is loaded from recommended host",
+    "description": ""
+  },
+  "audits/loads-gpt-over-https.js | description": {
+    "message": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-over-https).",
+    "description": ""
+  },
+  "audits/loads-gpt-over-https.js | failureDisplayValue": {
+    "message": "Load gpt.js over HTTPS",
+    "description": ""
+  },
+  "audits/loads-gpt-over-https.js | failureTitle": {
+    "message": "Load GPT over HTTPS",
+    "description": ""
+  },
+  "audits/loads-gpt-over-https.js | title": {
+    "message": "GPT tag is loaded over HTTPS",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | columnDuration": {
+    "message": "Duration",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | columnLineNumber": {
+    "message": "Source Line Number",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | columnRequest": {
+    "message": "Resource",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | description": {
+    "message": "Load scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. This allows the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/).",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | displayValue": {
+    "message": "{numTags} script-injected {numTags, plural, =1 {resources} other {resources}}",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | failureTitle": {
+    "message": "Avoid script-injected tags",
+    "description": ""
+  },
+  "audits/script-injected-tags.js | title": {
+    "message": "No script-injected tags found",
+    "description": ""
+  },
+  "audits/serial-header-bidding.js | columnBidder": {
+    "message": "Bidder",
+    "description": ""
+  },
+  "audits/serial-header-bidding.js | columnDuration": {
+    "message": "Duration",
+    "description": ""
+  },
+  "audits/serial-header-bidding.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/serial-header-bidding.js | columnUrl": {
+    "message": "URL",
+    "description": ""
+  },
+  "audits/serial-header-bidding.js | description": {
+    "message": "Send header bidding requests simultaneously, rather than serially, to retrieve bids more quickly. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/serial-header-bidding).",
+    "description": ""
+  },
+  "audits/serial-header-bidding.js | failureTitle": {
+    "message": "Parallelize bid requests",
+    "description": ""
+  },
+  "audits/serial-header-bidding.js | title": {
+    "message": "Header bidding is parallelized",
+    "description": ""
+  },
+  "audits/static-ad-tags.js | columnLineNumber": {
+    "message": "Line Number",
+    "description": ""
+  },
+  "audits/static-ad-tags.js | columnUrl": {
+    "message": "Initiator",
+    "description": ""
+  },
+  "audits/static-ad-tags.js | description": {
+    "message": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags).",
+    "description": ""
+  },
+  "audits/static-ad-tags.js | failureDisplayValue": {
+    "message": "Up to {opportunity, number, seconds} s tag load time improvement",
+    "description": ""
+  },
+  "audits/static-ad-tags.js | failureTitle": {
+    "message": "Load GPT tag statically",
+    "description": ""
+  },
+  "audits/static-ad-tags.js | title": {
+    "message": "GPT tag is loaded statically",
+    "description": ""
+  },
+  "audits/tag-load-time.js | description": {
+    "message": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "description": ""
+  },
+  "audits/tag-load-time.js | displayValue": {
+    "message": "{tagLoadTime, number, seconds} s",
+    "description": ""
+  },
+  "audits/tag-load-time.js | failureTitle": {
+    "message": "Reduce tag load time",
+    "description": ""
+  },
+  "audits/tag-load-time.js | title": {
+    "message": "Tag load time",
+    "description": ""
+  },
+  "audits/viewport-ad-density.js | description": {
+    "message": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density).",
+    "description": ""
+  },
+  "audits/viewport-ad-density.js | displayValue": {
+    "message": "{adDensity, number, percent} covered by ads",
+    "description": ""
+  },
+  "audits/viewport-ad-density.js | failureTitle": {
+    "message": "Reduce ad density in initial viewport",
+    "description": ""
+  },
+  "audits/viewport-ad-density.js | title": {
+    "message": "Ad density in initial viewport is within recommended range",
+    "description": ""
+  },
+  "messages/common-strings.js | ERRORS__AREA_LARGER_THAN_VIEWPORT": {
+    "message": "Calculated ad area is larger than viewport",
+    "description": ""
+  },
+  "messages/common-strings.js | ERRORS__VIEWPORT_AREA_ZERO": {
+    "message": "Viewport area is zero",
+    "description": ""
+  },
+  "messages/common-strings.js | GROUPS__ADS_BEST_PRACTICES": {
+    "message": "Tag Best Practices",
+    "description": ""
+  },
+  "messages/common-strings.js | GROUPS__ADS_PERFORMANCE": {
+    "message": "Ad Speed",
+    "description": ""
+  },
+  "messages/common-strings.js | GROUPS__METRICS": {
+    "message": "Metrics",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__DEFAULT": {
+    "message": "Audit not applicable",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__INVALID_TIMING": {
+    "message": "Invalid timing task data",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_AD_RELATED_REQ": {
+    "message": "No ad-related requests",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_AD_RENDERED": {
+    "message": "No ads rendered",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_ADS": {
+    "message": "No ads requested",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_ADS_VIEWPORT": {
+    "message": "No ads in viewport",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_BIDS": {
+    "message": "No bids detected",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_EVENT_MATCHING_REQ": {
+    "message": "No event matches network records",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_GPT": {
+    "message": "GPT not requested",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_RECORDS": {
+    "message": "No successful network records",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_TAG": {
+    "message": "No tag requested",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_TAGS": {
+    "message": "No tags requested",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_TASKS": {
+    "message": "No tasks to compare",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_VALID_AD_WIDTHS": {
+    "message": "No requested ads contain ads of valid width",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_VISIBLE_SLOTS": {
+    "message": "No visible slots",
+    "description": ""
+  },
+  "messages/common-strings.js | WARNINGS__NO_AD_RENDERED": {
+    "message": "No ads were painted when rendering this page.",
+    "description": ""
+  },
+  "messages/common-strings.js | WARNINGS__NO_ADS": {
+    "message": "No ads were requested when fetching this page.",
+    "description": ""
+  },
+  "messages/common-strings.js | WARNINGS__NO_TAG": {
+    "message": "The GPT tag was not requested.",
+    "description": ""
   }
 }
