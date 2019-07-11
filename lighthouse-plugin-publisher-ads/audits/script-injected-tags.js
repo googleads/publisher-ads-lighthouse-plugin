@@ -31,8 +31,8 @@ const UIStrings = {
   'script sooner. [Learn more](' +
   'https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/' +
   ').',
-  displayValue: '{numTags} script-injected {numTags, plural, =1 {resources} ' +
-  'other {resources}}',
+  displayValue: '{numTags, plural, =1 {1 script-injected resource} ' +
+  'other {# script-injected resources}}',
   columnRequest: 'Resource',
   columnStartTime: 'Start',
   columnDuration: 'Duration',
