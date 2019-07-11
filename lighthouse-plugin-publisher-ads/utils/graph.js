@@ -159,9 +159,23 @@ function addInitiatedRequests(
       initiatedReq.resourceType == 'XHR' &&
       isXhrCritical(initiatedReq, networkSummary, criticalRequests);
     if (blocking) {
-      getCriticalGraph(networkSummary, initiatedReq, criticalRequests);
+      linkGraph(networkSummary, initiatedReq, criticalRequests);
     }
   }
+}
+
+/**
+ * Returns the set of requests in the critical path of the target request.
+ * @param {NetworkRequest[]} networkRecords
+ * @param {TraceEvent[]} traceEvents
+ * @param {NetworkRequest} targetRequest
+ * @return {Set<NetworkRequest>}
+ */
+function getCriticalGraph(networkRecords, traceEvents, targetRequest) {
+  const summary = buildNetworkSummary(networkRecords, traceEvents);
+  const criticalRequests = new Set();
+  linkGraph(summary, targetRequest, criticalRequests);
+  return criticalRequests;
 }
 
 /**
@@ -171,7 +185,7 @@ function addInitiatedRequests(
  * @param {Set<NetworkRequest>=} criticalRequests
  * @return {Set<NetworkRequest>}
  */
-function getCriticalGraph(
+function linkGraph(
   networkSummary, targetRequest, criticalRequests = new Set()) {
   if (!targetRequest || criticalRequests.has(targetRequest)) {
     return criticalRequests;
@@ -186,7 +200,7 @@ function getCriticalGraph(
       const request = networkSummary.requestsByUrl.get(url);
       if (!request) continue;
 
-      getCriticalGraph(networkSummary, request, criticalRequests);
+      linkGraph(networkSummary, request, criticalRequests);
 
       if (request.resourceType == 'Script') {
         const scriptUrl = stack.callFrames[0].url;
@@ -202,7 +216,7 @@ function getCriticalGraph(
     }
   }
   // Check the initiator request just to be sure.
-  getCriticalGraph(
+  linkGraph(
     networkSummary, targetRequest.initiatorRequest || null, criticalRequests);
   return criticalRequests;
 }
@@ -251,7 +265,7 @@ function getAdCriticalGraph(networkRecords, traceEvents) {
     !!getHeaderBidder(r.url) && r.endTime <= firstAdRequest.startTime);
   const summary = buildNetworkSummary(networkRecords, traceEvents);
   for (const req of [firstAdRequest, ...bidRequests]) {
-    getCriticalGraph(summary, req, criticalRequests);
+    linkGraph(summary, req, criticalRequests);
   }
   const result = new Set(Array.from(criticalRequests).filter(
     (r) => r.endTime < firstAdRequest.startTime || r == firstAdRequest));

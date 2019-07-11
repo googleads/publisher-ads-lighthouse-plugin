@@ -16,9 +16,9 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
+const {getAbbreviatedUrl, trimUrl} = require('../utils/resource-classification');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
-const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -155,33 +155,6 @@ function computeDepth(requests) {
     }
   }
   return hops;
-}
-
-/**
- * Extracts the request from a URL.
- * @param {string} url
- * @return {string}
- */
-function getAbbreviatedUrl(url) {
-  const u = new URL(trimUrl(url));
-  const parts = u.pathname.split('/');
-  if (parts.length > 4) {
-    u.pathname = [...parts.splice(0, 4), '...'].join('/');
-  }
-  return u.toString();
-}
-
-/**
- * Removes the query string from the URL.
- * @param {string} url
- * @return {string}
- */
-function trimUrl(url) {
-  const u = new URL(url);
-  const PATH_MAX = 60;
-  const path = u.pathname.length > PATH_MAX ?
-    u.pathname.substr(0, PATH_MAX) + '...' : u.pathname;
-  return u.origin + path;
 }
 
 /**

@@ -19,7 +19,7 @@ const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isCacheable} = require('../utils/network');
-const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
+const {isGoogleAds, getHeaderBidder, getAbbreviatedUrl} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -88,7 +88,7 @@ function constructRecords(records, recordType, timings) {
     const timing = timings.get(record);
     if (!timing) continue;
     results.push(Object.assign({}, timing, {
-      url: record.url,
+      url: getAbbreviatedUrl(record.url),
       type: recordType,
     }));
   }
@@ -162,12 +162,17 @@ class SerialHeaderBidding extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const unfilteredNetworkRecords =
-    await NetworkRecords.request(devtoolsLog, context);
+      await NetworkRecords.request(devtoolsLog, context);
+    if (!unfilteredNetworkRecords.length) {
+      return auditNotApplicable.NoRecords;
+    }
+    const mainFrameId = unfilteredNetworkRecords[0].frameId;
 
     // Filter out requests without responses, image responses, and responses
     // taking less than 50ms.
     const networkRecords = unfilteredNetworkRecords
-        .filter(isPossibleBid);
+        .filter(isPossibleBid)
+        .filter((r) => r.frameId == mainFrameId);
 
     // We filter for URLs that are related to header bidding.
     // Then we create shallow copies of each record. This is because the records

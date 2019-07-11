@@ -35,7 +35,7 @@ module.exports = [
   {
     label: 'Amazon',
     patterns: [
-      '^https?://[a-z-_.]*[.]amazon-adsystem[.]com/.*',
+      '^https?://[a-z-_.]*[.]amazon-adsystem[.]com/.*bid.*',
     ],
   },
   {
