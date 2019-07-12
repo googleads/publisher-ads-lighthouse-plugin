@@ -23,6 +23,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/ad-render-blocking-resources`},
     {path: `${PLUGIN_PATH}/audits/ad-request-critical-path`},
     {path: `${PLUGIN_PATH}/audits/idle-network-times`},
+    {path: `${PLUGIN_PATH}/audits/blocking-load-events`},
     {path: `${PLUGIN_PATH}/audits/ads-in-viewport`},
     {path: `${PLUGIN_PATH}/audits/async-ad-tags`},
     {path: `${PLUGIN_PATH}/audits/loads-gpt-over-https`},
@@ -67,6 +68,8 @@ module.exports = {
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
       {id: 'static-ad-tags', weight: 1, group: 'ads-performance'},
+      {id: 'idle-network-times', weight: 1, group: 'ads-performance'},
+      {id: 'blocking-load-events', weight: 1, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 2, group: 'ads-best-practices'},
