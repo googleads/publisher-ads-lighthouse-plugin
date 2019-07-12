@@ -24,17 +24,12 @@ const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
 
 const UIStrings = {
-  title: '[Experimental] Network is efficiently utilized before ad requests',
-  failureTitle: '[Experimental] Reduce network idle time before ad requests',
-  description: 'Moments of network idleness in the critical path to ad ' +
-  'loading present opportunities to improve speed. Consider eliminating long ' +
-  'tasks, timeouts, waiting on load events, or synchronous resources to avoid ' +
-  'idleness. Chrome DevTools can be used to discover what is causing network ' +
-  'idleness. [Learn more](' +
-  'https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/reference' +
-  ').',
-  displayValue: '{timeInMs, number, seconds} s spent idle in critical path',
+  title: 'Ads not blocked by load events',
+  failureTitle: 'Avoid load event handlers in critical path of ad requests',
+  description: 'TODO',
+  displayValue: '{timeInMs, number, seconds} s blocked',
   columnEvent: 'Event',
+  columnTime: 'Time',
   columnUrl: 'Script',
   columnFunctionName: 'Function',
   columnLineNumber: 'Line',
@@ -58,6 +53,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  */
 const HEADINGS = [
   {key: 'eventName', itemType: 'text', text: str_(UIStrings.columnEvent)},
+  {key: 'time', itemType: 'ms', text: str_(UIStrings.columnTime)},
   {key: 'url', itemType: 'url', text: str_(UIStrings.columnUrl)},
   {key: 'functionName', itemType: 'text', text: str_(UIStrings.columnFunctionName)},
   {key: 'lineNumber', itemType: 'numeric', text: str_(UIStrings.columnLineNumber)},
@@ -144,6 +140,8 @@ class IdleNetworkTimes extends Audit {
       ...findEventIntervals('domContentLoaded', processEvents),
       ...findEventIntervals('load', processEvents),
     ];
+    const {ts: navigationStart} =
+      processEvents.find((e) => e.name === 'navigationStart');
     const blockingEvents = [];
     const seen = new Set();
     for (const r of criticalRequests) {
@@ -166,16 +164,20 @@ class IdleNetworkTimes extends Audit {
       const interval = eventTimes.find((interval) =>
         interval.start <= traceEvent.ts && traceEvent.ts <= interval.end);
       if (interval) {
-        blockingEvents.push(
-            Object.assign({eventName: interval.eventName}, callFrame));
+        blockingEvents.push(Object.assign({
+          eventName: interval.eventName,
+          time: (interval.start - navigationStart) / 1000,
+        }, callFrame));
       }
     }
 
+    const failed = blockingEvents.length > 0;
     return {
       numericValue: blockingEvents.length,
-      score: blockingEvents.length ? 0 : 1,
-      displayValue:
-        str_(UIStrings.displayValue, {timeInMs: (9)}),
+      score: failed ? 0 : 1,
+      displayValue: failed ?
+        str_(UIStrings.displayValue, {timeInMs: blockingEvents[0].time}) :
+        '',
       details: IdleNetworkTimes.makeTableDetails(HEADINGS, blockingEvents),
     };
   }
