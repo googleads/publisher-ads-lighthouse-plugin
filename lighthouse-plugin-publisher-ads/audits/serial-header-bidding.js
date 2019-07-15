@@ -12,26 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isCacheable} = require('../utils/network');
-const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
+const {isGoogleAds, getHeaderBidder, getAbbreviatedUrl} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
-const id = 'serial-header-bidding';
-const {
-  title,
-  failureTitle,
-  description,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Header bidding is parallelized',
+  failureTitle: 'Parallelize bid requests',
+  description: 'Send header bidding requests simultaneously, rather than ' +
+  'serially, to retrieve bids more quickly. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/serial-header-bidding' +
+  ').',
+  columnBidder: 'Bidder',
+  columnUrl: 'URL',
+  columnStartTime: 'Start',
+  columnDuration: 'Duration',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Min record duration (s) to be considered a bid.
 const MIN_BID_DURATION = .05;
@@ -50,10 +57,10 @@ const MIN_BID_DURATION = .05;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'bidder', itemType: 'text', text: headings.bidder},
-  {key: 'url', itemType: 'url', text: headings.url},
-  {key: 'startTime', itemType: 'ms', text: headings.startTime},
-  {key: 'duration', itemType: 'ms', text: headings.duration},
+  {key: 'bidder', itemType: 'text', text: str_(UIStrings.columnBidder)},
+  {key: 'url', itemType: 'url', text: str_(UIStrings.columnUrl)},
+  {key: 'startTime', itemType: 'ms', text: str_(UIStrings.columnStartTime)},
+  {key: 'duration', itemType: 'ms', text: str_(UIStrings.columnDuration)},
 ];
 
 /**
@@ -81,7 +88,7 @@ function constructRecords(records, recordType, timings) {
     const timing = timings.get(record);
     if (!timing) continue;
     results.push(Object.assign({}, timing, {
-      url: record.url,
+      url: getAbbreviatedUrl(record.url),
       type: recordType,
     }));
   }
@@ -138,10 +145,10 @@ class SerialHeaderBidding extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'serial-header-bidding',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
@@ -155,12 +162,17 @@ class SerialHeaderBidding extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const unfilteredNetworkRecords =
-    await NetworkRecords.request(devtoolsLog, context);
+      await NetworkRecords.request(devtoolsLog, context);
+    if (!unfilteredNetworkRecords.length) {
+      return auditNotApplicable.NoRecords;
+    }
+    const mainFrameId = unfilteredNetworkRecords[0].frameId;
 
     // Filter out requests without responses, image responses, and responses
     // taking less than 50ms.
     const networkRecords = unfilteredNetworkRecords
-        .filter(isPossibleBid);
+        .filter(isPossibleBid)
+        .filter((r) => r.frameId == mainFrameId);
 
     // We filter for URLs that are related to header bidding.
     // Then we create shallow copies of each record. This is because the records
@@ -171,7 +183,7 @@ class SerialHeaderBidding extends Audit {
     const recordsByType = bucket(networkRecords, checkRecordType);
 
     if (!recordsByType.has(RequestType.BID)) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_BIDS);
+      return auditNotApplicable.NoBids;
     }
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
@@ -217,3 +229,4 @@ class SerialHeaderBidding extends Audit {
 }
 
 module.exports = SerialHeaderBidding;
+module.exports.UIStrings = UIStrings;

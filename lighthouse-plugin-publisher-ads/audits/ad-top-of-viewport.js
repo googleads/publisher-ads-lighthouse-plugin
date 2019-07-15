@@ -12,21 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 const {isGptIframe} = require('../utils/resource-classification');
 
-const id = 'ad-top-of-viewport';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-  failureDisplayValue,
-  headings,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'No ad found at the very top of the viewport',
+  failureTitle: 'Move the top ad further down the page',
+  description: 'Over 10% of ads are never viewed because users scroll past ' +
+  'them before they become viewable. By moving ad slots away from the very ' +
+  'top of the viewport, users are more likely to see ads before scrolling ' +
+  'away. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-top-of-viewport' +
+  ').',
+  failureDisplayValue: 'A scroll of {valueInPx, number} px would hide half of your topmost ad',
+  columnSlot: 'Top Slot ID',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+
 
 const SCROLL_PX_THRESHOLD = 100;
 
@@ -35,7 +40,7 @@ const SCROLL_PX_THRESHOLD = 100;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'slot', itemType: 'text', text: headings.slot},
+  {key: 'slot', itemType: 'text', text: str_(UIStrings.columnSlot)},
 ];
 
 
@@ -47,10 +52,10 @@ class AdTopOfViewport extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'ad-top-of-viewport',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       requiredArtifacts: ['ViewportDimensions', 'IFrameElements'],
     };
   }
@@ -70,7 +75,7 @@ class AdTopOfViewport extends Audit {
         }));
 
     if (!slots.length) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_VISIBLE_SLOTS);
+      return auditNotApplicable.NoVisibleSlots;
     }
 
     const topSlot = slots.reduce((a, b) => (a.midpoint < b.midpoint) ? a : b);
@@ -78,7 +83,7 @@ class AdTopOfViewport extends Audit {
     const inViewport = topSlot.midpoint < viewport.innerHeight;
 
     if (!inViewport) {
-      return auditNotApplicable(NOT_APPLICABLE.NO_ADS_VIEWPORT);
+      return auditNotApplicable.NoAdsViewport;
     }
 
     const score = inViewport && topSlot.midpoint < SCROLL_PX_THRESHOLD ? 0 : 1;
@@ -87,8 +92,8 @@ class AdTopOfViewport extends Audit {
       score,
       numericValue: topSlot.midpoint,
       // No displayValue if passing, no changes to be made.
-      displayValue: score ? displayValue :
-        formatMessage(failureDisplayValue, {valueInPx: topSlot.midpoint}),
+      displayValue: score ? '' :
+        str_(UIStrings.failureDisplayValue, {valueInPx: topSlot.midpoint}),
       details: AdTopOfViewport.makeTableDetails(
         HEADINGS,
         score ? [] : [{slot: topSlot.id}]
@@ -98,3 +103,4 @@ class AdTopOfViewport extends Audit {
 }
 
 module.exports = AdTopOfViewport;
+module.exports.UIStrings = UIStrings;

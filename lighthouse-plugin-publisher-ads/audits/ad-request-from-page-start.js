@@ -13,22 +13,27 @@
 // limitations under the License.
 
 const ComputedAdRequestTime = require('../computed/ad-request-time');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE, WARNINGS} = require('../messages/messages');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 
-const id = 'ad-request-from-page-start';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Latency of first ad request',
+  failureTitle: 'Reduce latency of first ad request',
+  description: 'This metric measures the elapsed time from the start of page ' +
+  'load until the first ad request is made. Delayed ad requests will ' +
+  'decrease impressions and viewability, and have a negative impact on ad ' +
+  'revenue. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  ').',
+  displayValue: '{timeInMs, number, seconds} s',
+};
+
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
-const PODR = 1.5; // seconds, 1 second beyond tag load time PODR
-const MEDIAN = 3.5; // seconds
+const PODR = 1500; // ms, 1 second beyond tag load time PODR
+const MEDIAN = 3500; // ms
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -40,10 +45,10 @@ class AdRequestFromPageStart extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'ad-request-from-page-start',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs', 'traces'],
@@ -62,12 +67,11 @@ class AdRequestFromPageStart extends Audit {
 
     const {timing} = await ComputedAdRequestTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(WARNINGS.NO_ADS);
-      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
+      context.LighthouseRunWarnings.push(runWarning.NoAds);
+      return auditNotApplicable.NoAds;
     }
 
-    const adReqTimeSec = timing / 1000;
-    let normalScore = Audit.computeLogNormalScore(adReqTimeSec, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
@@ -75,11 +79,12 @@ class AdRequestFromPageStart extends Audit {
     }
 
     return {
-      numericValue: adReqTimeSec,
+      numericValue: timing * 1e-3,
       score: normalScore,
-      displayValue: formatMessage(displayValue, {adReqTime: adReqTimeSec}),
+      displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
 }
 
 module.exports = AdRequestFromPageStart;
+module.exports.UIStrings = UIStrings;

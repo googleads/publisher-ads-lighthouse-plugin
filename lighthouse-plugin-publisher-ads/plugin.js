@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {GROUPS} = require('./messages/messages.js');
+const {group} = require('./messages/common-strings');
 
 const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';
 
@@ -30,6 +30,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/static-ad-tags`},
     {path: `${PLUGIN_PATH}/audits/viewport-ad-density`},
     {path: `${PLUGIN_PATH}/audits/tag-load-time`},
+    {path: `${PLUGIN_PATH}/audits/gpt-bids-parallel`},
     {path: `${PLUGIN_PATH}/audits/ad-request-from-page-start`},
     {path: `${PLUGIN_PATH}/audits/ad-request-from-tag-load`},
     {path: `${PLUGIN_PATH}/audits/first-ad-paint`},
@@ -41,13 +42,13 @@ module.exports = {
   ],
   groups: {
     'metrics': {
-      title: GROUPS.METRICS,
+      title: group.Metrics,
     },
     'ads-performance': {
-      title: GROUPS.ADS_PERFORMANCE,
+      title: group.AdsPerformance,
     },
     'ads-best-practices': {
-      title: GROUPS.ADS_BEST_PRACTICES,
+      title: group.AdsBestPractices,
     },
   },
   category: {
@@ -62,6 +63,7 @@ module.exports = {
       {id: 'ad-blocking-tasks', weight: 2, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
+      {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
       {id: 'static-ad-tags', weight: 1, group: 'ads-performance'},
