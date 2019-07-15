@@ -33,8 +33,6 @@ const UIStrings = {
   columnScript: 'Script',
   columnBlockedUrl: 'Blocked URL',
   columnFunctionName: 'Function',
-  columnLineNumber: 'Line',
-  columnColumnNumber: 'Column',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -48,8 +46,6 @@ const HEADINGS = [
   {key: 'url', itemType: 'url', text: str_(UIStrings.columnScript)},
   {key: 'blockedUrl', itemType: 'url', text: str_(UIStrings.columnBlockedUrl)},
   {key: 'functionName', itemType: 'text', text: str_(UIStrings.columnFunctionName)},
-  {key: 'lineNumber', itemType: 'numeric', text: str_(UIStrings.columnLineNumber)},
-  {key: 'columnNumber', itemType: 'numeric', text: str_(UIStrings.columnColumnNumber)},
 ];
 
 /**
