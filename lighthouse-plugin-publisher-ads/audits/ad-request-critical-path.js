@@ -69,6 +69,7 @@ const HEADINGS = [
     key: 'selfTime',
     itemType: 'ms',
     text: str_(UIStrings.columnSelfTime),
+    granularity: 1,
   },
   {
     key: 'startTime',
