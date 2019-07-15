@@ -50,12 +50,12 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /** @enum {string} */
 const Cause = {
-  DOM_CONTENT_LOADED: (UIStrings.causeDomContentLoaded),
-  LOAD_EVENT: (UIStrings.causeLoadEvent),
-  LONG_TASK: (UIStrings.causeLongTask),
-  RENDER_BLOCKING_RESOURCE: (UIStrings.causeRenderBlockingResource),
-  TIMEOUT: (UIStrings.causeTimeout),
-  OTHER: (UIStrings.causeOther),
+  DOM_CONTENT_LOADED: str_(UIStrings.causeDomContentLoaded),
+  LOAD_EVENT: str_(UIStrings.causeLoadEvent),
+  LONG_TASK: str_(UIStrings.causeLongTask),
+  RENDER_BLOCKING_RESOURCE: str_(UIStrings.causeRenderBlockingResource),
+  TIMEOUT: str_(UIStrings.causeTimeout),
+  OTHER: str_(UIStrings.causeOther),
 };
 
 /**
@@ -268,21 +268,13 @@ class IdleNetworkTimes extends Audit {
     } catch (e) {
       // Ignore tracing errors.
     }
-    const {timings, processEvents} = await TraceOfTab.request(trace, context);
-    const test = processEvents.filter(e =>
-      e.args.data && e.args.data.functionName == 'R' || e.name.includes('domContentLoaded'));
+    const {timings} = await TraceOfTab.request(trace, context);
 
     const timerEvents =
         trace.traceEvents.filter((t) => t.name.startsWith('Timer'));
 
     const criticalRequests =
       getAdCriticalGraph(networkRecords, trace.traceEvents);
-
-    const adRequest = networkRecords.find((r) => r.url.includes('gampad/ads'))
-    let stack = adRequest.initiator && adRequest.initiator.stack;
-    while (stack) {
-     stack = stack.parent;
-    }
 
     const pageStartTime = getPageStartTime(networkRecords);
     const blockingRequests = Array.from(criticalRequests)
