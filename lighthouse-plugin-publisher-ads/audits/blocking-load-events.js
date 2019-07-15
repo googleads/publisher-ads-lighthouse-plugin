@@ -21,7 +21,7 @@ const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAdCriticalGraph} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
-const {getPageStartTime} = require('../utils/network-timing');
+const {getTimingsByRecord} = require('../utils/network-timing');
 
 const UIStrings = {
   title: 'Ads not blocked by load events',
@@ -98,12 +98,28 @@ function findEventIntervals(eventName, traceEvents) {
   return intervals;
 }
 
+function quantifyBlockedTime(blockingEvent, timings, networkRecords,
+    timingsByRecord) {
+  const eventScript = networkRecords.find(
+    (r) => r.url == blockingEvent.url);
+  const scriptLoadTime = timingsByRecord.get(eventScript);
+  const blockedRequest = networkRecords.find(
+    (r) => r.url == blockingEvent.blockedUrl);
+  const blockedRequestLoadTime = timingsByRecord.get(blockedRequest);
+  if (!scriptLoadTime || !blockedRequestLoadTime) {
+    return 0;
+  }
+  const eventListenerScript = networkRecords.find(
+    (r) => r.url == blockingEvent.url);
+  const eventTime = timings[blockingEvent.eventName];
+  return eventTime - scriptLoadTime.endTime;
+}
+
 
 /**
- * Audit to check the length of the critical path to load ads.
- * Also determines the critical path for visualization purposes.
+ * Audit to find blocking load events.
  */
-class IdleNetworkTimes extends Audit {
+class BlockingLoadEvents extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
@@ -166,22 +182,31 @@ class IdleNetworkTimes extends Audit {
       if (interval) {
         blockingEvents.push(Object.assign({
           eventName: interval.eventName,
-          time: (interval.start - navigationStart) / 1000,
+          blockedUrl: r.url,
         }, callFrame));
       }
     }
 
     const failed = blockingEvents.length > 0;
+    let blockedTime = 0;
+    if (failed) {
+      const {timings} = await TraceOfTab.request(trace, context);
+      /** @type {Map<NetworkRequest, NodeTiming>} */
+      const timingsByRecord =
+        await getTimingsByRecord(trace, devtoolsLog, context);
+      blockedTime = quantifyBlockedTime(
+        blockingEvents[0], timings, networkRecords, timingsByRecord);
+    }
     return {
       numericValue: blockingEvents.length,
       score: failed ? 0 : 1,
-      displayValue: failed ?
-        str_(UIStrings.displayValue, {timeInMs: blockingEvents[0].time}) :
+      displayValue: failed  && blockedTime?
+        str_(UIStrings.displayValue, {timeInMs: blockedTime}) :
         '',
-      details: IdleNetworkTimes.makeTableDetails(HEADINGS, blockingEvents),
+      details: BlockingLoadEvents.makeTableDetails(HEADINGS, blockingEvents),
     };
   }
 }
 
-module.exports = IdleNetworkTimes;
+module.exports = BlockingLoadEvents;
 module.exports.UIStrings = UIStrings;
