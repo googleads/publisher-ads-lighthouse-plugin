@@ -52,7 +52,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  * @property {number} startTime
  * @property {number} endTime
  * @property {number} duration
- * @property {number|undefined} selfTime
+ * @property {?number?} selfTime
  */
 
 /**
@@ -130,7 +130,7 @@ function computeSelfTime(requests) {
     }
   }
   for (const request of requests) {
-    if (request.selfTime < 100) {
+    if (request.selfTime == null || request.selfTime < 100) {
       delete request.selfTime;
     }
   }
@@ -241,12 +241,14 @@ class AdRequestCriticalPath extends Audit {
     if (!blockingRequests.length) {
       return auditNotApplicable.NoAds;
     }
+    /** @type {SimpleRequest[]} */
     let tableView = blockingRequests.map((req) => {
       const {startTime, endTime} = timingsByRecord.get(req) || req;
       return {
         startTime,
         endTime,
         duration: endTime - startTime,
+        selfTime: null, // Set later
         url: trimUrl(req.url),
         abbreviatedUrl: getAbbreviatedUrl(req.url),
         type: req.resourceType,
