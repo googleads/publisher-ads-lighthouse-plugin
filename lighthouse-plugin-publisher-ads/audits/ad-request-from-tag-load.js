@@ -14,22 +14,24 @@
 
 const ComputedAdRequestTime = require('../computed/ad-request-time');
 const ComputedTagLoadTime = require('../computed/tag-load-time');
-const {auditNotApplicable} = require('../utils/builder');
-const {AUDITS, NOT_APPLICABLE} = require('../messages/messages');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {formatMessage} = require('../messages/format');
 
-const id = 'ad-request-from-tag-load';
-const {
-  title,
-  failureTitle,
-  description,
-  displayValue,
-} = AUDITS[id];
+const UIStrings = {
+  title: 'Latency of first ad request, from tag load',
+  failureTitle: 'Reduce latency of first ad request (from tag load)',
+  description: 'This metric measures the elapsed time from when the Google ' +
+  'Publisher Tag loads until the first ad request is made. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  ').',
+  displayValue: '{timeInMs, number, seconds} s',
+};
 
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 // Point of diminishing returns.
-const PODR = 0.3; // seconds
-const MEDIAN = 1; // seconds
+const PODR = 300; // ms
+const MEDIAN = 1000; // ms
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -41,10 +43,10 @@ class AdRequestFromTagLoad extends Audit {
    */
   static get meta() {
     return {
-      id,
-      title,
-      failureTitle,
-      description,
+      id: 'ad-request-from-tag-load',
+      title: str_(UIStrings.title),
+      failureTitle: str_(UIStrings.failureTitle),
+      description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs', 'traces'],
@@ -64,18 +66,18 @@ class AdRequestFromTagLoad extends Audit {
     const {timing: tagEndTime} =
         await ComputedTagLoadTime.request(metricData, context);
     if (!(tagEndTime > 0)) { // Handle NaN, etc.
-      return auditNotApplicable(NOT_APPLICABLE.NO_TAG);
+      return auditNotApplicable.NoTag;
     }
 
     const {timing: adStartTime} =
         await ComputedAdRequestTime.request(metricData, context);
     if (!(adStartTime > 0)) { // Handle NaN, etc.
-      return auditNotApplicable(NOT_APPLICABLE.NO_ADS);
+      return auditNotApplicable.NoAds;
     }
 
-    const adReqTimeSec = (adStartTime - tagEndTime) / 1000;
+    const adReqTimeMs = (adStartTime - tagEndTime);
 
-    let normalScore = Audit.computeLogNormalScore(adReqTimeSec, PODR, MEDIAN);
+    let normalScore = Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN);
 
     // Results that have green text should be under passing category.
     if (normalScore >= .9) {
@@ -83,11 +85,12 @@ class AdRequestFromTagLoad extends Audit {
     }
 
     return {
-      numericValue: adReqTimeSec,
+      numericValue: adReqTimeMs * 1e-3,
       score: normalScore,
-      displayValue: formatMessage(displayValue, {adReqTime: adReqTimeSec}),
+      displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }
 }
 
 module.exports = AdRequestFromTagLoad;
+module.exports.UIStrings = UIStrings;

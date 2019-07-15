@@ -13,7 +13,18 @@
 // limitations under the License.
 
 const bidderPatterns = require('./bidder-patterns');
+const {isCacheable} = require('../utils/network');
 const {URL} = require('url');
+
+/**
+ * Converts the given url to a URL, if it's not already a URL. Otherwise returns
+ * the same URL object (not a copy).
+ * @param {URL|string} urlOrStr
+ * @return {URL}
+ */
+function toURL(urlOrStr) {
+  return (typeof urlOrStr === 'string') ? new URL(urlOrStr) : urlOrStr;
+}
 
 /**
  * Checks if the url is from a Google ads host.
@@ -27,23 +38,26 @@ function isGoogleAds(url) {
 
 /**
  * Checks if the url is for pubads implementation tag.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isImplTag(url) {
-  return /(^\/gpt\/pubads_impl_\d+.js)/
-      .test(url.pathname);
+  return /(^\/gpt\/pubads_impl_\d+.js)/.test(toURL(url).pathname);
 }
 
 /**
  * Checks if the url is loading a gpt.js script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isGptTag(url) {
-  return (url.host === 'www.googletagservices.com' || url.host === 'securepubads.g.doubleclick.net') &&
-      (url.pathname === '/tag/js/gpt.js' ||
-      url.pathname === '/tag/js/gpt_mobile.js');
+  const {host, pathname} = toURL(url);
+  const matchesHost = [
+    'www.googletagservices.com',
+    'securepubads.g.doubleclick.net'].includes(host);
+  const matchesPath =
+    ['/tag/js/gpt.js', '/tag/js/gpt_mobile.js'].includes(pathname);
+  return matchesHost && matchesPath;
 }
 
 /**
@@ -107,15 +121,35 @@ function getHeaderBidder(url) {
 }
 
 /**
- * Checks whether the given request is a bid request.
+ * Checks whether the given request is a bid request or related to bidding (e.g.
+ * a bidding script).
  * @param {LH.Artifacts.NetworkRequest|string} requestOrUrl
  * @return {boolean}
  */
-function isBidRequest(requestOrUrl) {
+function isBidRelatedRequest(requestOrUrl) {
   return !!getHeaderBidder(
     typeof requestOrUrl == 'string' ? requestOrUrl : requestOrUrl.url);
 }
 
+/**
+ * Checks the request to see if it meets requirements for bid requests.
+ * @param {LH.Artifacts.NetworkRequest} req
+ * @return {boolean}
+ */
+function isPossibleBidRequest(req) {
+  return (req.resourceSize == null || req.resourceSize > 0) &&
+      (req.resourceType != 'Image') &&
+      !isCacheable(req);
+}
+
+/**
+ * Checks the request to see if it's a bid request.
+ * @param {LH.Artifacts.NetworkRequest} req
+ * @return {boolean}
+ */
+function isBidRequest(req) {
+  return isBidRelatedRequest(req) && isPossibleBidRequest(req);
+}
 
 /**
  * @param {LH.Artifacts.NetworkRequest} request
@@ -134,7 +168,36 @@ function isGptIframe(iframe) {
   return /(^google_ads_iframe_)/.test(iframe.id);
 }
 
+/**
+ * Removes the query string from the URL.
+ * @param {string} url
+ * @return {string}
+ */
+function trimUrl(url) {
+  const u = new URL(url);
+  const PATH_MAX = 60;
+  const path = u.pathname.length > PATH_MAX ?
+    u.pathname.substr(0, PATH_MAX) + '...' : u.pathname;
+  return u.origin + path;
+}
+
+/**
+ * Returns an abbreviated version of the URL, with a shortened path and no query
+ * string.
+ * @param {string} url
+ * @return {string}
+ */
+function getAbbreviatedUrl(url) {
+  const u = new URL(trimUrl(url));
+  const parts = u.pathname.split('/');
+  if (parts.length > 4) {
+    u.pathname = [...parts.splice(0, 4), '...'].join('/');
+  }
+  return u.toString();
+}
+
 module.exports = {
+  isBidRelatedRequest,
   isBidRequest,
   isGoogleAds,
   isGptAdRequest,
@@ -146,4 +209,6 @@ module.exports = {
   getHeaderBidder,
   isStaticRequest,
   isGptIframe,
+  getAbbreviatedUrl,
+  trimUrl,
 };
