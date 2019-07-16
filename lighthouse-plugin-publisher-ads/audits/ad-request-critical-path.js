@@ -28,16 +28,13 @@ const UIStrings = {
   failureTitle: 'Reduce critical path for ad loading',
   description: 'Consider reducing the number of resources, loading multiple ' +
   'resources simultaneously, or loading resources earlier to improve ad ' +
-  'speed. Requests that block ad loading can be found below. ' +
-  'Focus on speeding up or parallelizing requests with high self times. ' +
-  '[Learn more](' +
+  'speed. Requests that block ad loading can be found below. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-critical-path' +
   ').',
   displayValue: '{serialResources, plural, =1 {1 serial resource} other {# serial resources}}, ' +
   '{totalResources, plural, =1 {1 total resource} other {# total resources}}',
   columnUrl: 'Request',
   columnType: 'Type',
-  columnSelfTime: 'Self Time',
   columnStartTime: 'Start',
   columnEndTime: 'End',
 };
@@ -52,7 +49,6 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  * @property {number} startTime
  * @property {number} endTime
  * @property {number} duration
- * @property {?number?} selfTime
  */
 
 /**
@@ -66,10 +62,9 @@ const HEADINGS = [
     text: str_(UIStrings.columnUrl),
   },
   {
-    key: 'selfTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnSelfTime),
-    granularity: 1,
+    key: 'type',
+    itemType: 'text',
+    text: str_(UIStrings.columnType),
   },
   {
     key: 'startTime',
@@ -99,42 +94,6 @@ function areSimilarRequests(r1, r2) {
     return false;
   }
   return r1.abbreviatedUrl == r2.abbreviatedUrl;
-}
-
-/**
- * Computes self time for each request
- * @param {SimpleRequest[]} requests A pre-sorted list of requests by start
- *   time.
- */
-function computeSelfTime(requests) {
-  let bottlneckRequest = requests[0];
-  bottlneckRequest.selfTime = bottlneckRequest.duration;
-
-  let scanEnd = bottlneckRequest.startTime;
-  for (let i = 1; i < requests.length - 1; i++) {
-    const current = requests[i];
-    if (current.endTime < scanEnd) {
-      // Overlaps with previous requests, skip to avoid double counting.
-      continue;
-    }
-    const left = Math.max(scanEnd, current.startTime);
-    const right = Math.min(bottlneckRequest.endTime, current.endTime);
-    if (left < right) {
-      // @ts-ignore selfTime is initialized elsewhere, so it won't be undefined.
-      bottlneckRequest.selfTime -= (right - left);
-    }
-    scanEnd = Math.max(scanEnd, right);
-    if (current.endTime > bottlneckRequest.endTime) {
-      // The next request is a potential bottleneck.
-      current.selfTime = current.endTime - left;
-      bottlneckRequest = current;
-    }
-  }
-  for (const request of requests) {
-    if (request.selfTime == null || request.selfTime < 100) {
-      delete request.selfTime;
-    }
-  }
 }
 
 /**
@@ -176,7 +135,6 @@ function computeSummaries(requests) {
     result.push(current);
   }
   result.sort((a, b) => a.startTime - b.startTime);
-  computeSelfTime(result);
   return result;
 }
 
@@ -218,12 +176,7 @@ class AdRequestCriticalPath extends Audit {
     };
   }
 
-  /**
-   * @param {LH.Artifacts} artifacts
-   * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Audit.Product>}
-   */
-  static async audit(artifacts, context) {
+  static async computeResults(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
@@ -242,21 +195,28 @@ class AdRequestCriticalPath extends Audit {
     if (!blockingRequests.length) {
       return auditNotApplicable.NoAds;
     }
-    /** @type {SimpleRequest[]} */
     let tableView = blockingRequests.map((req) => {
       const {startTime, endTime} = timingsByRecord.get(req) || req;
       return {
         startTime,
         endTime,
         duration: endTime - startTime,
-        selfTime: null, // Set later
         url: trimUrl(req.url),
         abbreviatedUrl: getAbbreviatedUrl(req.url),
         type: req.resourceType,
       };
     });
-    tableView = computeSummaries(tableView)
-        .filter((r) => r.duration > 30 && r.startTime > 0);
+    return computeSummaries(tableView)
+      .filter((r) => r.duration > 30 && r.startTime > 0);
+  }
+
+  /**
+   * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Audit.Product>}
+   */
+  static async audit(artifacts, context) {
+    const tableView = AdRequestCriticalPath.computeResults(artifacts, context);
 
     const depth = computeDepth(tableView);
     const failed = depth > 3;
