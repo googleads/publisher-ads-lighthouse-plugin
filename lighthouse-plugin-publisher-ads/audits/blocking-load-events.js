@@ -25,11 +25,12 @@ const {getTimingsByRecord} = require('../utils/network-timing');
 
 const UIStrings = {
   title: 'Ads not blocked by load events',
-  failureTitle: 'Avoid load event handlers in critical path of ad requests',
-  description: 'TODO',
+  failureTitle: 'Avoid waiting on load events',
+  description: 'Waiting on load events increases ad latency. ' +
+    'To speed up ads, eliminate the following load event handlers.',
   displayValue: '{timeInMs, number, seconds} s blocked',
-  columnEvent: 'Event',
-  columnTime: 'Time',
+  columnEvent: 'Event Name',
+  columnTime: 'Event Time',
   columnScript: 'Script',
   columnBlockedUrl: 'Blocked URL',
   columnFunctionName: 'Function',
@@ -43,8 +44,8 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  */
 const HEADINGS = [
   {key: 'eventName', itemType: 'text', text: str_(UIStrings.columnEvent)},
+  {key: 'time', itemType: 'ms', text: str_(UIStrings.columnTime), granularity: 1},
   {key: 'url', itemType: 'url', text: str_(UIStrings.columnScript)},
-  {key: 'blockedUrl', itemType: 'url', text: str_(UIStrings.columnBlockedUrl)},
   {key: 'functionName', itemType: 'text', text: str_(UIStrings.columnFunctionName)},
 ];
 
@@ -161,7 +162,7 @@ class BlockingLoadEvents extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const {processEvents} = await TraceOfTab.request(trace, context);
+    const {timings, processEvents} = await TraceOfTab.request(trace, context);
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =
       await getTimingsByRecord(trace, devtoolsLog, context);
@@ -201,6 +202,7 @@ class BlockingLoadEvents extends Audit {
         const blockingEvent = Object.assign({
           eventName: interval.eventName,
           blockedUrl: r.url,
+          time: timings[interval.eventName],
         }, callFrame);
         blockingEvent.blockedTime = quantifyBlockedTime(
           blockingEvent, networkRecords, timingsByRecord);
