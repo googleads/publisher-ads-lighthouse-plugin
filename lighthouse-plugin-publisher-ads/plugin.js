@@ -68,7 +68,6 @@ module.exports = {
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
       {id: 'static-ad-tags', weight: 1, group: 'ads-performance'},
-      {id: 'idle-network-times', weight: 1, group: 'ads-performance'},
       {id: 'blocking-load-events', weight: 1, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
