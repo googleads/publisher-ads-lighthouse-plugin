@@ -272,7 +272,7 @@ function areSimilarRequests(r1, r2) {
   if (Math.max(r1.startTime, r2.startTime) > Math.min(r1.endTime, r2.endTime)) {
     return false;
   }
-  if (r1.type != r2.type) {
+  if (r1.type && r2.type && r1.type != r2.type) {
     return false;
   }
   return r1.abbreviatedUrl == r2.abbreviatedUrl;
