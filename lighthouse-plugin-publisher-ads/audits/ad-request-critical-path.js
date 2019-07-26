@@ -216,7 +216,9 @@ class AdRequestCriticalPath extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const tableView = AdRequestCriticalPath.computeResults(artifacts, context);
+    try {
+    const tableView =
+      await AdRequestCriticalPath.computeResults(artifacts, context);
 
     const depth = computeDepth(tableView);
     const failed = depth > 3;
@@ -231,6 +233,7 @@ class AdRequestCriticalPath extends Audit {
         }),
       details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
     };
+    } catch(e) {console.log(e)}
   }
 }
 

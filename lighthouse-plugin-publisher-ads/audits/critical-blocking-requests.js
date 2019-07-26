@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const AdRequestCriticalPath = require('./ad-request-critical-path');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
@@ -26,16 +27,13 @@ const {getTimingsByRecord} = require('../utils/network-timing');
 const UIStrings = {
   title: 'No blocking requests found',
   failureTitle: 'Avoid blocking requests',
-  // TODO: rephrase eliminate
-  description: 'To improve ad loading, speed up or eliminate the following ' +
-      'requests on your page.',
-  displayValue: '{serialResources, plural, =1 {1 serial resource} other {# serial resources}}, ' +
-  '{totalResources, plural, =1 {1 total resource} other {# total resources}}',
-  columnUrl: 'Request',
-  columnType: 'Type',
-  columnSelfTime: 'Self Time',
+  description: 'Speed up, parallelize, or eliminate the following ' +
+    'requests and their dependencies in order to speed up ad loading.',
+  displayValue: '{blockedTime, number, seconds} s spent blocked on requests',
+  columnUrl: 'Blocking Request',
+  columnInitiatorUrl: 'Initiator Request',
   columnStartTime: 'Start',
-  columnEndTime: 'End',
+  columnSelfTime: 'Self Time',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -62,40 +60,33 @@ const HEADINGS = [
     text: str_(UIStrings.columnUrl),
   },
   {
-    key: 'selfTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnSelfTime),
-    granularity: 1,
-  },
-  {
     key: 'startTime',
     itemType: 'ms',
     text: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
-    key: 'endTime',
+    key: 'selfTime',
     itemType: 'ms',
-    text: str_(UIStrings.columnEndTime),
+    text: str_(UIStrings.columnSelfTime),
     granularity: 1,
   },
 ];
 
 /**
- * Computes self time for each request
  * @param {SimpleRequest[]} requests A pre-sorted list of requests by start
  *   time.
+ * @return {SimpleRequest[]}
  */
-function getBlockingRequests(requests) {
+function findBlockingRequests(requests) {
   let bottlneckRequest = requests[0];
   bottlneckRequest.selfTime = bottlneckRequest.duration;
 
   let scanEnd = bottlneckRequest.startTime;
 
-  const results = {};
-  for (let i = 1; i < requests.length - 1; i++) {
-    const current = requests[i];
-    if (current.endTime < scanEnd) {
+  const results = [];
+  for (const current of requests) {
+    if (current.endTime < scanEnd || current == bottlneckRequest) {
       // Overlaps with previous requests, skip to avoid double counting.
       continue;
     }
@@ -108,11 +99,13 @@ function getBlockingRequests(requests) {
     scanEnd = Math.max(scanEnd, right);
     if (current.endTime > bottlneckRequest.endTime) {
       // The next request is a potential bottleneck.
-      current.selfTime = current.endTime - left;
-      bottlneckRequest = current;
-      if (bottlneckRequest.selfTime > 300) {
+      if (bottlneckRequest.selfTime > 100) {
+        bottlneckRequest.initiatorUrl = bottlneckRequest.initiatorRequest ?
+            bottlneckRequest.initiatorRequest.url : '',
         results.push(bottlneckRequest)
       }
+      current.selfTime = current.endTime - left;
+      bottlneckRequest = current;
     }
   }
   return results;
@@ -143,21 +136,25 @@ class CriticalBlockingRequests extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const criticalRequests =
-      AdRequestCriticalPath.computeResult(artifacts, context);
-
-    const depth = computeDepth(tableView);
-    const failed = depth > 3;
-
+    const waterfall =
+      await AdRequestCriticalPath.computeResults(artifacts, context);
+    if (!waterfall.length) {
+      return auditNotApplicable.NoAdRelatedReq;
+    }
+    const criticalRequests = findBlockingRequests(waterfall);
+    // Only show the top critical requests for the sake of brevity.
+    const topCriticalRequests = criticalRequests
+      .sort((a, b) => b.selfTime - a.selfTime)
+      .slice(0, 5);
+    const blockedTime =
+      topCriticalRequests.reduce((sum, r) => sum + r.selfTime, 0) / 1000;
+    const failed = criticalRequests.length > 3 || blockedTime > 0.5;
     return {
-      numericValue: depth,
+      numericValue: topCriticalRequests.length,
       score: failed ? 0 : 1,
-      displayValue: str_(UIStrings.displayValue,
-        {
-          serialResources: depth,
-          totalResources: tableView.length,
-        }),
-      details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
+      displayValue: failed ? str_(UIStrings.displayValue, {blockedTime}) : '',
+      details: AdRequestCriticalPath.makeTableDetails(
+        HEADINGS, topCriticalRequests),
     };
   }
 }
