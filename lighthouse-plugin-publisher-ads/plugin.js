@@ -61,13 +61,13 @@ module.exports = {
       {id: 'ad-request-from-page-start', weight: 4, group: 'metrics'},
       {id: 'first-ad-paint', weight: 8, group: 'metrics'},
       // Performance group.
-      {id: 'ad-blocking-tasks', weight: 2, group: 'ads-performance'},
       {id: 'critical-blocking-requests', weight: 1, group: 'ads-performance'},
-      {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
+      {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
       {id: 'static-ad-tags', weight: 1, group: 'ads-performance'},
+      {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
