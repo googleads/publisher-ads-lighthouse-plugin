@@ -260,7 +260,6 @@ function buildNetworkSummary(networkRecords, traceEvents) {
  * @property {number} endTime
  * @property {number} duration
  * @property {number} selfTime
- * @property {NetworkRequest} record
  */
 
 /**
@@ -382,8 +381,7 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
   const REQUEST_TYPES = new Set([
     'Script', 'XHR', 'Fetch', 'EventStream', 'Document', undefined]);
   const waterfall = Array.from(criticalRequests)
-      .filter((r) =>
-        r.endTime < firstAdRequest.startTime || r == firstAdRequest)
+      .filter((r) => r.endTime < firstAdRequest.startTime)
       .filter((r) => REQUEST_TYPES.has(r.resourceType))
       .filter((r) => r.mimeType != 'text/css');
 
@@ -400,7 +398,6 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
       url: trimUrl(req.url),
       abbreviatedUrl: getAbbreviatedUrl(req.url),
       type: req.resourceType,
-      record: req,
     };
   });
   const result = computeSummaries(timedWaterfall);
