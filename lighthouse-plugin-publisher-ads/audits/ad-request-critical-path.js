@@ -195,7 +195,7 @@ class AdRequestCriticalPath extends Audit {
     if (!blockingRequests.length) {
       return auditNotApplicable.NoAds;
     }
-    let tableView = blockingRequests.map((req) => {
+    const tableView = blockingRequests.map((req) => {
       const {startTime, endTime} = timingsByRecord.get(req) || req;
       return {
         startTime,
@@ -207,7 +207,7 @@ class AdRequestCriticalPath extends Audit {
       };
     });
     return computeSummaries(tableView)
-      .filter((r) => r.duration > 30 && r.startTime > 0);
+        .filter((r) => r.duration > 30 && r.startTime > 0);
   }
 
   /**
@@ -217,23 +217,25 @@ class AdRequestCriticalPath extends Audit {
    */
   static async audit(artifacts, context) {
     try {
-    const tableView =
+      const tableView =
       await AdRequestCriticalPath.computeResults(artifacts, context);
 
-    const depth = computeDepth(tableView);
-    const failed = depth > 3;
+      const depth = computeDepth(tableView);
+      const failed = depth > 3;
 
-    return {
-      numericValue: depth,
-      score: failed ? 0 : 1,
-      displayValue: str_(UIStrings.displayValue,
-        {
-          serialResources: depth,
-          totalResources: tableView.length,
-        }),
-      details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
-    };
-    } catch(e) {console.log(e)}
+      return {
+        numericValue: depth,
+        score: failed ? 0 : 1,
+        displayValue: str_(UIStrings.displayValue,
+          {
+            serialResources: depth,
+            totalResources: tableView.length,
+          }),
+        details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
+      };
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
 

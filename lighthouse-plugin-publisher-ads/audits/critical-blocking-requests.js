@@ -101,8 +101,8 @@ function findBlockingRequests(requests) {
       // The next request is a potential bottleneck.
       if (bottlneckRequest.selfTime > 100) {
         bottlneckRequest.initiatorUrl = bottlneckRequest.initiatorRequest ?
-            bottlneckRequest.initiatorRequest.url : '',
-        results.push(bottlneckRequest)
+          bottlneckRequest.initiatorRequest.url : '',
+        results.push(bottlneckRequest);
       }
       current.selfTime = current.endTime - left;
       bottlneckRequest = current;
@@ -144,8 +144,8 @@ class CriticalBlockingRequests extends Audit {
     const criticalRequests = findBlockingRequests(waterfall);
     // Only show the top critical requests for the sake of brevity.
     const topCriticalRequests = criticalRequests
-      .sort((a, b) => b.selfTime - a.selfTime)
-      .slice(0, 5);
+        .sort((a, b) => b.selfTime - a.selfTime)
+        .slice(0, 5);
     const blockedTime =
       topCriticalRequests.reduce((sum, r) => sum + r.selfTime, 0) / 1000;
     const failed = criticalRequests.length > 3 || blockedTime > 0.5;
