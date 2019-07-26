@@ -16,6 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
+const {isGptAdRequest} = require('../utils/resource-classification');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -89,11 +90,12 @@ class CriticalBlockingRequests extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
 
     const waterfall =
-      await computeAdRequestWaterfall(trace, devtoolsLog, context);
+      (await computeAdRequestWaterfall(trace, devtoolsLog, context))
+          .filter((r) => r.startTime > 0 && !isGptAdRequest(r.record));
     if (!waterfall.length) {
       return auditNotApplicable.NoAdRelatedReq;
     }
-    const CRITICAL_SELF_TIME_MS = 200;
+    const CRITICAL_SELF_TIME_MS = 150;
     const criticalRequests = waterfall
         .filter((a) => a.selfTime > CRITICAL_SELF_TIME_MS)
         .sort((a, b) => b.selfTime - a.selfTime)
