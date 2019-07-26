@@ -95,7 +95,7 @@ class CriticalBlockingRequests extends Audit {
     if (!waterfall.length) {
       return auditNotApplicable.NoAdRelatedReq;
     }
-    const CRITICAL_SELF_TIME_MS = 150;
+    const CRITICAL_SELF_TIME_MS = 200;
     const criticalRequests = waterfall
         .filter((a) => a.selfTime > CRITICAL_SELF_TIME_MS)
         .sort((a, b) => b.selfTime - a.selfTime)
@@ -104,7 +104,7 @@ class CriticalBlockingRequests extends Audit {
     const blockedTime =
       // @ts-ignore param types not inferred.
       criticalRequests.reduce((sum, r) => sum + r.selfTime, 0) / 1000;
-    const failed = criticalRequests.length > 3 || blockedTime > 0.5;
+    const failed = blockedTime > CRITICAL_SELF_TIME_MS * 4;
     return {
       numericValue: criticalRequests.length,
       score: failed ? 0 : 1,
