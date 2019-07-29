@@ -21,8 +21,8 @@ const {computeAdRequestWaterfall} = require('../utils/graph');
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 const UIStrings = {
-  title: 'No blocking requests found',
-  failureTitle: 'Avoid blocking requests',
+  title: 'No bottleneck requests found',
+  failureTitle: 'Avoid bottleneck requests',
   description: 'Speed up, parallelize, or eliminate the following ' +
     'requests and their dependencies in order to speed up ad loading.',
   displayValue: '{blockedTime, number, seconds} s spent blocked on requests',
@@ -61,10 +61,9 @@ const HEADINGS = [
 
 
 /**
- * Audit to check the length of the critical path to load ads.
- * Also determines the critical path for visualization purposes.
+ * Audits any bottlneck requests in the path of loading ads.
  */
-class CriticalBlockingRequests extends Audit {
+class BottleneckRequests extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
@@ -109,10 +108,10 @@ class CriticalBlockingRequests extends Audit {
       score: failed ? 0 : 1,
       displayValue: failed ? str_(UIStrings.displayValue, {blockedTime}) : '',
       details:
-        CriticalBlockingRequests.makeTableDetails(HEADINGS, criticalRequests),
+        BottleneckRequests.makeTableDetails(HEADINGS, criticalRequests),
     };
   }
 }
 
-module.exports = CriticalBlockingRequests;
+module.exports = BottleneckRequests;
 module.exports.UIStrings = UIStrings;
