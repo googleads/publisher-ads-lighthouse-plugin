@@ -114,7 +114,8 @@ class AdRequestCriticalPath extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
 
     const tableView =
-      await computeAdRequestWaterfall(trace, devtoolsLog, context);
+      (await computeAdRequestWaterfall(trace, devtoolsLog, context))
+          .filter((r) => r.startTime > 0);
     if (!tableView.length) {
       return auditNotApplicable.NoAds;
     }
