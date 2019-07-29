@@ -22,7 +22,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/ad-blocking-tasks`},
     {path: `${PLUGIN_PATH}/audits/ad-render-blocking-resources`},
     {path: `${PLUGIN_PATH}/audits/ad-request-critical-path`},
-    {path: `${PLUGIN_PATH}/audits/critical-blocking-requests`},
+    {path: `${PLUGIN_PATH}/audits/bottleneck-requests`},
     {path: `${PLUGIN_PATH}/audits/idle-network-times`},
     {path: `${PLUGIN_PATH}/audits/ads-in-viewport`},
     {path: `${PLUGIN_PATH}/audits/async-ad-tags`},
