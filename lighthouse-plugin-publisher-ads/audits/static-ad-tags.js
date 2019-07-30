@@ -13,32 +13,30 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
-const {URL} = require('url');
+const {getTimingsByRecord} = require('../utils/network-timing');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 const UIStrings = {
-  title: 'GPT tag is loaded statically',
-  failureTitle: 'Load GPT tag statically',
+  title: 'Ad tags are loaded statically',
+  failureTitle: 'Load ad tags statically',
   description: 'Tags loaded dynamically are not visible to the browser ' +
   'preloader. Consider using a static tag or `<link rel=\"preload\">` so the ' +
-  'browser may load GPT sooner. [Learn more](' +
+  'browser may load tag sooner. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags' +
   ').',
-  failureDisplayValue: 'Up to {timeInMs, number, seconds} s tag load time ' +
-  'improvement',
-  columnUrl: 'Initiator',
-  columnLineNumber: 'Line Number',
+  failureDisplayValue: 'Load {tags, plural, =1 {1 script} other {# scripts}} statically',
+  columnUrl: 'Script',
+  columnLoadTime: 'Load Time',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
@@ -50,37 +48,20 @@ const HEADINGS = [
     text: str_(UIStrings.columnUrl),
   },
   {
-    key: 'lineNumber',
-    itemType: 'numeric',
-    text: str_(UIStrings.columnLineNumber),
+    key: 'loadTime',
+    itemType: 'ms',
     granularity: 1,
+    text: str_(UIStrings.columnLoadTime),
   },
 ];
 
 /**
- * @param {LH.Artifacts.NetworkRequest} dynamicReq
- * @return {{url: string, lineNumber: number}[]}
- */
-function getDetailsTable(dynamicReq) {
-  const table = [];
-  const seen = new Set();
-  for (let stack = dynamicReq.initiator.stack; stack; stack = stack.parent) {
-    for (const {url, lineNumber} of stack.callFrames) {
-      if (seen.has(url)) continue;
-      table.push({url, lineNumber});
-      seen.add(url);
-    }
-  }
-  return table;
-}
-
-/**
  * Returns the estimated opportunity in loading GPT statically.
- * @param {LH.Artifacts.NetworkRequest} tagRequest
+ * @param {LH.Artifacts.NetworkRequest[]} tagRequests
  * @param {LH.Artifacts.NetworkRequest[]} networkRecords
  * @return {number}
  */
-function quantifyOpportunityMs(tagRequest, networkRecords) {
+function quantifyOpportunityMs(tagRequests, networkRecords) {
   // The first HTML-initiated request is the best possible load time.
   const firstResource = networkRecords.find((r) =>
     ['parser', 'preload'].includes(r.initiator.type) ||
@@ -88,8 +69,22 @@ function quantifyOpportunityMs(tagRequest, networkRecords) {
   if (!firstResource) {
     return 0;
   }
-  return (tagRequest.startTime - firstResource.startTime) * 1e3;
+
+  const tags = new Set(tagRequests);
+  const loadTimes = networkRecords
+      .filter((r) => tags.has(r.initiatorRequest))
+      .map((r) => r.startTime - firstResource.startTime);
+
+  return Math.min(...loadTimes) * 1e3;
 }
+
+const TAGS = [
+  /amazon-adsystem.com\/aax2\/apstag.js/,
+  /js-sec.indexww.com\/ht\/p\/.*.js/,
+  /pubads.g.doubleclick.net\/tag\/js\/gpt.js/,
+  /static.criteo.net\/js\/.*\/publishertag.js/,
+  /www.googletagservices.com\/tag\/js\/gpt.js/,
+];
 
 /** @inheritDoc */
 class StaticAdTags extends Audit {
@@ -103,7 +98,7 @@ class StaticAdTags extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
@@ -113,35 +108,55 @@ class StaticAdTags extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const tagReqs = networkRecords
-        .filter((req) => isGptTag(new URL(req.url)));
+        .filter((req) => TAGS.find((t) => req.url.match(t)));
 
     if (!tagReqs.length) {
       return auditNotApplicable.NoTag;
     }
 
-    const numStatic = array.count(tagReqs, isStaticRequest);
-    const numTags = tagReqs.length;
+    const seenUrls = new Set();
+    const tableView = [];
 
-    const dynamicReq = tagReqs.find((r) => !isStaticRequest(r));
-    const table = dynamicReq ? getDetailsTable(dynamicReq) : [];
+    /** @type {Map<NetworkRequest, NodeTiming>} */
+    const timingsByRecord =
+        await getTimingsByRecord(trace, devtoolsLog, context);
 
-    const failed = numStatic < numTags;
+    for (const tag of tagReqs) {
+      if (seenUrls.has(tag.url)) continue;
+      seenUrls.add(tag.url);
+      const relatedTags = tagReqs.filter((t) => t.url === tag.url);
+
+      const numStatic = array.count(
+        relatedTags, (t) => t.initiator.type === 'parser' && !t.isLinkPreload);
+      if (numStatic === 0) {
+        const tags = new Set(relatedTags);
+        const initiatedRequest =
+          networkRecords.find((r) => tags.has(r.initiatorRequest));
+        const loadTime = initiatedRequest ?
+          timingsByRecord.get(initiatedRequest).startTime :
+          timingsByRecord.get(tag).endTime;
+        tableView.push({url: tag.url, loadTime});
+      }
+    }
+    const failed = tableView.length > 0;
     let displayValue = '';
     if (failed) {
-      const opportunity = quantifyOpportunityMs(tagReqs[0], networkRecords);
+      const opportunity = quantifyOpportunityMs(tagReqs, networkRecords);
       if (opportunity > 100) {
         displayValue = str_(
-          UIStrings.failureDisplayValue, {timeInMs: opportunity});
+          UIStrings.failureDisplayValue, {tags: tableView.length});
       }
     }
 
+    tableView.sort((a, b) => a.loadTime - b.loadTime);
     return {
       displayValue,
       score: Number(!failed),
-      details: StaticAdTags.makeTableDetails(HEADINGS, table),
+      details: StaticAdTags.makeTableDetails(HEADINGS, tableView),
     };
   }
 }
