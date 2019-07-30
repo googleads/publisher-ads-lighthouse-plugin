@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const ComputedAdRequestTime = require('../computed/ad-request-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
@@ -166,6 +167,7 @@ class SerialHeaderBidding extends Audit {
     if (!unfilteredNetworkRecords.length) {
       return auditNotApplicable.NoRecords;
     }
+
     const mainFrameId = unfilteredNetworkRecords[0].frameId;
 
     // Filter out requests without responses, image responses, and responses
@@ -186,6 +188,10 @@ class SerialHeaderBidding extends Audit {
       return auditNotApplicable.NoBids;
     }
 
+    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const {timing: adRequestTime} =
+      await ComputedAdRequestTime.request(metricData, context);
+
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord = await getTimingsByRecord(
       trace, devtoolsLog, context);
@@ -199,6 +205,9 @@ class SerialHeaderBidding extends Audit {
 
     // Iterate forward in order of start time.
     for (const record of headerBiddingRecords) {
+      if (record.endTime > adRequestTime) {
+        continue;
+      }
       record.bidder = getHeaderBidder(record.url);
       record.url = clearQueryString(record.url);
 
