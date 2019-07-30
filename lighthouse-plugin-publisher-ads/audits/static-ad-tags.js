@@ -17,6 +17,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
+const {getAdCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -113,6 +114,19 @@ class StaticAdTags extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const tagReqs = networkRecords
         .filter((req) => TAGS.find((t) => req.url.match(t)));
+
+    const criticalRequests = getAdCriticalGraph(
+      networkRecords, trace.traceEvents);
+    for (const req of criticalRequests) {
+      if (req.resourceType !== 'Script' || req.initiator.type !== 'script') {
+        continue;
+      }
+      if (!req.initiatorRequest ||
+        req.initiatorRequest.url !== req.documentURL) {
+        continue;
+      }
+      tagReqs.push(req);
+    }
 
     if (!tagReqs.length) {
       return auditNotApplicable.NoTag;
