@@ -15,13 +15,18 @@
 const array = require('../utils/array.js');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAdCriticalGraph} = require('../utils/graph');
-const {getTimingsByRecord} = require('../utils/network-timing');
+const {getScriptEvaluationTimes} = require('../utils/network-timing');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
+
+// Don't bother failing on scripts that are dynamically inserted but load
+// quickly.
+const MINIMUM_LOAD_TIME_MS = 400;
 
 const UIStrings = {
   title: 'Ad tags are loaded statically',
@@ -117,12 +122,21 @@ class StaticAdTags extends Audit {
 
     const criticalRequests = getAdCriticalGraph(
       networkRecords, trace.traceEvents);
+    // Find critical scripts that were loaded by inline scripts, which could
+    // have been loaded statically.
     for (const req of criticalRequests) {
-      if (req.resourceType !== 'Script' || req.initiator.type !== 'script') {
+      if (req.resourceType !== 'Script') {
+        // Don't count resources that aren't scripts.
         continue;
       }
-      if (!req.initiatorRequest ||
-        req.initiatorRequest.url !== req.documentURL) {
+      if (req.initiator.type !== 'script') {
+        // Don't count resources that weren't loaded by inline scripts.
+        continue;
+      }
+      const initiators = PageDependencyGraph.getNetworkInitiators(req);
+      if (initiators.length !== 1 || initiators[0] !== req.documentURL) {
+        // We can't recommend static loading of requests that depend on other
+        // scripts.
         continue;
       }
       tagReqs.push(req);
@@ -135,10 +149,8 @@ class StaticAdTags extends Audit {
     const seenUrls = new Set();
     const tableView = [];
 
-    /** @type {Map<NetworkRequest, NodeTiming>} */
-    const timingsByRecord =
-        await getTimingsByRecord(trace, devtoolsLog, context);
-
+    const scriptTimes =
+      await getScriptEvaluationTimes(trace, devtoolsLog, context);
     for (const tag of tagReqs) {
       if (seenUrls.has(tag.url)) continue;
       seenUrls.add(tag.url);
@@ -147,13 +159,14 @@ class StaticAdTags extends Audit {
       const numStatic = array.count(
         relatedTags, (t) => t.initiator.type === 'parser' && !t.isLinkPreload);
       if (numStatic === 0) {
-        const tags = new Set(relatedTags);
-        const initiatedRequest =
-          networkRecords.find((r) => tags.has(r.initiatorRequest));
-        const loadTime = initiatedRequest ?
-          timingsByRecord.get(initiatedRequest).startTime :
-          timingsByRecord.get(tag).endTime;
-        tableView.push({url: tag.url, loadTime});
+        const loadTime = scriptTimes.get(tag.url);
+        if (loadTime < MINIMUM_LOAD_TIME_MS) {
+          continue;
+        }
+        tableView.push({
+          url: tag.url,
+          loadTime,
+        });
       }
     }
     const failed = tableView.length > 0;
@@ -170,6 +183,7 @@ class StaticAdTags extends Audit {
     return {
       displayValue,
       score: Number(!failed),
+      numericValue: tableView.length,
       details: StaticAdTags.makeTableDetails(HEADINGS, tableView),
     };
   }

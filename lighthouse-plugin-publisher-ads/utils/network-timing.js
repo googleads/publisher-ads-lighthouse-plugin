@@ -13,12 +13,8 @@
 // limitations under the License.
 
 const AdLanternMetric = require('../computed/ad-lantern-metric');
-// eslint-disable-next-line no-unused-vars
-const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // @ts-ignore
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
-// eslint-disable-next-line no-unused-vars
-const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {isGptAdRequest, isImplTag} = require('./resource-classification');
@@ -110,10 +106,54 @@ async function getTimingsByRecord(trace, devtoolsLog, context) {
   return timingsByRecord;
 }
 
+/**
+ * @param {LH.TraceEvent} e A trace event.
+ * @return {string|undefined} A script URL, if applicable.
+ */
+function getScriptUrl(e) {
+  if (!e.args.data) {
+    return undefined;
+  }
+  if (!['EvaluateScript', 'FunctionCall'].includes(e.name)) {
+    return undefined;
+  }
+  if (e.args.data.url) {
+    return e.args.data.url;
+  }
+  if (e.args.data.stackTrace) {
+    return e.args.data.stackTrace[0].url;
+  }
+  return undefined;
+}
+
+/**
+ * Returns the load time for each script based on when the script execute. This
+ * is particularly important when network timing does not reflect execution
+ * time (for example if the script was preloaded).
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
+ * @param {number=} defaultValue
+ * @return {Promise<Map<string, number>>} A map from script URL to evaluation
+ *   time.
+ */
+async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
+  const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+  const pageStartTime = getPageStartTime(networkRecords) * 1000;
+  /** @type {Map<string, number>} */
+  const results = new Map();
+  for (const e of trace.traceEvents) {
+    const script = getScriptUrl(e);
+    if (script && !results.has(script)) {
+      results.set(script, (e.ts / 1000) - pageStartTime);
+    }
+  }
+  return results;
+}
+
 module.exports = {
   getTagEndTime,
   getAdStartTime,
   getPageStartTime,
   getPageResponseTime,
   getTimingsByRecord,
+  getScriptEvaluationTimes,
 };
