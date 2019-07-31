@@ -19,7 +19,7 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {getAdCriticalGraph} = require('../utils/graph');
+const {computeAdRequestWaterfall} = require('../utils/graph');
 const {getAttributableUrl} = require('../utils/tasks');
 const {getPageStartTime} = require('../utils/network-timing');
 
@@ -273,20 +273,9 @@ class IdleNetworkTimes extends Audit {
     const timerEvents =
         trace.traceEvents.filter((t) => t.name.startsWith('Timer'));
 
-    const criticalRequests =
-      getAdCriticalGraph(networkRecords, trace.traceEvents);
-
     const pageStartTime = getPageStartTime(networkRecords);
-    const blockingRequests = Array.from(criticalRequests)
-        .filter((r) => ['Script', 'XHR', 'Fetch', 'EventStream', 'Document'].includes(r.resourceType))
-        .filter((r) => r.mimeType != 'text/css')
-        .filter((r) => r.startTime > 0)
-        .map((r) => ({
-          startTime: (r.startTime - pageStartTime) * 1e3,
-          endTime: (r.endTime - pageStartTime) * 1e3,
-        }))
-        .sort((a, b) => a.startTime - b.startTime);
-
+    const blockingRequests =
+      await computeAdRequestWaterfall(trace, devtoolsLog, context);
     if (!blockingRequests.length) {
       return auditNotApplicable.NoAdRelatedReq;
     }
