@@ -17,7 +17,7 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 // @ts-ignore
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {Audit} = require('lighthouse');
-const {getAdCriticalGraph} = require('../utils/graph');
+const {computeAdRequestWaterfall} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -49,8 +49,10 @@ const HEADINGS = [
   {key: 'functionName', itemType: 'text', text: str_(UIStrings.columnFunctionName)},
 ];
 
+/** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
+
 /**
- * @param {NetworkRequest} request
+ * @param {SimpleRequest} request
  * @return {LH.Crdp.Runtime.CallFrame}
  */
 function findOriginalCallFrame(request) {
@@ -168,9 +170,8 @@ class BlockingLoadEvents extends Audit {
       await getTimingsByRecord(trace, devtoolsLog, context);
 
     const criticalRequests =
-      Array.from(getAdCriticalGraph(networkRecords, trace.traceEvents))
-      // Sort by start time so we process the earliest requests first.
-      // @ts-ignore
+      (await computeAdRequestWaterfall(trace, devtoolsLog, context))
+          // Sort by start time so we process the earliest requests first.
           .sort((a, b) => a.startTime - b.startTime);
 
     const eventTimes = [

@@ -17,10 +17,14 @@ const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-n
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {assert} = require('./asserts');
+const {getAbbreviatedUrl, trimUrl} = require('../utils/resource-classification');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
+const {getTimingsByRecord} = require('../utils/network-timing');
 const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
 
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 /** @typedef {LH.TraceEvent} TraceEvent */
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 
@@ -248,28 +252,163 @@ function buildNetworkSummary(networkRecords, traceEvents) {
 }
 
 /**
+ * @typedef {Object} SimpleRequest
+ * @property {string} url
+ * @property {string} abbreviatedUrl
+ * @property {string} type
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ * @property {number} selfTime
+ * @property {LH.Crdp.Network.Initiator} [initiator]
+ */
+
+/**
+ * Checks if two requests are similar enough to be merged.
+ * @param {SimpleRequest} r1
+ * @param {SimpleRequest} r2
+ * @return {boolean}
+ */
+function areSimilarRequests(r1, r2) {
+  if (Math.max(r1.startTime, r2.startTime) > Math.min(r1.endTime, r2.endTime)) {
+    return false;
+  }
+  if (r1.type && r2.type && r1.type != r2.type) {
+    return false;
+  }
+  return r1.abbreviatedUrl == r2.abbreviatedUrl;
+}
+
+/**
+ * Summarizes the given array of requests by merging overlapping requests with
+ * the same url. The resulting array will be ordered by start time.
+ * @param {SimpleRequest[]} requests
+ * @return {SimpleRequest[]}
+ */
+function computeSummaries(requests) {
+  // Sort requests by URL first since we will merge overlapping records with
+  // the same URL below, using a similar algorithm to std::unique.
+  // Within a url, we sort by time to make overlap checks easier.
+  requests.sort((a, b) => {
+    if (a.abbreviatedUrl != b.abbreviatedUrl) {
+      return a.abbreviatedUrl < b.abbreviatedUrl ? -1 : 1;
+    }
+    if (a.type != b.type) {
+      return a.type < b.type ? -1 : 1;
+    }
+    if (a.startTime != b.startTime) {
+      return a.startTime < b.startTime ? -1 : 1;
+    }
+    return a.endTime - b.endTime;
+  });
+  const result = [];
+  for (let i = 0; i < requests.length; i++) {
+    const current = requests[i];
+    let next;
+    while (i < requests.length) {
+      next = requests[i + 1];
+      if (!next || !areSimilarRequests(next, current)) {
+        break;
+      }
+      current.url = current.abbreviatedUrl;
+      current.endTime = Math.max(current.endTime, next.endTime);
+      current.duration = current.endTime - current.startTime;
+      i++;
+    }
+    result.push(current);
+  }
+  result.sort((a, b) => a.startTime - b.startTime);
+  return result;
+}
+
+/**
+ * @param {SimpleRequest[]} requests A pre-sorted list of requests by start
+ *   time.
+ */
+function computeSelfTimes(requests) {
+  if (!requests.length) {
+    return [];
+  }
+  /** @type {SimpleRequest} */
+  let bottlneckRequest = assert(requests[0]);
+  bottlneckRequest.selfTime = bottlneckRequest.duration;
+
+  let scanEnd = bottlneckRequest.startTime;
+
+  for (const current of requests) {
+    if (current.endTime < scanEnd || current == bottlneckRequest) {
+      // Overlaps with previous requests, skip to avoid double counting.
+      continue;
+    }
+    const left = Math.max(scanEnd, current.startTime);
+    const right = Math.min(bottlneckRequest.endTime, current.endTime);
+    if (left < right) {
+      // @ts-ignore selfTime is initialized elsewhere, so it won't be undefined.
+      bottlneckRequest.selfTime -= (right - left);
+    }
+    scanEnd = Math.max(scanEnd, right);
+    if (current.endTime > bottlneckRequest.endTime) {
+      current.selfTime = current.endTime - left;
+      bottlneckRequest = current;
+    }
+  }
+}
+
+// TODO(warrengm): Memoize this function?
+/**
  * Returns all requests in the loading graph of ads. This will return the empty
  * set if no ad requests are present.
- * @param {NetworkRequest[]} networkRecords
- * @param {TraceEvent[]} traceEvents
- * @return {Set<NetworkRequest>}
+ * @param {LH.Trace} trace
+ * @param {LH.DevtoolsLog} devtoolsLog
+ * @param {LH.Audit.Context} context
+ * @return {Promise<SimpleRequest[]>}
  */
-function getAdCriticalGraph(networkRecords, traceEvents) {
+async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
+  const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+
   const maybeFirstAdRequest = networkRecords.find(isGptAdRequest);
   const criticalRequests = new Set();
   if (maybeFirstAdRequest == null) {
-    return criticalRequests;
+    return Promise.resolve([]);
   }
   const firstAdRequest = assert(maybeFirstAdRequest);
   const bidRequests = networkRecords.filter((r) =>
     !!getHeaderBidder(r.url) && r.endTime <= firstAdRequest.startTime);
-  const summary = buildNetworkSummary(networkRecords, traceEvents);
+  const summary = buildNetworkSummary(networkRecords, trace.traceEvents);
   for (const req of [firstAdRequest, ...bidRequests]) {
     linkGraph(summary, req, criticalRequests);
   }
-  const result = new Set(Array.from(criticalRequests).filter(
-    (r) => r.endTime < firstAdRequest.startTime || r == firstAdRequest));
+
+  const REQUEST_TYPES = new Set([
+    'Script', 'XHR', 'Fetch', 'EventStream', 'Document', undefined]);
+  const waterfall = Array.from(criticalRequests)
+      .filter((r) => r.endTime < firstAdRequest.startTime)
+      .filter((r) => REQUEST_TYPES.has(r.resourceType))
+      .filter((r) => r.mimeType != 'text/css');
+
+  /** @type {Map<NetworkRequest, NodeTiming>} */
+  const timingsByRecord =
+      await getTimingsByRecord(trace, devtoolsLog, context);
+  const timedWaterfall = waterfall.map((req) => {
+    const {startTime, endTime} = timingsByRecord.get(req) || req;
+    return {
+      startTime,
+      endTime,
+      duration: endTime - startTime,
+      selfTime: 0, // Computed below.
+      url: trimUrl(req.url),
+      abbreviatedUrl: getAbbreviatedUrl(req.url),
+      type: req.resourceType,
+      initiator: req.initiator,
+    };
+  });
+  const result = computeSummaries(timedWaterfall);
+  computeSelfTimes(result);
   return result;
 }
 
-module.exports = {getTransitiveClosure, getCriticalGraph, getAdCriticalGraph};
+module.exports = {
+  getTransitiveClosure,
+  getCriticalGraph,
+  computeAdRequestWaterfall,
+};
