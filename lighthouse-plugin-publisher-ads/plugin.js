@@ -61,7 +61,7 @@ module.exports = {
       {id: 'ad-request-from-page-start', weight: 4, group: 'metrics'},
       {id: 'first-ad-paint', weight: 8, group: 'metrics'},
       // Performance group.
-      {id: 'critical-blocking-requests', weight: 1, group: 'ads-performance'},
+      {id: 'bottleneck-requests', weight: 1, group: 'ads-performance'},
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},

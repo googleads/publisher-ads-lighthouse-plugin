@@ -70,7 +70,7 @@ class BottleneckRequests extends Audit {
    */
   static get meta() {
     return {
-      id: 'critical-blocking-requests',
+      id: 'bottleneck-requests',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
@@ -101,7 +101,7 @@ class BottleneckRequests extends Audit {
         .slice(0, 5);
     const blockedTime =
       // @ts-ignore param types not inferred.
-      criticalRequests.reduce((sum, r) => sum + r.selfTime, 0) / 1000;
+      criticalRequests.reduce((sum, r) => sum + r.selfTime, 0);
     const failed = blockedTime > CRITICAL_SELF_TIME_MS * 4;
     return {
       numericValue: criticalRequests.length,
