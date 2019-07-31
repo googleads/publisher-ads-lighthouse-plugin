@@ -31,10 +31,10 @@ const MINIMUM_LOAD_TIME_MS = 400;
 const UIStrings = {
   title: 'Ad tags are loaded statically',
   failureTitle: 'Load ad tags statically',
-  description: 'Tags loaded dynamically are not visible to the browser ' +
-  'preloader. Consider using a static tag or `<link rel=\"preload\">` so the ' +
-  'browser may load tag sooner. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags' +
+  description: 'Load the following scripts directly with ' +
+  '`<script async src=...>` instead of injecting scripts with JavaScript. ' +
+  'Doing so allows the browser to preload scripts sooner. [Learn more](' +
+  'https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/' +
   ').',
   failureDisplayValue: 'Load {tags, plural, =1 {1 script} other {# scripts}} statically',
   columnUrl: 'Script',
