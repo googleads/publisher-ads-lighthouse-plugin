@@ -152,6 +152,26 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
       results.set(script, (e.ts / 1000) - pageStartTime);
     }
   }
+  if (context.settings.throttlingMethod !== 'simulate') {
+    return results;
+  }
+  // Offset each timing by network timings to account for simulation.
+  const timingsByRecord = await getTimingsByRecord(trace, devtoolsLog, context);
+  for (const [req, timing] of timingsByRecord.entries()) {
+    const scriptEvalTime = results.get(req.url);
+    if (!scriptEvalTime) {
+      continue;
+    }
+    const unsimulatedNetworkTime = req.startTime * 1000 - pageStartTime;
+    const simulatedNetworkTime = timing.endTime;
+
+    const cpuFactor = context.settings.throttling.cpuSlowdownMultiplier;
+    // Any time between script eval and network response is due to cpu.
+    const unsimulatedCpuTime = scriptEvalTime - unsimulatedNetworkTime;
+    const simulatedCpuTime = cpuFactor * unsimulatedCpuTime;
+    // Update results.
+    results.set(req.url, simulatedNetworkTime + simulatedCpuTime);
+  }
   return results;
 }
 

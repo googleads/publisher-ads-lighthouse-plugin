@@ -18,7 +18,7 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {getAdCriticalGraph} = require('../utils/graph');
+const {computeAdRequestWaterfall} = require('../utils/graph');
 const {getScriptEvaluationTimes} = require('../utils/network-timing');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -97,26 +97,26 @@ class StaticAdTags extends Audit {
     const tagReqs = networkRecords.filter(
       (req) => STATICALLY_LOADABLE_TAGS.find((t) => req.url.match(t)));
 
-    const criticalRequests = getAdCriticalGraph(
-      networkRecords, trace.traceEvents);
+    const criticalRequests =
+      await computeAdRequestWaterfall(trace, devtoolsLog, context);
     // Find critical scripts that were loaded by inline scripts, which could
     // have been loaded statically.
-    for (const req of criticalRequests) {
-      if (req.resourceType !== 'Script') {
+    for (const {record} of criticalRequests) {
+      if (record.resourceType !== 'Script') {
         // Don't count resources that aren't scripts.
         continue;
       }
-      if (req.initiator.type !== 'script') {
+      if (record.initiator.type !== 'script') {
         // Don't count resources that weren't loaded by inline scripts.
         continue;
       }
-      const initiators = PageDependencyGraph.getNetworkInitiators(req);
-      if (initiators.length !== 1 || initiators[0] !== req.documentURL) {
+      const initiators = PageDependencyGraph.getNetworkInitiators(record);
+      if (initiators.length !== 1 || initiators[0] !== record.documentURL) {
         // We can't recommend static loading of requests that depend on other
         // scripts.
         continue;
       }
-      tagReqs.push(req);
+      tagReqs.push(record);
     }
 
     if (!tagReqs.length) {

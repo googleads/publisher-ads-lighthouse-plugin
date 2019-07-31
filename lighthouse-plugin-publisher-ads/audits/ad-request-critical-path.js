@@ -122,6 +122,10 @@ class AdRequestCriticalPath extends Audit {
     const depth = computeDepth(tableView);
     const failed = depth > 3;
 
+    for (const row of tableView) {
+      delete row.record; // Remove circular references before serialization.
+    }
+
     return {
       numericValue: depth,
       score: failed ? 0 : 1,
