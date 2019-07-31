@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,31 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const array = require('../utils/array.js');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {getTimingsByRecord} = require('../utils/network-timing');
-const {getTransitiveClosure} = require('../utils/graph');
-const {isGptAdRequest} = require('../utils/resource-classification');
+const {getAdCriticalGraph} = require('../utils/graph');
+const {getScriptEvaluationTimes} = require('../utils/network-timing');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
+// Don't bother failing on scripts that are dynamically inserted but load
+// quickly.
+const MINIMUM_LOAD_TIME_MS = 400;
+
 const UIStrings = {
-  title: 'No script-injected tags found',
-  failureTitle: 'Avoid script-injected tags',
-  description: 'Load scripts directly with `<script async src=...>` instead ' +
-  'of injecting scripts with JavaScript. This allows the browser fetch the ' +
-  'script sooner. [Learn more](' +
+  title: 'Ad tags are loaded statically',
+  failureTitle: 'Load ad tags statically',
+  description: 'Load the following scripts directly with ' +
+  '`<script async src=...>` instead of injecting scripts with JavaScript. ' +
+  'Doing so allows the browser to preload scripts sooner. [Learn more](' +
   'https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/' +
   ').',
-  displayValue: '{numTags, plural, =1 {1 script-injected resource} ' +
-  'other {# script-injected resources}}',
-  columnRequest: 'Resource',
-  columnStartTime: 'Start',
-  columnDuration: 'Duration',
-  columnLineNumber: 'Source Line Number',
+  failureDisplayValue: 'Load {tags, plural, =1 {1 script} other {# scripts}} statically',
+  columnUrl: 'Script',
+  columnLoadTime: 'Load Time',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -47,42 +49,35 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  */
 const HEADINGS = [
   {
-    key: 'request',
+    key: 'url',
     itemType: 'url',
-    text: str_(UIStrings.columnRequest),
+    text: str_(UIStrings.columnUrl),
   },
   {
-    key: 'startTime',
+    key: 'loadTime',
     itemType: 'ms',
-    text: str_(UIStrings.columnStartTime),
     granularity: 1,
-  },
-  {
-    key: 'duration',
-    itemType: 'ms',
-    text: str_(UIStrings.columnDuration),
-    granularity: 1,
-  },
-  {
-    key: 'lineNumber',
-    itemType: 'numeric',
-    text: str_(UIStrings.columnLineNumber),
-    granularity: 1,
+    text: str_(UIStrings.columnLoadTime),
   },
 ];
 
-/**
- * Audit to check the length of the critical path to load ads.
- * Also determines the critical path for visualization purposes.
- */
-class ScriptInjectedTags extends Audit {
+const STATICALLY_LOADABLE_TAGS = [
+  /amazon-adsystem.com\/aax2\/apstag.js/,
+  /js-sec.indexww.com\/ht\/p\/.*.js/,
+  /pubads.g.doubleclick.net\/tag\/js\/gpt.js/,
+  /static.criteo.net\/js\/.*\/publishertag.js/,
+  /www.googletagservices.com\/tag\/js\/gpt.js/,
+];
+
+/** @inheritDoc */
+class StaticAdTags extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
     return {
-      id: 'script-injected-tags',
+      id: 'static-ad-tags',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
@@ -98,39 +93,71 @@ class ScriptInjectedTags extends Audit {
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    // @ts-ignore
-    const mainDocumentNode = await PageDependencyGraph.request(
-      {trace, devtoolsLog}, context);
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    const tagReqs = networkRecords.filter(
+      (req) => STATICALLY_LOADABLE_TAGS.find((t) => req.url.match(t)));
 
-    const closure = getTransitiveClosure(mainDocumentNode, isGptAdRequest);
-    if (!closure.requests.length) {
-      return auditNotApplicable.NoAdRelatedReq;
+    const criticalRequests = getAdCriticalGraph(
+      networkRecords, trace.traceEvents);
+    // Find critical scripts that were loaded by inline scripts, which could
+    // have been loaded statically.
+    for (const req of criticalRequests) {
+      if (req.resourceType !== 'Script') {
+        // Don't count resources that aren't scripts.
+        continue;
+      }
+      if (req.initiator.type !== 'script') {
+        // Don't count resources that weren't loaded by inline scripts.
+        continue;
+      }
+      const initiators = PageDependencyGraph.getNetworkInitiators(req);
+      if (initiators.length !== 1 || initiators[0] !== req.documentURL) {
+        // We can't recommend static loading of requests that depend on other
+        // scripts.
+        continue;
+      }
+      tagReqs.push(req);
     }
-    const injectedBlockingRequests = closure.requests
-        .filter((r) =>
-          r.resourceType == 'Script' && r.initiator.type == 'script')
-        .filter((r) =>
-          r.initiatorRequest && r.initiatorRequest.url == r.documentURL);
 
-    /** @type {Map<NetworkRequest, NodeTiming>} */
-    const timings = await getTimingsByRecord(
-      trace, devtoolsLog, context);
-    const tableView = injectedBlockingRequests.map((req) =>
-      Object.assign({}, timings.get(req), {
-        request: req.url,
-        lineNumber: req.initiator.stack.callFrames[0].lineNumber,
-      }));
-    tableView.sort((a, b) => a.startTime - b.startTime);
+    if (!tagReqs.length) {
+      return auditNotApplicable.NoTag;
+    }
+
+    const seenUrls = new Set();
+    const tableView = [];
+
+    const scriptTimes =
+      await getScriptEvaluationTimes(trace, devtoolsLog, context);
+    for (const tag of tagReqs) {
+      if (seenUrls.has(tag.url)) continue;
+      seenUrls.add(tag.url);
+      const relatedTags = tagReqs.filter((t) => t.url === tag.url);
+
+      const numStatic = array.count(
+        relatedTags, (t) => t.initiator.type === 'parser' && !t.isLinkPreload);
+      if (numStatic === 0) {
+        const loadTime = scriptTimes.get(tag.url) || 0;
+        if (loadTime < MINIMUM_LOAD_TIME_MS) {
+          continue;
+        }
+        tableView.push({
+          url: tag.url,
+          loadTime,
+        });
+      }
+    }
+    tableView.sort((a, b) => a.loadTime - b.loadTime);
 
     const failed = tableView.length > 0;
     return {
+      displayValue: failed ?
+        str_(UIStrings.failureDisplayValue, {tags: tableView.length}) : '',
+      score: Number(!failed),
       numericValue: tableView.length,
-      score: failed ? 0 : 1,
-      displayValue: str_(UIStrings.displayValue, {numTags: tableView.length}),
-      details: ScriptInjectedTags.makeTableDetails(HEADINGS, tableView),
+      details: StaticAdTags.makeTableDetails(HEADINGS, tableView),
     };
   }
 }
 
-module.exports = ScriptInjectedTags;
+module.exports = StaticAdTags;
 module.exports.UIStrings = UIStrings;
