@@ -101,8 +101,8 @@ class BottleneckRequests extends Audit {
         .slice(0, 5);
     const blockedTime =
       // @ts-ignore param types not inferred.
-      criticalRequests.reduce((sum, r) => sum + r.selfTime, 0);
-    const failed = blockedTime > CRITICAL_SELF_TIME_MS * 4;
+      criticalRequests.reduce((sum, r) => sum + r.selfTime, 0) / 1000;
+    const failed = blockedTime * 1e3 > CRITICAL_SELF_TIME_MS * 4;
     return {
       numericValue: criticalRequests.length,
       score: failed ? 0 : 1,
