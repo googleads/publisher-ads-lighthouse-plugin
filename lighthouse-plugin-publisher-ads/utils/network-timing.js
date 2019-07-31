@@ -23,6 +23,11 @@ const {URL} = require('url');
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
+/* eslint-disable max-len */
+/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
+/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js')} NetworkNode */
+/* eslint-enable max-len */
+
 /**
  * Returns end time of tag load (s) relative to system boot.
  * @param {LH.Artifacts.NetworkRequest[]} networkRecords
@@ -130,8 +135,9 @@ function getScriptUrl(e) {
  * Returns the load time for each script based on when the script execute. This
  * is particularly important when network timing does not reflect execution
  * time (for example if the script was preloaded).
- * @param {LH.Artifacts.NetworkRequest[]} networkRecords
- * @param {number=} defaultValue
+ * @param {LH.Trace} trace
+ * @param {LH.DevtoolsLog} devtoolsLog
+ * @param {LH.Audit.Context} context
  * @return {Promise<Map<string, number>>} A map from script URL to evaluation
  *   time.
  */

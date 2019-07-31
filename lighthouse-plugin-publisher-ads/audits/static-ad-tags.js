@@ -61,30 +61,7 @@ const HEADINGS = [
   },
 ];
 
-/**
- * Returns the estimated opportunity in loading GPT statically.
- * @param {LH.Artifacts.NetworkRequest[]} tagRequests
- * @param {LH.Artifacts.NetworkRequest[]} networkRecords
- * @return {number}
- */
-function quantifyOpportunityMs(tagRequests, networkRecords) {
-  // The first HTML-initiated request is the best possible load time.
-  const firstResource = networkRecords.find((r) =>
-    ['parser', 'preload'].includes(r.initiator.type) ||
-    r.resourceType == 'Script');
-  if (!firstResource) {
-    return 0;
-  }
-
-  const tags = new Set(tagRequests);
-  const loadTimes = networkRecords
-      .filter((r) => tags.has(r.initiatorRequest))
-      .map((r) => r.startTime - firstResource.startTime);
-
-  return Math.min(...loadTimes) * 1e3;
-}
-
-const TAGS = [
+const STATICALLY_LOADABLE_TAGS = [
   /amazon-adsystem.com\/aax2\/apstag.js/,
   /js-sec.indexww.com\/ht\/p\/.*.js/,
   /pubads.g.doubleclick.net\/tag\/js\/gpt.js/,
@@ -117,8 +94,8 @@ class StaticAdTags extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const tagReqs = networkRecords
-        .filter((req) => TAGS.find((t) => req.url.match(t)));
+    const tagReqs = networkRecords.filter(
+      (req) => STATICALLY_LOADABLE_TAGS.find((t) => req.url.match(t)));
 
     const criticalRequests = getAdCriticalGraph(
       networkRecords, trace.traceEvents);
@@ -159,7 +136,7 @@ class StaticAdTags extends Audit {
       const numStatic = array.count(
         relatedTags, (t) => t.initiator.type === 'parser' && !t.isLinkPreload);
       if (numStatic === 0) {
-        const loadTime = scriptTimes.get(tag.url);
+        const loadTime = scriptTimes.get(tag.url) || 0;
         if (loadTime < MINIMUM_LOAD_TIME_MS) {
           continue;
         }
@@ -169,19 +146,12 @@ class StaticAdTags extends Audit {
         });
       }
     }
-    const failed = tableView.length > 0;
-    let displayValue = '';
-    if (failed) {
-      const opportunity = quantifyOpportunityMs(tagReqs, networkRecords);
-      if (opportunity > 100) {
-        displayValue = str_(
-          UIStrings.failureDisplayValue, {tags: tableView.length});
-      }
-    }
-
     tableView.sort((a, b) => a.loadTime - b.loadTime);
+
+    const failed = tableView.length > 0;
     return {
-      displayValue,
+      displayValue: failed ?
+        str_(UIStrings.failureDisplayValue, {tags: tableView.length}) : '',
       score: Number(!failed),
       numericValue: tableView.length,
       details: StaticAdTags.makeTableDetails(HEADINGS, tableView),
