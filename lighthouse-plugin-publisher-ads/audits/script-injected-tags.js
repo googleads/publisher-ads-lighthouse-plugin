@@ -29,8 +29,8 @@ const {getScriptEvaluationTimes} = require('../utils/network-timing');
 const MINIMUM_LOAD_TIME_MS = 400;
 
 const UIStrings = {
-  title: 'Ad tags are loaded statically',
-  failureTitle: 'Load ad tags statically',
+  title: 'Ad scripts are loaded statically',
+  failureTitle: 'Load ad scripts statically',
   description: 'Load the following scripts directly with ' +
   '`<script async src=...>` instead of injecting scripts with JavaScript. ' +
   'Doing so allows the browser to preload scripts sooner. [Learn more](' +
@@ -77,7 +77,7 @@ class StaticAdTags extends Audit {
    */
   static get meta() {
     return {
-      id: 'static-ad-tags',
+      id: 'script-injected-tags',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
