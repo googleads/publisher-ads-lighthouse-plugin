@@ -132,7 +132,7 @@ function getScriptUrl(e) {
 }
 
 /**
- * Returns the load time for each script based on when the script execute. This
+ * Returns the load time for each script based on when the script executed. This
  * is particularly important when network timing does not reflect execution
  * time (for example if the script was preloaded).
  * @param {LH.Trace} trace
