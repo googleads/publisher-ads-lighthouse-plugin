@@ -1,3 +1,6 @@
+<!-- This page should fail script-injected-tags audit even though gpt.js is
+     requested statically from a link preload. -->
+
 <head>
 <link rel=preload as=script href=https://securepubads.g.doubleclick.net/tag/js/gpt.js>
 </head>
