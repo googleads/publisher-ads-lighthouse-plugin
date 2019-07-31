@@ -14,7 +14,6 @@
 
 const array = require('../utils/array.js');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
@@ -69,6 +68,56 @@ const STATICALLY_LOADABLE_TAGS = [
   /www.googletagservices.com\/tag\/js\/gpt.js/,
 ];
 
+/**
+ * Checks if the given record was initiated by an inline script with
+ * dependencies on any other resource.
+ * That is, the record was initiated by another script insert a <script> tag
+ * into the DOM using doc.write or body.appendChild, for example.
+ * @param {NetworkRequest} record
+ * @return {boolean}
+ */
+function initiatedByInlineScript(record) {
+  if (record.initiator.type !== 'script') {
+    // Initiated by some other means, e.g. preload link or static script tag.
+    return false;
+  }
+  const initiators = PageDependencyGraph.getNetworkInitiators(record);
+  if (initiators.length !== 1 || initiators[0] !== record.documentURL) {
+    // Depends on some other script.
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Finds requests for tags that could have been loaded statically but were not.
+ * @param {LH.Artifacts} artifacts
+ * @param {LH.Audit.Context} context
+ * @return {Promise<NetworkRequest[]>}
+ */
+async function findStaticallyLoadableTags(artifacts, context) {
+  const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+  const trace = artifacts.traces[Audit.DEFAULT_PASS];
+
+  const tagReqs = [];
+
+  // Next add any scripts that appear that they can be loaded statically based
+  // on page analysis.
+  const criticalRequests =
+    await computeAdRequestWaterfall(trace, devtoolsLog, context);
+  for (const {record} of criticalRequests) {
+    if (record.resourceType !== 'Script') {
+      // Don't count resources that aren't scripts.
+      continue;
+    }
+    if (initiatedByInlineScript(record) ||
+      STATICALLY_LOADABLE_TAGS.find((t) => record.url.match(t))) {
+      tagReqs.push(record);
+    }
+  }
+  return tagReqs;
+}
+
 /** @inheritDoc */
 class StaticAdTags extends Audit {
   /**
@@ -91,34 +140,7 @@ class StaticAdTags extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const tagReqs = networkRecords.filter(
-      (req) => STATICALLY_LOADABLE_TAGS.find((t) => req.url.match(t)));
-
-    const criticalRequests =
-      await computeAdRequestWaterfall(trace, devtoolsLog, context);
-    // Find critical scripts that were loaded by inline scripts, which could
-    // have been loaded statically.
-    for (const {record} of criticalRequests) {
-      if (record.resourceType !== 'Script') {
-        // Don't count resources that aren't scripts.
-        continue;
-      }
-      if (record.initiator.type !== 'script') {
-        // Don't count resources that weren't loaded by inline scripts.
-        continue;
-      }
-      const initiators = PageDependencyGraph.getNetworkInitiators(record);
-      if (initiators.length !== 1 || initiators[0] !== record.documentURL) {
-        // We can't recommend static loading of requests that depend on other
-        // scripts.
-        continue;
-      }
-      tagReqs.push(record);
-    }
-
+    const tagReqs = await findStaticallyLoadableTags(artifacts, context);
     if (!tagReqs.length) {
       return auditNotApplicable.NoTag;
     }
@@ -126,6 +148,8 @@ class StaticAdTags extends Audit {
     const seenUrls = new Set();
     const tableView = [];
 
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const scriptTimes =
       await getScriptEvaluationTimes(trace, devtoolsLog, context);
     for (const tag of tagReqs) {
