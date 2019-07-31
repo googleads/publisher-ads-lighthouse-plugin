@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,25 +17,23 @@ const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
 
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
-/** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
 
 const UIStrings = {
-  title: 'Minimal requests found in ad critical path',
-  failureTitle: 'Reduce critical path for ad loading',
-  description: 'Consider reducing the number of resources, loading multiple ' +
-  'resources simultaneously, or loading resources earlier to improve ad ' +
-  'speed. Requests that block ad loading can be found below. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-critical-path' +
-  ').',
-  displayValue: '{serialResources, plural, =1 {1 serial resource} other {# serial resources}}',
-  columnUrl: 'Request',
-  columnType: 'Type',
+  title: 'No bottleneck requests found',
+  failureTitle: 'Avoid bottleneck requests',
+  description: 'Speed up, parallelize, or eliminate the following ' +
+    'requests and their dependencies in order to speed up ad loading.',
+  displayValue: '{blockedTime, number, seconds} s spent blocked on requests',
+  columnUrl: 'Blocking Request',
+  columnInitiatorUrl: 'Initiator Request',
   columnStartTime: 'Start',
-  columnEndTime: 'End',
+  columnSelfTime: 'Self Time',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+
 
 /**
  * Table headings for audits details sections.
@@ -48,55 +46,31 @@ const HEADINGS = [
     text: str_(UIStrings.columnUrl),
   },
   {
-    key: 'type',
-    itemType: 'text',
-    text: str_(UIStrings.columnType),
-  },
-  {
     key: 'startTime',
     itemType: 'ms',
     text: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
-    key: 'endTime',
+    key: 'selfTime',
     itemType: 'ms',
-    text: str_(UIStrings.columnEndTime),
+    text: str_(UIStrings.columnSelfTime),
     granularity: 1,
   },
 ];
 
-/**
- * Comptues the depth of the loading graph by comparing timings.
- * @param {SimpleRequest[]} requests
- * @return {number}
- */
-function computeDepth(requests) {
-  let prevEnd = 0;
-  let hops = 0;
-  for (const {startTime, endTime} of requests) {
-    if (startTime > prevEnd) {
-      ++hops;
-      prevEnd = endTime;
-    } else {
-      prevEnd = Math.min(prevEnd, endTime);
-    }
-  }
-  return hops;
-}
 
 /**
- * Audit to check the length of the critical path to load ads.
- * Also determines the critical path for visualization purposes.
+ * Audits any bottlneck requests in the path of loading ads.
  */
-class AdRequestCriticalPath extends Audit {
+class BottleneckRequests extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
     return {
-      id: 'ad-request-critical-path',
+      id: 'bottleneck-requests',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
@@ -113,27 +87,31 @@ class AdRequestCriticalPath extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
 
-    const tableView =
+    const waterfall =
       (await computeAdRequestWaterfall(trace, devtoolsLog, context))
           .filter((r) => r.startTime > 0);
-    if (!tableView.length) {
-      return auditNotApplicable.NoAds;
+    if (!waterfall.length) {
+      return auditNotApplicable.NoAdRelatedReq;
     }
-    const depth = computeDepth(tableView);
-    const failed = depth > 3;
-
+    const CRITICAL_SELF_TIME_MS = 200;
+    const criticalRequests = waterfall
+        .filter((a) => a.selfTime > CRITICAL_SELF_TIME_MS)
+        .sort((a, b) => b.selfTime - a.selfTime)
+        // Only show the top critical requests for the sake of brevity.
+        .slice(0, 5);
+    const blockedTime =
+      // @ts-ignore param types not inferred.
+      criticalRequests.reduce((sum, r) => sum + r.selfTime, 0) / 1000;
+    const failed = blockedTime * 1e3 > CRITICAL_SELF_TIME_MS * 4;
     return {
-      numericValue: depth,
+      numericValue: criticalRequests.length,
       score: failed ? 0 : 1,
-      displayValue: str_(UIStrings.displayValue,
-        {
-          serialResources: depth,
-          totalResources: tableView.length,
-        }),
-      details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
+      displayValue: failed ? str_(UIStrings.displayValue, {blockedTime}) : '',
+      details:
+        BottleneckRequests.makeTableDetails(HEADINGS, criticalRequests),
     };
   }
 }
 
-module.exports = AdRequestCriticalPath;
+module.exports = BottleneckRequests;
 module.exports.UIStrings = UIStrings;
