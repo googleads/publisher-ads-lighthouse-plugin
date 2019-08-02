@@ -205,7 +205,9 @@ class SerialHeaderBidding extends Audit {
 
     // Iterate forward in order of start time.
     for (const record of headerBiddingRecords) {
-      if (record.endTime > adRequestTime) {
+      // We don't check the bid time against ad request time if there are no ad
+      // requests.
+      if (adRequestTime > 0 && record.endTime > adRequestTime) {
         continue;
       }
       record.bidder = getHeaderBidder(record.url);
