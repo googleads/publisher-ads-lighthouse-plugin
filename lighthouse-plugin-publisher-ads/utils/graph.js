@@ -260,6 +260,7 @@ function buildNetworkSummary(networkRecords, traceEvents) {
  * @property {number} endTime
  * @property {number} duration
  * @property {number} selfTime
+ * @property {NetworkRequest} [record]
  */
 
 /**
@@ -398,6 +399,7 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
       url: trimUrl(req.url),
       abbreviatedUrl: getAbbreviatedUrl(req.url),
       type: req.resourceType,
+      record: req,
     };
   });
   const result = computeSummaries(timedWaterfall);
