@@ -56,7 +56,8 @@ const HEADINGS = [
  * @return {LH.Crdp.Runtime.CallFrame}
  */
 function findOriginalCallFrame(request) {
-  let stack = request.initiator && request.initiator.stack;
+  const {record} = request;
+  let stack = record && record.initiator && record.initiator.stack;
   if (!stack) {
     return undefined;
   }
