@@ -23,13 +23,15 @@ const {computeAdRequestWaterfall} = require('../utils/graph');
 const UIStrings = {
   title: 'No bottleneck requests found',
   failureTitle: 'Avoid bottleneck requests',
-  description: 'Speed up, parallelize, or eliminate the following ' +
-    'requests and their dependencies in order to speed up ad loading.',
+  description: 'Speed up, load earlier, parallelize, or eliminate the ' +
+    'following requests and their dependencies in order to speed up ad ' +
+    'loading.',
   displayValue: '{blockedTime, number, seconds} s spent blocked on requests',
   columnUrl: 'Blocking Request',
   columnInitiatorUrl: 'Initiator Request',
   columnStartTime: 'Start',
-  columnSelfTime: 'Self Time',
+  columnSelfTime: 'Exclusive Time',
+  columnDuration: 'Total Time',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -46,15 +48,15 @@ const HEADINGS = [
     text: str_(UIStrings.columnUrl),
   },
   {
-    key: 'startTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnStartTime),
-    granularity: 1,
-  },
-  {
     key: 'selfTime',
     itemType: 'ms',
     text: str_(UIStrings.columnSelfTime),
+    granularity: 1,
+  },
+  {
+    key: 'duration',
+    itemType: 'ms',
+    text: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -93,10 +95,15 @@ class BottleneckRequests extends Audit {
     if (!waterfall.length) {
       return auditNotApplicable.NoAdRelatedReq;
     }
-    const CRITICAL_SELF_TIME_MS = 200;
+    const CRITICAL_SELF_TIME_MS = 250;
+    const CRITICAL_DURATION_MS = 1000;
+    const isBottleneck = (r) =>
+      r.selfTime > CRITICAL_SELF_TIME_MS || r.duration > CRITICAL_DURATION_MS;
+    // selfTime is more costly than duration so weigh it more than duration.
+    const cost = (r) => r.selfTime * 3 + r.duration;
     const criticalRequests = waterfall
-        .filter((a) => a.selfTime > CRITICAL_SELF_TIME_MS)
-        .sort((a, b) => b.selfTime - a.selfTime)
+        .filter(isBottleneck)
+        .sort((a, b) => cost(b) - cost(a))
         // Only show the top critical requests for the sake of brevity.
         .slice(0, 5);
     const blockedTime =
