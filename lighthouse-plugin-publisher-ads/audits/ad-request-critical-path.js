@@ -21,7 +21,7 @@ const {computeAdRequestWaterfall} = require('../utils/graph');
 /** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
 
 const UIStrings = {
-  title: 'Ad request waterfall',
+  title: 'Minimal requests found in ad critical path',
   failureTitle: 'Reduce critical path for ad loading',
   description: 'Consider reducing the number of resources, loading multiple ' +
   'resources simultaneously, or loading resources earlier to improve ad ' +
@@ -100,7 +100,6 @@ class AdRequestCriticalPath extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      scoreDisplayMode: 'informative',
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
