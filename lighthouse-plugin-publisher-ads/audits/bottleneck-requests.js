@@ -18,7 +18,7 @@ const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
-/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
+/** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
 
 const UIStrings = {
   title: 'No bottleneck requests found',
@@ -97,9 +97,11 @@ class BottleneckRequests extends Audit {
     }
     const CRITICAL_SELF_TIME_MS = 250;
     const CRITICAL_DURATION_MS = 1000;
+    /** @param {SimpleRequest} r @return {boolean} */
     const isBottleneck = (r) =>
       r.selfTime > CRITICAL_SELF_TIME_MS || r.duration > CRITICAL_DURATION_MS;
     // selfTime is more costly than duration so weigh it more than duration.
+    /** @param {SimpleRequest} r @return {number} */
     const cost = (r) => r.selfTime * 3 + r.duration;
     const criticalRequests = waterfall
         .filter(isBottleneck)
