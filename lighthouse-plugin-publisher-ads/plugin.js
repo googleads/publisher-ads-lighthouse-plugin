@@ -77,6 +77,10 @@ module.exports = {
       {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
+      // The following audits are run but not shown. We include them to be able
+      // collect metadata about the audit, but decide to hide them since they
+      // aren't actionable to end users.
+      {id: 'idle-network-times', weight: 0},
     ],
   },
 };
