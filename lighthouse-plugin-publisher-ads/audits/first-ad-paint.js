@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdPaintTime = require('../computed/ad-paint-time');
+const ComputedAdPaintTime = require('../computed/ad-paint-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
@@ -30,8 +30,8 @@ const UIStrings = {
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 // Point of diminishing returns.
-const PODR = 3000; // ms
-const MEDIAN = 4000; // ms
+const PODR = 2700; // ms
+const MEDIAN = 3700; // ms
 
 /**
  * Measures the first ad paint time.
@@ -51,7 +51,7 @@ class FirstAdPaint extends Audit {
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       // @ts-ignore
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'IFrameElements'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
   /**
@@ -65,10 +65,9 @@ class FirstAdPaint extends Audit {
     const metricData = {
       devtoolsLog,
       trace,
-      iframeElements: artifacts.IFrameElements,
       settings: context.settings,
     };
-    const {timing} = await AdPaintTime.request(metricData, context);
+    const {timing} = await ComputedAdPaintTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
       context.LighthouseRunWarnings.push(runWarning.NoAdRendered);

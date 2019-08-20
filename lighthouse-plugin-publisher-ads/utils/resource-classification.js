@@ -46,6 +46,22 @@ function isImplTag(url) {
 }
 
 /**
+ * Checks if the url is an impression ping.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isImpressionPing(url) {
+  const {host, pathname} = toURL(url);
+  return (
+    [
+      'securepubads.g.doubleclick.net',
+      'googleads4.g.doubleclick.net',
+    ].includes(host) &&
+    ['/pcs/view', '/pagead/adview'].includes(pathname)
+  );
+}
+
+/**
  * Checks if the url is loading a gpt.js script.
  * @param {URL|string} url
  * @return {boolean}
@@ -94,15 +110,6 @@ function isGptAdRequest(request) {
   );
 }
 
-/**
- * Checks if the url has an impression path.
- * @param {URL} url
- * @return {boolean}
- */
-function hasImpressionPath(url) {
-  return url.pathname === '/pcs/view' ||
-      url.pathname === '/pagead/adview';
-}
 
 /**
  * Returns header bidder or undefined if not a bid.
@@ -201,7 +208,7 @@ module.exports = {
   isBidRequest,
   isGoogleAds,
   isGptAdRequest,
-  hasImpressionPath,
+  isImpressionPing,
   isGpt,
   isGptTag,
   isImplTag,

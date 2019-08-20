@@ -17,7 +17,7 @@ const AdLanternMetric = require('../computed/ad-lantern-metric');
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
-const {isGptAdRequest, isImplTag} = require('./resource-classification');
+const {isGptAdRequest, isImplTag, isImpressionPing} = require('./resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -48,6 +48,17 @@ function getAdStartTime(networkRecords) {
   const firstAdRecord = networkRecords.find(
     (record) => isGptAdRequest(record));
   return firstAdRecord ? firstAdRecord.startTime : -1;
+}
+
+/**
+ * Returns start time of first ad impression relative to system boot.
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
+ * @return {number}
+ */
+function getImpressionStartTime(networkRecords) {
+  const firstImpressionRecord = networkRecords.find(
+    (record) => isImpressionPing(record.url));
+  return firstImpressionRecord ? firstImpressionRecord.startTime : -1;
 }
 
 /**
@@ -177,6 +188,7 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
 
 module.exports = {
   getTagEndTime,
+  getImpressionStartTime,
   getAdStartTime,
   getPageStartTime,
   getPageResponseTime,

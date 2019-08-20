@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const {expect} = require('chai');
-const {isGoogleAds, isGptAdRequest, hasImpressionPath, isGptTag} = require('../../utils/resource-classification');
+const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {
@@ -106,20 +106,25 @@ describe('resource-classification', () => {
     });
   });
 
-  describe('#hasImpressionPath', () => {
-    it('should return true for /pcs/view as the impression path', () => {
-      const url = new URL('https://googlesyndication.com/pcs/view?bar=baz');
-      expect(hasImpressionPath(url)).to.be.true;
+  describe('#isImpressionPing', () => {
+    it('should return true for securepubads.g.doubleclick.net/pcs/view as the impression path', () => {
+      const url = new URL('https://securepubads.g.doubleclick.net/pcs/view?bar=baz');
+      expect(isImpressionPing(url)).to.be.true;
+    });
+
+    it('should return true for googleads4.g.doubleclick.net/pcs/view as the impression path', () => {
+      const url = new URL('https://googleads4.g.doubleclick.net/pcs/view?bar=baz');
+      expect(isImpressionPing(url)).to.be.true;
     });
 
     it('should return true for /pagead/adview as the impression path', () => {
-      const url = new URL('https://googlesyndication.com/pagead/adview?bar=baz');
-      expect(hasImpressionPath(url)).to.be.true;
+      const url = new URL('https://securepubads.g.doubleclick.net/pagead/adview?bar=baz');
+      expect(isImpressionPing(url)).to.be.true;
     });
 
     it('should return false for any other impression path', () => {
-      const url = new URL('https://googlesyndication.com/file/folder/foo?bar=baz');
-      expect(hasImpressionPath(url)).to.be.false;
+      const url = new URL('https://securepubads.g.doubleclick.net/file/folder/foo?bar=baz');
+      expect(isImpressionPing(url)).to.be.false;
     });
   });
 
