@@ -70,6 +70,29 @@ function isGpt(url) {
 }
 
 /**
+ * Checks if the url is loading an AdSense script.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isAdSenseTag(url) {
+  const {host, pathname} = toURL(url);
+  const matchesHost = [
+    'pagead2.googlesyndication.com'].includes(host);
+  const matchesPath =
+      ['pagead/js/adsbygoogle.js'].includes(pathname);
+  return matchesHost && matchesPath;
+}
+
+/**
+ * Checks if the url is loading an AdSense script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isAdSense(url) {
+  return isAdSenseTag(url);
+}
+
+/**
  * Checks if str contains at least one provided substring.
  * @param {string} str
  * @param {Array<string>} substrings
@@ -88,9 +111,23 @@ function isGptAdRequest(request) {
   if (!request) return false;
   const url = new URL(request.url);
   return (
-    url.pathname === '/gampad/ads' &&
-    url.host === 'securepubads.g.doubleclick.net' &&
-    request.resourceType === 'XHR'
+      url.pathname === '/gampad/ads' &&
+      url.host === 'securepubads.g.doubleclick.net' &&
+      request.resourceType === 'XHR'
+  );
+}
+
+/**
+ * Checks if a network request is an AdSense ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isAdSenseAdRequest(request) {
+  if (!request) return false;
+  const url = new URL(request.url);
+  return (
+      url.pathname === 'pagead/ads' &&
+      url.host === 'googleads.g.doubleclick.net'
   );
 }
 
@@ -169,6 +206,14 @@ function isGptIframe(iframe) {
 }
 
 /**
+ * @param {Artifacts['IFrameElement']} iframe
+ * @return {boolean}
+ */
+function isAdSenseIframe(iframe) {
+  return /(^google_ads_frame)/.test(iframe.id);
+}
+
+/**
  * Removes the query string from the URL.
  * @param {string} url
  * @return {string}
@@ -201,14 +246,18 @@ module.exports = {
   isBidRequest,
   isGoogleAds,
   isGptAdRequest,
+  isAdSenseAdRequest,
   hasImpressionPath,
   isGpt,
   isGptTag,
   isImplTag,
+  isAdSense,
+  isAdSenseTag,
   containsAnySubstring,
   getHeaderBidder,
   isStaticRequest,
   isGptIframe,
+  isAdSenseIframe,
   getAbbreviatedUrl,
   trimUrl,
 };
