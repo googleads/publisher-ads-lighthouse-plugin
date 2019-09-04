@@ -37,6 +37,68 @@ function isGoogleAds(url) {
 }
 
 /**
+ * Checks if the url is loading an AdSense script.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isAdSenseTag(url) {
+  const {host, pathname} = toURL(url);
+  const matchesHost = [
+    'pagead2.googlesyndication.com'].includes(host);
+  const matchesPath =
+      [
+        '/pagead/js/adsbygoogle.js',
+        '/pagead/show_ads.js',
+      ].includes(pathname);
+  return matchesHost && matchesPath;
+}
+
+/**
+ * Checks if the url is loading an AdSense script.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isAdSenseImplTag(url) {
+  const {host, pathname} = toURL(url);
+  const matchesHost = [
+    'pagead2.googlesyndication.com'].includes(host);
+  const matchesPath =
+      /(^\/pagead\/js\/.*\/show_ads_impl\.js)/.test(pathname);
+  return matchesHost && matchesPath;
+}
+
+/**
+ * Checks if the url is loading an AdSense loader or impl script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isAdSense(url) {
+  return isAdSenseTag(url) || isAdSenseImplTag(url);
+}
+
+/**
+ * Checks if a network request is an AdSense ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isAdSenseAdRequest(request) {
+  if (!request) return false;
+  const url = new URL(request.url);
+  return (
+    url.pathname === '/pagead/ads' &&
+    url.host === 'googleads.g.doubleclick.net'
+  );
+}
+
+/**
+ * @param {Artifacts['IFrameElement']} iframe
+ * @return {boolean}
+ */
+function isAdSenseIframe(iframe) {
+  return /(^google_ads_frame)/.test(iframe.id);
+}
+
+/**
  * Checks if the url is loading a gpt.js script.
  * @param {URL|string} url
  * @return {boolean}
@@ -57,7 +119,7 @@ function isGptTag(url) {
  * @return {boolean}
  */
 function isGptImplTag(url) {
-  return /(^\/gpt\/pubads_impl_\d+.js)/.test(toURL(url).pathname);
+  return /(^\/gpt\/pubads_impl_\d+\.js)/.test(toURL(url).pathname);
 }
 
 /**
@@ -90,53 +152,6 @@ function isGptAdRequest(request) {
  */
 function isGptIframe(iframe) {
   return /(^google_ads_iframe_)/.test(iframe.id);
-}
-
-/**
- * Checks if the url is loading an AdSense script.
- * @param {URL|string} url
- * @return {boolean}
- */
-function isAdSenseTag(url) {
-  const {host, pathname} = toURL(url);
-  const matchesHost = [
-    'pagead2.googlesyndication.com'].includes(host);
-  const matchesPath =
-      ['/pagead/js/adsbygoogle.js'].includes(pathname);
-  return matchesHost && matchesPath;
-}
-
-/**
- * Checks if the url is loading an AdSense script. Kind of pointless since
- * AdSense doesn't have a separate loader, but provided anyway for symmetry with
- * isGpt().
- * @param {URL} url
- * @return {boolean}
- */
-function isAdSense(url) {
-  return isAdSenseTag(url);
-}
-
-/**
- * Checks if a network request is an AdSense ad request.
- * @param {LH.Artifacts.NetworkRequest} request
- * @return {boolean}
- */
-function isAdSenseAdRequest(request) {
-  if (!request) return false;
-  const url = new URL(request.url);
-  return (
-    url.pathname === '/pagead/ads' &&
-    url.host === 'googleads.g.doubleclick.net'
-  );
-}
-
-/**
- * @param {Artifacts['IFrameElement']} iframe
- * @return {boolean}
- */
-function isAdSenseIframe(iframe) {
-  return /(^google_ads_frame)/.test(iframe.id);
 }
 
 /**
@@ -274,15 +289,16 @@ function getAbbreviatedUrl(url) {
 
 module.exports = {
   isGoogleAds,
+  isAdSense,
+  isAdSenseTag,
+  isAdSenseImplTag,
+  isAdSenseAdRequest,
+  isAdSenseIframe,
   isGptTag,
   isGptImplTag,
   isGpt,
   isGptAdRequest,
   isGptIframe,
-  isAdSense,
-  isAdSenseTag,
-  isAdSenseAdRequest,
-  isAdSenseIframe,
   isAdTag,
   isAdRequest,
   isImplTag,
