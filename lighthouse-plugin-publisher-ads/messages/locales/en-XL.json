@@ -224,16 +224,16 @@
   "audits/loads-gpt-from-sgdn.js | title": {
     "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ f̂ŕôḿ r̂éĉóm̂ḿêńd̂éd̂ h́ôśt̂"
   },
-  "audits/loads-gpt-over-https.js | description": {
-    "message": "F̂ór̂ ṕr̂ív̂áĉý âńd̂ śêćûŕît́ŷ, ál̂ẃâýŝ ĺôád̂ ǴP̂T́ ôv́êŕ ĤT́T̂ṔŜ. Ín̂śêćûŕê ṕâǵêś ŝh́ôúl̂d́ êx́p̂ĺîćît́l̂ý r̂éq̂úêśt̂ t́ĥé ĜṔT̂ śĉŕîṕt̂ śêćûŕêĺŷ. Éx̂ám̂ṕl̂é:`<ŝćr̂íp̂t́ âśŷńĉ śr̂ć=\"ĥt́t̂ṕŝ://śêćûŕêṕûb́âd́ŝ.ǵ.d̂óûb́l̂éĉĺîćk̂.ńêt́/t̂áĝ/j́ŝ/ǵp̂t́.ĵś\">`. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/l̂óâd́ŝ-ǵp̂t́-ôv́êŕ-ĥt́t̂ṕŝ)."
+  "audits/loads-ad-tag-over-https.js | description": {
+    "message": "F̂ór̂ ṕr̂ív̂áĉý âńd̂ śêćûŕît́ŷ, ál̂ẃâýŝ ĺôád̂ ǴP̂T́ ôv́êŕ ĤT́T̂ṔŜ. Ín̂śêćûŕê ṕâǵêś ŝh́ôúl̂d́ êx́p̂ĺîćît́l̂ý r̂éq̂úêśt̂ t́ĥé ĜṔT̂ śĉŕîṕt̂ śêćûŕêĺŷ. Éx̂ám̂ṕl̂é:`<ŝćr̂íp̂t́ âśŷńĉ śr̂ć=\"ĥt́t̂ṕŝ://śêćûŕêṕûb́âd́ŝ.ǵ.d̂óûb́l̂éĉĺîćk̂.ńêt́/t̂áĝ/j́ŝ/ǵp̂t́.ĵś\"> ôŕ `<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\">``. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/l̂óâd́ŝ-ǵp̂t́-ôv́êŕ-ĥt́t̂ṕŝ)."
   },
-  "audits/loads-gpt-over-https.js | failureDisplayValue": {
+  "audits/loads-ad-tag-over-https.js | failureDisplayValue": {
     "message": "L̂óâd́ ĝṕt̂.j́ŝ óv̂ér̂ H́T̂T́P̂Ś"
   },
-  "audits/loads-gpt-over-https.js | failureTitle": {
+  "audits/loads-ad-tag-over-https.js | failureTitle": {
     "message": "L̂óâd́ ĜṔT̂ óv̂ér̂ H́T̂T́P̂Ś"
   },
-  "audits/loads-gpt-over-https.js | title": {
+  "audits/loads-ad-tag-over-https.js | title": {
     "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ ôv́êŕ ĤT́T̂ṔŜ"
   },
   "audits/script-injected-tags.js | columnDuration": {
@@ -361,9 +361,6 @@
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_EVENT_MATCHING_REQ": {
     "message": "N̂ó êv́êńt̂ ḿât́ĉh́êś n̂ét̂ẃôŕk̂ ŕêćôŕd̂ś"
-  },
-  "messages/common-strings.js | NOT_APPLICABLE__NO_GPT": {
-    "message": "ĜṔT̂ ńôt́ r̂éq̂úêśt̂éd̂"
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_RECORDS": {
     "message": "N̂ó ŝúĉćêśŝf́ûĺ n̂ét̂ẃôŕk̂ ŕêćôŕd̂ś"

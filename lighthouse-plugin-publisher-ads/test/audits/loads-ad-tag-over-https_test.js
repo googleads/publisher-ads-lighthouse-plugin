@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const LoadsGptOverHttps = require('../../audits/loads-gpt-over-https');
+const LoadsAdTagOverHttps = require('../../audits/loads-ad-tag-over-https');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const sinon = require('sinon');
 const {expect} = require('chai');
 
-describe('LoadsGptOverHttps', async () => {
+describe('LoadsAdTagOverHttps', async () => {
   let sandbox;
   beforeEach(() => {
     sandbox = sinon.createSandbox();
@@ -25,7 +25,7 @@ describe('LoadsGptOverHttps', async () => {
   afterEach(() => {
     sandbox.restore();
   });
-  describe('numGptHttpReqs', async () => {
+  describe('numAdTagHttpReqs', async () => {
     const testCases = [
       {
         networkRecords: [],
@@ -48,8 +48,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 0,
-        expectedNumGptHttpReqs: 1,
-        expectedNumGptHttpsReqs: 1,
+        expectedNumAdTagHttpReqs: 1,
+        expectedNumAdTagHttpsReqs: 1,
       },
       {
         networkRecords: [
@@ -64,8 +64,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 1,
-        expectedNumGptHttpReqs: 0,
-        expectedNumGptHttpsReqs: 1,
+        expectedNumAdTagHttpReqs: 0,
+        expectedNumAdTagHttpsReqs: 1,
       },
       {
         networkRecords: [
@@ -84,8 +84,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 0,
-        expectedNumGptHttpReqs: 1,
-        expectedNumGptHttpsReqs: 1,
+        expectedNumAdTagHttpReqs: 1,
+        expectedNumAdTagHttpsReqs: 1,
       },
       {
         networkRecords: [
@@ -100,8 +100,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 0,
-        expectedNumGptHttpReqs: 1,
-        expectedNumGptHttpsReqs: 0,
+        expectedNumAdTagHttpReqs: 1,
+        expectedNumAdTagHttpsReqs: 0,
       },
       {
         networkRecords: [
@@ -124,8 +124,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 0,
-        expectedNumGptHttpReqs: 2,
-        expectedNumGptHttpsReqs: 1,
+        expectedNumAdTagHttpReqs: 2,
+        expectedNumAdTagHttpsReqs: 1,
       },
       {
         networkRecords: [
@@ -148,36 +148,56 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 0,
-        expectedNumGptHttpReqs: 3,
-        expectedNumGptHttpsReqs: 0,
+        expectedNumAdTagHttpReqs: 3,
+        expectedNumAdTagHttpsReqs: 0,
+      },
+      {
+        networkRecords: [
+          {
+            url: 'https://example.com',
+            isSecure: true,
+            statusCode: 200,
+          },
+          {
+            url: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+            isSecure: true,
+          },
+          {
+            url: 'http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js#foo',
+            isSecure: false,
+          },
+        ],
+        expectedScore: 0,
+        expectedNumAdTagHttpReqs: 1,
+        expectedNumAdTagHttpsReqs: 1,
       },
     ];
     for (const {networkRecords, expectedScore, expectedNotAppl,
-      expectedNumGptHttpReqs, expectedNumGptHttpsReqs} of testCases) {
+      expectedNumAdTagHttpReqs, expectedNumAdTagHttpsReqs} of testCases) {
       it(`should have a score of ${expectedScore} with` +
-        ` ${expectedNumGptHttpReqs} HTTP requests and` +
-        ` ${expectedNumGptHttpsReqs} HTTPS requests`, async () => {
+        ` ${expectedNumAdTagHttpReqs} HTTP requests and` +
+        ` ${expectedNumAdTagHttpsReqs} HTTPS requests`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
-        const results = await LoadsGptOverHttps.audit({devtoolsLogs: {}}, {});
+        const results = await LoadsAdTagOverHttps.audit({devtoolsLogs: {}}, {});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
           expect(results).to.have.property('score', expectedScore);
           expect(results).with.property('details')
-              .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
+              .property('numAdTagHttpReqs').equal(expectedNumAdTagHttpReqs);
           expect(results).with.property('details')
-              .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
+              .property('numAdTagHttpsReqs').equal(expectedNumAdTagHttpsReqs);
         }
       });
     }
   });
 
-  describe('numGptHttpsReqs', async () => {
+  describe('numAdTagHttpsReqs', async () => {
     const testCases = [
       {
         networkRecords: [],
-        expectedNumGptHttpReqs: 0,
-        expectedNumGptHttpsReqs: 0,
+        expectedNumAdTagHttpReqs: 0,
+        expectedNumAdTagHttpsReqs: 0,
         expectedNotAppl: true,
       },
       {
@@ -193,8 +213,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 0,
-        expectedNumGptHttpReqs: 1,
-        expectedNumGptHttpsReqs: 0,
+        expectedNumAdTagHttpReqs: 1,
+        expectedNumAdTagHttpsReqs: 0,
       },
       {
         networkRecords: [
@@ -217,8 +237,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 0,
-        expectedNumGptHttpReqs: 1,
-        expectedNumGptHttpsReqs: 2,
+        expectedNumAdTagHttpReqs: 1,
+        expectedNumAdTagHttpsReqs: 2,
       },
       {
         networkRecords: [
@@ -233,8 +253,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 1,
-        expectedNumGptHttpReqs: 0,
-        expectedNumGptHttpsReqs: 1,
+        expectedNumAdTagHttpReqs: 0,
+        expectedNumAdTagHttpsReqs: 1,
       },
       {
         networkRecords: [
@@ -253,8 +273,8 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 1,
-        expectedNumGptHttpReqs: 0,
-        expectedNumGptHttpsReqs: 2,
+        expectedNumAdTagHttpReqs: 0,
+        expectedNumAdTagHttpsReqs: 2,
       },
       {
         networkRecords: [
@@ -277,25 +297,49 @@ describe('LoadsGptOverHttps', async () => {
           },
         ],
         expectedScore: 1,
-        expectedNumGptHttpReqs: 0,
-        expectedNumGptHttpsReqs: 3,
+        expectedNumAdTagHttpReqs: 0,
+        expectedNumAdTagHttpsReqs: 3,
+      },
+      {
+        networkRecords: [
+          {
+            url: 'http://example.com',
+            isSecure: false,
+            statusCode: 200,
+          },
+          {
+            url: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+            isSecure: true,
+          },
+          {
+            url: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?foo=bar',
+            isSecure: true,
+          },
+          {
+            url: 'http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js#foo',
+            isSecure: false,
+          },
+        ],
+        expectedScore: 0,
+        expectedNumAdTagHttpReqs: 1,
+        expectedNumAdTagHttpsReqs: 2,
       },
     ];
     for (const {networkRecords, expectedScore, expectedNotAppl,
-      expectedNumGptHttpReqs, expectedNumGptHttpsReqs} of testCases) {
+      expectedNumAdTagHttpReqs, expectedNumAdTagHttpsReqs} of testCases) {
       it(`should have a score of ${expectedScore} with` +
-        ` ${expectedNumGptHttpReqs} HTTP requests and` +
-        ` ${expectedNumGptHttpsReqs} HTTPS requests`, async () => {
+        ` ${expectedNumAdTagHttpReqs} HTTP requests and` +
+        ` ${expectedNumAdTagHttpsReqs} HTTPS requests`, async () => {
         sandbox.stub(NetworkRecords, 'request').returns(networkRecords);
-        const results = await LoadsGptOverHttps.audit({devtoolsLogs: {}}, {});
+        const results = await LoadsAdTagOverHttps.audit({devtoolsLogs: {}}, {});
         if (expectedNotAppl) {
           expect(results).to.have.property('notApplicable', true);
         } else {
           expect(results).to.have.property('score', expectedScore);
           expect(results).with.property('details')
-              .property('numGptHttpReqs').equal(expectedNumGptHttpReqs);
+              .property('numAdTagHttpReqs').equal(expectedNumAdTagHttpReqs);
           expect(results).with.property('details')
-              .property('numGptHttpsReqs').equal(expectedNumGptHttpsReqs);
+              .property('numAdTagHttpsReqs').equal(expectedNumAdTagHttpsReqs);
         }
       });
     }

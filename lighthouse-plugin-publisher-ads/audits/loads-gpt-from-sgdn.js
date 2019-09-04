@@ -61,7 +61,7 @@ class LoadsGptFromSgdn extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const gptUrl = networkRecords.map((r) => new URL(r.url)).find(isGptTag);
     if (!gptUrl) {
-      return auditNotApplicable.NoGpt;
+      return auditNotApplicable.NoTag;
     }
     return {
       score: Number(gptUrl.host === 'securepubads.g.doubleclick.net'),

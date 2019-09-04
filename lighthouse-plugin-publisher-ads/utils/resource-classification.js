@@ -37,15 +37,6 @@ function isGoogleAds(url) {
 }
 
 /**
- * Checks if the url is for pubads implementation tag.
- * @param {URL|string} url
- * @return {boolean}
- */
-function isImplTag(url) {
-  return /(^\/gpt\/pubads_impl_\d+.js)/.test(toURL(url).pathname);
-}
-
-/**
  * Checks if the url is loading a gpt.js script.
  * @param {URL|string} url
  * @return {boolean}
@@ -61,12 +52,44 @@ function isGptTag(url) {
 }
 
 /**
+ * Checks if the url is for pubads implementation tag.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isGptImplTag(url) {
+  return /(^\/gpt\/pubads_impl_\d+.js)/.test(toURL(url).pathname);
+}
+
+/**
  * Checks if the url is loading a gpt.js or pubads_impl_*.js script.
  * @param {URL} url
  * @return {boolean}
  */
 function isGpt(url) {
-  return isGptTag(url) || isImplTag(url);
+  return isGptTag(url) || isGptImplTag(url);
+}
+
+/**
+ * Checks if a network request is a GPT ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isGptAdRequest(request) {
+  if (!request) return false;
+  const url = new URL(request.url);
+  return (
+    url.pathname === '/gampad/ads' &&
+    url.host === 'securepubads.g.doubleclick.net' &&
+    request.resourceType === 'XHR'
+  );
+}
+
+/**
+ * @param {Artifacts['IFrameElement']} iframe
+ * @return {boolean}
+ */
+function isGptIframe(iframe) {
+  return /(^google_ads_iframe_)/.test(iframe.id);
 }
 
 /**
@@ -79,42 +102,19 @@ function isAdSenseTag(url) {
   const matchesHost = [
     'pagead2.googlesyndication.com'].includes(host);
   const matchesPath =
-      ['pagead/js/adsbygoogle.js'].includes(pathname);
+      ['/pagead/js/adsbygoogle.js'].includes(pathname);
   return matchesHost && matchesPath;
 }
 
 /**
- * Checks if the url is loading an AdSense script.
+ * Checks if the url is loading an AdSense script. Kind of pointless since
+ * AdSense doesn't have a separate loader, but provided anyway for symmetry with
+ * isGpt().
  * @param {URL} url
  * @return {boolean}
  */
 function isAdSense(url) {
   return isAdSenseTag(url);
-}
-
-/**
- * Checks if str contains at least one provided substring.
- * @param {string} str
- * @param {Array<string>} substrings
- * @return {boolean}
- */
-function containsAnySubstring(str, substrings) {
-  return substrings.some((substring) => str.includes(substring));
-}
-
-/**
- * Checks if a network request is a GPT ad request.
- * @param {LH.Artifacts.NetworkRequest} request
- * @return {boolean}
- */
-function isGptAdRequest(request) {
-  if (!request) return false;
-  const url = new URL(request.url);
-  return (
-      url.pathname === '/gampad/ads' &&
-      url.host === 'securepubads.g.doubleclick.net' &&
-      request.resourceType === 'XHR'
-  );
 }
 
 /**
@@ -126,9 +126,47 @@ function isAdSenseAdRequest(request) {
   if (!request) return false;
   const url = new URL(request.url);
   return (
-      url.pathname === 'pagead/ads' &&
-      url.host === 'googleads.g.doubleclick.net'
+    url.pathname === 'pagead/ads' &&
+    url.host === 'googleads.g.doubleclick.net'
   );
+}
+
+/**
+ * @param {Artifacts['IFrameElement']} iframe
+ * @return {boolean}
+ */
+function isAdSenseIframe(iframe) {
+  return /(^google_ads_frame)/.test(iframe.id);
+}
+
+/**
+ * Checks if the url is loading either the GPT loader script or the AdSense
+ * script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isAdTag(url) {
+  return isAdSenseTag(url) || isGptTag(url);
+}
+
+/**
+ * Checks if the url is loading either the GPT impl script or the AdSense
+ * script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isImplTag(url) {
+  return isAdSenseTag(url) || isGptImplTag(url);
+}
+
+/**
+ * Checks if str contains at least one provided substring.
+ * @param {string} str
+ * @param {Array<string>} substrings
+ * @return {boolean}
+ */
+function containsAnySubstring(str, substrings) {
+  return substrings.some((substring) => str.includes(substring));
 }
 
 /**
@@ -198,22 +236,6 @@ function isStaticRequest(request) {
 }
 
 /**
- * @param {Artifacts['IFrameElement']} iframe
- * @return {boolean}
- */
-function isGptIframe(iframe) {
-  return /(^google_ads_iframe_)/.test(iframe.id);
-}
-
-/**
- * @param {Artifacts['IFrameElement']} iframe
- * @return {boolean}
- */
-function isAdSenseIframe(iframe) {
-  return /(^google_ads_frame)/.test(iframe.id);
-}
-
-/**
  * Removes the query string from the URL.
  * @param {string} url
  * @return {string}
@@ -242,22 +264,24 @@ function getAbbreviatedUrl(url) {
 }
 
 module.exports = {
-  isBidRelatedRequest,
-  isBidRequest,
   isGoogleAds,
-  isGptAdRequest,
-  isAdSenseAdRequest,
-  hasImpressionPath,
-  isGpt,
   isGptTag,
-  isImplTag,
+  isGptImplTag,
+  isGpt,
+  isGptAdRequest,
+  isGptIframe,
   isAdSense,
   isAdSenseTag,
-  containsAnySubstring,
-  getHeaderBidder,
-  isStaticRequest,
-  isGptIframe,
+  isAdSenseAdRequest,
   isAdSenseIframe,
-  getAbbreviatedUrl,
+  isAdTag,
+  isImplTag,
+  containsAnySubstring,
+  hasImpressionPath,
+  getHeaderBidder,
+  isBidRelatedRequest,
+  isBidRequest,
+  isStaticRequest,
   trimUrl,
+  getAbbreviatedUrl,
 };

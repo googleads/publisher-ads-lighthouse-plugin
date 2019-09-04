@@ -299,20 +299,20 @@
     "message": "GPT tag is loaded from recommended host",
     "description": ""
   },
-  "audits/loads-gpt-over-https.js | description": {
-    "message": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-over-https).",
+  "audits/loads-ad-tag-over-https.js | description": {
+    "message": "For privacy and security, always load GPT/AdSense over HTTPS. Insecure pages should explicitly request the ad script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">` or `<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https).",
     "description": ""
   },
-  "audits/loads-gpt-over-https.js | failureDisplayValue": {
-    "message": "Load gpt.js over HTTPS",
+  "audits/loads-ad-tag-over-https.js | failureDisplayValue": {
+    "message": "Load ad tag over HTTPS",
     "description": ""
   },
-  "audits/loads-gpt-over-https.js | failureTitle": {
-    "message": "Load GPT over HTTPS",
+  "audits/loads-ad-tag-over-https.js | failureTitle": {
+    "message": "Load ad tag over HTTPS",
     "description": ""
   },
-  "audits/loads-gpt-over-https.js | title": {
-    "message": "GPT tag is loaded over HTTPS",
+  "audits/loads-ad-tag-over-https.js | title": {
+    "message": "Ad tag is loaded over HTTPS",
     "description": ""
   },
   "audits/script-injected-tags.js | columnDuration": {
@@ -481,10 +481,6 @@
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_EVENT_MATCHING_REQ": {
     "message": "No event matches network records",
-    "description": ""
-  },
-  "messages/common-strings.js | NOT_APPLICABLE__NO_GPT": {
-    "message": "GPT not requested",
     "description": ""
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_RECORDS": {
