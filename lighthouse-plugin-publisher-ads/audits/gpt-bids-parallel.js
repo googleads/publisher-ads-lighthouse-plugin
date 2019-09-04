@@ -118,3 +118,4 @@ class GptBidsInParallel extends Audit {
 }
 
 module.exports = GptBidsInParallel;
+module.exports.UIStrings = UIStrings;

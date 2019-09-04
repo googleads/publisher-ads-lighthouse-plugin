@@ -25,10 +25,9 @@ const UIStrings = {
   failureTitle: 'Load ad tag over HTTPS',
   description: 'For privacy and security, always load GPT/AdSense over ' +
   'HTTPS. Insecure pages should explicitly request the ad script securely. ' +
-  'Examples: ' +
-  '`<script async ' +
-  'src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">` or ' +
-  '`<script async ' +
+  'GPT Example: `<script async ' +
+  'src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">` ' +
+  'AdSense Example: `<script async ' +
   'src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\">`' +
   '. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https' +
