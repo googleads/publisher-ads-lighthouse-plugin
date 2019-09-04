@@ -126,7 +126,7 @@ function isAdSenseAdRequest(request) {
   if (!request) return false;
   const url = new URL(request.url);
   return (
-    url.pathname === 'pagead/ads' &&
+    url.pathname === '/pagead/ads' &&
     url.host === 'googleads.g.doubleclick.net'
   );
 }
@@ -147,6 +147,15 @@ function isAdSenseIframe(iframe) {
  */
 function isAdTag(url) {
   return isAdSenseTag(url) || isGptTag(url);
+}
+
+/**
+ * Checks if a network request is a GPT or AdSense ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isAdRequest(request) {
+  return isAdSenseAdRequest(request) || isGptAdRequest(request);
 }
 
 /**
@@ -275,6 +284,7 @@ module.exports = {
   isAdSenseAdRequest,
   isAdSenseIframe,
   isAdTag,
+  isAdRequest,
   isImplTag,
   containsAnySubstring,
   hasImpressionPath,

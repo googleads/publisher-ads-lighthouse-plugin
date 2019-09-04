@@ -25,6 +25,7 @@ const UIStrings = {
   NOT_APPLICABLE__NO_ADS: 'No ads requested',
   NOT_APPLICABLE__NO_BIDS: 'No bids detected',
   NOT_APPLICABLE__NO_EVENT_MATCHING_REQ: 'No event matches network records',
+  NOT_APPLICABLE__NO_GPT: 'GPT not requested',
   NOT_APPLICABLE__NO_RECORDS: 'No successful network records',
   NOT_APPLICABLE__NO_VISIBLE_SLOTS: 'No visible slots',
   NOT_APPLICABLE__NO_TAG: 'No tag requested',
@@ -68,6 +69,7 @@ const auditNotApplicable = {
   NoBids: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_BIDS),
   NoEventMatchingReq: notApplicableObj(
     UIStrings.NOT_APPLICABLE__NO_EVENT_MATCHING_REQ),
+  NoGpt: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_GPT),
   NoRecords: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_RECORDS),
   NoVisibleSlots: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_VISIBLE_SLOTS),
   NoTag: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_TAG),

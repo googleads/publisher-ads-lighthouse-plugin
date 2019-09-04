@@ -61,11 +61,12 @@ const HEADINGS = [
 ];
 
 const STATICALLY_LOADABLE_TAGS = [
-  /amazon-adsystem.com\/aax2\/apstag.js/,
-  /js-sec.indexww.com\/ht\/p\/.*.js/,
-  /pubads.g.doubleclick.net\/tag\/js\/gpt.js/,
-  /static.criteo.net\/js\/.*\/publishertag.js/,
-  /www.googletagservices.com\/tag\/js\/gpt.js/,
+  /amazon-adsystem\.com\/aax2\/apstag.js/,
+  /js-sec\.indexww\.com\/ht\/p\/.*\.js/,
+  /pubads\.g\.doubleclick\.net\/tag\/js\/gpt\.js/,
+  /static\.criteo\.net\/js\/.*\/publishertag\.js/,
+  /www\.googletagservices\.com\/tag\/js\/gpt\.js/,
+  /pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js/,
 ];
 
 /**

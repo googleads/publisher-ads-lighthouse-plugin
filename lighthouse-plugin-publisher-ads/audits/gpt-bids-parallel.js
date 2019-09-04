@@ -75,7 +75,7 @@ class GptBidsInParallel extends Audit {
 
     const pubadsImpl = network.find((r) => isGptImplTag(r.url));
     if (!pubadsImpl) {
-      return auditNotApplicable.NoTag;
+      return auditNotApplicable.NoGpt;
     }
 
     const bids = network.filter(isBidRequest)

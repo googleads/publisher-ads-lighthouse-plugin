@@ -160,15 +160,15 @@
     "description": ""
   },
   "audits/async-ad-tags.js | description": {
-    "message": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags).",
+    "message": "Loading the ad tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js and/or adsbygoogle.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags).",
     "description": ""
   },
   "audits/async-ad-tags.js | failureTitle": {
-    "message": "Load GPT asynchronously",
+    "message": "Load ad tag asynchronously",
     "description": ""
   },
   "audits/async-ad-tags.js | title": {
-    "message": "GPT tag is loaded asynchronously",
+    "message": "Ad tag is loaded asynchronously",
     "description": ""
   },
   "audits/blocking-load-events.js | columnBlockedUrl": {
@@ -468,7 +468,7 @@
     "description": ""
   },
   "audits/tag-load-time.js | description": {
-    "message": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "message": "This metric measures the time for the ad tag's implementation script (pubads_impl.js for GPT; adsbygoogle.js for AdSense) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
     "description": ""
   },
   "audits/tag-load-time.js | displayValue": {
@@ -549,6 +549,10 @@
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_EVENT_MATCHING_REQ": {
     "message": "No event matches network records",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_GPT": {
+    "message": "GPT not requested",
     "description": ""
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_RECORDS": {
