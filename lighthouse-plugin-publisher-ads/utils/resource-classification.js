@@ -95,7 +95,9 @@ function isAdSenseAdRequest(request) {
  * @return {boolean}
  */
 function isAdSenseIframe(iframe) {
-  return /(^google_ads_frame)/.test(iframe.id);
+  // TODO(jonkeller) Discuss with warrengm@ which of these is correct
+  // return /(^google_ads_frame)/.test(iframe.id);
+  return /(^aswift_\d+)/.test(iframe.id);
 }
 
 /**
@@ -155,8 +157,7 @@ function isGptIframe(iframe) {
 }
 
 /**
- * Checks if the url is loading either the GPT loader script or the AdSense
- * script.
+ * Checks if the url is loading an AdSense or GPT loader script.
  * @param {URL} url
  * @return {boolean}
  */
@@ -165,7 +166,16 @@ function isAdTag(url) {
 }
 
 /**
- * Checks if a network request is a GPT or AdSense ad request.
+ * Checks if the url is loading an AdSense or GPT loader or impl script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isAdScript(url) {
+  return isAdSense(url) || isGpt(url);
+}
+
+/**
+ * Checks if a network request is an AdSense or GPT ad request.
  * @param {LH.Artifacts.NetworkRequest} request
  * @return {boolean}
  */
@@ -174,8 +184,16 @@ function isAdRequest(request) {
 }
 
 /**
- * Checks if the url is loading either the GPT impl script or the AdSense
- * script.
+ * Checks if an iframe is an AdSense or GPT iframe.
+ * @param {Artifacts['IFrameElement']} iframe
+ * @return {boolean}
+ */
+function isAdIframe(iframe) {
+  return isAdSenseIframe(iframe) || isGptIframe(iframe);
+}
+
+/**
+ * Checks if the url is loading either the AdSense or GPT impl script.
  * @param {URL} url
  * @return {boolean}
  */
@@ -300,7 +318,9 @@ module.exports = {
   isGptAdRequest,
   isGptIframe,
   isAdTag,
+  isAdScript,
   isAdRequest,
+  isAdIframe,
   isImplTag,
   containsAnySubstring,
   hasImpressionPath,

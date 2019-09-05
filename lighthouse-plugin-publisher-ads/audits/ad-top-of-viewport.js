@@ -15,7 +15,7 @@
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {isGptIframe} = require('../utils/resource-classification');
+const {isAdIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'No ad found at the very top of the viewport',
@@ -67,7 +67,7 @@ class AdTopOfViewport extends Audit {
    */
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
-    const slots = artifacts.IFrameElements.filter(isGptIframe)
+    const slots = artifacts.IFrameElements.filter(isAdIframe)
         .filter((slot) => slot.isVisible && !slot.isFixed)
         .map((slot) => ({
           midpoint: slot.clientRect.top + slot.clientRect.height / 2,

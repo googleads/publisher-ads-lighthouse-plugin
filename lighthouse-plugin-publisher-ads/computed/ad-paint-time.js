@@ -17,7 +17,7 @@ const AdLanternMetric = require('./ad-lantern-metric');
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
-const {isGptAdRequest, isGptIframe} = require('../utils/resource-classification');
+const {isAdRequest, isAdIframe} = require('../utils/resource-classification');
 
 /**
  * Returns the frame ID of the given event, if present.
@@ -54,7 +54,7 @@ function getAdIframes(data) {
   if (!iframeElements) {
     return [];
   }
-  return iframeElements.filter(isGptIframe);
+  return iframeElements.filter(isAdIframe);
 }
 
 /** Computes simulated first ad request time using Lantern. */
@@ -71,11 +71,17 @@ class LanternAdPaintTime extends AdLanternMetric {
     const adFrameIds = new Set(iframes.map(
       /** @param {Artifacts['IFrameElement']} s */
       (s) => s.frame && s.frame.id));
+    console.log('------- adFrameIds ---------'); // DO NOT SUBMIT - remove before merging PR
+    console.dir(adFrameIds); // DO NOT SUBMIT - remove before merging PR
     const adResponseMs = AdLanternMetric.findNetworkTiming(
-      nodeTimings, isGptAdRequest).endTime;
+      nodeTimings, isAdRequest).endTime;
+    console.log('------- adResponseMs ---------'); // DO NOT SUBMIT - remove before merging PR
+    console.dir(adResponseMs); // DO NOT SUBMIT - remove before merging PR
     // TODO: filter out pixels from resources
     const firstAdResource = AdLanternMetric.findNetworkTiming(
       nodeTimings, (request) => adFrameIds.has(request.frameId)).endTime;
+    console.log('------- firstAdResource ---------'); // DO NOT SUBMIT - remove before merging PR
+    console.dir(firstAdResource); // DO NOT SUBMIT - remove before merging PR
     const timeInMs = adResponseMs + firstAdResource;
     return {timeInMs, nodeTimings};
   }

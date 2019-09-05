@@ -16,7 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable, auditError} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {boxViewableArea} = require('../utils/geometry');
-const {isGptIframe} = require('../utils/resource-classification');
+const {isAdIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Ad density in initial viewport is within recommended range',
@@ -57,7 +57,7 @@ class ViewportAdDensity extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements.filter(
-      (slot) => isGptIframe(slot) && slot.isVisible);
+      (slot) => isAdIframe(slot) && slot.isVisible);
 
     if (!slots.length) {
       return auditNotApplicable.NoVisibleSlots;
