@@ -17,7 +17,7 @@ const AdLanternMetric = require('./ad-lantern-metric');
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
-const {isAdRequest, isAdIframe} = require('../utils/resource-classification');
+const {isGptAdRequest, isGptIframe} = require('../utils/resource-classification');
 
 /**
  * Returns the frame ID of the given event, if present.
@@ -49,12 +49,12 @@ function getMinEventTime(eventName, traceEvents, adFrameIds) {
  * @param {MetricComputationData} data
  * @return {Array<Artifacts['IFrameElement']>}
  */
-function getAdIframes(data) {
+function getGptIframes(data) {
   const {iframeElements} = data;
   if (!iframeElements) {
     return [];
   }
-  return iframeElements.filter(isAdIframe);
+  return iframeElements.filter(isGptIframe);
 }
 
 /** Computes simulated first ad request time using Lantern. */
@@ -71,17 +71,11 @@ class LanternAdPaintTime extends AdLanternMetric {
     const adFrameIds = new Set(iframes.map(
       /** @param {Artifacts['IFrameElement']} s */
       (s) => s.frame && s.frame.id));
-    console.log('------- adFrameIds ---------'); // DO NOT SUBMIT - remove before merging PR
-    console.dir(adFrameIds); // DO NOT SUBMIT - remove before merging PR
     const adResponseMs = AdLanternMetric.findNetworkTiming(
-      nodeTimings, isAdRequest).endTime;
-    console.log('------- adResponseMs ---------'); // DO NOT SUBMIT - remove before merging PR
-    console.dir(adResponseMs); // DO NOT SUBMIT - remove before merging PR
+      nodeTimings, isGptAdRequest).endTime;
     // TODO: filter out pixels from resources
     const firstAdResource = AdLanternMetric.findNetworkTiming(
       nodeTimings, (request) => adFrameIds.has(request.frameId)).endTime;
-    console.log('------- firstAdResource ---------'); // DO NOT SUBMIT - remove before merging PR
-    console.dir(firstAdResource); // DO NOT SUBMIT - remove before merging PR
     const timeInMs = adResponseMs + firstAdResource;
     return {timeInMs, nodeTimings};
   }
@@ -101,7 +95,7 @@ class AdPaintTime extends ComputedMetric {
    * @override
    */
   static async computeSimulatedMetric(data, context) {
-    const iframes = getAdIframes(data);
+    const iframes = getGptIframes(data);
     // @ts-ignore computeMetricWithGraphs is not a property of
     // LanternAdPaintTime.
     return LanternAdPaintTime.computeMetricWithGraphs(data, context, {iframes});
@@ -114,7 +108,7 @@ class AdPaintTime extends ComputedMetric {
    * @override
    */
   static async computeObservedMetric(data, context) {
-    const iframes = getAdIframes(data);
+    const iframes = getGptIframes(data);
     const {trace: {traceEvents}} = data;
     const {ts: pageNavigationStart} =
       traceEvents.find((e) => e.name == 'navigationStart') || {ts: 0};

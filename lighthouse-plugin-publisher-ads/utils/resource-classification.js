@@ -95,9 +95,7 @@ function isAdSenseAdRequest(request) {
  * @return {boolean}
  */
 function isAdSenseIframe(iframe) {
-  // TODO(jonkeller) Discuss with warrengm@ which of these is correct
-  // return /(^google_ads_frame)/.test(iframe.id);
-  return /(^aswift_\d+)/.test(iframe.id);
+  return /(^aswift_\d+)/.test(iframe.id); // (^google_ads_frame) is cross-domain
 }
 
 /**
