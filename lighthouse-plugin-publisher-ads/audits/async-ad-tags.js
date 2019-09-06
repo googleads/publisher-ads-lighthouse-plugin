@@ -19,15 +19,15 @@ const MainResource = require('lighthouse/lighthouse-core/computed/main-resource'
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {isGptTag, isStaticRequest} = require('../utils/resource-classification');
+const {isAdTag, isStaticRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
-  title: 'GPT tag is loaded asynchronously',
-  failureTitle: 'Load GPT asynchronously',
-  description: 'Loading the GPT tag synchronously blocks content rendering ' +
+  title: 'Ad tag is loaded asynchronously',
+  failureTitle: 'Load ad tag asynchronously',
+  description: 'Loading the ad tag synchronously blocks content rendering ' +
   'until the tag is fetched and loaded. Consider using the `async` attribute ' +
-  'to load gpt.js asynchronously. [Learn more](' +
+  'to load gpt.js and/or adsbygoogle.js asynchronously. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags' +
   ').',
 };
@@ -72,7 +72,7 @@ class AsyncAdTags extends Audit {
     const mainResource =
         await MainResource.request({URL: artifacts.URL, devtoolsLog}, context);
     const tagReqs = networkRecords
-        .filter((req) => isGptTag(new URL(req.url)))
+        .filter((req) => isAdTag(new URL(req.url)))
         .filter((req) => req.frameId === mainResource.frameId);
 
     if (!tagReqs.length) {

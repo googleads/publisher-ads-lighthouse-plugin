@@ -17,37 +17,40 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 const util = require('util');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {isGptTag} = require('../utils/resource-classification');
+const {isAdTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
-  title: 'GPT tag is loaded over HTTPS',
-  failureTitle: 'Load GPT over HTTPS',
-  description: 'For privacy and security, always load GPT over HTTPS. ' +
-  'Insecure pages should explicitly request the GPT script securely. Example:' +
-  '`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\"' +
-  '>`. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-over-https' +
+  title: 'Ad tag is loaded over HTTPS',
+  failureTitle: 'Load ad tag over HTTPS',
+  description: 'For privacy and security, always load GPT/AdSense over ' +
+  'HTTPS. Insecure pages should explicitly request the ad script securely. ' +
+  'GPT Example: `<script async ' +
+  'src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">` ' +
+  'AdSense Example: `<script async ' +
+  'src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\">`' +
+  '. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https' +
   ').',
-  failureDisplayValue: 'Load gpt.js over HTTPS',
+  failureDisplayValue: 'Load ad tag over HTTPS',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 
 /**
- * Simple audit that checks if gpt is loaded over https.
+ * Simple audit that checks if GPT/AdSense is loaded over https.
  * Currently based on network logs since it covers statically and dynamically
  * loaded scripts from the main page and iframes.
  */
-class LoadsGptOverHttps extends Audit {
+class LoadsAdTagOverHttps extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
     return {
-      id: 'loads-gpt-over-https',
+      id: 'loads-ad-tag-over-https',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
@@ -69,35 +72,37 @@ class LoadsGptOverHttps extends Audit {
       return auditNotApplicable.NoRecords;
     }
 
-    const gptRequests = networkRecords
-        .filter((record) => isGptTag(new URL(record.url)));
+    const adRequests = networkRecords
+        .filter((record) => isAdTag(new URL(record.url)));
 
-    const secureGptRequests = gptRequests.filter((request) => request.isSecure);
+    const secureAdRequests = adRequests.filter((request) => request.isSecure);
 
     /** @type {LH.Audit.Details.DebugData} */
     const details = {
       type: 'debugdata',
-      numGptHttpReqs: gptRequests.length - secureGptRequests.length,
-      numGptHttpsReqs: secureGptRequests.length,
+      numAdTagHttpReqs: adRequests.length - secureAdRequests.length,
+      numAdTagHttpsReqs: secureAdRequests.length,
     };
 
-    if (!gptRequests.length) {
-      const returnVal = auditNotApplicable.NoGpt;
+    if (!adRequests.length) {
+      const returnVal = auditNotApplicable.NoTag;
       returnVal.details = details;
       return returnVal;
     }
 
+    // TODO(jonkeller): Add a details table indicating which scripts are loaded
+    // over HTTP.
     return {
-      numericValue: details.numGptHttpReqs,
-      score: details.numGptHttpReqs ? 0 : 1,
-      displayValue: details.numGptHttpReqs ?
+      numericValue: details.numAdTagHttpReqs,
+      score: details.numAdTagHttpReqs ? 0 : 1,
+      displayValue: details.numAdTagHttpReqs ?
         util.format(
-          str_(UIStrings.failureDisplayValue), details.numGptHttpReqs) :
+          str_(UIStrings.failureDisplayValue), details.numAdTagHttpReqs) :
         '',
       details,
     };
   }
 }
 
-module.exports = LoadsGptOverHttps;
+module.exports = LoadsAdTagOverHttps;
 module.exports.UIStrings = UIStrings;

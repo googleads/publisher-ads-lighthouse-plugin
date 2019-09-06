@@ -19,7 +19,7 @@ const RenderBlockingResources = require('lighthouse/lighthouse-core/audits/byte-
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getPageStartTime} = require('../utils/network-timing');
-const {isGptTag} = require('../utils/resource-classification');
+const {isAdTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
@@ -88,7 +88,7 @@ class AdRenderBlockingResources extends RenderBlockingResources {
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const hasTag = !!networkRecords.find((req) => isGptTag(new URL(req.url)));
+    const hasTag = !!networkRecords.find((req) => isAdTag(new URL(req.url)));
     if (!hasTag) {
       return auditNotApplicable.NoTag;
     }

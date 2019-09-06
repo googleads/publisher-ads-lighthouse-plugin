@@ -16,7 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {isGptAdRequest} = require('../utils/resource-classification');
+const {isAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
@@ -61,7 +61,7 @@ class FullWidthSlots extends Audit {
 
     /** @type {Array<URL>} */
     const adRequestUrls = networkRecords
-        .filter(isGptAdRequest)
+        .filter(isAdRequest)
         .map((record) => new URL(record.url));
 
     if (!adRequestUrls.length) {

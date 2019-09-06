@@ -16,6 +16,7 @@ const AdPaintTime = require('../computed/ad-paint-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
+const {isAdIframe, isGptIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Latency of first ad render',
@@ -71,7 +72,12 @@ class FirstAdPaint extends Audit {
     const {timing} = await AdPaintTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
+      // Currently only GPT ads are supported by this audit.
+      const nonGptAdSlots = artifacts.IFrameElements.filter(
+        (iframe) => isAdIframe(iframe) && !isGptIframe(iframe));
+      if (nonGptAdSlots.length === 0) {
+        context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
+      }
       return auditNotApplicable.NoAdRendered;
     }
 

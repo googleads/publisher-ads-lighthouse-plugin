@@ -57,13 +57,13 @@
     "message": "Ĉón̂śîd́êŕ r̂éd̂úĉín̂ǵ t̂h́ê ńûḿb̂ér̂ óf̂ ŕêśôúr̂ćêś, l̂óâd́îńĝ ḿûĺt̂íp̂ĺê ŕêśôúr̂ćêś ŝím̂úl̂t́âńêóûśl̂ý, ôŕ l̂óâd́îńĝ ŕêśôúr̂ćêś êár̂ĺîér̂ t́ô ím̂ṕr̂óv̂é âd́ ŝṕêéd̂. Ŕêq́ûéŝt́ŝ t́ĥát̂ b́l̂óĉḱ âd́ l̂óâd́îńĝ ćâń b̂é f̂óûńd̂ b́êĺôẃ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-r̂éq̂úêśt̂-ćr̂ít̂íĉál̂-ṕât́ĥ)."
   },
   "audits/ad-request-critical-path.js | displayValue": {
-    "message": "{serialResources, plural, =1 {1 ŝér̂íâĺ r̂éŝóûŕĉé} other {# ŝér̂íâĺ r̂éŝóûŕĉéŝ}}, {totalResources, plural, =1 {1 t́ôt́âĺ r̂éŝóûŕĉé} other {# t̂ót̂ál̂ ŕêśôúr̂ćêś}}"
+    "message": "{serialResources, plural, =1 {1 ŝér̂íâĺ r̂éŝóûŕĉé} other {# ŝér̂íâĺ r̂éŝóûŕĉéŝ}}"
   },
   "audits/ad-request-critical-path.js | failureTitle": {
     "message": "R̂éd̂úĉé ĉŕît́îćâĺ p̂át̂h́ f̂ór̂ ád̂ ĺôád̂ín̂ǵ"
   },
   "audits/ad-request-critical-path.js | title": {
-    "message": "M̂ín̂ím̂ál̂ ŕêq́ûéŝt́ŝ f́ôún̂d́ îń âd́ ĉŕît́îćâĺ p̂át̂h́"
+    "message": "Âd́ r̂éq̂úêśt̂ ẃât́êŕf̂ál̂ĺ"
   },
   "audits/ad-request-from-page-start.js | description": {
     "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ t̂h́ê śt̂ár̂t́ ôf́ p̂áĝé l̂óâd́ ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. D̂él̂áŷéd̂ ád̂ ŕêq́ûéŝt́ŝ ẃîĺl̂ d́êćr̂éâśê ím̂ṕr̂éŝśîón̂ś âńd̂ v́îéŵáb̂íl̂ít̂ý, âńd̂ h́âv́ê á n̂éĝát̂ív̂é îḿp̂áĉt́ ôń âd́ r̂év̂én̂úê. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
@@ -120,13 +120,67 @@
     "message": "F̂éŵ ór̂ ńô ád̂ś l̂óâd́êd́ ôút̂śîd́ê v́îéŵṕôŕt̂"
   },
   "audits/async-ad-tags.js | description": {
-    "message": "L̂óâd́îńĝ t́ĥé ĜṔT̂ t́âǵ ŝýn̂ćĥŕôńôúŝĺŷ b́l̂óĉḱŝ ćôńt̂én̂t́ r̂én̂d́êŕîńĝ ún̂t́îĺ t̂h́ê t́âǵ îś f̂ét̂ćĥéd̂ án̂d́ l̂óâd́êd́. Ĉón̂śîd́êŕ ûśîńĝ t́ĥé `âśŷńĉ` át̂t́r̂íb̂út̂é t̂ó l̂óâd́ ĝṕt̂.j́ŝ áŝýn̂ćĥŕôńôúŝĺŷ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/áŝýn̂ć-âd́-t̂áĝś)."
+    "message": "L̂óâd́îńĝ t́ĥé âd́ t̂áĝ śŷńĉh́r̂ón̂óûśl̂ý b̂ĺôćk̂ś ĉón̂t́êńt̂ ŕêńd̂ér̂ín̂ǵ ûńt̂íl̂ t́ĥé t̂áĝ íŝ f́êt́ĉh́êd́ âńd̂ ĺôád̂éd̂. Ćôńŝíd̂ér̂ úŝín̂ǵ t̂h́ê `áŝýn̂ć` ât́t̂ŕîb́ût́ê t́ô ĺôád̂ ǵp̂t́.ĵś âńd̂/ór̂ ád̂śb̂ýĝóôǵl̂é.ĵś âśŷńĉh́r̂ón̂óûśl̂ý. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âśŷńĉ-ád̂-t́âǵŝ)."
   },
   "audits/async-ad-tags.js | failureTitle": {
-    "message": "L̂óâd́ ĜṔT̂ áŝýn̂ćĥŕôńôúŝĺŷ"
+    "message": "L̂óâd́ âd́ t̂áĝ áŝýn̂ćĥŕôńôúŝĺŷ"
   },
   "audits/async-ad-tags.js | title": {
-    "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ âśŷńĉh́r̂ón̂óûśl̂ý"
+    "message": "Âd́ t̂áĝ íŝ ĺôád̂éd̂ áŝýn̂ćĥŕôńôúŝĺŷ"
+  },
+  "audits/blocking-load-events.js | columnBlockedUrl": {
+    "message": "B̂ĺôćk̂éd̂ ÚR̂Ĺ"
+  },
+  "audits/blocking-load-events.js | columnEvent": {
+    "message": "Êv́êńt̂ Ńâḿê"
+  },
+  "audits/blocking-load-events.js | columnFunctionName": {
+    "message": "F̂ún̂ćt̂íôń"
+  },
+  "audits/blocking-load-events.js | columnScript": {
+    "message": "Ŝćr̂íp̂t́"
+  },
+  "audits/blocking-load-events.js | columnTime": {
+    "message": "Êv́êńt̂ T́îḿê"
+  },
+  "audits/blocking-load-events.js | description": {
+    "message": "Ŵáît́îńĝ ón̂ ĺôád̂ év̂én̂t́ŝ ín̂ćr̂éâśêś âd́ l̂át̂én̂ćŷ. T́ô śp̂éêd́ ûṕ âd́ŝ, él̂ím̂ín̂át̂é t̂h́ê f́ôĺl̂óŵín̂ǵ l̂óâd́ êv́êńt̂ h́âńd̂ĺêŕŝ."
+  },
+  "audits/blocking-load-events.js | displayValue": {
+    "message": "{timeInMs, number, seconds} ŝ b́l̂óĉḱêd́"
+  },
+  "audits/blocking-load-events.js | failureTitle": {
+    "message": "Âv́ôíd̂ ẃâít̂ín̂ǵ ôń l̂óâd́ êv́êńt̂ś"
+  },
+  "audits/blocking-load-events.js | title": {
+    "message": "Âd́ŝ ńôt́ b̂ĺôćk̂éd̂ b́ŷ ĺôád̂ év̂én̂t́ŝ"
+  },
+  "audits/bottleneck-requests.js | columnDuration": {
+    "message": "T̂ót̂ál̂ T́îḿê"
+  },
+  "audits/bottleneck-requests.js | columnInitiatorUrl": {
+    "message": "Îńît́îát̂ór̂ Ŕêq́ûéŝt́"
+  },
+  "audits/bottleneck-requests.js | columnSelfTime": {
+    "message": "Êx́ĉĺûśîv́ê T́îḿê"
+  },
+  "audits/bottleneck-requests.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂"
+  },
+  "audits/bottleneck-requests.js | columnUrl": {
+    "message": "B̂ĺôćk̂ín̂ǵ R̂éq̂úêśt̂"
+  },
+  "audits/bottleneck-requests.js | description": {
+    "message": "Ŝṕêéd̂ úp̂, ĺôád̂ éâŕl̂íêŕ, p̂ár̂ál̂ĺêĺîźê, ór̂ él̂ím̂ín̂át̂é t̂h́ê f́ôĺl̂óŵín̂ǵ r̂éq̂úêśt̂ś âńd̂ t́ĥéîŕ d̂ép̂én̂d́êńĉíêś îń ôŕd̂ér̂ t́ô śp̂éêd́ ûṕ âd́ l̂óâd́îńĝ."
+  },
+  "audits/bottleneck-requests.js | displayValue": {
+    "message": "{blockedTime, number, seconds} ŝ śp̂én̂t́ b̂ĺôćk̂éd̂ ón̂ ŕêq́ûéŝt́ŝ"
+  },
+  "audits/bottleneck-requests.js | failureTitle": {
+    "message": "Âv́ôíd̂ b́ôt́t̂ĺêńêćk̂ ŕêq́ûéŝt́ŝ"
+  },
+  "audits/bottleneck-requests.js | title": {
+    "message": "N̂ó b̂ót̂t́l̂én̂éĉḱ r̂éq̂úêśt̂ś f̂óûńd̂"
   },
   "audits/duplicate-tags.js | columnFrameId": {
     "message": "F̂ŕâḿê ÍD̂"
@@ -173,6 +227,27 @@
   "audits/full-width-slots.js | title": {
     "message": "Âd́ ŝĺôt́ŝ éf̂f́êćt̂ív̂él̂ý ûśê h́ôŕîźôńt̂ál̂ śp̂áĉé"
   },
+  "audits/gpt-bids-parallel.js | columnBidder": {
+    "message": "B̂íd̂d́êŕ"
+  },
+  "audits/gpt-bids-parallel.js | columnDuration": {
+    "message": "D̂úr̂át̂íôń"
+  },
+  "audits/gpt-bids-parallel.js | columnStartTime": {
+    "message": "Ŝt́âŕt̂"
+  },
+  "audits/gpt-bids-parallel.js | columnUrl": {
+    "message": "ÛŔL̂"
+  },
+  "audits/gpt-bids-parallel.js | description": {
+    "message": "T̂ó ôṕt̂ím̂íẑé âd́ l̂óâd́îńĝ, b́îd́ r̂éq̂úêśt̂ś ŝh́ôúl̂d́ n̂ót̂ ẃâít̂ ón̂ ǴP̂T́ t̂ó l̂óâd́. T̂h́îś îśŝúê ćâń ôf́t̂én̂ b́ê f́îx́êd́ b̂ý m̂ák̂ín̂ǵ ŝúr̂é t̂h́ât́ b̂íd̂ ŕêq́ûéŝt́ŝ d́ô ńôt́ ŵáît́ ôń `ĝóôǵl̂ét̂áĝ.ṕûb́âd́ŝŔêád̂ý` ôŕ `ĝóôǵl̂ét̂áĝ.ćm̂d́.p̂úŝh́`."
+  },
+  "audits/gpt-bids-parallel.js | failureTitle": {
+    "message": "L̂óâd́ ĜṔT̂ án̂d́ b̂íd̂ś îń p̂ár̂ál̂ĺêĺ"
+  },
+  "audits/gpt-bids-parallel.js | title": {
+    "message": "ĜṔT̂ án̂d́ b̂íd̂ś l̂óâd́êd́ îń p̂ár̂ál̂ĺêĺ"
+  },
   "audits/idle-network-times.js | causeDomContentLoaded": {
     "message": "D̂ÓM̂Ćôńt̂én̂t́L̂óâd́êd́ Êv́êńt̂"
   },
@@ -215,6 +290,18 @@
   "audits/idle-network-times.js | title": {
     "message": "[Êx́p̂ér̂ím̂én̂t́âĺ] N̂ét̂ẃôŕk̂ íŝ éf̂f́îćîén̂t́l̂ý ût́îĺîźêd́ b̂éf̂ór̂é âd́ r̂éq̂úêśt̂ś"
   },
+  "audits/loads-ad-tag-over-https.js | description": {
+    "message": "F̂ór̂ ṕr̂ív̂áĉý âńd̂ śêćûŕît́ŷ, ál̂ẃâýŝ ĺôád̂ ǴP̂T́/Âd́Ŝén̂śê óv̂ér̂ H́T̂T́P̂Ś. Îńŝéĉúr̂é p̂áĝéŝ śĥóûĺd̂ éx̂ṕl̂íĉít̂ĺŷ ŕêq́ûéŝt́ t̂h́ê ád̂ śĉŕîṕt̂ śêćûŕêĺŷ. ǴP̂T́ Êx́âḿp̂ĺê: `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=\"h́t̂t́p̂ś://ŝéĉúr̂ép̂úb̂ád̂ś.ĝ.d́ôúb̂ĺêćl̂íĉḱ.n̂ét̂/t́âǵ/ĵś/ĝṕt̂.j́ŝ\">` Ád̂Śêńŝé Êx́âḿp̂ĺê: `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=\"h́t̂t́p̂ś://p̂áĝéâd́2.ĝóôǵl̂éŝýn̂d́îćât́îón̂.ćôḿ/p̂áĝéâd́/ĵś/âd́ŝb́ŷǵôóĝĺê.j́ŝ\">`. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ĺôád̂ś-âd́-t̂áĝ-óv̂ér̂-h́t̂t́p̂ś)."
+  },
+  "audits/loads-ad-tag-over-https.js | failureDisplayValue": {
+    "message": "L̂óâd́ âd́ t̂áĝ óv̂ér̂ H́T̂T́P̂Ś"
+  },
+  "audits/loads-ad-tag-over-https.js | failureTitle": {
+    "message": "L̂óâd́ âd́ t̂áĝ óv̂ér̂ H́T̂T́P̂Ś"
+  },
+  "audits/loads-ad-tag-over-https.js | title": {
+    "message": "Âd́ t̂áĝ íŝ ĺôád̂éd̂ óv̂ér̂ H́T̂T́P̂Ś"
+  },
   "audits/loads-gpt-from-sgdn.js | description": {
     "message": "L̂óâd́ ĜṔT̂ f́r̂óm̂ 'śêćûŕêṕûb́âd́ŝ.ǵ.d̂óûb́l̂éĉĺîćk̂.ńêt́' t̂ó r̂éd̂úĉé ĜṔT̂ ĺôád̂ t́îḿê. B́ŷ ĺôád̂ín̂ǵ ĜṔT̂ f́r̂óm̂ t́ĥé ŝám̂é ĥóŝt́ âś âd́ r̂éq̂úêśt̂ś, b̂ŕôẃŝér̂ś ĉán̂ áv̂óîd́ âń âd́d̂ít̂íôńâĺ D̂ŃŜ ĺôók̂úp̂ án̂d́ ĤT́T̂Ṕ ĉón̂ńêćt̂íôń. Êx́âḿp̂ĺê:`<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=\"h́t̂t́p̂ś://ŝéĉúr̂ép̂úb̂ád̂ś.ĝ.d́ôúb̂ĺêćl̂íĉḱ.n̂ét̂/t́âǵ/ĵś/ĝṕt̂.j́ŝ\">`. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ĺôád̂ś-ĝṕt̂-f́r̂óm̂-śĝd́n̂)."
   },
@@ -224,41 +311,23 @@
   "audits/loads-gpt-from-sgdn.js | title": {
     "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ f̂ŕôḿ r̂éĉóm̂ḿêńd̂éd̂ h́ôśt̂"
   },
-  "audits/loads-gpt-over-https.js | description": {
-    "message": "F̂ór̂ ṕr̂ív̂áĉý âńd̂ śêćûŕît́ŷ, ál̂ẃâýŝ ĺôád̂ ǴP̂T́ ôv́êŕ ĤT́T̂ṔŜ. Ín̂śêćûŕê ṕâǵêś ŝh́ôúl̂d́ êx́p̂ĺîćît́l̂ý r̂éq̂úêśt̂ t́ĥé ĜṔT̂ śĉŕîṕt̂ śêćûŕêĺŷ. Éx̂ám̂ṕl̂é:`<ŝćr̂íp̂t́ âśŷńĉ śr̂ć=\"ĥt́t̂ṕŝ://śêćûŕêṕûb́âd́ŝ.ǵ.d̂óûb́l̂éĉĺîćk̂.ńêt́/t̂áĝ/j́ŝ/ǵp̂t́.ĵś\">`. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/l̂óâd́ŝ-ǵp̂t́-ôv́êŕ-ĥt́t̂ṕŝ)."
+  "audits/script-injected-tags.js | columnLoadTime": {
+    "message": "L̂óâd́ T̂ím̂é"
   },
-  "audits/loads-gpt-over-https.js | failureDisplayValue": {
-    "message": "L̂óâd́ ĝṕt̂.j́ŝ óv̂ér̂ H́T̂T́P̂Ś"
-  },
-  "audits/loads-gpt-over-https.js | failureTitle": {
-    "message": "L̂óâd́ ĜṔT̂ óv̂ér̂ H́T̂T́P̂Ś"
-  },
-  "audits/loads-gpt-over-https.js | title": {
-    "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ ôv́êŕ ĤT́T̂ṔŜ"
-  },
-  "audits/script-injected-tags.js | columnDuration": {
-    "message": "D̂úr̂át̂íôń"
-  },
-  "audits/script-injected-tags.js | columnLineNumber": {
-    "message": "Ŝóûŕĉé L̂ín̂é N̂úm̂b́êŕ"
-  },
-  "audits/script-injected-tags.js | columnRequest": {
-    "message": "R̂éŝóûŕĉé"
-  },
-  "audits/script-injected-tags.js | columnStartTime": {
-    "message": "Ŝt́âŕt̂"
+  "audits/script-injected-tags.js | columnUrl": {
+    "message": "Ŝćr̂íp̂t́"
   },
   "audits/script-injected-tags.js | description": {
-    "message": "L̂óâd́ ŝćr̂íp̂t́ŝ d́îŕêćt̂ĺŷ ẃît́ĥ `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=...>` ín̂śt̂éâd́ ôf́ îńĵéĉt́îńĝ śĉŕîṕt̂ś ŵít̂h́ Ĵáv̂áŜćr̂íp̂t́. T̂h́îś âĺl̂óŵś t̂h́ê b́r̂óŵśêŕ f̂ét̂ćĥ t́ĥé ŝćr̂íp̂t́ ŝóôńêŕ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://ŵẃŵ.íĝv́ît́â.ćôḿ/2014/05/20/ŝćr̂íp̂t́-îńĵéĉt́êd́-âśŷńĉ-śĉŕîṕt̂ś-ĉón̂śîd́êŕêd́-ĥár̂ḿf̂úl̂/)."
+    "message": "L̂óâd́ t̂h́ê f́ôĺl̂óŵín̂ǵ ŝćr̂íp̂t́ŝ d́îŕêćt̂ĺŷ ẃît́ĥ `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=...>` ín̂śt̂éâd́ ôf́ îńĵéĉt́îńĝ śĉŕîṕt̂ś ŵít̂h́ Ĵáv̂áŜćr̂íp̂t́. D̂óîńĝ śô ál̂ĺôẃŝ t́ĥé b̂ŕôẃŝér̂ t́ô ṕr̂él̂óâd́ ŝćr̂íp̂t́ŝ śôón̂ér̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://ẃŵẃ.îǵv̂ít̂á.ĉóm̂/2014/05/20/śĉŕîṕt̂-ín̂j́êćt̂éd̂-áŝýn̂ć-ŝćr̂íp̂t́ŝ-ćôńŝíd̂ér̂éd̂-h́âŕm̂f́ûĺ/)."
   },
-  "audits/script-injected-tags.js | displayValue": {
-    "message": "{numTags, plural, =1 {1 ŝćr̂íp̂t́-îńĵéĉt́êd́ r̂éŝóûŕĉé} other {# ŝćr̂íp̂t́-îńĵéĉt́êd́ r̂éŝóûŕĉéŝ}}"
+  "audits/script-injected-tags.js | failureDisplayValue": {
+    "message": "L̂óâd́ {tags, plural, =1 {1 ŝćr̂íp̂t́} other {# ŝćr̂íp̂t́ŝ}} śt̂át̂íĉál̂ĺŷ"
   },
   "audits/script-injected-tags.js | failureTitle": {
-    "message": "Âv́ôíd̂ śĉŕîṕt̂-ín̂j́êćt̂éd̂ t́âǵŝ"
+    "message": "L̂óâd́ âd́ ŝćr̂íp̂t́ŝ śt̂át̂íĉál̂ĺŷ"
   },
   "audits/script-injected-tags.js | title": {
-    "message": "N̂ó ŝćr̂íp̂t́-îńĵéĉt́êd́ t̂áĝś f̂óûńd̂"
+    "message": "Âd́ ŝćr̂íp̂t́ŝ ár̂é l̂óâd́êd́ ŝt́ât́îćâĺl̂ý"
   },
   "audits/serial-header-bidding.js | columnBidder": {
     "message": "B̂íd̂d́êŕ"
@@ -281,26 +350,8 @@
   "audits/serial-header-bidding.js | title": {
     "message": "Ĥéâd́êŕ b̂íd̂d́îńĝ íŝ ṕâŕâĺl̂él̂íẑéd̂"
   },
-  "audits/static-ad-tags.js | columnLineNumber": {
-    "message": "L̂ín̂é N̂úm̂b́êŕ"
-  },
-  "audits/static-ad-tags.js | columnUrl": {
-    "message": "Îńît́îát̂ór̂"
-  },
-  "audits/static-ad-tags.js | description": {
-    "message": "T̂áĝś l̂óâd́êd́ d̂ýn̂ám̂íĉál̂ĺŷ ár̂é n̂ót̂ v́îśîb́l̂é t̂ó t̂h́ê b́r̂óŵśêŕ p̂ŕêĺôád̂ér̂. Ćôńŝíd̂ér̂ úŝín̂ǵ â śt̂át̂íĉ t́âǵ ôŕ `<l̂ín̂ḱ r̂él̂=\"ṕr̂él̂óâd́\">` ŝó t̂h́ê b́r̂óŵśêŕ m̂áŷ ĺôád̂ ǴP̂T́ ŝóôńêŕ. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/ŝt́ât́îć-âd́-t̂áĝś)."
-  },
-  "audits/static-ad-tags.js | failureDisplayValue": {
-    "message": "Ûṕ t̂ó {timeInMs, number, seconds} ŝ t́âǵ l̂óâd́ t̂ím̂é îḿp̂ŕôv́êḿêńt̂"
-  },
-  "audits/static-ad-tags.js | failureTitle": {
-    "message": "L̂óâd́ ĜṔT̂ t́âǵ ŝt́ât́îćâĺl̂ý"
-  },
-  "audits/static-ad-tags.js | title": {
-    "message": "ĜṔT̂ t́âǵ îś l̂óâd́êd́ ŝt́ât́îćâĺl̂ý"
-  },
   "audits/tag-load-time.js | description": {
-    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê Ǵôóĝĺê Ṕûb́l̂íŝh́êŕ T̂áĝ'ś îḿp̂ĺêḿêńt̂át̂íôń ŝćr̂íp̂t́ (p̂úb̂ád̂ś_îḿp̂ĺ.ĵś) t̂ó l̂óâd́ âf́t̂ér̂ t́ĥé p̂áĝé l̂óâd́ŝ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê ád̂ t́âǵ'ŝ ím̂ṕl̂ém̂én̂t́ât́îón̂ śĉŕîṕt̂ (ṕûb́âd́ŝ_ím̂ṕl̂.j́ŝ f́ôŕ ĜṔT̂; ád̂śb̂ýĝóôǵl̂é.ĵś f̂ór̂ Ád̂Śêńŝé) t̂ó l̂óâd́ âf́t̂ér̂ t́ĥé p̂áĝé l̂óâd́ŝ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
   },
   "audits/tag-load-time.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ"
