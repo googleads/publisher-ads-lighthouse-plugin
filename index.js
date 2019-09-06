@@ -24,6 +24,11 @@ async function main() {
     process.argv.push(`--config-path=${configPath}`);
   }
 
+  if (!yargs.argv.throttlingMethod) {
+    // Disable simulation.
+    process.argv.push('--throttling-method=provided');
+  }
+
   if (!yargs.argv.chromeFlags) {
     // TODO: merge if extra flags are specified
     process.argv.push('--chrome-flags=--headless');
