@@ -42,14 +42,13 @@ function isGoogleAds(url) {
  * @return {boolean}
  */
 function isAdSenseTag(url) {
-  const {host, pathname} = toURL(url);
-  const matchesHost = [
-    'pagead2.googlesyndication.com'].includes(host);
+  url = toURL(url);
+  const matchesHost = url.host === 'pagead2.googlesyndication.com';
   const matchesPath =
       [
         '/pagead/js/adsbygoogle.js',
         '/pagead/show_ads.js',
-      ].includes(pathname);
+      ].includes(url.pathname);
   return matchesHost && matchesPath;
 }
 
@@ -59,11 +58,10 @@ function isAdSenseTag(url) {
  * @return {boolean}
  */
 function isAdSenseImplTag(url) {
-  const {host, pathname} = toURL(url);
-  const matchesHost = [
-    'pagead2.googlesyndication.com'].includes(host);
+  url = toURL(url);
+  const matchesHost = url.host === 'pagead2.googlesyndication.com';
   const matchesPath =
-      /(^\/pagead\/js\/.*\/show_ads_impl\.js)/.test(pathname);
+      /(^\/pagead\/js\/.*\/show_ads_impl\.js)/.test(url.pathname);
   return matchesHost && matchesPath;
 }
 

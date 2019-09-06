@@ -90,6 +90,8 @@ class LoadsAdTagOverHttps extends Audit {
       return returnVal;
     }
 
+    // TODO(jonkeller): Add a details table indicating which scripts are loaded
+    // over HTTP.
     return {
       numericValue: details.numAdTagHttpReqs,
       score: details.numAdTagHttpReqs ? 0 : 1,
