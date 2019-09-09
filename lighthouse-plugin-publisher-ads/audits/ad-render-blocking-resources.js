@@ -74,7 +74,7 @@ class AdRenderBlockingResources extends RenderBlockingResources {
       id: 'ad-render-blocking-resources',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
-      scoreDisplayMode: 'numeric',
+      scoreDisplayMode: 'binary',
       description: str_(UIStrings.description),
       requiredArtifacts: RenderBlockingResources.meta.requiredArtifacts,
     };
