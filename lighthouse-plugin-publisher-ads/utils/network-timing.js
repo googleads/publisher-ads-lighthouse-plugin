@@ -17,7 +17,7 @@ const AdLanternMetric = require('../computed/ad-lantern-metric');
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
-const {isGptAdRequest, isImplTag, isImpressionPing} = require('./resource-classification');
+const {isAdRequest, isImplTag, isImpressionPing} = require('./resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -46,7 +46,7 @@ function getTagEndTime(networkRecords) {
  */
 function getAdStartTime(networkRecords) {
   const firstAdRecord = networkRecords.find(
-    (record) => isGptAdRequest(record));
+    (record) => isAdRequest(record));
   return firstAdRecord ? firstAdRecord.startTime : -1;
 }
 

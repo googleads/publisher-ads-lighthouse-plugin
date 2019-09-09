@@ -35,7 +35,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/gpt-bids-parallel`},
     {path: `${PLUGIN_PATH}/audits/idle-network-times`},
     {path: `${PLUGIN_PATH}/audits/loads-gpt-from-sgdn`},
-    {path: `${PLUGIN_PATH}/audits/loads-gpt-over-https`},
+    {path: `${PLUGIN_PATH}/audits/loads-ad-tag-over-https`},
     {path: `${PLUGIN_PATH}/audits/script-injected-tags`},
     {path: `${PLUGIN_PATH}/audits/serial-header-bidding`},
     {path: `${PLUGIN_PATH}/audits/tag-load-time`},
@@ -72,7 +72,7 @@ module.exports = {
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 2, group: 'ads-best-practices'},
-      {id: 'loads-gpt-over-https', weight: 1, group: 'ads-best-practices'},
+      {id: 'loads-ad-tag-over-https', weight: 1, group: 'ads-best-practices'},
       {id: 'loads-gpt-from-sgdn', weight: 1, group: 'ads-best-practices'},
       {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},

@@ -18,7 +18,7 @@ const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getCriticalGraph} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
-const {isImplTag, isBidRequest, getAbbreviatedUrl, getHeaderBidder} = require('../utils/resource-classification');
+const {isGptImplTag, isBidRequest, getAbbreviatedUrl, getHeaderBidder} = require('../utils/resource-classification');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -73,9 +73,9 @@ class GptBidsInParallel extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const network = await NetworkRecords.request(devtoolsLog, context);
 
-    const pubadsImpl = network.find((r) => isImplTag(r.url));
+    const pubadsImpl = network.find((r) => isGptImplTag(r.url));
     if (!pubadsImpl) {
-      return auditNotApplicable.NoTag;
+      return auditNotApplicable.NoGpt;
     }
 
     const bids = network.filter(isBidRequest)
@@ -118,3 +118,4 @@ class GptBidsInParallel extends Audit {
 }
 
 module.exports = GptBidsInParallel;
+module.exports.UIStrings = UIStrings;

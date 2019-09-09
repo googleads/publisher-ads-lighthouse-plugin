@@ -22,7 +22,7 @@ const {assert} = require('./asserts');
 const {getAbbreviatedUrl, trimUrl} = require('../utils/resource-classification');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
-const {isGptAdRequest, getHeaderBidder} = require('./resource-classification');
+const {isAdRequest, getHeaderBidder} = require('./resource-classification');
 
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 /** @typedef {LH.TraceEvent} TraceEvent */
@@ -366,7 +366,7 @@ function computeSelfTimes(requests) {
 async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
   const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
-  const maybeFirstAdRequest = networkRecords.find(isGptAdRequest);
+  const maybeFirstAdRequest = networkRecords.find(isAdRequest);
   const criticalRequests = new Set();
   if (maybeFirstAdRequest == null) {
     return Promise.resolve([]);

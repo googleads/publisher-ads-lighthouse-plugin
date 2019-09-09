@@ -18,7 +18,7 @@ const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metr
 // @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
 const {getAdStartTime, getPageStartTime} = require('../utils/network-timing');
-const {isGptAdRequest} = require('../utils/resource-classification');
+const {isAdRequest} = require('../utils/resource-classification');
 
 // @ts-ignore
 // eslint-disable-next-line max-len
@@ -35,7 +35,7 @@ class LanternAdRequestTime extends AdLanternMetric {
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
     const timeInMs = AdLanternMetric.findNetworkTiming(
-      nodeTimings, isGptAdRequest).startTime;
+      nodeTimings, isAdRequest).startTime;
     return {timeInMs, nodeTimings};
   }
 }

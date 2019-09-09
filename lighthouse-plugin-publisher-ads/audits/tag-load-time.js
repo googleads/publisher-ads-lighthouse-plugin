@@ -20,9 +20,9 @@ const {Audit} = require('lighthouse');
 const UIStrings = {
   title: 'Tag load time',
   failureTitle: 'Reduce tag load time',
-  description: 'This metric measures the time for the Google Publisher ' +
-  'Tag\'s implementation script (pubads_impl.js) to load after the page ' +
-  'loads. [Learn more](' +
+  description: 'This metric measures the time for the ad tag\'s ' +
+  'implementation script (pubads_impl.js for GPT; adsbygoogle.js for ' +
+  'AdSense) to load after the page loads. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',

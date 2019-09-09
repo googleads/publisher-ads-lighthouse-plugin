@@ -107,17 +107,17 @@ describe('resource-classification', () => {
   });
 
   describe('#isImpressionPing', () => {
-    it('should return true for securepubads.g.doubleclick.net/pcs/view as the impression path', () => {
+    it('should return true for securepubads.g.doubleclick.net/pcs/view', () => {
       const url = new URL('https://securepubads.g.doubleclick.net/pcs/view?bar=baz');
       expect(isImpressionPing(url)).to.be.true;
     });
 
-    it('should return true for googleads4.g.doubleclick.net/pcs/view as the impression path', () => {
+    it('should return true for googleads4.g.doubleclick.net/pcs/view', () => {
       const url = new URL('https://googleads4.g.doubleclick.net/pcs/view?bar=baz');
       expect(isImpressionPing(url)).to.be.true;
     });
 
-    it('should return true for /pagead/adview as the impression path', () => {
+    it('should return true for securepubads.g.doubleclick.net/pagead/adview as the impression path', () => {
       const url = new URL('https://securepubads.g.doubleclick.net/pagead/adview?bar=baz');
       expect(isImpressionPing(url)).to.be.true;
     });

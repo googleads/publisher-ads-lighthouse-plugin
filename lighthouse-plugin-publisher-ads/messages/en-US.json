@@ -76,7 +76,7 @@
     "description": ""
   },
   "audits/ad-request-critical-path.js | displayValue": {
-    "message": "{serialResources, plural, =1 {1 serial resource} other {# serial resources}}, {totalResources, plural, =1 {1 total resource} other {# total resources}}",
+    "message": "{serialResources, plural, =1 {1 serial resource} other {# serial resources}}",
     "description": ""
   },
   "audits/ad-request-critical-path.js | failureTitle": {
@@ -84,7 +84,7 @@
     "description": ""
   },
   "audits/ad-request-critical-path.js | title": {
-    "message": "Minimal requests found in ad critical path",
+    "message": "Ad request waterfall",
     "description": ""
   },
   "audits/ad-request-from-page-start.js | description": {
@@ -160,15 +160,87 @@
     "description": ""
   },
   "audits/async-ad-tags.js | description": {
-    "message": "Loading the GPT tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags).",
+    "message": "Loading the ad tag synchronously blocks content rendering until the tag is fetched and loaded. Consider using the `async` attribute to load gpt.js and/or adsbygoogle.js asynchronously. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/async-ad-tags).",
     "description": ""
   },
   "audits/async-ad-tags.js | failureTitle": {
-    "message": "Load GPT asynchronously",
+    "message": "Load ad tag asynchronously",
     "description": ""
   },
   "audits/async-ad-tags.js | title": {
-    "message": "GPT tag is loaded asynchronously",
+    "message": "Ad tag is loaded asynchronously",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | columnBlockedUrl": {
+    "message": "Blocked URL",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | columnEvent": {
+    "message": "Event Name",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | columnFunctionName": {
+    "message": "Function",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | columnScript": {
+    "message": "Script",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | columnTime": {
+    "message": "Event Time",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | description": {
+    "message": "Waiting on load events increases ad latency. To speed up ads, eliminate the following load event handlers.",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | displayValue": {
+    "message": "{timeInMs, number, seconds} s blocked",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | failureTitle": {
+    "message": "Avoid waiting on load events",
+    "description": ""
+  },
+  "audits/blocking-load-events.js | title": {
+    "message": "Ads not blocked by load events",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | columnDuration": {
+    "message": "Total Time",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | columnInitiatorUrl": {
+    "message": "Initiator Request",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | columnSelfTime": {
+    "message": "Exclusive Time",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | columnUrl": {
+    "message": "Blocking Request",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | description": {
+    "message": "Speed up, load earlier, parallelize, or eliminate the following requests and their dependencies in order to speed up ad loading.",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | displayValue": {
+    "message": "{blockedTime, number, seconds} s spent blocked on requests",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | failureTitle": {
+    "message": "Avoid bottleneck requests",
+    "description": ""
+  },
+  "audits/bottleneck-requests.js | title": {
+    "message": "No bottleneck requests found",
     "description": ""
   },
   "audits/duplicate-tags.js | columnFrameId": {
@@ -231,6 +303,34 @@
     "message": "Ad slots effectively use horizontal space",
     "description": ""
   },
+  "audits/gpt-bids-parallel.js | columnBidder": {
+    "message": "Bidder",
+    "description": ""
+  },
+  "audits/gpt-bids-parallel.js | columnDuration": {
+    "message": "Duration",
+    "description": ""
+  },
+  "audits/gpt-bids-parallel.js | columnStartTime": {
+    "message": "Start",
+    "description": ""
+  },
+  "audits/gpt-bids-parallel.js | columnUrl": {
+    "message": "URL",
+    "description": ""
+  },
+  "audits/gpt-bids-parallel.js | description": {
+    "message": "To optimize ad loading, bid requests should not wait on GPT to load. This issue can often be fixed by making sure that bid requests do not wait on `googletag.pubadsReady` or `googletag.cmd.push`.",
+    "description": ""
+  },
+  "audits/gpt-bids-parallel.js | failureTitle": {
+    "message": "Load GPT and bids in parallel",
+    "description": ""
+  },
+  "audits/gpt-bids-parallel.js | title": {
+    "message": "GPT and bids loaded in parallel",
+    "description": ""
+  },
   "audits/idle-network-times.js | causeDomContentLoaded": {
     "message": "DOMContentLoaded Event",
     "description": ""
@@ -287,6 +387,22 @@
     "message": "[Experimental] Network is efficiently utilized before ad requests",
     "description": ""
   },
+  "audits/loads-ad-tag-over-https.js | description": {
+    "message": "For privacy and security, always load GPT/AdSense over HTTPS. Insecure pages should explicitly request the ad script securely. GPT Example: `<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">` AdSense Example: `<script async src=\"https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https).",
+    "description": ""
+  },
+  "audits/loads-ad-tag-over-https.js | failureDisplayValue": {
+    "message": "Load ad tag over HTTPS",
+    "description": ""
+  },
+  "audits/loads-ad-tag-over-https.js | failureTitle": {
+    "message": "Load ad tag over HTTPS",
+    "description": ""
+  },
+  "audits/loads-ad-tag-over-https.js | title": {
+    "message": "Ad tag is loaded over HTTPS",
+    "description": ""
+  },
   "audits/loads-gpt-from-sgdn.js | description": {
     "message": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load time. By loading GPT from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-sgdn).",
     "description": ""
@@ -299,52 +415,28 @@
     "message": "GPT tag is loaded from recommended host",
     "description": ""
   },
-  "audits/loads-gpt-over-https.js | description": {
-    "message": "For privacy and security, always load GPT over HTTPS. Insecure pages should explicitly request the GPT script securely. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-over-https).",
+  "audits/script-injected-tags.js | columnLoadTime": {
+    "message": "Load Time",
     "description": ""
   },
-  "audits/loads-gpt-over-https.js | failureDisplayValue": {
-    "message": "Load gpt.js over HTTPS",
-    "description": ""
-  },
-  "audits/loads-gpt-over-https.js | failureTitle": {
-    "message": "Load GPT over HTTPS",
-    "description": ""
-  },
-  "audits/loads-gpt-over-https.js | title": {
-    "message": "GPT tag is loaded over HTTPS",
-    "description": ""
-  },
-  "audits/script-injected-tags.js | columnDuration": {
-    "message": "Duration",
-    "description": ""
-  },
-  "audits/script-injected-tags.js | columnLineNumber": {
-    "message": "Source Line Number",
-    "description": ""
-  },
-  "audits/script-injected-tags.js | columnRequest": {
-    "message": "Resource",
-    "description": ""
-  },
-  "audits/script-injected-tags.js | columnStartTime": {
-    "message": "Start",
+  "audits/script-injected-tags.js | columnUrl": {
+    "message": "Script",
     "description": ""
   },
   "audits/script-injected-tags.js | description": {
-    "message": "Load scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. This allows the browser fetch the script sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/).",
+    "message": "Load the following scripts directly with `<script async src=...>` instead of injecting scripts with JavaScript. Doing so allows the browser to preload scripts sooner. [Learn more](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/).",
     "description": ""
   },
-  "audits/script-injected-tags.js | displayValue": {
-    "message": "{numTags, plural, =1 {1 script-injected resource} other {# script-injected resources}}",
+  "audits/script-injected-tags.js | failureDisplayValue": {
+    "message": "Load {tags, plural, =1 {1 script} other {# scripts}} statically",
     "description": ""
   },
   "audits/script-injected-tags.js | failureTitle": {
-    "message": "Avoid script-injected tags",
+    "message": "Load ad scripts statically",
     "description": ""
   },
   "audits/script-injected-tags.js | title": {
-    "message": "No script-injected tags found",
+    "message": "Ad scripts are loaded statically",
     "description": ""
   },
   "audits/serial-header-bidding.js | columnBidder": {
@@ -375,32 +467,8 @@
     "message": "Header bidding is parallelized",
     "description": ""
   },
-  "audits/static-ad-tags.js | columnLineNumber": {
-    "message": "Line Number",
-    "description": ""
-  },
-  "audits/static-ad-tags.js | columnUrl": {
-    "message": "Initiator",
-    "description": ""
-  },
-  "audits/static-ad-tags.js | description": {
-    "message": "Tags loaded dynamically are not visible to the browser preloader. Consider using a static tag or `<link rel=\"preload\">` so the browser may load GPT sooner. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/static-ad-tags).",
-    "description": ""
-  },
-  "audits/static-ad-tags.js | failureDisplayValue": {
-    "message": "Up to {timeInMs, number, seconds} s tag load time improvement",
-    "description": ""
-  },
-  "audits/static-ad-tags.js | failureTitle": {
-    "message": "Load GPT tag statically",
-    "description": ""
-  },
-  "audits/static-ad-tags.js | title": {
-    "message": "GPT tag is loaded statically",
-    "description": ""
-  },
   "audits/tag-load-time.js | description": {
-    "message": "This metric measures the time for the Google Publisher Tag's implementation script (pubads_impl.js) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "message": "This metric measures the time for the ad tag's implementation script (pubads_impl.js for GPT; adsbygoogle.js for AdSense) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
     "description": ""
   },
   "audits/tag-load-time.js | displayValue": {

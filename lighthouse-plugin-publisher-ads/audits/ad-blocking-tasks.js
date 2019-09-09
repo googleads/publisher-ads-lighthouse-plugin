@@ -13,7 +13,7 @@ const LongTasks = require('../computed/long-tasks');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAttributableUrl} = require('../utils/tasks');
-const {isGpt} = require('../utils/resource-classification');
+const {isAdScript} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
@@ -124,7 +124,7 @@ class AdBlockingTasks extends Audit {
         continue;
       }
       const scriptUrl = getAttributableUrl(longTask);
-      if (scriptUrl && isGpt(new URL(scriptUrl))) {
+      if (scriptUrl && isAdScript(new URL(scriptUrl))) {
         continue;
       }
 
