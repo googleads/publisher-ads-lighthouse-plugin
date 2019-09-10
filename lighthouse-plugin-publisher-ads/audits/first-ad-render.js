@@ -45,7 +45,7 @@ class FirstAdRender extends Audit {
   static get meta() {
     // @ts-ignore
     return {
-      id: 'first-ad-paint',
+      id: 'first-ad-render',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),

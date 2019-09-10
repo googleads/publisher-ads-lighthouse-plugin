@@ -30,7 +30,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/blocking-load-events`},
     {path: `${PLUGIN_PATH}/audits/bottleneck-requests`},
     {path: `${PLUGIN_PATH}/audits/duplicate-tags`},
-    {path: `${PLUGIN_PATH}/audits/first-ad-paint`},
+    {path: `${PLUGIN_PATH}/audits/first-ad-render`},
     {path: `${PLUGIN_PATH}/audits/full-width-slots`},
     {path: `${PLUGIN_PATH}/audits/gpt-bids-parallel`},
     {path: `${PLUGIN_PATH}/audits/idle-network-times`},
@@ -59,7 +59,7 @@ module.exports = {
       {id: 'tag-load-time', weight: 4, group: 'metrics'},
       {id: 'ad-request-from-tag-load', weight: 4, group: 'metrics'},
       {id: 'ad-request-from-page-start', weight: 4, group: 'metrics'},
-      {id: 'first-ad-paint', weight: 8, group: 'metrics'},
+      {id: 'first-ad-render', weight: 8, group: 'metrics'},
       // Performance group.
       {id: 'bottleneck-requests', weight: 1, group: 'ads-performance'},
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
