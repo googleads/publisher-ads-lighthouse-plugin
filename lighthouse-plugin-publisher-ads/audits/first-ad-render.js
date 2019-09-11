@@ -71,7 +71,6 @@ class FirstAdRender extends Audit {
     const {timing} = await ComputedAdRenderTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
-      // Currently only GPT ads are supported by this audit.
       const adSlots = artifacts.IFrameElements.filter(
         (iframe) => isAdIframe(iframe));
       if (adSlots.length === 0) {
