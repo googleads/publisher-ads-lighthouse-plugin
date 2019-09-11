@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const ComputedAdPaintTime = require('../computed/ad-paint-time');
+const ComputedAdRenderTime = require('../computed/ad-render-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
@@ -22,7 +22,7 @@ const UIStrings = {
   title: 'Latency of first ad render',
   failureTitle: 'Reduce time to render first ad',
   description: 'This metric measures the time for the first ad iframe to ' +
-  'paint from page navigation. [Learn more](' +
+  'render from page navigation. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
@@ -35,9 +35,9 @@ const PODR = 2700; // ms
 const MEDIAN = 3700; // ms
 
 /**
- * Measures the first ad paint time.
+ * Measures the first ad render time.
  */
-class FirstAdPaint extends Audit {
+class FirstAdRender extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
@@ -45,7 +45,7 @@ class FirstAdPaint extends Audit {
   static get meta() {
     // @ts-ignore
     return {
-      id: 'first-ad-paint',
+      id: 'first-ad-render',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
@@ -68,7 +68,7 @@ class FirstAdPaint extends Audit {
       trace,
       settings: context.settings,
     };
-    const {timing} = await ComputedAdPaintTime.request(metricData, context);
+    const {timing} = await ComputedAdRenderTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
       // Currently only GPT ads are supported by this audit.
@@ -92,5 +92,5 @@ class FirstAdPaint extends Audit {
     };
   }
 }
-module.exports = FirstAdPaint;
+module.exports = FirstAdRender;
 module.exports.UIStrings = UIStrings;

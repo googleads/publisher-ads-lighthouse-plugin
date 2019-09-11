@@ -271,19 +271,19 @@
     "message": "No duplicate tags found in any frame",
     "description": ""
   },
-  "audits/first-ad-paint.js | description": {
-    "message": "This metric measures the time for the first ad iframe to paint from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+  "audits/first-ad-render.js | description": {
+    "message": "This metric measures the time for the first ad iframe to render from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
     "description": ""
   },
-  "audits/first-ad-paint.js | displayValue": {
+  "audits/first-ad-render.js | displayValue": {
     "message": "{timeInMs, number, seconds} s",
     "description": ""
   },
-  "audits/first-ad-paint.js | failureTitle": {
+  "audits/first-ad-render.js | failureTitle": {
     "message": "Reduce time to render first ad",
     "description": ""
   },
-  "audits/first-ad-paint.js | title": {
+  "audits/first-ad-render.js | title": {
     "message": "Latency of first ad render",
     "description": ""
   },
@@ -580,7 +580,7 @@
     "description": ""
   },
   "messages/common-strings.js | WARNINGS__NO_AD_RENDERED": {
-    "message": "No ads were painted when rendering this page.",
+    "message": "No ads were rendered when rendering this page.",
     "description": ""
   },
   "messages/common-strings.js | WARNINGS__NO_ADS": {

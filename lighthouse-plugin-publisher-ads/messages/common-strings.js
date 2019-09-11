@@ -37,7 +37,7 @@ const UIStrings = {
   ERRORS__VIEWPORT_AREA_ZERO: 'Viewport area is zero',
 
   WARNINGS__NO_ADS: 'No ads were requested when fetching this page.',
-  WARNINGS__NO_AD_RENDERED: 'No ads were painted when rendering this page.',
+  WARNINGS__NO_AD_RENDERED: 'No ads were rendered when rendering this page.',
   WARNINGS__NO_TAG: 'The GPT tag was not requested.',
 };
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');

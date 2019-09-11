@@ -24,8 +24,8 @@ const {isImpressionPing} = require('../utils/resource-classification');
 // eslint-disable-next-line max-len
 /** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
 
-/** Computes simulated first ad paint time using Lantern. */
-class LanternAdPaintTime extends AdLanternMetric {
+/** Computes simulated first ad render time using Lantern. */
+class LanternAdRenderTime extends AdLanternMetric {
   /**
    * @param {LH.Gatherer.Simulation.Result} simulationResult
    * @param {Object} extras
@@ -44,10 +44,10 @@ class LanternAdPaintTime extends AdLanternMetric {
 // Decorate the class.
 // @ts-ignore Allow reassignment for decoration.
 // eslint-disable-next-line no-class-assign
-LanternAdPaintTime = makeComputedArtifact(LanternAdPaintTime);
+LanternAdRenderTime = makeComputedArtifact(LanternAdRenderTime);
 
-/** Computes the first ad paint time metric. */
-class AdPaintTime extends ComputedMetric {
+/** Computes the first ad render time metric. */
+class AdRenderTime extends ComputedMetric {
   /**
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
@@ -55,8 +55,8 @@ class AdPaintTime extends ComputedMetric {
    * @override
    */
   static async computeSimulatedMetric(data, context) {
-    // @ts-ignore request does not exist on LanternAdPaintTime
-    return LanternAdPaintTime.request(data, context);
+    // @ts-ignore request does not exist on LanternAdRenderTime
+    return LanternAdRenderTime.request(data, context);
   }
 
   /**
@@ -77,7 +77,7 @@ class AdPaintTime extends ComputedMetric {
 // Decorate the class.
 // @ts-ignore Allow reassignment for decoration.
 // eslint-disable-next-line no-class-assign
-AdPaintTime = makeComputedArtifact(AdPaintTime);
+AdRenderTime = makeComputedArtifact(AdRenderTime);
 
-module.exports = AdPaintTime;
+module.exports = AdRenderTime;
 

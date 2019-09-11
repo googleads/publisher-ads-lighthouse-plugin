@@ -203,16 +203,16 @@
   "audits/duplicate-tags.js | title": {
     "message": "N̂ó d̂úp̂ĺîćât́ê t́âǵŝ f́ôún̂d́ îń âńŷ f́r̂ám̂é"
   },
-  "audits/first-ad-paint.js | description": {
-    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê f́îŕŝt́ âd́ îf́r̂ám̂é t̂ó p̂áîńt̂ f́r̂óm̂ ṕâǵê ńâv́îǵât́îón̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+  "audits/first-ad-render.js | description": {
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê f́îŕŝt́ âd́ îf́r̂ám̂é t̂ó r̂én̂d́êŕ f̂ŕôḿ p̂áĝé n̂áv̂íĝát̂íôń. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/m̂ét̂ŕîćŝ)."
   },
-  "audits/first-ad-paint.js | displayValue": {
+  "audits/first-ad-render.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ"
   },
-  "audits/first-ad-paint.js | failureTitle": {
+  "audits/first-ad-render.js | failureTitle": {
     "message": "R̂éd̂úĉé t̂ím̂é t̂ó r̂én̂d́êŕ f̂ír̂śt̂ ád̂"
   },
-  "audits/first-ad-paint.js | title": {
+  "audits/first-ad-render.js | title": {
     "message": "L̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂én̂d́êŕ"
   },
   "audits/full-width-slots.js | description": {
@@ -435,7 +435,7 @@
     "message": "N̂ó v̂íŝíb̂ĺê śl̂ót̂ś"
   },
   "messages/common-strings.js | WARNINGS__NO_AD_RENDERED": {
-    "message": "N̂ó âd́ŝ ẃêŕê ṕâín̂t́êd́ ŵh́êń r̂én̂d́êŕîńĝ t́ĥíŝ ṕâǵê."
+    "message": "N̂ó âd́ŝ ẃêŕê ŕêńd̂ér̂éd̂ ẃĥén̂ ŕêńd̂ér̂ín̂ǵ t̂h́îś p̂áĝé."
   },
   "messages/common-strings.js | WARNINGS__NO_ADS": {
     "message": "N̂ó âd́ŝ ẃêŕê ŕêq́ûéŝt́êd́ ŵh́êń f̂ét̂ćĥín̂ǵ t̂h́îś p̂áĝé."
