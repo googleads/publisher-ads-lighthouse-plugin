@@ -16,7 +16,6 @@ const ComputedAdRenderTime = require('../computed/ad-render-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {isAdIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Latency of first ad render',
@@ -71,11 +70,7 @@ class FirstAdRender extends Audit {
     const {timing} = await ComputedAdRenderTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
-      const adSlots = artifacts.IFrameElements.filter(
-        (iframe) => isAdIframe(iframe));
-      if (adSlots.length === 0) {
-        context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
-      }
+      context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
       return auditNotApplicable.NoAdRendered;
     }
 
