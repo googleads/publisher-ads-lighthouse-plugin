@@ -22,7 +22,7 @@
     "yargs": "^13.3.0"
   },
   "peerDependencies": {
-    "lighthouse": "^5.1.0"
+    "lighthouse": "^5.4.0"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.1",
