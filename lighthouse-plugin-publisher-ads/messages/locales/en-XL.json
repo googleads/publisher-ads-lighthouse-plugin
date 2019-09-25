@@ -318,7 +318,7 @@
     "message": "Ŝćr̂íp̂t́"
   },
   "audits/script-injected-tags.js | description": {
-    "message": "L̂óâd́ t̂h́ê f́ôĺl̂óŵín̂ǵ ŝćr̂íp̂t́ŝ d́îŕêćt̂ĺŷ ẃît́ĥ `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=...>` ín̂śt̂éâd́ ôf́ îńĵéĉt́îńĝ śĉŕîṕt̂ś ŵít̂h́ Ĵáv̂áŜćr̂íp̂t́. D̂óîńĝ śô ál̂ĺôẃŝ t́ĥé b̂ŕôẃŝér̂ t́ô ṕr̂él̂óâd́ ŝćr̂íp̂t́ŝ śôón̂ér̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://ẃŵẃ.îǵv̂ít̂á.ĉóm̂/2014/05/20/śĉŕîṕt̂-ín̂j́êćt̂éd̂-áŝýn̂ć-ŝćr̂íp̂t́ŝ-ćôńŝíd̂ér̂éd̂-h́âŕm̂f́ûĺ/)."
+    "message": "L̂óâd́ t̂h́ê f́ôĺl̂óŵín̂ǵ ŝćr̂íp̂t́ŝ d́îŕêćt̂ĺŷ ẃît́ĥ `<śĉŕîṕt̂ áŝýn̂ć ŝŕĉ=...>` ín̂śt̂éâd́ ôf́ îńĵéĉt́îńĝ śĉŕîṕt̂ś ŵít̂h́ Ĵáv̂áŜćr̂íp̂t́. D̂óîńĝ śô ál̂ĺôẃŝ t́ĥé b̂ŕôẃŝér̂ t́ô ṕr̂él̂óâd́ ŝćr̂íp̂t́ŝ śôón̂ér̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/śĉŕîṕt̂-ín̂j́êćt̂éd̂-t́âǵŝ)."
   },
   "audits/script-injected-tags.js | failureDisplayValue": {
     "message": "L̂óâd́ {tags, plural, =1 {1 ŝćr̂íp̂t́} other {# ŝćr̂íp̂t́ŝ}} śt̂át̂íĉál̂ĺŷ"
