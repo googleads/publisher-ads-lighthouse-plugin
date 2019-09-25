@@ -33,7 +33,7 @@ const UIStrings = {
   description: 'Load the following scripts directly with ' +
   '`<script async src=...>` instead of injecting scripts with JavaScript. ' +
   'Doing so allows the browser to preload scripts sooner. [Learn more](' +
-  'https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/script-injected-tags' +
   ').',
   failureDisplayValue: 'Load {tags, plural, =1 {1 script} other {# scripts}} statically',
   columnUrl: 'Script',
