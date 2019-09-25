@@ -14,7 +14,6 @@
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const util = require('util');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isAdTag} = require('../utils/resource-classification');
@@ -32,7 +31,6 @@ const UIStrings = {
   '. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/loads-ad-tag-over-https' +
   ').',
-  failureDisplayValue: 'Load ad tag over HTTPS',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -95,10 +93,6 @@ class LoadsAdTagOverHttps extends Audit {
     return {
       numericValue: details.numAdTagHttpReqs,
       score: details.numAdTagHttpReqs ? 0 : 1,
-      displayValue: details.numAdTagHttpReqs ?
-        util.format(
-          str_(UIStrings.failureDisplayValue), details.numAdTagHttpReqs) :
-        '',
       details,
     };
   }
