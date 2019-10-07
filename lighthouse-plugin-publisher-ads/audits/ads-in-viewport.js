@@ -67,7 +67,8 @@ class AdsInViewport extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements
-        .filter((iframe) => isAdIframe(iframe) && iframe.isVisible);
+        .filter((iframe) => isAdIframe(iframe) &&
+          iframe.clientRect.height * iframe.clientRect.width > 1);
 
     if (!slots.length) {
       return auditNotApplicable.NoVisibleSlots;

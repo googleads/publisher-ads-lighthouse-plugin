@@ -68,7 +68,9 @@ class AdTopOfViewport extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements.filter(isAdIframe)
-        .filter((slot) => slot.isVisible && !slot.isFixed)
+        .filter((slot) =>
+          slot.clientRect.width * slot.clientRect.height > 1
+          && !slot.isPositionFixed)
         .map((slot) => ({
           midpoint: slot.clientRect.top + slot.clientRect.height / 2,
           id: slot.id,

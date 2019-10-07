@@ -133,7 +133,6 @@ class AdRequestCriticalPath extends Audit {
       displayValue: str_(UIStrings.displayValue,
         {
           serialResources: depth,
-          totalResources: tableView.length,
         }),
       details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
     };

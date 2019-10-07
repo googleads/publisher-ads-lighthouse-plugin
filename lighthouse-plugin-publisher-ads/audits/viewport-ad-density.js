@@ -57,7 +57,8 @@ class ViewportAdDensity extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements.filter(
-      (slot) => isAdIframe(slot) && slot.isVisible);
+      (slot) => isAdIframe(slot) &&
+      slot.clientRect.width * slot.clientRect.height > 1 );
 
     if (!slots.length) {
       return auditNotApplicable.NoVisibleSlots;

@@ -26,10 +26,6 @@ module.exports = {
   passes: [
     {
       passName: 'defaultPass',
-      gatherers: [
-        require.resolve(
-          './lighthouse-plugin-publisher-ads/gatherers/iframe-elements'),
-      ],
     },
   ],
   settings: {

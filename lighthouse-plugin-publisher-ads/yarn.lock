@@ -54,6 +54,11 @@
   resolved "https://registry.yarnpkg.com/@sinonjs/text-encoding/-/text-encoding-0.7.1.tgz#8da5c6530915653f3a1f38fd5f101d8c3f8079c5"
   integrity sha512-+iTbntw2IZPb/anVDbypzfQa+ay64MW0Zo8aJ8gZPWMMK6/OubMVb6lUPMagqjOPnmtauXnFCACVl3O7ogjeqQ==
 
+"@tusbar/cache-control@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@tusbar/cache-control/-/cache-control-0.3.1.tgz#2ee673c6a7166041b5d419f7e15cd9f16e21c8e1"
+  integrity sha512-qeQhWoHQqDdW+SS1TgybdOeaSo+8tZx4ZesMY0+HSLeWWa2bGDetB9wxAT/umlXuutC6QdbADd48RJ6hrYr4BQ==
+
 "@types/intl-messageformat@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@types/intl-messageformat/-/intl-messageformat-3.0.0.tgz#a405302abfa55c427cbcd374cecb12c0b90e6915"

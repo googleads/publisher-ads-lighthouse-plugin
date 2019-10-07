@@ -17,19 +17,16 @@ const {expect} = require('chai');
 
 describe('AdsInViewport', () => {
   // From top left corner & dimensions
-  const generateSlot = ({x, y, w, h}) => ({
+  const generateSlot = ({left, top, w, h}) => ({
     clientRect: {
-      x,
-      y,
       width: w,
       height: h,
-      top: y,
-      bottom: y + h,
-      left: x,
-      right: x + w,
+      top,
+      bottom: top + h,
+      left,
+      right: left + w,
     },
     id: 'google_ads_iframe_test',
-    isVisible: w > 0 && h > 0,
   });
 
   const ViewportDimensions = {
@@ -47,10 +44,10 @@ describe('AdsInViewport', () => {
 
     it('should return fraction of ad slots inside viewport', async () => {
       const IFrameElements = [
-        generateSlot({x: 0, y: 100, w: 50, h: 50}), // in
-        generateSlot({x: 0, y: 700, w: 50, h: 50}), // out
-        generateSlot({x: 0, y: 800, w: 50, h: 50}), // out
-        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({left: 0, top: 100, w: 50, h: 50}), // in
+        generateSlot({left: 0, top: 700, w: 50, h: 50}), // out
+        generateSlot({left: 0, top: 800, w: 50, h: 50}), // out
+        generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
@@ -58,17 +55,17 @@ describe('AdsInViewport', () => {
     });
 
     const positiveTests = [
-      {x: 10, y: 10, w: 10, h: 10, overlap: 100, pos: 'inside'},
+      {left: 10, top: 10, w: 10, h: 10, overlap: 100, pos: 'inside'},
       // Cases overlapping an edge of the viewport
-      {x: -10, y: 0, w: 20, h: 200, overlap: 2000, pos: 'left edge'},
-      {x: 0, y: -10, w: 300, h: 20, overlap: 3000, pos: 'top edge'},
-      {x: 290, y: 0, w: 20, h: 200, overlap: 2000, pos: 'right edge'},
-      {x: 0, y: 190, w: 300, h: 20, overlap: 3000, pos: 'bottom edge'},
+      {left: -10, top: 0, w: 20, h: 200, overlap: 2000, pos: 'left edge'},
+      {left: 0, top: -10, w: 300, h: 20, overlap: 3000, pos: 'top edge'},
+      {left: 290, top: 0, w: 20, h: 200, overlap: 2000, pos: 'right edge'},
+      {left: 0, top: 190, w: 300, h: 20, overlap: 3000, pos: 'bottom edge'},
       // Cases overlapping a corner of the viewport
-      {x: -10, y: -10, w: 20, h: 20, overlap: 100, pos: 'top left corner'},
-      {x: 290, y: -10, w: 20, h: 20, overlap: 100, pos: 'top right corner'},
-      {x: -10, y: 190, w: 20, h: 20, overlap: 100, pos: 'bottom left corner'},
-      {x: 290, y: 190, w: 20, h: 20, overlap: 100, pos: 'bottom right corner'},
+      {left: -10, top: -10, w: 20, h: 20, overlap: 100, pos: 'top left corner'},
+      {left: 290, top: -10, w: 20, h: 20, overlap: 100, pos: 'top right corner'},
+      {left: -10, top: 190, w: 20, h: 20, overlap: 100, pos: 'bottom left corner'},
+      {left: 290, top: 190, w: 20, h: 20, overlap: 100, pos: 'bottom right corner'},
     ];
 
     positiveTests.forEach(async (test) =>
@@ -81,15 +78,15 @@ describe('AdsInViewport', () => {
 
     const negativeTests = [
       // Cases outside an edge of the viewport
-      {x: -20, y: 0, w: 20, h: 200, pos: 'left edge'},
-      {x: 0, y: -20, w: 300, h: 20, pos: 'top edge'},
-      {x: 300, y: 0, w: 20, h: 200, pos: 'right edge'},
-      {x: 0, y: 200, w: 300, h: 20, pos: 'bottom edge'},
+      {left: -20, top: 0, w: 20, h: 200, pos: 'left edge'},
+      {left: 0, top: -20, w: 300, h: 20, pos: 'top edge'},
+      {left: 300, top: 0, w: 20, h: 200, pos: 'right edge'},
+      {left: 0, top: 200, w: 300, h: 20, pos: 'bottom edge'},
       // Cases outside a corner of the viewport
-      {x: -20, y: -20, w: 20, h: 20, pos: 'top left corner'},
-      {x: 300, y: -20, w: 20, h: 20, pos: 'top right corner'},
-      {x: -20, y: 200, w: 20, h: 20, pos: 'bottom left corner'},
-      {x: 300, y: 200, w: 20, h: 20, pos: 'bottom right corner'},
+      {left: -20, top: -20, w: 20, h: 20, pos: 'top left corner'},
+      {left: 300, top: -20, w: 20, h: 20, pos: 'top right corner'},
+      {left: -20, top: 200, w: 20, h: 20, pos: 'bottom left corner'},
+      {left: 300, top: 200, w: 20, h: 20, pos: 'bottom right corner'},
     ];
 
     negativeTests.forEach(async (test) =>
@@ -102,8 +99,8 @@ describe('AdsInViewport', () => {
 
     it('should be not applicable if no slots have area', async () => {
       const IFrameElements = [
-        generateSlot({x: 10, y: 10, w: 0, h: 0}),
-        generateSlot({x: 100, y: 10, w: 100, h: 0}),
+        generateSlot({left: 10, top: 10, w: 0, h: 0}),
+        generateSlot({left: 100, top: 10, w: 100, h: 0}),
       ];
       const artifacts = {IFrameElements, ViewportDimensions};
       expect(AdsInViewport.audit(artifacts))
@@ -112,8 +109,8 @@ describe('AdsInViewport', () => {
 
     it('should be not applicable if all slots are hidden', async () => {
       const IFrameElements = [
-        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
-        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
+        generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
       ];
       const artifacts = {IFrameElements, ViewportDimensions};
       expect(AdsInViewport.audit(artifacts))

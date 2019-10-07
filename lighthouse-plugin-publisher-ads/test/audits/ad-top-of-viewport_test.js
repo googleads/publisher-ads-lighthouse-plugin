@@ -17,19 +17,16 @@ const {expect} = require('chai');
 
 describe('AdTopOfViewport', () => {
   // From top left corner & dimensions
-  const generateSlot = ({x = 0, y, w = 200, h}) => ({
+  const generateSlot = ({left = 0, top, w = 200, h}) => ({
     clientRect: {
-      x,
-      y,
       width: w,
       height: h,
-      top: y,
-      bottom: y + h,
-      left: x,
-      right: x + w,
+      top,
+      bottom: top + h,
+      left,
+      right: left + w,
     },
     id: 'google_ads_iframe_test',
-    isVisible: w > 0 && h > 0,
   });
 
   const ViewportDimensions = {
@@ -47,10 +44,10 @@ describe('AdTopOfViewport', () => {
 
     it('should return midpoint of top ad within viewport', async () => {
       const IFrameElements = [
-        generateSlot({y: 100, h: 50}), // in
-        generateSlot({y: 200, h: 50}), // out
-        generateSlot({y: 800, h: 50}), // out
-        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({top: 100, h: 50}), // in
+        generateSlot({top: 200, h: 50}), // out
+        generateSlot({top: 800, h: 50}), // out
+        generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
@@ -59,10 +56,10 @@ describe('AdTopOfViewport', () => {
 
     it('should not be applicable if no ads in viewport', async () => {
       const IFrameElements = [
-        generateSlot({y: 505, h: 50}), // out
-        generateSlot({y: 600, h: 50}), // out
-        generateSlot({y: 800, h: 50}), // out
-        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({top: 505, h: 50}), // out
+        generateSlot({top: 600, h: 50}), // out
+        generateSlot({top: 800, h: 50}), // out
+        generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
@@ -80,8 +77,8 @@ describe('AdTopOfViewport', () => {
 
     it('should not be applicable if no slots are visible', async () => {
       const IFrameElements = [
-        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
-        generateSlot({x: 0, y: 0, w: 0, h: 0}), // hidden
+        generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
+        generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
