@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Script Injected Tags</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script>googletag = window.googletag || {cmd: []};</script>
+
+    <script>
+      const gpt = document.createElement('script');
+      gpt.setAttribute('src', 'https://securepubads.g.doubleclick.net/tag/js/gpt.js')
+      document.querySelector('head').appendChild(gpt);
+    </script>
+  <body>
+      <script>
+          googletag.cmd.push(function() {
+            googletag.defineSlot('/6355419/Travel', [728, 90], `div0`)
+                  .setTargeting("test","infinitescroll")
+                  .addService(googletag.pubads());
+            googletag.pubads().enableSingleRequest();
+            googletag.enableServices();
+          });
+      </script>
+    <h2>Blocked Ad</h2>
+    <div id="div0" style="width: 728px; height: 90px">
+      <script>
+        googletag.cmd.push(function() { googletag.display('div0'); });
+      </script>
+    </div>
+  </body>
+</html>

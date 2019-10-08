@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Long Tasks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      function longTask(duration) {
+        const start = new Date().getTime();
+        // Busy countdown
+        while (new Date().getTime() - start < duration);
+      }
+
+      function initAds() {
+        googletag.cmd.push(function() {
+        googletag.defineSlot('/6355419/Travel', [728, 90], `div0`)
+              .setTargeting("test","infinitescroll")
+              .addService(googletag.pubads());
+        googletag.pubads().enableSingleRequest();
+        googletag.enableServices();
+      });
+      }
+    </script>
+    <script>googletag = window.googletag || {cmd: []};</script>
+    <script async src="https://www.googletagservices.com/tag/js/gpt.js"></script>
+  <body>
+    <h2>Blocked Ad</h2>
+    <script>
+      initAds();
+      longTask(1000);
+    </script>
+    <div id="div0" style="width: 728px; height: 90px">
+        <script>
+          googletag.cmd.push(function() { googletag.display('div0'); });
+        </script>
+    </div>
+  </body>
+</html>

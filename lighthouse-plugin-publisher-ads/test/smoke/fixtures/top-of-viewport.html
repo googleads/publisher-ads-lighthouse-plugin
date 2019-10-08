@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lazy Load</title>
+    <style>
+      p {
+        font-size: 50px;
+      }
+    </style>
+    <script>googletag = window.googletag || {cmd: []};</script>
+    <script async src="https://www.googletagservices.com/tag/js/gpt.js"></script>
+    <script>
+      const numAds = 2;
+      for (let i = 0; i < numAds; i++) {
+        googletag.cmd.push(() => {
+          googletag.defineSlot('/6355419/Travel', [728, 90], `div${i}`)
+              .setTargeting("test","infinitescroll")
+              .addService(googletag.pubads());
+        });
+      }
+      googletag.cmd.push(function() {
+        googletag.pubads().enableSingleRequest();
+        googletag.enableServices();
+      });
+    </script>
+  </head>
+  <body>
+    <div id="div0" style="width: 728px; height: 90px; position: fixed;">
+      <script>
+        googletag.cmd.push(function() { googletag.display('div0'); });
+      </script>
+    </div>
+
+    <div id="div1" style="width: 728px; height: 90px">
+      <script>
+        googletag.cmd.push(function() { googletag.display('div1'); });
+      </script>
+    </div>
+
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium justo 
+        enim. Vivamus non congue ligula, non pulvinar risus. Ut sodales pulvinar 
+        sem, et semper mi fringilla quis. Donec ac lacus orci. Sed pharetra eros 
+        et risus egestas fermentum. Cras pulvinar metus tempus, varius nunc ut, 
+        ullamcorper massa. Nam tempus imperdiet molestie. Mauris et bibendum 
+        lorem. Nunc metus leo, rhoncus quis mollis nec, ultricies a erat. 
+        Suspendisse sed auctor mauris, sit amet faucibus neque. Praesent commodo 
+        tortor et lorem imperdiet, ac interdum massa molestie. Aliquam in 
+        bibendum sem. Duis bibendum ex dolor, et molestie sem aliquam non. Duis 
+        eu risus nec lectus maximus imperdiet. In mi velit, varius sit amet enim 
+        a, semper tristique sapien. Nulla in leo sed nibh dictum pharetra rhoncus 
+        id lacus.
+      </p>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut pretium justo 
+        enim. Vivamus non congue ligula, non pulvinar risus. Ut sodales pulvinar 
+        sem, et semper mi fringilla quis. Donec ac lacus orci. Sed pharetra eros 
+        et risus egestas fermentum. Cras pulvinar metus tempus, varius nunc ut, 
+        ullamcorper massa. Nam tempus imperdiet molestie. Mauris et bibendum 
+        lorem. Nunc metus leo, rhoncus quis mollis nec, ultricies a erat. 
+        Suspendisse sed auctor mauris, sit amet faucibus neque. Praesent commodo 
+        tortor et lorem imperdiet, ac interdum massa molestie. Aliquam in 
+        bibendum sem. Duis bibendum ex dolor, et molestie sem aliquam non. Duis 
+        eu risus nec lectus maximus imperdiet. In mi velit, varius sit amet enim 
+        a, semper tristique sapien. Nulla in leo sed nibh dictum pharetra rhoncus 
+        id lacus.
+      </p>
+
+  </body>
+</html>

@@ -18,7 +18,7 @@
   "dependencies": {
     "@tusbar/cache-control": "^0.3.1",
     "@types/esprima": "^4.0.2",
-    "lighthouse": "5.4.0",
+    "lighthouse": "https://github.com/GoogleChrome/lighthouse.git",
     "yargs": "^13.3.0"
   },
   "devDependencies": {
@@ -30,6 +30,7 @@
     "husky": "^2.4.0",
     "mocha": "^5.1.1",
     "sinon": "^5.0.7",
+    "static-server": "^2.2.1",
     "typescript": "^3.5.1"
   }
 }
