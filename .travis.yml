@@ -10,8 +10,11 @@ branches:
   only:
     - master
 install:
-  - yarn
+  - yarn install --frozen-lockfile
 script:
   - yarn lint
   - yarn test
   - yarn type-check
+  before_cache:
+  - rm -rf ./node_modules/.cache/
+  - rm -rf lighthouse-plugin-publisher-ads/node_modules/.cache/
