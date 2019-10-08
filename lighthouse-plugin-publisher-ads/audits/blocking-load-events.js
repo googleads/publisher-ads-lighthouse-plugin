@@ -16,6 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
 const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
@@ -174,6 +175,10 @@ class BlockingLoadEvents extends Audit {
       (await computeAdRequestWaterfall(trace, devtoolsLog, context))
           // Sort by start time so we process the earliest requests first.
           .sort((a, b) => a.startTime - b.startTime);
+
+    if (!criticalRequests.length) {
+      return auditNotApplicable.NoAdRelatedReq;
+    }
 
     const eventTimes = [
       ...findEventIntervals('domContentLoaded', processEvents),
