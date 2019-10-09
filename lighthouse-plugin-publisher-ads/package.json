@@ -6,7 +6,7 @@
   "main": "plugin.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha test/**/*.js",
+    "test": "mocha test/{audits,utils}/*.js",
     "type-check": "tsc -p ."
   },
   "husky": {

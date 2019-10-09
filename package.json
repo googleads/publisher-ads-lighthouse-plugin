@@ -6,8 +6,9 @@
   "main": "index.js",
   "scripts": {
     "lint": "eslint -c lighthouse-plugin-publisher-ads/.eslintrc.js .",
-    "debug": "mocha debug lighthouse-plugin-publisher-ads/test/**/*.js",
-    "test": "mocha lighthouse-plugin-publisher-ads/test/**/*.js",
+    "debug": "mocha debug lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
+    "test": "mocha lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
+    "smoke": "node lighthouse-plugin-publisher-ads/test/smoke/run-smoke.js",
     "type-check": "tsc -p lighthouse-plugin-publisher-ads/tsconfig.json"
   },
   "husky": {
