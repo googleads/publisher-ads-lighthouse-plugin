@@ -18,3 +18,4 @@ script:
   before_cache:
   - rm -rf ./node_modules/.cache/
   - rm -rf lighthouse-plugin-publisher-ads/node_modules/.cache/
+  
