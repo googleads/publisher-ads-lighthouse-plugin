@@ -152,7 +152,8 @@ function isXhrCritical(xhrReq, networkSummary, criticalRequests) {
 function addInitiatedRequests(
   scriptReq, parentReq, networkSummary, criticalRequests) {
   const initiatedRequests = networkSummary.allRecords
-      .filter((r) => ['Script', 'XHR'].includes(r.resourceType) &&
+      .filter((r) => r.resourceType != undefined)
+      .filter((r) => ['Script', 'XHR'].includes(r.resourceType || '') &&
           r.endTime < parentReq.startTime)
       .filter((r) => r.initiatorRequest == scriptReq ||
         getNetworkInitiators(r).includes(scriptReq.url));

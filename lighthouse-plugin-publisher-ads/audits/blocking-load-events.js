@@ -53,7 +53,7 @@ const HEADINGS = [
 
 /**
  * @param {SimpleRequest} request
- * @return {LH.Crdp.Runtime.CallFrame}
+ * @return {LH.Crdp.Runtime.CallFrame|undefined}
  */
 function findOriginalCallFrame(request) {
   const {record} = request;
@@ -116,7 +116,15 @@ function findEventIntervals(eventName, traceEvents) {
 }
 
 /**
- * @param {{url: string, blockedUrl: string}} blockingEvent
+ * @typedef {Object} BlockingEvent
+ * @property {string} eventName
+ * @property {string} blockedUrl
+ * @property {number} time
+ * @property {number} blockedTime
+ */
+
+/**
+ * @param {BlockingEvent & LH.Crdp.Runtime.CallFrame} blockingEvent
  * @param {NetworkRequest[]} networkRecords
  * @param {Map<NetworkRequest, NodeTiming>} timingsByRecord
  * @return {number}
@@ -201,10 +209,12 @@ class BlockingLoadEvents extends Audit {
       const interval = eventTimes.find((interval) =>
         interval.start <= traceEvent.ts && traceEvent.ts <= interval.end);
       if (interval) {
+        /** @type {BlockingEvent & LH.Crdp.Runtime.CallFrame} */
         const blockingEvent = Object.assign({
           eventName: interval.eventName,
           blockedUrl: r.url,
           time: timings[interval.eventName],
+          blockedTime: Infinity,
         }, callFrame);
         blockingEvent.blockedTime = quantifyBlockedTime(
           blockingEvent, networkRecords, timingsByRecord);
