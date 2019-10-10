@@ -14,6 +14,7 @@ install:
   - google-chrome-stable --version
   - yarn install --frozen-lockfile
 before_script:
+  - export CHROME_PATH="$(which google-chrome-stable)"
   - google-chrome-stable --version
 script:
   - yarn lint
@@ -25,3 +26,5 @@ before_cache:
   - rm -rf lighthouse-plugin-publisher-ads/node_modules/.cache/
 addons:
   chrome: stable
+services:
+  - xvfb
