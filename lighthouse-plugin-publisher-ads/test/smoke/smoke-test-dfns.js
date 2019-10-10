@@ -14,11 +14,31 @@
 'use strict';
 
 /** @type {Array<Smokehouse.TestDfn>} */
-const smokeTests = [{
-  id: 'lighthouse-plugin-publisher-ads',
-  expectations: require('./expectations.js'),
-  config: require('./config.js'),
-  batch: 'pub-ads',
-}];
+const smokeTests = [
+  {
+    id: 'lazy-load',
+    expectations: require('./expectations/lazy-load.js'),
+    config: require('./config.js'),
+    batch: 'pub-ads',
+  },
+  {
+    id: 'long-tasks',
+    expectations: require('./expectations/long-tasks.js'),
+    config: require('./config.js'),
+    batch: 'pub-ads',
+  },
+  {
+    id: 'script-injected',
+    expectations: require('./expectations/script-injected.js'),
+    config: require('./config.js'),
+    batch: 'pub-ads',
+  },
+  {
+    id: 'top-of-viewport',
+    expectations: require('./expectations/top-of-viewport.js'),
+    config: require('./config.js'),
+    batch: 'pub-ads',
+  },
+];
 
 module.exports = smokeTests;
