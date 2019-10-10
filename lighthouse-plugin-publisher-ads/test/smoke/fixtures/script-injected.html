@@ -20,12 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>googletag = window.googletag || {cmd: []};</script>
-
-    <script>
-      const gpt = document.createElement('script');
-      gpt.setAttribute('src', 'https://securepubads.g.doubleclick.net/tag/js/gpt.js')
-      document.querySelector('head').appendChild(gpt);
-    </script>
+    <script async src="./slowly-inject-gpt.js"></script>
   <body>
       <script>
           googletag.cmd.push(function() {

@@ -32,6 +32,32 @@ module.exports = [
             ],
           },
         },
+        'loads-ad-tag-over-https': {
+          score: 0,
+          numericValue: 1,
+        },
+        'ad-blocking-tasks': {
+          score: 0,
+          details: {
+            items: [
+              {
+                script: 'http://localhost:8081/slowly-inject-gpt.js',
+                duration: '1010 +/- 10',
+              },
+            ],
+          },
+        },
+        'bottleneck-requests': {
+          score: 0,
+          details: {
+            items: [
+              {url: new RegExp(/.*\/gpt\/pubads_impl_\d*\.js/,'g')},
+              {url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'},
+              {url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js'},
+              {url: 'http://localhost:8081/slowly-inject-gpt.js'},
+            ],
+          },
+        },
       },
     },
   },
