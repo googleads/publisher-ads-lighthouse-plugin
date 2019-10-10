@@ -19,7 +19,7 @@
   "dependencies": {
     "@tusbar/cache-control": "^0.3.1",
     "@types/esprima": "^4.0.2",
-    "lighthouse": "https://github.com/GoogleChrome/lighthouse.git",
+    "lighthouse": "GoogleChrome/lighthouse#9501/head",
     "yargs": "^13.3.0"
   },
   "devDependencies": {

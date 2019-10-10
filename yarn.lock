@@ -1345,9 +1345,9 @@ jpeg-js@0.1.2, jpeg-js@^0.1.2:
   integrity sha1-E1uZLAV1yYXPoPSUoyJ+0jhYPs4=
 
 js-library-detector@^5.4.0:
-  version "5.4.0"
-  resolved "https://registry.yarnpkg.com/js-library-detector/-/js-library-detector-5.4.0.tgz#d1b08dfbdc3886258f888bd441801ef9e5b69567"
-  integrity sha512-lSTEC9Q3L/cXOhYIilW3GH/v4tOnPIN40NTIBHRcn2vxTwGhMyySQTQpJ0W68ISGzOgvwVe7KCfQ9PJi6MsOIw==
+  version "5.5.0"
+  resolved "https://registry.yarnpkg.com/js-library-detector/-/js-library-detector-5.5.0.tgz#3cf17128f6eaaf594d3d6b4c631d18eca059bfdc"
+  integrity sha512-rLRizuKBAYFmCQM7Efjdbf8u8EoJnfuTlKYUBLQ/2bj9Raw2tr09guQoto/4NIOGmpAYLrzJQ0fmPUqxABCM5w==
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -1457,9 +1457,9 @@ lighthouse-logger@^1.0.0, lighthouse-logger@^1.2.0:
     debug "^2.6.8"
     marky "^1.2.0"
 
-"lighthouse@https://github.com/GoogleChrome/lighthouse.git":
-  version "5.5.0"
-  resolved "https://github.com/GoogleChrome/lighthouse.git#67460ddf05e73c0485aa48cb66faa58cedfba8b1"
+lighthouse@GoogleChrome/lighthouse#9501/head:
+  version "5.4.0"
+  resolved "https://codeload.github.com/GoogleChrome/lighthouse/tar.gz/a83133f04321519edc60de4790a1aa8ee5b9afe5"
   dependencies:
     axe-core "3.3.0"
     chrome-launcher "^0.11.2"

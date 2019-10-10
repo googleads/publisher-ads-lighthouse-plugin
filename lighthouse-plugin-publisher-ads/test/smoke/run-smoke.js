@@ -33,7 +33,7 @@ const server = new StaticServer({
 });
 
 /**
- * TODO(jburger)
+ * Temporarily move files into core Lighthouse to allow for smokehouse usage.
  */
 function init() {
   const cmd = [
@@ -51,7 +51,7 @@ function init() {
 }
 
 /**
- * TODO(jburger)
+ * Revert changes from init().
  */
 function cleanUp() {
   const cmd = [
