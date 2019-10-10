@@ -28,7 +28,4 @@ module.exports = {
       passName: 'defaultPass',
     },
   ],
-  settings: {
-    onlyCategories: ['lighthouse-plugin-publisher-ads'],
-  },
 };

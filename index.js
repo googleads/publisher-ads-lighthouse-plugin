@@ -34,6 +34,10 @@ async function main() {
     process.argv.push('--chrome-flags=--headless');
   }
 
+  if (!yargs.argv.full && !yargs.argv.onlyCategories) {
+    process.argv.push('--only-categories=lighthouse-plugin-publisher-ads');
+  }
+
   // @ts-ignore let LH handle the CLI
   await require('lighthouse/lighthouse-cli/bin').begin();
 }
