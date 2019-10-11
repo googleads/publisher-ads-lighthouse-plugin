@@ -123,6 +123,7 @@ class AdRenderBlockingResources extends Audit {
         // Don't fail on sync resources loaded after the tag. This includes sync
         // resources loaded inside of iframes.
         .filter((r) => r.endTime < tag.startTime)
+        .filter((r) => r != tag.initiatorRequest)
         // Sanity check to filter out duplicate requests which were async. If
         // type != parser then the resource was dynamically added and is
         // therefore async (non-blocking).
