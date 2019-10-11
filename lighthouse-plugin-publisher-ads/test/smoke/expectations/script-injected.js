@@ -51,7 +51,10 @@ module.exports = [
           score: 0,
           details: {
             items: [
-              {url: new RegExp(/.*\/gpt\/pubads_impl_\d*\.js/, 'g')},
+              {
+                url: new RegExp(
+                  /(.*\/gpt\/pubads_impl([a-z_]*)((?<!rendering)_)\d+\.js)/, 'g'),
+              },
               {url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'},
               {url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js'},
               {url: 'http://localhost:8081/slowly-inject-gpt.js'},
