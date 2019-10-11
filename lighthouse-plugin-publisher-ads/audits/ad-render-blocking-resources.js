@@ -130,7 +130,9 @@ class AdRenderBlockingResources extends Audit {
     tableView.sort((a, b) => a.endTime - b.endTime);
 
     // @ts-ignore
-    const opportunity = Math.max(...tableView.map((r) => r.duration));
+    const opportunity =
+        Math.max(...tableView.map((r) => r.endTime)) -
+        Math.min(...tableView.map((r) => r.endTime));
     let displayValue = '';
     if (tableView.length > 0 && opportunity > 0) {
       displayValue = str_(
