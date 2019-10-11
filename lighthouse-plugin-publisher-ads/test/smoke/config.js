@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
  * https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/config
  * @const {LH.Config}
  */
+// TODO(jburger): Make Chrome run in headless mode.
 module.exports = {
   extends: 'lighthouse:full',
   plugins: ['lighthouse-plugin-publisher-ads'],
@@ -28,4 +29,9 @@ module.exports = {
       passName: 'defaultPass',
     },
   ],
+  settings: {
+    onlyCategories: ['lighthouse-plugin-publisher-ads'],
+    // TODO(jburger): Use simulation once properly implemented.
+    throttlingMethod: 'devtools',
+  },
 };
