@@ -33,7 +33,6 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/first-ad-render`},
     {path: `${PLUGIN_PATH}/audits/full-width-slots`},
     {path: `${PLUGIN_PATH}/audits/gpt-bids-parallel`},
-    {path: `${PLUGIN_PATH}/audits/idle-network-times`},
     {path: `${PLUGIN_PATH}/audits/loads-gpt-from-sgdn`},
     {path: `${PLUGIN_PATH}/audits/loads-ad-tag-over-https`},
     {path: `${PLUGIN_PATH}/audits/script-injected-tags`},
@@ -77,10 +76,6 @@ module.exports = {
       {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
-      // The following audits are run but not shown. We include them to be able
-      // collect metadata about the audit, but decide to hide them since they
-      // aren't actionable to end users.
-      {id: 'idle-network-times', weight: 0},
     ],
   },
 };

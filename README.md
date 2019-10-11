@@ -26,6 +26,7 @@ node index.js <url>
 
 Available options:
 -   `--view`: Open report in Chrome after execution.
+-   `--full`: Run all Lighthouse categories.
 -   Any other [Lighthouse flags](https://github.com/GoogleChrome/lighthouse/#cli-options).
 
 Some common options are:

@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,21 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+'use strict';
+const StaticServer = require('static-server');
 
-/**
- * Config for running lighthouse audits.
- * For the possible types, see
- * https://github.com/GoogleChrome/lighthouse/blob/master/typings/config.d.ts.
- * and
- * https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/config
- * @const {LH.Config}
- */
-module.exports = {
-  extends: 'lighthouse:full',
-  plugins: ['lighthouse-plugin-publisher-ads'],
-  passes: [
-    {
-      passName: 'defaultPass',
-    },
-  ],
-};
+const server = new StaticServer({
+  rootPath: `${__dirname}/fixtures`,
+  port: 8081,
+});
+
+server.start(() => {
+  console.log('Server listening to', server.port);
+});
+
