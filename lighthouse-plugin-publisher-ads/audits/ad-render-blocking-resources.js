@@ -15,10 +15,9 @@
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 // @ts-ignore
-const RenderBlockingResources = require('lighthouse/lighthouse-core/audits/byte-efficiency/render-blocking-resources.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {getPageStartTime} = require('../utils/network-timing');
+const {getTimingsByRecord} = require('../utils/network-timing');
 const {isAdTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
@@ -36,6 +35,9 @@ const UIStrings = {
   columnStartTime: 'Start',
   columnDuration: 'Duration',
 };
+
+/** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+/** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
@@ -64,7 +66,7 @@ const HEADINGS = [
 ];
 
 /** Audits for render blocking resources */
-class AdRenderBlockingResources extends RenderBlockingResources {
+class AdRenderBlockingResources extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
@@ -76,7 +78,8 @@ class AdRenderBlockingResources extends RenderBlockingResources {
       failureTitle: str_(UIStrings.failureTitle),
       scoreDisplayMode: 'binary',
       description: str_(UIStrings.description),
-      requiredArtifacts: RenderBlockingResources.meta.requiredArtifacts,
+      requiredArtifacts:
+          ['LinkElements', 'ScriptElements', 'devtoolsLogs', 'traces'],
     };
   }
 
@@ -87,40 +90,64 @@ class AdRenderBlockingResources extends RenderBlockingResources {
    */
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const hasTag = !!networkRecords.find((req) => isAdTag(new URL(req.url)));
-    if (!hasTag) {
+    const tag = networkRecords.find((req) => isAdTag(new URL(req.url)));
+    if (!tag) {
       return auditNotApplicable.NoTag;
     }
 
-    const {results} = await RenderBlockingResources.computeResults(
-      artifacts, context);
+    /** @type {Map<NetworkRequest, NodeTiming>} */
+    const timingsByRecord =
+      await getTimingsByRecord(trace, devtoolsLog, context);
 
-    const pageStartTime = getPageStartTime(networkRecords);
-    const tableView = results
-        // @ts-ignore
-        .map((r) => networkRecords.find((n) => n.url === r.url))
-        .filter(Boolean)
-        // @ts-ignore
-        .map((record) => ({
-          url: record.url,
-          // TODO: line number
-          startTime: (record.startTime - pageStartTime) * 1000,
-          endTime: (record.endTime - pageStartTime) * 1000,
-          duration: (record.endTime - record.startTime) * 1000,
-        }));
+    // NOTE(warrengm): Ideally we would key be requestId here but LinkElements
+    // don't have request IDs.
+    /** @type {Set<string>} */
+    const blockingElementUrls = new Set();
+    for (const link of artifacts.LinkElements) {
+      // TODO(warrengm): Check for media queries? Or is the network filter below
+      // sufficient?
+      if (link.href && link.rel == 'stylesheet') {
+        // NOTE that href here is normalized to the URL that went over the wire.
+        blockingElementUrls.add(link.href);
+      }
+    }
+    for (const script of artifacts.ScriptElements) {
+      if (script.src && !script.defer && !script.async) {
+        blockingElementUrls.add(script.src);
+      }
+    }
+
+    const blockingNetworkRecords = networkRecords
+        // Don't fail on sync resources loaded after the tag. This includes sync
+        // resources loaded inside of iframes.
+        .filter((r) => r.endTime < tag.startTime)
+        .filter((r) => r != tag.initiatorRequest)
+        // Sanity check to filter out duplicate requests which were async. If
+        // type != parser then the resource was dynamically added and is
+        // therefore async (non-blocking).
+        .filter((r) => r.initiator.type = 'parser')
+        .filter((r) => blockingElementUrls.has(r.url));
+
+    const tableView = blockingNetworkRecords
+        .map((r) => Object.assign({url: r.url}, timingsByRecord.get(r)));
+
+    tableView.sort((a, b) => a.endTime - b.endTime);
 
     // @ts-ignore
-    const opportunity = Math.max(...tableView.map((r) => r.duration));
+    const endTimes = tableView.map((r) => r.endTime);
+    const opportunity = Math.max(...endTimes) - Math.min(...endTimes);
     let displayValue = '';
-    if (results.length > 0 && opportunity > 0) {
+    if (tableView.length > 0 && opportunity > 0) {
       displayValue = str_(
         UIStrings.failureDisplayValue, {timeInMs: opportunity});
     }
 
+    const failed = tableView.length > 0;
     return {
-      numericValue: results.length,
-      score: results.length ? 0 : 1,
+      score: failed ? 0 : 1,
+      numericValue: tableView.length,
       displayValue,
       details: AdRenderBlockingResources.makeTableDetails(HEADINGS, tableView),
     };
