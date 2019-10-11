@@ -39,6 +39,12 @@ const smokeTests = [
     config: require('./config.js'),
     batch: 'pub-ads',
   },
+  {
+    id: 'not-applicable',
+    expectations: require('./expectations/not-applicable.js'),
+    config: require('./config.js'),
+    batch: 'pub-ads',
+  },
 ];
 
 module.exports = smokeTests;
