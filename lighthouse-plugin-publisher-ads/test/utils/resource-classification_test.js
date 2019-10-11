@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const {expect} = require('chai');
-const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag} = require('../../utils/resource-classification');
+const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {
@@ -159,6 +159,36 @@ describe('resource-classification', () => {
     for (const {description, url, expectation} of testCases) {
       it(`should return ${expectation} for ${description}`, () => {
         const results = isGptTag(url);
+        expect(results).to.equal(expectation);
+      });
+    }
+  });
+  describe('#isGptImplTag', () => {
+    const testCases = [
+      {
+        description: 'Standard tag matches',
+        url: new URL('https://securepubads.g.doubleclick.net/gpt/pubads_impl_19700101.js?1234'),
+        expectation: true,
+      },
+      {
+        description: 'Non-standard tag matches',
+        url: new URL('https://securepubads.g.doubleclick.net/gpt/pubads_impl_modern_19700101.js'),
+        expectation: true,
+      },
+      {
+        description: 'Standard rendering tag does not match.',
+        url: new URL('https://securepubads.g.doubleclick.net/gpt/pubads_impl_rendering_19700101.js?1234'),
+        expectation: false,
+      },
+      {
+        description: 'Standard rendering tag does not match.',
+        url: new URL('https://securepubads.g.doubleclick.net/gpt/pubads_impl_test_rendering_19700101.js?1234'),
+        expectation: false,
+      },
+    ];
+    for (const {description, url, expectation} of testCases) {
+      it(`should return ${expectation} for ${description}`, () => {
+        const results = isGptImplTag(url);
         expect(results).to.equal(expectation);
       });
     }
