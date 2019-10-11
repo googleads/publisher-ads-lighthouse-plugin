@@ -160,7 +160,7 @@ class BlockingLoadEvents extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'TagsBlockingFirstPaint'],
+      requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
 
