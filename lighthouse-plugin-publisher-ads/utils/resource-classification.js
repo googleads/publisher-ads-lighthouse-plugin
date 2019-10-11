@@ -133,7 +133,10 @@ function isGptTag(url) {
  * @return {boolean}
  */
 function isGptImplTag(url) {
-  return /(^\/gpt\/pubads_impl_[a-z_]*\d+\.js)/.test(toURL(url).pathname);
+  return (
+    /(^\/gpt\/pubads_impl([a-z_]*)((?<!rendering)_)\d+\.js)/
+        .test(toURL(url).pathname)
+  );
 }
 
 /**
