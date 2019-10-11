@@ -145,9 +145,10 @@ class AdRenderBlockingResources extends Audit {
         UIStrings.failureDisplayValue, {timeInMs: opportunity});
     }
 
+    const failed = tableView.length > 0;
     return {
+      score: failed ? 0 : 1,
       numericValue: tableView.length,
-      score: tableView.length ? 0 : 1,
       displayValue,
       details: AdRenderBlockingResources.makeTableDetails(HEADINGS, tableView),
     };

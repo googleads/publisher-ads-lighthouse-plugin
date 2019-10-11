@@ -28,6 +28,12 @@ const smokeTests = [
     batch: 'pub-ads',
   },
   {
+    id: 'render-blocking-tasks',
+    expectations: require('./expectations/render-blocking-tags.js'),
+    config: require('./config.js'),
+    batch: 'pub-ads',
+  },
+  {
     id: 'script-injected',
     expectations: require('./expectations/script-injected.js'),
     config: require('./config.js'),

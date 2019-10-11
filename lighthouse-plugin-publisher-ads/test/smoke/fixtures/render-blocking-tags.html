@@ -20,8 +20,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <script>googletag = window.googletag || {cmd: []};</script>
-    <script async src="./slowly-inject-gpt.js"></script>
+    <link rel=stylesheet href="./no-op-style.css">
   <body>
+      <script src="./no-op-script.js"></script>
+      <!-- Note: we dynamically insert gpt.js here to hide it from the preload
+           scanner. Also, we want to verify that slow-inject-gpt.js doesn't
+           count as a gpt.js render blocking script. -->
+      <script src="./slowly-inject-gpt.js"></script>
       <script>
           googletag.cmd.push(function() {
             googletag.defineSlot('/6355419/Travel', [728, 90], `div0`)
