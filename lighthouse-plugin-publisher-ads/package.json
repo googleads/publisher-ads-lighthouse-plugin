@@ -6,7 +6,7 @@
   "main": "plugin.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha test/**/*.js",
+    "test": "mocha test/{audits,utils}/*.js",
     "type-check": "tsc -p ."
   },
   "husky": {
@@ -23,7 +23,7 @@
     "yargs": "^13.3.0"
   },
   "peerDependencies": {
-    "lighthouse": "5.4.0"
+    "lighthouse": "^5.5.0"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.1",

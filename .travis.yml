@@ -10,8 +10,21 @@ branches:
   only:
     - master
 install:
-  - yarn
+  # Ensure we have the latest Chrome stable.
+  - google-chrome-stable --version
+  - yarn install --frozen-lockfile
+before_script:
+  - export CHROME_PATH="$(which google-chrome-stable)"
+  - google-chrome-stable --version
 script:
   - yarn lint
   - yarn test
   - yarn type-check
+  - yarn smoke
+before_cache:
+  - rm -rf ./node_modules/.cache/
+  - rm -rf lighthouse-plugin-publisher-ads/node_modules/.cache/
+addons:
+  chrome: stable
+services:
+  - xvfb
