@@ -38,6 +38,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/script-injected-tags`},
     {path: `${PLUGIN_PATH}/audits/serial-header-bidding`},
     {path: `${PLUGIN_PATH}/audits/tag-load-time`},
+    {path: `${PLUGIN_PATH}/audits/uses-h2`},
     {path: `${PLUGIN_PATH}/audits/viewport-ad-density`},
   ],
   groups: {
@@ -67,6 +68,7 @@ module.exports = {
       {id: 'blocking-load-events', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
+      {id: 'uses-h2', weight: 0, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
