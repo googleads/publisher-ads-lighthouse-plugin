@@ -39,6 +39,15 @@ const UIStrings = {
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
+/**
+ * @typedef {Object} BlockingRequest
+ * @property {string} url
+ * @property {number} startTime
+ * @property {number} endTime
+ * @property {number} duration
+ * @property {NetworkRequest} [record]
+ */
+
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
@@ -86,15 +95,16 @@ class AdRenderBlockingResources extends Audit {
   /**
    * @param {LH.Artifacts} artifacts
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Audit.Product>}
+   * @return {Promise<BlockingRequest[]>}
+   * @throws auditNotApplicable.NoTag
    */
-  static async audit(artifacts, context) {
+  static async computeResults(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const tag = networkRecords.find((req) => isAdTag(new URL(req.url)));
     if (!tag) {
-      return auditNotApplicable.NoTag;
+      throw auditNotApplicable.NoTag;
     }
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
@@ -130,10 +140,25 @@ class AdRenderBlockingResources extends Audit {
         .filter((r) => r.initiator.type = 'parser')
         .filter((r) => blockingElementUrls.has(r.url));
 
-    const tableView = blockingNetworkRecords
-        .map((r) => Object.assign({url: r.url}, timingsByRecord.get(r)));
+    const tableView = blockingNetworkRecords.map(
+      (r) => Object.assign({url: r.url, record: r}, timingsByRecord.get(r)));
 
-    tableView.sort((a, b) => a.endTime - b.endTime);
+    tableView.sort((a, b) => a.startTime - b.startTime);
+    return tableView;
+  }
+
+  /**
+   * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Audit.Product>}
+   */
+  static async audit(artifacts, context) {
+    let tableView;
+    try {
+      tableView = await this.computeResults(artifacts, context);
+    } catch (e) {
+      return e;
+    }
 
     // @ts-ignore
     const endTimes = tableView.map((r) => r.endTime);
