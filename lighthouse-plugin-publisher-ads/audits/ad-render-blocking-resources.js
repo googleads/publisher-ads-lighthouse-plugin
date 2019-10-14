@@ -30,7 +30,7 @@ const UIStrings = {
   'https://developers.google.com/web/tools/lighthouse/audits/blocking-resources' +
   ').',
   failureDisplayValue: 'Up to {timeInMs, number, seconds} s tag load time ' +
-  'improvement',
+  'speed-up',
   columnUrl: 'Resource',
   columnStartTime: 'Start',
   columnDuration: 'Duration',

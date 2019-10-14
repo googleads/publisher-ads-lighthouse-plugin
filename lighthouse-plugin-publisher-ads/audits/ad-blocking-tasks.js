@@ -26,8 +26,7 @@ const UIStrings = {
   'performance on less powerful devices. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/ad-blocking-tasks' +
   ').',
-  failureDisplayValue: '{numTasks, plural, =1 {1 long task} other ' +
-  '{# long tasks}}',
+  failureDisplayValue: '{timeInMs, number, seconds} s blocked',
   columnScript: 'Attributable URL',
   columnStartTime: 'Start',
   columnDuration: 'Duration',
@@ -153,11 +152,11 @@ class AdBlockingTasks extends Audit {
           .sort((a, b) => a.startTime - b.startTime);
     }
 
-    const numTasks = blocking.length;
+    const blockedTimeMs = blocking.reduce((sum, r) => sum + r.duration, 0);
     return {
       score: Number(blocking.length == 0),
       displayValue: blocking.length ?
-        str_(UIStrings.failureDisplayValue, {numTasks}) :
+        str_(UIStrings.failureDisplayValue, {timeInMs: blockedTimeMs}) :
         '',
       details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
     };
