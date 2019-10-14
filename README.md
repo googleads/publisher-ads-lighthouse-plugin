@@ -46,7 +46,7 @@ yarn test
 
 ## Contributions
 
-See [CONTRIBUTING.md](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouse-plugin-publisher-ads/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/CONTRIBUTING.md)
 
 
 
