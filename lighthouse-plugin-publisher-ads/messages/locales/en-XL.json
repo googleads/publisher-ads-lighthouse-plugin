@@ -128,6 +128,18 @@
   "audits/async-ad-tags.js | title": {
     "message": "Âd́ t̂áĝ íŝ ĺôád̂éd̂ áŝýn̂ćĥŕôńôúŝĺŷ"
   },
+  "audits/bid-request-from-page-start.js | description": {
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ t̂h́ê śt̂ár̂t́ ôf́ p̂áĝé l̂óâd́ ûńt̂íl̂ t́ĥé f̂ír̂śt̂ b́îd́ r̂éq̂úêśt̂ íŝ ḿâd́ê. D́êĺâýêd́ b̂íd̂ ŕêq́ûéŝt́ŝ ẃîĺl̂ d́êćr̂éâśê ím̂ṕr̂éŝśîón̂ś âńd̂ v́îéŵáb̂íl̂ít̂ý, âńd̂ h́âv́ê á n̂éĝát̂ív̂é îḿp̂áĉt́ ôń âd́ r̂év̂én̂úê. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+  },
+  "audits/bid-request-from-page-start.js | displayValue": {
+    "message": "{timeInMs, number, seconds} ŝ"
+  },
+  "audits/bid-request-from-page-start.js | failureTitle": {
+    "message": "R̂éd̂úĉé l̂át̂én̂ćŷ óf̂ f́îŕŝt́ b̂íd̂ ŕêq́ûéŝt́"
+  },
+  "audits/bid-request-from-page-start.js | title": {
+    "message": "L̂át̂én̂ćŷ óf̂ f́îŕŝt́ b̂íd̂ ŕêq́ûéŝt́"
+  },
   "audits/blocking-load-events.js | columnBlockedUrl": {
     "message": "B̂ĺôćk̂éd̂ ÚR̂Ĺ"
   },

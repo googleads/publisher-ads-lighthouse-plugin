@@ -17,7 +17,7 @@ const AdLanternMetric = require('../computed/ad-lantern-metric');
 const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
-const {isAdRequest, isImplTag, isImpressionPing} = require('./resource-classification');
+const {isAdRequest, isBidRequest, isImplTag, isImpressionPing} = require('./resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -45,9 +45,18 @@ function getTagEndTime(networkRecords) {
  * @return {number}
  */
 function getAdStartTime(networkRecords) {
-  const firstAdRecord = networkRecords.find(
-    (record) => isAdRequest(record));
+  const firstAdRecord = networkRecords.find(isAdRequest);
   return firstAdRecord ? firstAdRecord.startTime : -1;
+}
+
+/**
+ * Returns start time of first bid request (s) relative to system boot.
+ * @param {LH.Artifacts.NetworkRequest[]} networkRecords
+ * @return {number}
+ */
+function getBidStartTime(networkRecords) {
+  const firstBidRecord = networkRecords.find(isBidRequest);
+  return firstBidRecord ? firstBidRecord.startTime : -1;
 }
 
 /**
@@ -190,6 +199,7 @@ module.exports = {
   getTagEndTime,
   getImpressionStartTime,
   getAdStartTime,
+  getBidStartTime,
   getPageStartTime,
   getPageResponseTime,
   getTimingsByRecord,

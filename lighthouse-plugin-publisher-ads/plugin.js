@@ -23,7 +23,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/ad-render-blocking-resources`},
     {path: `${PLUGIN_PATH}/audits/ad-request-critical-path`},
     {path: `${PLUGIN_PATH}/audits/ad-request-from-page-start`},
-    {path: `${PLUGIN_PATH}/audits/ad-request-from-tag-load`},
+    {path: `${PLUGIN_PATH}/audits/bid-request-from-page-start`},
     {path: `${PLUGIN_PATH}/audits/ad-top-of-viewport`},
     {path: `${PLUGIN_PATH}/audits/ads-in-viewport`},
     {path: `${PLUGIN_PATH}/audits/async-ad-tags`},
@@ -56,8 +56,8 @@ module.exports = {
     auditRefs: [
       // Measurements group.
       {id: 'tag-load-time', weight: 4, group: 'metrics'},
-      {id: 'ad-request-from-tag-load', weight: 4, group: 'metrics'},
       {id: 'ad-request-from-page-start', weight: 4, group: 'metrics'},
+      {id: 'bid-request-from-page-start', weight: 8, group: 'metrics'},
       {id: 'first-ad-render', weight: 8, group: 'metrics'},
       // Performance group.
       {id: 'bottleneck-requests', weight: 1, group: 'ads-performance'},
