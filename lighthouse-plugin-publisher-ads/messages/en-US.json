@@ -96,11 +96,11 @@
     "description": ""
   },
   "audits/ad-request-from-page-start.js | failureTitle": {
-    "message": "Reduce latency of first ad request",
+    "message": "Reduce time to send the first ad request",
     "description": ""
   },
   "audits/ad-request-from-page-start.js | title": {
-    "message": "Latency of first ad request",
+    "message": "First ad request time",
     "description": ""
   },
   "audits/ad-request-from-tag-load.js | description": {
@@ -180,11 +180,11 @@
     "description": ""
   },
   "audits/bid-request-from-page-start.js | failureTitle": {
-    "message": "Reduce latency of first bid request",
+    "message": "Reduce time to send the first bid request",
     "description": ""
   },
   "audits/bid-request-from-page-start.js | title": {
-    "message": "Latency of first bid request",
+    "message": "First bid request time",
     "description": ""
   },
   "audits/blocking-load-events.js | columnBlockedUrl": {

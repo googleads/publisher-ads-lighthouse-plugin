@@ -72,10 +72,10 @@
     "message": "{timeInMs, number, seconds} ŝ"
   },
   "audits/ad-request-from-page-start.js | failureTitle": {
-    "message": "R̂éd̂úĉé l̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂éq̂úêśt̂"
+    "message": "R̂éd̂úĉé t̂ím̂é t̂ó ŝén̂d́ t̂h́ê f́îŕŝt́ âd́ r̂éq̂úêśt̂"
   },
   "audits/ad-request-from-page-start.js | title": {
-    "message": "L̂át̂én̂ćŷ óf̂ f́îŕŝt́ âd́ r̂éq̂úêśt̂"
+    "message": "F̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ t̂ím̂é"
   },
   "audits/ad-request-from-tag-load.js | description": {
     "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ ŵh́êń t̂h́ê Ǵôóĝĺê Ṕûb́l̂íŝh́êŕ T̂áĝ ĺôád̂ś ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/m̂ét̂ŕîćŝ)."
@@ -135,10 +135,10 @@
     "message": "{timeInMs, number, seconds} ŝ"
   },
   "audits/bid-request-from-page-start.js | failureTitle": {
-    "message": "R̂éd̂úĉé l̂át̂én̂ćŷ óf̂ f́îŕŝt́ b̂íd̂ ŕêq́ûéŝt́"
+    "message": "R̂éd̂úĉé t̂ím̂é t̂ó ŝén̂d́ t̂h́ê f́îŕŝt́ b̂íd̂ ŕêq́ûéŝt́"
   },
   "audits/bid-request-from-page-start.js | title": {
-    "message": "L̂át̂én̂ćŷ óf̂ f́îŕŝt́ b̂íd̂ ŕêq́ûéŝt́"
+    "message": "F̂ír̂śt̂ b́îd́ r̂éq̂úêśt̂ t́îḿê"
   },
   "audits/blocking-load-events.js | columnBlockedUrl": {
     "message": "B̂ĺôćk̂éd̂ ÚR̂Ĺ"
