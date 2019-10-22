@@ -154,7 +154,7 @@ class AdBlockingTasks extends Audit {
 
     const blockedTime = blocking.reduce(
       (sum, t) => t.isTopLevel ? sum + t.duration : sum, 0);
-    const failed = blocking.length > 1;
+    const failed = blocking.length > 0;
     return {
       score: failed ? 0 : 1,
       displayValue: failed ?
