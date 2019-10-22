@@ -16,7 +16,7 @@
     "description": ""
   },
   "audits/ad-blocking-tasks.js | failureDisplayValue": {
-    "message": "{numTasks, plural, =1 {1 long task} other {# long tasks}}",
+    "message": "{timeInMs, number, seconds} s blocked",
     "description": ""
   },
   "audits/ad-blocking-tasks.js | failureTitle": {

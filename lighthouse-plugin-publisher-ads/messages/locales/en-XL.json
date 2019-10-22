@@ -12,7 +12,7 @@
     "message": "T̂áŝḱŝ b́l̂óĉḱîńĝ t́ĥé m̂áîń t̂h́r̂éâd́ ĉán̂ d́êĺâý âd́ r̂éq̂úêśt̂ś âńd̂ ćâúŝé â ṕôór̂ úŝér̂ éx̂ṕêŕîén̂ćê. Ćôńŝíd̂ér̂ ŕêḿôv́îńĝ ĺôńĝ b́l̂óĉḱîńĝ t́âśk̂ś ôŕ m̂óv̂ín̂ǵ t̂h́êḿ ôf́f̂ óf̂ t́ĥé m̂áîń t̂h́r̂éâd́. T̂h́êśê t́âśk̂ś ĉán̂ b́ê éŝṕêćîál̂ĺŷ d́êt́r̂ím̂én̂t́âĺ t̂ó p̂ér̂f́ôŕm̂án̂ćê ón̂ ĺêśŝ ṕôẃêŕf̂úl̂ d́êv́îćêś. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-b̂ĺôćk̂ín̂ǵ-t̂áŝḱŝ)."
   },
   "audits/ad-blocking-tasks.js | failureDisplayValue": {
-    "message": "{numTasks, plural, =1 {1 l̂ón̂ǵ t̂áŝḱ} other {# l̂ón̂ǵ t̂áŝḱŝ}}"
+    "message": "{timeInMs, number, seconds} ŝ b́l̂óĉḱêd́"
   },
   "audits/ad-blocking-tasks.js | failureTitle": {
     "message": "Âv́ôíd̂ ĺôńĝ t́âśk̂ś t̂h́ât́ b̂ĺôćk̂ ád̂-ŕêĺât́êd́ n̂ét̂ẃôŕk̂ ŕêq́ûéŝt́ŝ"
