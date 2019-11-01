@@ -60,9 +60,9 @@ module.exports = {
       {id: 'bid-request-from-page-start', weight: 8, group: 'metrics'},
       {id: 'first-ad-render', weight: 8, group: 'metrics'},
       // Performance group.
-      {id: 'bottleneck-requests', weight: 1, group: 'ads-performance'},
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
+      {id: 'bottleneck-requests', weight: 1, group: 'ads-performance'},
       {id: 'script-injected-tags', weight: 1, group: 'ads-performance'},
       {id: 'blocking-load-events', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
