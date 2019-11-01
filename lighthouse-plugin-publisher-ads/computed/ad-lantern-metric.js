@@ -19,7 +19,7 @@ const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-nod
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 // eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
-const {isBidRelatedRequest, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
+const {isBidRelatedRequest, isImpressionPing, isGoogleAds, isGptAdRequest} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Gatherer.Simulation.GraphNode} GraphNode */
@@ -75,7 +75,7 @@ function isLongTask(cpuNode) {
  * Inserts edges between bid requests and ad requests.
  * @param {BaseNode} graph
  */
-function linkBidAndAdRequests(graph) {
+function addEdges(graph) {
   /** @type {NetworkNode[]} */ const adRequestNodes = [];
   graph.traverse((node) => {
     if (node.type === BaseNode.TYPES.NETWORK && isGptAdRequest(node.record)) {
@@ -83,13 +83,23 @@ function linkBidAndAdRequests(graph) {
     }
   });
   graph.traverse((node) => {
-    if (node.type === BaseNode.TYPES.NETWORK &&
-      isBidRelatedRequest(node.record)) {
+    if (node.type !== BaseNode.TYPES.NETWORK) {
+      return;
+    }
+    if (isBidRelatedRequest(node.record)) {
       for (const adNode of adRequestNodes) {
         // TODO(warrengm): Check for false positives. We don't worry too much
         // since we're focussing on the first few requests.
         if (adNode.record.startTime >= node.record.endTime) {
           node.addDependent(adNode);
+        }
+      }
+    }
+    if (isImpressionPing(node.record.url)) {
+      for (const adNode of adRequestNodes) {
+        if (adNode.record.endTime <= node.record.startTime) {
+          adNode.addDependent(node);
+          return;
         }
       }
     }
@@ -120,7 +130,7 @@ class AdLanternMetric extends LanternMetric {
   static getPessimisticGraph(graph) {
     // The pessimistic graph is the whole graph.
     const pessimisticGraph = graph.cloneWithRelationships((_) => true);
-    linkBidAndAdRequests(pessimisticGraph);
+    addEdges(pessimisticGraph);
     return pessimisticGraph;
   }
 
