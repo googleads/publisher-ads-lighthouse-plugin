@@ -1,4 +1,4 @@
-// Copyright 2018 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const ComputedAdRequestTime = require('../computed/ad-request-time');
+const ComputedBidRequestTime = require('../computed/bid-request-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const {auditNotApplicable, runWarning} = require('../messages/common-strings');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 
 const UIStrings = {
-  title: 'First ad request time',
-  failureTitle: 'Reduce time to send the first ad request',
+  title: 'First bid request time',
+  failureTitle: 'Reduce time to send the first bid request',
   description: 'This metric measures the elapsed time from the start of page ' +
-  'load until the first ad request is made. Delayed ad requests will ' +
+  'load until the first bid request is made. Delayed bid requests will ' +
   'decrease impressions and viewability, and have a negative impact on ad ' +
   'revenue. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
@@ -38,14 +38,14 @@ const MEDIAN = 3500; // ms
 /**
  * Audit to determine time for first ad request relative to page start.
  */
-class AdRequestFromPageStart extends Audit {
+class BidRequestFromPageStart extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
     return {
-      id: 'ad-request-from-page-start',
+      id: 'bid-request-from-page-start',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
@@ -65,10 +65,9 @@ class AdRequestFromPageStart extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const metricData = {trace, devtoolsLog, settings: context.settings};
 
-    const {timing} = await ComputedAdRequestTime.request(metricData, context);
+    const {timing} = await ComputedBidRequestTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(runWarning.NoAds);
-      return auditNotApplicable.NoAds;
+      return auditNotApplicable.NoBids;
     }
 
     let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
@@ -86,5 +85,5 @@ class AdRequestFromPageStart extends Audit {
   }
 }
 
-module.exports = AdRequestFromPageStart;
+module.exports = BidRequestFromPageStart;
 module.exports.UIStrings = UIStrings;
