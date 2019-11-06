@@ -1,6 +1,6 @@
 {
   "name": "lighthouse-plugin-publisher-ads-wrapper",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Wrapper for Publisher Ads Lighthouse Plugin.",
   "author": "Google Ads",
   "license": "Apache-2.0",
