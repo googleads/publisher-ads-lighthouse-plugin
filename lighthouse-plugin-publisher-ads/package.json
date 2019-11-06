@@ -1,9 +1,19 @@
 {
   "name": "lighthouse-plugin-publisher-ads",
-  "version": "0.4.0",
-  "description": "Ad-aware plugin for Lighthouse.",
+  "version": "0.4.1",
+  "description": "A Lighthouse plugin to improve ad speed and overall quality through a series of automated audits.",
   "author": "Google Ads",
   "license": "Apache-2.0",
+  "repository": "googleads/publisher-ads-lighthouse-plugin",
+  "keywords": [
+    "publisher ads",
+    "google ads",
+    "lighthouse"
+  ],
+  "bugs": {
+    "url": "https://github.com/googleads/publisher-ads-lighthouse-plugin/issues"
+  },
+  "homepage": "https://github.com/googleads/publisher-ads-lighthouse-plugin#readme",
   "main": "plugin.js",
   "scripts": {
     "lint": "eslint .",
@@ -23,7 +33,7 @@
     "yargs": "^13.3.0"
   },
   "peerDependencies": {
-    "lighthouse": "^5.5.0"
+    "lighthouse": ">=5.6.0"
   },
   "devDependencies": {
     "@types/yargs": "^12.0.1",
