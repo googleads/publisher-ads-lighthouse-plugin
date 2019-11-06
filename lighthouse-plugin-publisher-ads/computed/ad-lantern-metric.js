@@ -97,9 +97,14 @@ function addEdges(graph) {
     }
     if (isImpressionPing(node.record.url)) {
       for (const adNode of adRequestNodes) {
-        if (adNode.record.endTime <= node.record.startTime) {
-          adNode.addDependent(node);
-          return;
+        if (adNode.record.endTime > node.record.startTime) {
+          continue;
+        }
+        adNode.addDependent(node);
+        for (const dependent of adNode.getDependents()) {
+          if (dependent.endTime <= node.startTime) {
+            dependent.addDependency(node);
+          }
         }
       }
     }
