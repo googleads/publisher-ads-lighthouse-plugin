@@ -1344,10 +1344,10 @@ jpeg-js@0.1.2, jpeg-js@^0.1.2:
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.1.2.tgz#135b992c0575c985cfa0f494a3227ed238583ece"
   integrity sha1-E1uZLAV1yYXPoPSUoyJ+0jhYPs4=
 
-js-library-detector@^5.4.0:
-  version "5.5.0"
-  resolved "https://registry.yarnpkg.com/js-library-detector/-/js-library-detector-5.5.0.tgz#3cf17128f6eaaf594d3d6b4c631d18eca059bfdc"
-  integrity sha512-rLRizuKBAYFmCQM7Efjdbf8u8EoJnfuTlKYUBLQ/2bj9Raw2tr09guQoto/4NIOGmpAYLrzJQ0fmPUqxABCM5w==
+js-library-detector@^5.5.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/js-library-detector/-/js-library-detector-5.6.0.tgz#a44c95237870b5e4f66f0aff948270df7ec9f277"
+  integrity sha512-s9LeTXee2J+7qXQHJ1EHPbK4Mk5ZU820Wrw+EOxDRQcn2Tay4n+SvZaqJa6T8UpKu5mIomSh6nXoyuP1j2DzUw==
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -1457,9 +1457,10 @@ lighthouse-logger@^1.0.0, lighthouse-logger@^1.2.0:
     debug "^2.6.8"
     marky "^1.2.0"
 
-lighthouse@GoogleChrome/lighthouse#9501/head:
-  version "5.4.0"
-  resolved "https://codeload.github.com/GoogleChrome/lighthouse/tar.gz/a83133f04321519edc60de4790a1aa8ee5b9afe5"
+lighthouse@^5.6.0:
+  version "5.6.0"
+  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-5.6.0.tgz#2182e0d9bc79783bc9d801dd5099a33526dabdd0"
+  integrity sha512-PQYeK6/P0p/JxP/zq8yfcPmuep/aeib5ykROTgzDHejMiuzYdD6k6MaSCv0ncwK+lj+Ld67Az+66rHqiPKHc6g==
   dependencies:
     axe-core "3.3.0"
     chrome-launcher "^0.11.2"
@@ -1472,7 +1473,7 @@ lighthouse@GoogleChrome/lighthouse#9501/head:
     intl-messageformat "^4.4.0"
     intl-pluralrules "^1.0.3"
     jpeg-js "0.1.2"
-    js-library-detector "^5.4.0"
+    js-library-detector "^5.5.0"
     jsonld "^1.5.0"
     jsonlint-mod "^1.7.5"
     lighthouse-logger "^1.2.0"
@@ -1488,7 +1489,7 @@ lighthouse@GoogleChrome/lighthouse#9501/head:
     robots-parser "^2.0.1"
     semver "^5.3.0"
     speedline-core "1.4.2"
-    third-party-web "^0.8.2"
+    third-party-web "^0.11.0"
     update-notifier "^2.5.0"
     ws "3.3.2"
     yargs "3.32.0"
@@ -2390,10 +2391,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-third-party-web@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/third-party-web/-/third-party-web-0.8.2.tgz#9a13841174a2b2333a15233cb6dbf6553c03a7be"
-  integrity sha512-HVsNbtlvshQ7X+HwiMvVbes+aH5KwvfncUcUR1EaJ9qENZO/I3fNysunKBUtJZeVoIYq3HHKqeDayarTmBtdPw==
+third-party-web@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/third-party-web/-/third-party-web-0.11.0.tgz#4e80dac50c26557add464742306bc392ab845352"
+  integrity sha512-R9/WoBZc0Db7qLNQ9QzMSP0YMEU/LF5X8LJqOYvDd/cDFwSc/D1YszYbyFFRzt6McDP6PO425ZBmHQZWYFDZDg==
 
 through@^2.3.6:
   version "2.3.8"
