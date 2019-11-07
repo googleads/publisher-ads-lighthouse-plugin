@@ -12,6 +12,27 @@ We are currently in beta and still in the development process. In order to help 
 
 We currently have a web app version of Publisher Ads Lighthouse Plugin. It is currently in beta and can be accessed at [developers.google.com/publisher-ads-audits](https://developers.google.com/publisher-ads-audits/).
 
+## Lighthouse Node CLI
+
+Publisher Ads Audits is available as a [node package](https://npmjs.org/package/lighthouse-plugin-publisher-ads) which can be used with the Lighthouse CLI.
+
+> **Note**: There is currently a [bug](TODO: jburger) specifically affecting global installs of of this package. Until this bug is resolved this should exclusively be as a **local** install.
+
+### Setup
+```sh
+mkdir pub-ads-audits-wrapper && cd pub-ads-audits-wrapper && \
+npm init -y && \
+yarn add -D lighthouse && \
+yarn add -D lighthouse-plugin-publisher-ads
+```
+
+### Usage
+From withing `wrapper` directory
+```sh
+yarn lighthouse {url} --plugins=lighthouse-plugin-publisher-ads
+```
+
+
 ## Setup
 
 ```sh
