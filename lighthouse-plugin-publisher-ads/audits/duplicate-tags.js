@@ -38,8 +38,7 @@ const tags = [
   'googletagservices.com/tag/js/gpt.js',
   'securepubads.g.doubleclick.net/tag/js/gpt.js',
   'pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
-  'imasdk.googleapis.com/js/sdkloader/ima3.js',
-  'google-analytics.com/analytics.js',
+  'pagead2.googlesyndication.com/pagead/js/show_ads.js',
 ];
 
 /**
