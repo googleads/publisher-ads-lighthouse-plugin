@@ -59,13 +59,6 @@
   resolved "https://registry.yarnpkg.com/@tusbar/cache-control/-/cache-control-0.3.1.tgz#2ee673c6a7166041b5d419f7e15cd9f16e21c8e1"
   integrity sha512-qeQhWoHQqDdW+SS1TgybdOeaSo+8tZx4ZesMY0+HSLeWWa2bGDetB9wxAT/umlXuutC6QdbADd48RJ6hrYr4BQ==
 
-"@types/intl-messageformat@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@types/intl-messageformat/-/intl-messageformat-3.0.0.tgz#a405302abfa55c427cbcd374cecb12c0b90e6915"
-  integrity sha512-sOzBp/B4GlQZnh1ZHCJ/vVoIkhaErXHVQJnFE0P7LtEcdaIy5qCMMevXy5aOu73VWzZQ5MCv2PdOTFOpEDLQhw==
-  dependencies:
-    intl-messageformat "*"
-
 "@types/normalize-package-data@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
@@ -703,7 +696,7 @@ intl-messageformat-parser@^1.6.8:
   resolved "https://registry.yarnpkg.com/intl-messageformat-parser/-/intl-messageformat-parser-1.6.8.tgz#2edfe914227b9faea34fb5b2742bc1c53afef926"
   integrity sha512-wnjxkKzAOKUgtBYYqVoDf2xt8zSf/c/m7FrQSmaz0SL3LNEMzVzzYXeLLda//RD3s6Ae4Tj2CgpAmY0Fnrws6A==
 
-intl-messageformat@*, intl-messageformat@^4.1.2:
+intl-messageformat@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/intl-messageformat/-/intl-messageformat-4.1.2.tgz#4492cce301043541ff33a736de33df33ad93d96b"
   integrity sha512-VAIBsTw8VRgd/h4gYN7IbJFK/H6PbbDa6Sa5p2VbImO7HFr8CGpzX8pOooWQXAmiq+X6tPqPKXdrWFhoPbge/Q==
