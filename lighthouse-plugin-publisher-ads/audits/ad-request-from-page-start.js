@@ -24,7 +24,7 @@ const UIStrings = {
   'load until the first ad request is made. Delayed ad requests will ' +
   'decrease impressions and viewability, and have a negative impact on ad ' +
   'revenue. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-from-page-start' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };

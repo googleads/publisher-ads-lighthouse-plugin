@@ -22,7 +22,7 @@ const UIStrings = {
   failureTitle: 'Reduce time to render first ad',
   description: 'This metric measures the time for the first ad iframe to ' +
   'render from page navigation. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/first-ad-render' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };

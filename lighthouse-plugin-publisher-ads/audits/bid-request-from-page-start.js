@@ -23,9 +23,7 @@ const UIStrings = {
   description: 'This metric measures the elapsed time from the start of page ' +
   'load until the first bid request is made. Delayed bid requests will ' +
   'decrease impressions and viewability, and have a negative impact on ad ' +
-  'revenue. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
-  ').',
+  'revenue.',
   displayValue: '{timeInMs, number, seconds} s',
 };
 

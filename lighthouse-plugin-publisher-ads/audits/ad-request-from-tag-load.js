@@ -23,7 +23,7 @@ const UIStrings = {
   failureTitle: 'Reduce latency of first ad request (from tag load)',
   description: 'This metric measures the elapsed time from when the Google ' +
   'Publisher Tag loads until the first ad request is made. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-from-tag-load' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };
