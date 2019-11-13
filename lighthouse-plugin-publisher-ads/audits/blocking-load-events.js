@@ -28,7 +28,10 @@ const UIStrings = {
   title: 'Ads not blocked by load events',
   failureTitle: 'Avoid waiting on load events',
   description: 'Waiting on load events increases ad latency. ' +
-    'To speed up ads, eliminate the following load event handlers.',
+    'To speed up ads, eliminate the following load event handlers. ' +
+    '[Learn More](' +
+    'https://developers.google.com/publisher-ads-audits/reference/audits/blocking-load-events' +
+    ').',
   displayValue: '{timeInMs, number, seconds} s blocked',
   columnEvent: 'Event Name',
   columnTime: 'Event Time',

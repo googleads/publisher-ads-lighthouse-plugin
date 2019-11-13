@@ -23,7 +23,7 @@ const UIStrings = {
   description: 'This metric measures the time for the ad tag\'s ' +
   'implementation script (pubads_impl.js for GPT; adsbygoogle.js for ' +
   'AdSense) to load after the page loads. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };
