@@ -74,13 +74,9 @@ class FirstAdRender extends Audit {
       return auditNotApplicable.NoAdRendered;
     }
 
-    let normalScore =
-        Audit.computeLogNormalScore(timing, PODR, MEDIAN);
-    if (normalScore >= 0.9) normalScore = 1;
-
     return {
       numericValue: timing * 1e-3,
-      score: normalScore,
+      score: Audit.computeLogNormalScore(timing, PODR, MEDIAN),
       displayValue:
         str_(UIStrings.displayValue, {timeInMs: timing}),
     };

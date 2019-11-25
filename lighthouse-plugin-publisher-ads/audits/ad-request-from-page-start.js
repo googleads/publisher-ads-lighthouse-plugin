@@ -71,16 +71,9 @@ class AdRequestFromPageStart extends Audit {
       return auditNotApplicable.NoAds;
     }
 
-    let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
-
-    // Results that have green text should be under passing category.
-    if (normalScore >= .9) {
-      normalScore = 1;
-    }
-
     return {
       numericValue: timing * 1e-3,
-      score: normalScore,
+      score: Audit.computeLogNormalScore(timing, PODR, MEDIAN),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
