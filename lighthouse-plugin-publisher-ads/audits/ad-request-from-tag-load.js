@@ -77,16 +77,9 @@ class AdRequestFromTagLoad extends Audit {
 
     const adReqTimeMs = (adStartTime - tagEndTime);
 
-    let normalScore = Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN);
-
-    // Results that have green text should be under passing category.
-    if (normalScore >= .9) {
-      normalScore = 1;
-    }
-
     return {
       numericValue: adReqTimeMs * 1e-3,
-      score: normalScore,
+      score: Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN),
       displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }
