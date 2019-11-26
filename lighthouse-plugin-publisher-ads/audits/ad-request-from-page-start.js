@@ -31,10 +31,6 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
-// Point of diminishing returns.
-const PODR = 1500; // ms, 1 second beyond tag load time PODR
-const MEDIAN = 3500; // ms
-
 /**
  * Audit to determine time for first ad request relative to page start.
  */
@@ -52,6 +48,16 @@ class AdRequestFromPageStart extends Audit {
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
       requiredArtifacts: ['devtoolsLogs', 'traces'],
+    };
+  }
+  /**
+   * @return {LH.Audit.ScoreOptions}
+   */
+  static get defaultOptions() {
+    // 75th & 95th percentile with simulation.
+    return {
+      scorePODR: 3500,
+      scoreMedian: 8000,
     };
   }
 
@@ -73,7 +79,11 @@ class AdRequestFromPageStart extends Audit {
 
     return {
       numericValue: timing * 1e-3,
-      score: Audit.computeLogNormalScore(timing, PODR, MEDIAN),
+      score: Audit.computeLogNormalScore(
+        timing,
+        context.options.scorePODR,
+        context.options.scoreMedian
+      ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
