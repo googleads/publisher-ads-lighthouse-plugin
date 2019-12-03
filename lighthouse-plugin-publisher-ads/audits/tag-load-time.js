@@ -30,10 +30,6 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
-// Point of diminishing returns.
-const PODR = 1000; // ms
-const MEDIAN = 2000; // ms
-
 /**
  * Audit to determine time for tag to load relative to page start.
  */
@@ -53,6 +49,18 @@ class TagLoadTime extends Audit {
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
+
+  /**
+   * @return {LH.Audit.ScoreOptions}
+   */
+  static get defaultOptions() {
+    // 75th & 95th percentile with simulation.
+    return {
+      scorePODR: 6000,
+      scoreMedian: 10000,
+    };
+  }
+
   /**
    * @param {LH.Artifacts} artifacts
    * @param {LH.Audit.Context} context
@@ -73,7 +81,11 @@ class TagLoadTime extends Audit {
     // first party rendering.
     return {
       numericValue: timing * 1e-3, // seconds
-      score: Audit.computeLogNormalScore(timing, PODR, MEDIAN),
+      score: Audit.computeLogNormalScore(
+        timing,
+        context.options.scorePODR,
+        context.options.scoreMedian
+      ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
