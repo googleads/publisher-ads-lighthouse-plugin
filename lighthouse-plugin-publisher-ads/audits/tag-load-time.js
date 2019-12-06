@@ -23,16 +23,12 @@ const UIStrings = {
   description: 'This metric measures the time for the ad tag\'s ' +
   'implementation script (pubads_impl.js for GPT; adsbygoogle.js for ' +
   'AdSense) to load after the page loads. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-
-// Point of diminishing returns.
-const PODR = 1000; // ms
-const MEDIAN = 2000; // ms
 
 /**
  * Audit to determine time for tag to load relative to page start.
@@ -53,6 +49,18 @@ class TagLoadTime extends Audit {
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
+
+  /**
+   * @return {LH.Audit.ScoreOptions}
+   */
+  static get defaultOptions() {
+    // 75th & 95th percentile with simulation.
+    return {
+      scorePODR: 6000,
+      scoreMedian: 10000,
+    };
+  }
+
   /**
    * @param {LH.Artifacts} artifacts
    * @param {LH.Audit.Context} context
@@ -71,16 +79,13 @@ class TagLoadTime extends Audit {
 
     // NOTE: score is relative to page response time to avoid counting time for
     // first party rendering.
-    let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
-
-    // Results that have green text should be under passing category.
-    if (normalScore >= .9) {
-      normalScore = 1;
-    }
-
     return {
       numericValue: timing * 1e-3, // seconds
-      score: normalScore,
+      score: Audit.computeLogNormalScore(
+        timing,
+        context.options.scorePODR,
+        context.options.scoreMedian
+      ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
