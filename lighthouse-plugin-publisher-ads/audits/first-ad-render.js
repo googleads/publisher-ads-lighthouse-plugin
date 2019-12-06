@@ -22,16 +22,12 @@ const UIStrings = {
   failureTitle: 'Reduce time to render first ad',
   description: 'This metric measures the time for the first ad iframe to ' +
   'render from page navigation. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/first-ad-render' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-
-// Point of diminishing returns.
-const PODR = 2700; // ms
-const MEDIAN = 3700; // ms
 
 /**
  * Measures the first ad render time.
@@ -54,6 +50,29 @@ class FirstAdRender extends Audit {
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
+
+  /**
+   * @return {{
+   *   default: LH.Audit.ScoreOptions, lightrider: LH.Audit.ScoreOptions
+   * }}
+   */
+  static get defaultOptions() {
+    // 75th & 95th percentile with simulation.
+    return {
+      default: {
+        scorePODR: 8500,
+        scoreMedian: 15000,
+      },
+      // Specific to LR due to patch of
+      // https://github.com/GoogleChrome/lighthouse/pull/9910. Will update
+      // values after next LH release.
+      lightrider: {
+        scorePODR: 11000,
+        scoreMedian: 22000,
+      },
+
+    };
+  }
   /**
    * @param {Artifacts} artifacts
    * @param {LH.Audit.Context} context
@@ -74,13 +93,16 @@ class FirstAdRender extends Audit {
       return auditNotApplicable.NoAdRendered;
     }
 
-    let normalScore =
-        Audit.computeLogNormalScore(timing, PODR, MEDIAN);
-    if (normalScore >= 0.9) normalScore = 1;
+    const scoreOptions =
+      context.options[global.isLightrider ? 'default' : 'lightrider'];
 
     return {
       numericValue: timing * 1e-3,
-      score: normalScore,
+      score: Audit.computeLogNormalScore(
+        timing,
+        scoreOptions.scorePODR,
+        scoreOptions.scoreMedian
+      ),
       displayValue:
         str_(UIStrings.displayValue, {timeInMs: timing}),
     };

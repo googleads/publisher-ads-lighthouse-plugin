@@ -24,16 +24,12 @@ const UIStrings = {
   'load until the first ad request is made. Delayed ad requests will ' +
   'decrease impressions and viewability, and have a negative impact on ad ' +
   'revenue. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-from-page-start' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-
-// Point of diminishing returns.
-const PODR = 1500; // ms, 1 second beyond tag load time PODR
-const MEDIAN = 3500; // ms
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -54,6 +50,16 @@ class AdRequestFromPageStart extends Audit {
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
+  /**
+   * @return {LH.Audit.ScoreOptions}
+   */
+  static get defaultOptions() {
+    // 75th & 95th percentile with simulation.
+    return {
+      scorePODR: 3500,
+      scoreMedian: 8000,
+    };
+  }
 
   /**
    * @param {LH.Artifacts} artifacts
@@ -71,16 +77,13 @@ class AdRequestFromPageStart extends Audit {
       return auditNotApplicable.NoAds;
     }
 
-    let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
-
-    // Results that have green text should be under passing category.
-    if (normalScore >= .9) {
-      normalScore = 1;
-    }
-
     return {
       numericValue: timing * 1e-3,
-      score: normalScore,
+      score: Audit.computeLogNormalScore(
+        timing,
+        context.options.scorePODR,
+        context.options.scoreMedian
+      ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }

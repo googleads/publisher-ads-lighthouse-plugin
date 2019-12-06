@@ -25,8 +25,8 @@ async function main() {
   }
 
   if (!yargs.argv.throttlingMethod) {
-    // Disable simulation.
-    process.argv.push('--throttling-method=provided');
+    // Enable simulation.
+    process.argv.push('--throttling-method=simulate');
   }
 
   if (!yargs.argv.chromeFlags) {

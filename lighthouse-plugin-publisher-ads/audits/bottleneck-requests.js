@@ -25,7 +25,9 @@ const UIStrings = {
   failureTitle: 'Avoid bottleneck requests',
   description: 'Speed up, load earlier, parallelize, or eliminate the ' +
     'following requests and their dependencies in order to speed up ad ' +
-    'loading.',
+    'loading. [Learn More](' +
+    'https://developers.google.com/publisher-ads-audits/reference/audits/bottleneck-requests' +
+    ').',
   displayValue: '{blockedTime, number, seconds} s spent blocked on requests',
   columnUrl: 'Blocking Request',
   columnInitiatorUrl: 'Initiator Request',

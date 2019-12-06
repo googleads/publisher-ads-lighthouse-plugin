@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const ComputedAdRequestTime = require('../computed/ad-request-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
@@ -113,10 +114,16 @@ class AdRequestCriticalPath extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const metricData = {trace, devtoolsLog, settings: context.settings};
+
+    const adRequestTime =
+      await ComputedAdRequestTime.request(metricData, context);
 
     const tableView =
       (await computeAdRequestWaterfall(trace, devtoolsLog, context))
-          .filter((r) => r.startTime > 0);
+          .filter((r) => r.startTime > 0 && r.startTime < r.endTime
+          && r.endTime < adRequestTime.timing
+          );
     if (!tableView.length) {
       return auditNotApplicable.NoAds;
     }

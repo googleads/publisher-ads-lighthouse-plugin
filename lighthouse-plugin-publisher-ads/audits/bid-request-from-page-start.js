@@ -23,17 +23,13 @@ const UIStrings = {
   description: 'This metric measures the elapsed time from the start of page ' +
   'load until the first bid request is made. Delayed bid requests will ' +
   'decrease impressions and viewability, and have a negative impact on ad ' +
-  'revenue. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'revenue. [Learn More](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/bid-request-from-page-start' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-
-// Point of diminishing returns.
-const PODR = 1500; // ms, 1 second beyond tag load time PODR
-const MEDIAN = 3500; // ms
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -56,6 +52,17 @@ class BidRequestFromPageStart extends Audit {
   }
 
   /**
+   * @return {LH.Audit.ScoreOptions}
+   */
+  static get defaultOptions() {
+    // 75th & 95th percentile with simulation.
+    return {
+      scorePODR: 7500,
+      scoreMedian: 15500,
+    };
+  }
+
+  /**
    * @param {LH.Artifacts} artifacts
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
@@ -70,16 +77,13 @@ class BidRequestFromPageStart extends Audit {
       return auditNotApplicable.NoBids;
     }
 
-    let normalScore = Audit.computeLogNormalScore(timing, PODR, MEDIAN);
-
-    // Results that have green text should be under passing category.
-    if (normalScore >= .9) {
-      normalScore = 1;
-    }
-
     return {
       numericValue: timing * 1e-3,
-      score: normalScore,
+      score: Audit.computeLogNormalScore(
+        timing,
+        context.options.scorePODR,
+        context.options.scoreMedian
+      ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }

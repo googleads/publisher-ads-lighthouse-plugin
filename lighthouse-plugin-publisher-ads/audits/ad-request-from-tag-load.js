@@ -23,7 +23,7 @@ const UIStrings = {
   failureTitle: 'Reduce latency of first ad request (from tag load)',
   description: 'This metric measures the elapsed time from when the Google ' +
   'Publisher Tag loads until the first ad request is made. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/metrics' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-from-tag-load' +
   ').',
   displayValue: '{timeInMs, number, seconds} s',
 };
@@ -77,16 +77,9 @@ class AdRequestFromTagLoad extends Audit {
 
     const adReqTimeMs = (adStartTime - tagEndTime);
 
-    let normalScore = Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN);
-
-    // Results that have green text should be under passing category.
-    if (normalScore >= .9) {
-      normalScore = 1;
-    }
-
     return {
       numericValue: adReqTimeMs * 1e-3,
-      score: normalScore,
+      score: Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN),
       displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }
