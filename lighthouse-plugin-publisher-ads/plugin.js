@@ -88,5 +88,10 @@ module.exports = {
   },
 };
 
-// @ts-ignore
-module.exports.UIStrings = UIStrings;
+// @ts-ignore Use `defineProperty` so that the strings can be referenced but not
+// iterated over (i.e. set enumerable=false). Otherwise the config would be
+// invalid for having additional keys.
+Object.defineProperty(module.exports, 'UIStrings', {
+  enumerable: false,
+  get: () => UIStrings,
+});
