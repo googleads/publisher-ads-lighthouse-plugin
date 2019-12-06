@@ -56,8 +56,8 @@ module.exports = {
     auditRefs: [
       // Measurements group.
       {id: 'tag-load-time', weight: 4, group: 'metrics'},
+      {id: 'bid-request-from-page-start', weight: 4, group: 'metrics'},
       {id: 'ad-request-from-page-start', weight: 4, group: 'metrics'},
-      {id: 'bid-request-from-page-start', weight: 8, group: 'metrics'},
       {id: 'first-ad-render', weight: 8, group: 'metrics'},
       // Performance group.
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
