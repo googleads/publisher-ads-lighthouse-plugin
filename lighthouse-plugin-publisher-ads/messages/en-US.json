@@ -602,5 +602,9 @@
   "messages/common-strings.js | WARNINGS__NO_TAG": {
     "message": "The GPT tag was not requested.",
     "description": ""
+  },
+  "plugin.js | categoryDescription": {
+    "message": "A Lighthouse plugin to improve ad speed and overall quality that is targeted at sites using GPT or AdSense tag. [Learn more](https://developers.google.com/publisher-ads-audits/reference)",
+    "description": ""
   }
 }
