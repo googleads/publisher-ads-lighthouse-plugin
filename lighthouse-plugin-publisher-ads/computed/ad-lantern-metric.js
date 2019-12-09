@@ -99,6 +99,15 @@ function addEdges(graph) {
         }
       }
     }
+    if (isBidRelatedRequest(node.record)) {
+      for (const adNode of adRequestNodes) {
+        // TODO(warrengm): Check for false positives. We don't worry too much
+        // since we're focussing on the first few requests.
+        if (adNode.record.startTime >= node.record.endTime) {
+          node.addDependent(adNode);
+        }
+      }
+    }
     if (isImpressionPing(node.record.url)) {
       for (const adNode of adRequestNodes) {
         if (adNode.record.endTime > node.record.startTime) {
