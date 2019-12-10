@@ -165,21 +165,31 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
   const networkRecords = await NetworkRecords.request(devtoolsLog, context);
   const pageStartTime = getPageStartTime(networkRecords) * 1000;
   /** @type {Map<string, number>} */
-  const results = new Map();
+  const rawTimes = new Map();
   for (const e of trace.traceEvents) {
     const script = getScriptUrl(e);
-    if (script && !results.has(script)) {
-      results.set(script, (e.ts / 1000) - pageStartTime);
+    if (!script) {
+      continue;
+    }
+    const time = (e.ts / 1000) - pageStartTime;
+    // @ts-ignore The get() call won't return undefined.
+    if (!rawTimes.has(script) || rawTimes.get(script) > time) {
+      rawTimes.set(script, time);
     }
   }
   if (context.settings.throttlingMethod !== 'simulate') {
-    return results;
+    return rawTimes;
   }
   // Offset each timing by network timings to account for simulation.
   const timingsByRecord = await getTimingsByRecord(trace, devtoolsLog, context);
+  /** @type {Map<string, number>} */
+  const simulatedTimes = new Map();
   for (const [req, timing] of timingsByRecord.entries()) {
-    const scriptEvalTime = results.get(req.url);
+    const scriptEvalTime = rawTimes.get(req.url);
     if (!scriptEvalTime) {
+      continue;
+    }
+    if (simulatedTimes.has(req.url)) {
       continue;
     }
     const unsimulatedNetworkTime = req.startTime * 1000 - pageStartTime;
@@ -190,9 +200,9 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
     const unsimulatedCpuTime = scriptEvalTime - unsimulatedNetworkTime;
     const simulatedCpuTime = cpuFactor * unsimulatedCpuTime;
     // Update results.
-    results.set(req.url, simulatedNetworkTime + simulatedCpuTime);
+    simulatedTimes.set(req.url, simulatedNetworkTime + simulatedCpuTime);
   }
-  return results;
+  return simulatedTimes;
 }
 
 module.exports = {
