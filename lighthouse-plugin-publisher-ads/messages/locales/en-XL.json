@@ -451,5 +451,8 @@
   },
   "messages/common-strings.js | WARNINGS__NO_TAG": {
     "message": "T̂h́ê ǴP̂T́ t̂áĝ ẃâś n̂ót̂ ŕêq́ûéŝt́êd́."
+  },
+  "plugin.js | categoryDescription": {
+    "message": "Â Ĺîǵĥt́ĥóûśê ṕl̂úĝín̂ t́ô ím̂ṕr̂óv̂é âd́ ŝṕêéd̂ án̂d́ ôv́êŕâĺl̂ q́ûál̂ít̂ý t̂h́ât́ îś t̂ár̂ǵêt́êd́ ât́ ŝít̂éŝ úŝín̂ǵ ĜṔT̂ ór̂ Ád̂Śêńŝé t̂áĝ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê)"
   }
 }
