@@ -14,6 +14,7 @@
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const NetworkRequest = require('lighthouse/lighthouse-core/lib/network-request');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
@@ -78,7 +79,8 @@ class DuplicateTags extends Audit {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
     const tagReqs = networkRecords
-        .filter((record) => containsAnySubstring(record.url, tags));
+        .filter((r) => containsAnySubstring(r.url, tags))
+        .filter((r) => (r.resourceType === NetworkRequest.TYPES.Script));
 
     if (!tagReqs.length) {
       return auditNotApplicable.NoTags;
