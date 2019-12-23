@@ -41,6 +41,8 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
+const THRESHOLD_MS = 100;
+
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
@@ -144,7 +146,7 @@ class AdRenderBlockingResources extends Audit {
         UIStrings.failureDisplayValue, {timeInMs: opportunity});
     }
 
-    const failed = tableView.length > 0;
+    const failed = tableView.length > 0 && opportunity > THRESHOLD_MS;
     return {
       score: failed ? 0 : 1,
       numericValue: tableView.length,
