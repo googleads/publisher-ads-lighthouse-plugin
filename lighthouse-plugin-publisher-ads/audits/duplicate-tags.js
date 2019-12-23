@@ -23,7 +23,7 @@ const {URL} = require('url');
 const UIStrings = {
   title: 'No duplicate tags found',
   failureTitle: 'Load tags only once',
-  description: 'Loading a tag more than once in the same apge is redundant ' +
+  description: 'Loading a tag more than once in the same page is redundant ' +
   'and adds overhead without benefit. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags' +
   ').',
