@@ -21,9 +21,9 @@ const {containsAnySubstring} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
-  title: 'No duplicate tags found in any frame',
-  failureTitle: 'Load tags only once per frame',
-  description: 'Loading a tag more than once in the same frame is redundant ' +
+  title: 'No duplicate tags found',
+  failureTitle: 'Load tags only once',
+  description: 'Loading a tag more than once in the same apge is redundant ' +
   'and adds overhead without benefit. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags' +
   ').',
@@ -49,7 +49,6 @@ const tags = [
 const HEADINGS = [
   {key: 'script', itemType: 'url', text: str_(UIStrings.columnScript)},
   {key: 'numReqs', itemType: 'text', text: str_(UIStrings.columnNumReqs)},
-  {key: 'frameId', itemType: 'text', text: str_(UIStrings.columnFrameId)},
 ];
 /**
  * Simple audit that checks if any specified tags are duplicated within the same
@@ -78,34 +77,28 @@ class DuplicateTags extends Audit {
   static async audit(artifacts, context) {
     const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
+    const mainFrameId = networkRecords[1].frameId;
     const tagReqs = networkRecords
+        .filter((r) => r.frameId === mainFrameId)
         .filter((r) => containsAnySubstring(r.url, tags))
         .filter((r) => (r.resourceType === NetworkRequest.TYPES.Script));
 
     if (!tagReqs.length) {
       return auditNotApplicable.NoTags;
     }
-    /** @type {Object<string, Object<string, number>>} */
-    const tagsByFrame = {};
-    tagReqs.forEach((record) => {
-      const frameId = record.frameId || '';
+    /** @type {Map<string, number>} */
+    const tagCounts = new Map;
+    for (const record of tagReqs) {
       // Groups by path to account for scripts hosted on multiple domains.
       const script = new URL(record.url).pathname;
-      if (!tagsByFrame[frameId]) {
-        tagsByFrame[frameId] = {};
-      }
-      tagsByFrame[frameId][script] =
-          tagsByFrame[frameId][script] ? tagsByFrame[frameId][script] + 1 : 1;
-    });
-
+      const count = tagCounts.get(script) || 0;
+      tagCounts.set(script, count + 1);
+    }
     /** @type {LH.Audit.Details.Table['items']} */
     const dups = [];
-    for (const frameId of Object.keys(tagsByFrame)) {
-      for (const script of Object.keys(tagsByFrame[frameId])) {
-        const numReqs = tagsByFrame[frameId][script];
-        if (numReqs > 1) {
-          dups.push({script, numReqs, frameId});
-        }
+    for (const [script, numReqs] of tagCounts) {
+      if (numReqs > 1) {
+        dups.push({script, numReqs});
       }
     }
 

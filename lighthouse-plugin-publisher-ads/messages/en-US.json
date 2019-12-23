@@ -88,7 +88,7 @@
     "description": ""
   },
   "audits/ad-request-from-page-start.js | description": {
-    "message": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "message": "This metric measures the elapsed time from the start of page load until the first ad request is made. Delayed ad requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-from-page-start).",
     "description": ""
   },
   "audits/ad-request-from-page-start.js | displayValue": {
@@ -104,7 +104,7 @@
     "description": ""
   },
   "audits/ad-request-from-tag-load.js | description": {
-    "message": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "message": "This metric measures the elapsed time from when the Google Publisher Tag loads until the first ad request is made. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/ad-request-from-tag-load).",
     "description": ""
   },
   "audits/ad-request-from-tag-load.js | displayValue": {
@@ -172,7 +172,7 @@
     "description": ""
   },
   "audits/bid-request-from-page-start.js | description": {
-    "message": "This metric measures the elapsed time from the start of page load until the first bid request is made. Delayed bid requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "message": "This metric measures the elapsed time from the start of page load until the first bid request is made. Delayed bid requests will decrease impressions and viewability, and have a negative impact on ad revenue. [Learn More](https://developers.google.com/publisher-ads-audits/reference/audits/bid-request-from-page-start).",
     "description": ""
   },
   "audits/bid-request-from-page-start.js | displayValue": {
@@ -208,7 +208,7 @@
     "description": ""
   },
   "audits/blocking-load-events.js | description": {
-    "message": "Waiting on load events increases ad latency. To speed up ads, eliminate the following load event handlers.",
+    "message": "Waiting on load events increases ad latency. To speed up ads, eliminate the following load event handlers. [Learn More](https://developers.google.com/publisher-ads-audits/reference/audits/blocking-load-events).",
     "description": ""
   },
   "audits/blocking-load-events.js | displayValue": {
@@ -244,7 +244,7 @@
     "description": ""
   },
   "audits/bottleneck-requests.js | description": {
-    "message": "Speed up, load earlier, parallelize, or eliminate the following requests and their dependencies in order to speed up ad loading.",
+    "message": "Speed up, load earlier, parallelize, or eliminate the following requests and their dependencies in order to speed up ad loading. [Learn More](https://developers.google.com/publisher-ads-audits/reference/audits/bottleneck-requests).",
     "description": ""
   },
   "audits/bottleneck-requests.js | displayValue": {
@@ -272,7 +272,7 @@
     "description": ""
   },
   "audits/duplicate-tags.js | description": {
-    "message": "Loading a tag more than once in the same frame is redundant and adds overhead without benefit. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags).",
+    "message": "Loading a tag more than once in the same apge is redundant and adds overhead without benefit. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/duplicate-tags).",
     "description": ""
   },
   "audits/duplicate-tags.js | failureDisplayValue": {
@@ -280,15 +280,15 @@
     "description": ""
   },
   "audits/duplicate-tags.js | failureTitle": {
-    "message": "Load tags only once per frame",
+    "message": "Load tags only once",
     "description": ""
   },
   "audits/duplicate-tags.js | title": {
-    "message": "No duplicate tags found in any frame",
+    "message": "No duplicate tags found",
     "description": ""
   },
   "audits/first-ad-render.js | description": {
-    "message": "This metric measures the time for the first ad iframe to render from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "message": "This metric measures the time for the first ad iframe to render from page navigation. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/first-ad-render).",
     "description": ""
   },
   "audits/first-ad-render.js | displayValue": {
@@ -336,7 +336,7 @@
     "description": ""
   },
   "audits/gpt-bids-parallel.js | description": {
-    "message": "To optimize ad loading, bid requests should not wait on GPT to load. This issue can often be fixed by making sure that bid requests do not wait on `googletag.pubadsReady` or `googletag.cmd.push`.",
+    "message": "To optimize ad loading, bid requests should not wait on GPT to load. This issue can often be fixed by making sure that bid requests do not wait on `googletag.pubadsReady` or `googletag.cmd.push`. [Learn More](https://developers.google.com/publisher-ads-audits/reference/audits/gpt-bids-parallel).",
     "description": ""
   },
   "audits/gpt-bids-parallel.js | failureTitle": {
@@ -480,7 +480,7 @@
     "description": ""
   },
   "audits/tag-load-time.js | description": {
-    "message": "This metric measures the time for the ad tag's implementation script (pubads_impl.js for GPT; adsbygoogle.js for AdSense) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/metrics).",
+    "message": "This metric measures the time for the ad tag's implementation script (pubads_impl.js for GPT; adsbygoogle.js for AdSense) to load after the page loads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/tag-load-time).",
     "description": ""
   },
   "audits/tag-load-time.js | displayValue": {
