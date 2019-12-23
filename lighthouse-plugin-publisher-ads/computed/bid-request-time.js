@@ -34,14 +34,14 @@ class LanternBidRequestTime extends AdLanternMetric {
    */
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
-    const timeInMs = AdLanternMetric.findNetworkTiming(
+    const bidTimeInMs = AdLanternMetric.findNetworkTiming(
       nodeTimings, isBidRequest).startTime;
     const adRequestTimeMs = AdLanternMetric.findNetworkTiming(
       nodeTimings, isAdRequest).startTime;
-    if (timeInMs > adRequestTimeMs) {
+    if (bidTimeInMs > adRequestTimeMs) {
       return {timeInMs: -1, nodeTimings};
     }
-    return {timeInMs, nodeTimings};
+    return {timeInMs: bidTimeInMs, nodeTimings};
   }
 }
 
