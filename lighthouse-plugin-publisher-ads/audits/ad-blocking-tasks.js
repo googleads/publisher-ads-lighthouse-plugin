@@ -157,6 +157,7 @@ class AdBlockingTasks extends Audit {
     const failed = blocking.length > 0;
     return {
       score: failed ? 0 : 1,
+      numericValue: blockedTime,
       displayValue: failed ?
         str_(UIStrings.failureDisplayValue, {timeInMs: blockedTime}) :
         '',
