@@ -63,8 +63,10 @@ class LoadsGptFromSgdn extends Audit {
     if (!gptUrl) {
       return auditNotApplicable.NoGpt;
     }
+    const passed = (gptUrl.host === 'securepubads.g.doubleclick.net');
     return {
-      score: Number(gptUrl.host === 'securepubads.g.doubleclick.net'),
+      score: Number(passed),
+      numericValue: Number(!passed),
     };
   }
 }
