@@ -13,6 +13,8 @@
 // limitations under the License.
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+// @ts-ignore
+const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const NetworkRequest = require('lighthouse/lighthouse-core/lib/network-request');
 const {auditNotApplicable} = require('../messages/common-strings');
@@ -65,7 +67,7 @@ class DuplicateTags extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs'],
+      requiredArtifacts: ['devtoolsLogs', 'URL'],
     };
   }
 
@@ -75,11 +77,12 @@ class DuplicateTags extends Audit {
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
-    const devtoolsLogs = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const networkRecords = await NetworkRecords.request(devtoolsLogs, context);
-    const mainFrameId = networkRecords[1].frameId;
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    const mainResource =
+        await MainResource.request({URL: artifacts.URL, devtoolsLog}, context);
     const tagReqs = networkRecords
-        .filter((r) => r.frameId === mainFrameId)
+        .filter((r) => r.frameId === mainResource.frameId)
         .filter((r) => containsAnySubstring(r.url, tags))
         .filter((r) => (r.resourceType === NetworkRequest.TYPES.Script));
 
