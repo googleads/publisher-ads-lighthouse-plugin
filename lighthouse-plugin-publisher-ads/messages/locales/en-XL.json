@@ -66,7 +66,7 @@
     "message": "Âd́ r̂éq̂úêśt̂ ẃât́êŕf̂ál̂ĺ"
   },
   "audits/ad-request-from-page-start.js | description": {
-    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ t̂h́ê śt̂ár̂t́ ôf́ p̂áĝé l̂óâd́ ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. D̂él̂áŷéd̂ ád̂ ŕêq́ûéŝt́ŝ ẃîĺl̂ d́êćr̂éâśê ím̂ṕr̂éŝśîón̂ś âńd̂ v́îéŵáb̂íl̂ít̂ý, âńd̂ h́âv́ê á n̂éĝát̂ív̂é îḿp̂áĉt́ ôń âd́ r̂év̂én̂úê. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ t̂h́ê śt̂ár̂t́ ôf́ p̂áĝé l̂óâd́ ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. D̂él̂áŷéd̂ ád̂ ŕêq́ûéŝt́ŝ ẃîĺl̂ d́êćr̂éâśê ím̂ṕr̂éŝśîón̂ś âńd̂ v́îéŵáb̂íl̂ít̂ý, âńd̂ h́âv́ê á n̂éĝát̂ív̂é îḿp̂áĉt́ ôń âd́ r̂év̂én̂úê. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ád̂-ŕêq́ûéŝt́-f̂ŕôḿ-p̂áĝé-ŝt́âŕt̂)."
   },
   "audits/ad-request-from-page-start.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ"
@@ -78,7 +78,7 @@
     "message": "F̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ t̂ím̂é"
   },
   "audits/ad-request-from-tag-load.js | description": {
-    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ ŵh́êń t̂h́ê Ǵôóĝĺê Ṕûb́l̂íŝh́êŕ T̂áĝ ĺôád̂ś ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/m̂ét̂ŕîćŝ)."
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ ŵh́êń t̂h́ê Ǵôóĝĺê Ṕûb́l̂íŝh́êŕ T̂áĝ ĺôád̂ś ûńt̂íl̂ t́ĥé f̂ír̂śt̂ ád̂ ŕêq́ûéŝt́ îś m̂ád̂é. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/âd́-r̂éq̂úêśt̂-f́r̂óm̂-t́âǵ-l̂óâd́)."
   },
   "audits/ad-request-from-tag-load.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ"
@@ -129,7 +129,7 @@
     "message": "Âd́ t̂áĝ íŝ ĺôád̂éd̂ áŝýn̂ćĥŕôńôúŝĺŷ"
   },
   "audits/bid-request-from-page-start.js | description": {
-    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ t̂h́ê śt̂ár̂t́ ôf́ p̂áĝé l̂óâd́ ûńt̂íl̂ t́ĥé f̂ír̂śt̂ b́îd́ r̂éq̂úêśt̂ íŝ ḿâd́ê. D́êĺâýêd́ b̂íd̂ ŕêq́ûéŝt́ŝ ẃîĺl̂ d́êćr̂éâśê ím̂ṕr̂éŝśîón̂ś âńd̂ v́îéŵáb̂íl̂ít̂ý, âńd̂ h́âv́ê á n̂éĝát̂ív̂é îḿp̂áĉt́ ôń âd́ r̂év̂én̂úê. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê él̂áp̂śêd́ t̂ím̂é f̂ŕôḿ t̂h́ê śt̂ár̂t́ ôf́ p̂áĝé l̂óâd́ ûńt̂íl̂ t́ĥé f̂ír̂śt̂ b́îd́ r̂éq̂úêśt̂ íŝ ḿâd́ê. D́êĺâýêd́ b̂íd̂ ŕêq́ûéŝt́ŝ ẃîĺl̂ d́êćr̂éâśê ím̂ṕr̂éŝśîón̂ś âńd̂ v́îéŵáb̂íl̂ít̂ý, âńd̂ h́âv́ê á n̂éĝát̂ív̂é îḿp̂áĉt́ ôń âd́ r̂év̂én̂úê. [Ĺêár̂ń M̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/b́îd́-r̂éq̂úêśt̂-f́r̂óm̂-ṕâǵê-śt̂ár̂t́)."
   },
   "audits/bid-request-from-page-start.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ"
@@ -156,7 +156,7 @@
     "message": "Êv́êńt̂ T́îḿê"
   },
   "audits/blocking-load-events.js | description": {
-    "message": "Ŵáît́îńĝ ón̂ ĺôád̂ év̂én̂t́ŝ ín̂ćr̂éâśêś âd́ l̂át̂én̂ćŷ. T́ô śp̂éêd́ ûṕ âd́ŝ, él̂ím̂ín̂át̂é t̂h́ê f́ôĺl̂óŵín̂ǵ l̂óâd́ êv́êńt̂ h́âńd̂ĺêŕŝ."
+    "message": "Ŵáît́îńĝ ón̂ ĺôád̂ év̂én̂t́ŝ ín̂ćr̂éâśêś âd́ l̂át̂én̂ćŷ. T́ô śp̂éêd́ ûṕ âd́ŝ, él̂ím̂ín̂át̂é t̂h́ê f́ôĺl̂óŵín̂ǵ l̂óâd́ êv́êńt̂ h́âńd̂ĺêŕŝ. [Ĺêár̂ń M̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/b́l̂óĉḱîńĝ-ĺôád̂-év̂én̂t́ŝ)."
   },
   "audits/blocking-load-events.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ b́l̂óĉḱêd́"
@@ -183,7 +183,7 @@
     "message": "B̂ĺôćk̂ín̂ǵ R̂éq̂úêśt̂"
   },
   "audits/bottleneck-requests.js | description": {
-    "message": "Ŝṕêéd̂ úp̂, ĺôád̂ éâŕl̂íêŕ, p̂ár̂ál̂ĺêĺîźê, ór̂ él̂ím̂ín̂át̂é t̂h́ê f́ôĺl̂óŵín̂ǵ r̂éq̂úêśt̂ś âńd̂ t́ĥéîŕ d̂ép̂én̂d́êńĉíêś îń ôŕd̂ér̂ t́ô śp̂éêd́ ûṕ âd́ l̂óâd́îńĝ."
+    "message": "Ŝṕêéd̂ úp̂, ĺôád̂ éâŕl̂íêŕ, p̂ár̂ál̂ĺêĺîźê, ór̂ él̂ím̂ín̂át̂é t̂h́ê f́ôĺl̂óŵín̂ǵ r̂éq̂úêśt̂ś âńd̂ t́ĥéîŕ d̂ép̂én̂d́êńĉíêś îń ôŕd̂ér̂ t́ô śp̂éêd́ ûṕ âd́ l̂óâd́îńĝ. [Ĺêár̂ń M̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/b́ôt́t̂ĺêńêćk̂-ŕêq́ûéŝt́ŝ)."
   },
   "audits/bottleneck-requests.js | displayValue": {
     "message": "{blockedTime, number, seconds} ŝ śp̂én̂t́ b̂ĺôćk̂éd̂ ón̂ ŕêq́ûéŝt́ŝ"
@@ -204,19 +204,19 @@
     "message": "Ŝćr̂íp̂t́"
   },
   "audits/duplicate-tags.js | description": {
-    "message": "L̂óâd́îńĝ á t̂áĝ ḿôŕê t́ĥán̂ ón̂ćê ín̂ t́ĥé ŝám̂é f̂ŕâḿê íŝ ŕêd́ûńd̂án̂t́ âńd̂ ád̂d́ŝ óv̂ér̂h́êád̂ ẃît́ĥóût́ b̂én̂éf̂ít̂. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/d́ûṕl̂íĉát̂é-t̂áĝś)."
+    "message": "L̂óâd́îńĝ á t̂áĝ ḿôŕê t́ĥán̂ ón̂ćê ín̂ t́ĥé ŝám̂é p̂áĝé îś r̂éd̂ún̂d́âńt̂ án̂d́ âd́d̂ś ôv́êŕĥéâd́ ŵít̂h́ôút̂ b́êńêf́ît́. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/d̂úp̂ĺîćât́ê-t́âǵŝ)."
   },
   "audits/duplicate-tags.js | failureDisplayValue": {
     "message": "{duplicateTags, plural, =1 {1 d̂úp̂ĺîćât́ê t́âǵ} other {# d̂úp̂ĺîćât́ê t́âǵŝ}}"
   },
   "audits/duplicate-tags.js | failureTitle": {
-    "message": "L̂óâd́ t̂áĝś ôńl̂ý ôńĉé p̂ér̂ f́r̂ám̂é"
+    "message": "L̂óâd́ t̂áĝś ôńl̂ý ôńĉé"
   },
   "audits/duplicate-tags.js | title": {
-    "message": "N̂ó d̂úp̂ĺîćât́ê t́âǵŝ f́ôún̂d́ îń âńŷ f́r̂ám̂é"
+    "message": "N̂ó d̂úp̂ĺîćât́ê t́âǵŝ f́ôún̂d́"
   },
   "audits/first-ad-render.js | description": {
-    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê f́îŕŝt́ âd́ îf́r̂ám̂é t̂ó r̂én̂d́êŕ f̂ŕôḿ p̂áĝé n̂áv̂íĝát̂íôń. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/m̂ét̂ŕîćŝ)."
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê f́îŕŝt́ âd́ îf́r̂ám̂é t̂ó r̂én̂d́êŕ f̂ŕôḿ p̂áĝé n̂áv̂íĝát̂íôń. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/f̂ír̂śt̂-ád̂-ŕêńd̂ér̂)."
   },
   "audits/first-ad-render.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ"
@@ -252,7 +252,7 @@
     "message": "ÛŔL̂"
   },
   "audits/gpt-bids-parallel.js | description": {
-    "message": "T̂ó ôṕt̂ím̂íẑé âd́ l̂óâd́îńĝ, b́îd́ r̂éq̂úêśt̂ś ŝh́ôúl̂d́ n̂ót̂ ẃâít̂ ón̂ ǴP̂T́ t̂ó l̂óâd́. T̂h́îś îśŝúê ćâń ôf́t̂én̂ b́ê f́îx́êd́ b̂ý m̂ák̂ín̂ǵ ŝúr̂é t̂h́ât́ b̂íd̂ ŕêq́ûéŝt́ŝ d́ô ńôt́ ŵáît́ ôń `ĝóôǵl̂ét̂áĝ.ṕûb́âd́ŝŔêád̂ý` ôŕ `ĝóôǵl̂ét̂áĝ.ćm̂d́.p̂úŝh́`."
+    "message": "T̂ó ôṕt̂ím̂íẑé âd́ l̂óâd́îńĝ, b́îd́ r̂éq̂úêśt̂ś ŝh́ôúl̂d́ n̂ót̂ ẃâít̂ ón̂ ǴP̂T́ t̂ó l̂óâd́. T̂h́îś îśŝúê ćâń ôf́t̂én̂ b́ê f́îx́êd́ b̂ý m̂ák̂ín̂ǵ ŝúr̂é t̂h́ât́ b̂íd̂ ŕêq́ûéŝt́ŝ d́ô ńôt́ ŵáît́ ôń `ĝóôǵl̂ét̂áĝ.ṕûb́âd́ŝŔêád̂ý` ôŕ `ĝóôǵl̂ét̂áĝ.ćm̂d́.p̂úŝh́`. [L̂éâŕn̂ Ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/ĝṕt̂-b́îd́ŝ-ṕâŕâĺl̂él̂)."
   },
   "audits/gpt-bids-parallel.js | failureTitle": {
     "message": "L̂óâd́ ĜṔT̂ án̂d́ b̂íd̂ś îń p̂ár̂ál̂ĺêĺ"
@@ -360,7 +360,7 @@
     "message": "Ĥéâd́êŕ b̂íd̂d́îńĝ íŝ ṕâŕâĺl̂él̂íẑéd̂"
   },
   "audits/tag-load-time.js | description": {
-    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê ád̂ t́âǵ'ŝ ím̂ṕl̂ém̂én̂t́ât́îón̂ śĉŕîṕt̂ (ṕûb́âd́ŝ_ím̂ṕl̂.j́ŝ f́ôŕ ĜṔT̂; ád̂śb̂ýĝóôǵl̂é.ĵś f̂ór̂ Ád̂Śêńŝé) t̂ó l̂óâd́ âf́t̂ér̂ t́ĥé p̂áĝé l̂óâd́ŝ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ḿêt́r̂íĉś)."
+    "message": "T̂h́îś m̂ét̂ŕîć m̂éâśûŕêś t̂h́ê t́îḿê f́ôŕ t̂h́ê ád̂ t́âǵ'ŝ ím̂ṕl̂ém̂én̂t́ât́îón̂ śĉŕîṕt̂ (ṕûb́âd́ŝ_ím̂ṕl̂.j́ŝ f́ôŕ ĜṔT̂; ád̂śb̂ýĝóôǵl̂é.ĵś f̂ór̂ Ád̂Śêńŝé) t̂ó l̂óâd́ âf́t̂ér̂ t́ĥé p̂áĝé l̂óâd́ŝ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/t́âǵ-l̂óâd́-t̂ím̂é)."
   },
   "audits/tag-load-time.js | displayValue": {
     "message": "{timeInMs, number, seconds} ŝ"
