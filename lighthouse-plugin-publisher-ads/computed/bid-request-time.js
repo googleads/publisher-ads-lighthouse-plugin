@@ -17,8 +17,8 @@ const AdLanternMetric = require('./ad-lantern-metric');
 const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
 // @ts-ignore
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
-const {getBidStartTime, getPageStartTime} = require('../utils/network-timing');
-const {isBidRequest} = require('../utils/resource-classification');
+const {getAdStartTime, getBidStartTime, getPageStartTime} = require('../utils/network-timing');
+const {isAdRequest, isBidRequest} = require('../utils/resource-classification');
 
 // @ts-ignore
 // eslint-disable-next-line max-len
@@ -34,9 +34,14 @@ class LanternBidRequestTime extends AdLanternMetric {
    */
   static getEstimateFromSimulation(simulationResult, extras) {
     const {nodeTimings} = simulationResult;
-    const timeInMs = AdLanternMetric.findNetworkTiming(
+    const bidTimeInMs = AdLanternMetric.findNetworkTiming(
       nodeTimings, isBidRequest).startTime;
-    return {timeInMs, nodeTimings};
+    const adRequestTimeMs = AdLanternMetric.findNetworkTiming(
+      nodeTimings, isAdRequest).startTime;
+    if (bidTimeInMs > adRequestTimeMs) {
+      return {timeInMs: -1, nodeTimings};
+    }
+    return {timeInMs: bidTimeInMs, nodeTimings};
   }
 }
 
@@ -67,8 +72,12 @@ class BidRequestTime extends ComputedMetric {
     const {networkRecords} = data;
     const pageStartTime = getPageStartTime(networkRecords);
     const bidStartTime = getBidStartTime(networkRecords);
+    const adStartTime = getAdStartTime(networkRecords);
+    if (adStartTime < bidStartTime) {
+      return {timing: -1};
+    }
     const bidRequestTimeMs = (bidStartTime - pageStartTime) * 1000;
-    return Promise.resolve({timing: bidRequestTimeMs});
+    return {timing: bidRequestTimeMs};
   }
 }
 
