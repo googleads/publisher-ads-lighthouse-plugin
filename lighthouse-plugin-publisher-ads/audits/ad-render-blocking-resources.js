@@ -41,6 +41,8 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
+const THRESHOLD_MS = 100;
+
 /**
  * Table headings for audits details sections.
  * @type {LH.Audit.Details.Table['headings']}
@@ -135,21 +137,30 @@ class AdRenderBlockingResources extends Audit {
 
     tableView.sort((a, b) => a.endTime - b.endTime);
 
+    const tagTime = timingsByRecord.get(tag) || {startTime: Infinity};
+    // @ts-ignore
+    const startTimes = tableView.map((r) => r.startTime);
     // @ts-ignore
     const endTimes = tableView.map((r) => r.endTime);
-    const opportunity = Math.max(...endTimes) - Math.min(...endTimes);
+
+    const blockingStart = Math.min(...startTimes);
+    const blockingEnd = Math.min(Math.max(...endTimes), tagTime.startTime);
+    const opportunity = blockingEnd - blockingStart;
     let displayValue = '';
     if (tableView.length > 0 && opportunity > 0) {
       displayValue = str_(
         UIStrings.failureDisplayValue, {timeInMs: opportunity});
     }
 
-    const failed = tableView.length > 0;
+    const failed = tableView.length > 0 && opportunity > THRESHOLD_MS;
     return {
       score: failed ? 0 : 1,
       numericValue: tableView.length,
       displayValue,
-      details: AdRenderBlockingResources.makeTableDetails(HEADINGS, tableView),
+      details: {
+        opportunity,
+        ...AdRenderBlockingResources.makeTableDetails(HEADINGS, tableView),
+      },
     };
   }
 }
