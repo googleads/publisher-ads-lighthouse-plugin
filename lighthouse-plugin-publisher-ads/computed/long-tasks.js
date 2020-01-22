@@ -29,7 +29,8 @@ const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/net
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 
-const LONG_TASK_THRESHOLD_MS = 50;
+const PROVIDED_LONG_TASK_THRESHOLD_MS = 50;
+const SIMULATED_LONG_TASK_THRESHOLD_MS = 100;
 
 /**
  * @param {LH.Artifacts.TaskNode} task
@@ -37,7 +38,7 @@ const LONG_TASK_THRESHOLD_MS = 50;
  * @return {boolean}
  */
 function isLong(task, knownScripts) {
-  if (task.duration < LONG_TASK_THRESHOLD_MS) {
+  if (task.duration < PROVIDED_LONG_TASK_THRESHOLD_MS) {
     return false; // Short task
   }
   const script = getAttributableUrl(task, knownScripts);
@@ -84,7 +85,7 @@ class LongTasks extends ComputedMetric {
     /** @type {LH.Artifacts.TaskNode[]} */ const tasks = [];
     for (const [node, timing] of nodeTimings.entries()) {
       if (node.type !== BaseNode.TYPES.CPU ||
-          timing.duration < LONG_TASK_THRESHOLD_MS) {
+          timing.duration < SIMULATED_LONG_TASK_THRESHOLD_MS) {
         continue; // Not a long task
       }
       tasks.push({

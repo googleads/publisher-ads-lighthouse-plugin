@@ -22,8 +22,7 @@
 function getAttributableUrl(longTask, knownScripts = new Set()) {
   const scriptUrl = longTask.attributableURLs.find(
     /** @param {string} url */ (url) => knownScripts.has(url));
-  const fallbackUrl = longTask.attributableURLs[0] ||
-      (longTask.event.args.data || {}).url;
+  const fallbackUrl = longTask.attributableURLs[0];
   const attributableUrl = scriptUrl || fallbackUrl;
 
   if (attributableUrl) {

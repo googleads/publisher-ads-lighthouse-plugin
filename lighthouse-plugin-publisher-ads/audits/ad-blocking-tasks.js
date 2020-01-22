@@ -39,14 +39,9 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  * @property {number} endTime
  * @property {number} duration
  * @property {string} script
+ * @property {string} rawUrl
  * @property {boolean} isTopLevel
  */
-
-/**
- * Threshold to show long tasks in the report. We don't show shorter long tasks
- * since they each have a smaller impact on blocking ads.
- */
-const LONG_TASK_DUR_MS = 100;
 
 /**
  * Table headings for audits details sections.
@@ -95,6 +90,12 @@ class AdBlockingTasks extends Audit {
    * @override
    */
   static async audit(artifacts, context) {
+  /**
+   * Threshold to show long tasks in the report. We don't show shorter long
+   * tasks since they each have a smaller impact on blocking ads.
+   */
+    const LONG_TASK_DUR_MS =
+      context.settings.throttlingMethod == 'simulate' ? 200 : 100;
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const metricData = {trace, devtoolsLog, settings: context.settings};
@@ -116,7 +117,7 @@ class AdBlockingTasks extends Audit {
       return auditNotApplicable.NoAdRelatedReq;
     }
 
-    /** @type {TaskDetails[]} */ let blocking = [];
+    /** @type {TaskDetails[]} */ const blocking = [];
     for (const longTask of longTasks) {
       if (longTask.startTime > endTime ||
           longTask.duration < LONG_TASK_DUR_MS) {
@@ -128,11 +129,12 @@ class AdBlockingTasks extends Audit {
       }
 
       const url = scriptUrl && new URL(scriptUrl);
-      const displayUrl = url && (url.origin + url.pathname);
+      const displayUrl = url && (url.origin + url.pathname) || 'Other';
 
       blocking.push({
         // TODO(warrengm): Format the display URL so it fits on one line
         script: displayUrl,
+        rawUrl: scriptUrl,
         startTime: longTask.startTime,
         endTime: longTask.endTime,
         duration: longTask.duration,
@@ -140,28 +142,33 @@ class AdBlockingTasks extends Audit {
       });
     }
 
+    let filteredBlocking = Array.from(blocking);
     const taskLimit = 10;
-    if (blocking.length > taskLimit) {
-      // For the sake of brevity, we show at most 5 long tasks. If needed we
+    if (filteredBlocking.length > taskLimit) {
+      // For the sake of brevity, we show at most 10 long tasks. If needed we
       // will filter tasks that are less actionable (child tasks or ones missing
       // attributable URLs).
-      blocking = blocking.filter((b) => b.script && b.isTopLevel)
+      filteredBlocking = blocking
+          .filter((b) => b.script !== 'Other' && b.isTopLevel)
       // Only show the longest tasks.
           .sort((a, b) => b.duration - a.duration)
           .splice(0, taskLimit)
           .sort((a, b) => a.startTime - b.startTime);
     }
 
-    const blockedTime = blocking.reduce(
+    const blockedTime = filteredBlocking.reduce(
       (sum, t) => t.isTopLevel ? sum + t.duration : sum, 0);
-    const failed = blocking.length > 0;
+    const failed = filteredBlocking.length > 0;
     return {
       score: failed ? 0 : 1,
       numericValue: blockedTime,
       displayValue: failed ?
         str_(UIStrings.failureDisplayValue, {timeInMs: blockedTime}) :
         '',
-      details: AdBlockingTasks.makeTableDetails(HEADINGS, blocking),
+      details: AdBlockingTasks.makeTableDetails(HEADINGS, filteredBlocking),
+      extendedInfo: {
+        rawBlocking: blocking,
+      },
     };
   }
 }
