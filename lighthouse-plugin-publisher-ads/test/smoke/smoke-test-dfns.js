@@ -16,6 +16,12 @@
 /** @type {Array<Smokehouse.TestDfn>} */
 const smokeTests = [
   {
+    id: 'duplicate-tags',
+    expectations: require('./expectations/duplicate-tags.js'),
+    config: require('./config.js'),
+    batch: 'pub-ads',
+  },
+  {
     id: 'lazy-load',
     expectations: require('./expectations/lazy-load.js'),
     config: require('./config.js'),

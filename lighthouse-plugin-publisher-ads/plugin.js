@@ -12,9 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {group} = require('./messages/common-strings');
 
 const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';
+
+const UIStrings = {
+  categoryDescription: 'A Lighthouse plugin to improve ad speed and overall quality that is targeted at sites using GPT or AdSense tag. ' +
+      '[Learn more](https://developers.google.com/publisher-ads-audits/reference)',
+};
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /** @type {LH.Config.Plugin} */
 module.exports = {
@@ -53,12 +60,13 @@ module.exports = {
   },
   category: {
     title: 'Publisher Ads [Beta]',
+    description: str_(UIStrings.categoryDescription),
     auditRefs: [
       // Measurements group.
       {id: 'tag-load-time', weight: 4, group: 'metrics'},
-      {id: 'ad-request-from-page-start', weight: 4, group: 'metrics'},
-      {id: 'bid-request-from-page-start', weight: 8, group: 'metrics'},
-      {id: 'first-ad-render', weight: 8, group: 'metrics'},
+      {id: 'bid-request-from-page-start', weight: 4, group: 'metrics'},
+      {id: 'ad-request-from-page-start', weight: 20, group: 'metrics'},
+      {id: 'first-ad-render', weight: 10, group: 'metrics'},
       // Performance group.
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
@@ -72,10 +80,18 @@ module.exports = {
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 2, group: 'ads-best-practices'},
       {id: 'loads-ad-tag-over-https', weight: 1, group: 'ads-best-practices'},
-      {id: 'loads-gpt-from-sgdn', weight: 1, group: 'ads-best-practices'},
-      {id: 'viewport-ad-density', weight: 1, group: 'ads-best-practices'},
+      {id: 'loads-gpt-from-sgdn', weight: 4, group: 'ads-best-practices'},
+      {id: 'viewport-ad-density', weight: 2, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
     ],
   },
 };
+
+// @ts-ignore Use `defineProperty` so that the strings can be referenced but not
+// iterated over (i.e. set enumerable=false). Otherwise the config would be
+// invalid for having additional keys.
+Object.defineProperty(module.exports, 'UIStrings', {
+  enumerable: false,
+  get: () => UIStrings,
+});

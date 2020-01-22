@@ -68,7 +68,7 @@ const HEADINGS = [
 ];
 
 /**
- * Comptues the depth of the loading graph by comparing timings.
+ * Computes the depth of the loading graph by comparing timings.
  * @param {SimpleRequest[]} requests
  * @return {number}
  */
@@ -84,6 +84,32 @@ function computeDepth(requests) {
     }
   }
   return hops;
+}
+
+const MINIMUM_NOTEWORTHY_IDLE_GAP_MS = 150;
+
+/**
+ * Computes idle times in the network loading graph
+ * @param {SimpleRequest[]} blockingRequests A list of request that appear in
+ *     the ad loading graph.
+ * @return {number[]} List of idle durations.
+ */
+function computeIdleTimes(blockingRequests) {
+  let maxEndSoFar = Infinity;
+  const idleTimes = [];
+  for (let i = 0; i < blockingRequests.length;) {
+    const {startTime, endTime} = blockingRequests[i];
+    if (startTime - maxEndSoFar > MINIMUM_NOTEWORTHY_IDLE_GAP_MS) {
+      idleTimes.push(startTime - maxEndSoFar);
+    }
+
+    maxEndSoFar = endTime;
+    while (++i < blockingRequests.length &&
+        blockingRequests[i].startTime < maxEndSoFar) {
+      maxEndSoFar = Math.max(maxEndSoFar, blockingRequests[i].endTime);
+    }
+  }
+  return idleTimes;
 }
 
 /**
@@ -134,14 +160,21 @@ class AdRequestCriticalPath extends Audit {
       delete row.record; // Remove circular references before serialization.
     }
 
+    const idleTimes = computeIdleTimes(tableView);
+    const maxIdleTime = Math.max(...idleTimes);
+    const totalIdleTime = idleTimes.reduce((total, time) => total + time, 0);
+
     return {
       numericValue: depth,
       score: failed ? 0 : 1,
-      displayValue: str_(UIStrings.displayValue,
-        {
-          serialResources: depth,
-        }),
-      details: AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
+      displayValue: str_(UIStrings.displayValue, {serialResources: depth}),
+      details: {
+        size: tableView.length,
+        depth,
+        maxIdleTime,
+        totalIdleTime,
+        ...AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
+      },
     };
   }
 }

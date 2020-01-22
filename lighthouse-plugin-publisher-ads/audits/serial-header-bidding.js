@@ -14,6 +14,8 @@
 
 const ComputedAdRequestTime = require('../computed/ad-request-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+// @ts-ignore
+const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
@@ -150,7 +152,7 @@ class SerialHeaderBidding extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL'],
     };
   }
 
@@ -168,13 +170,14 @@ class SerialHeaderBidding extends Audit {
       return auditNotApplicable.NoRecords;
     }
 
-    const mainFrameId = unfilteredNetworkRecords[0].frameId;
+    const mainResource =
+        await MainResource.request({URL: artifacts.URL, devtoolsLog}, context);
 
     // Filter out requests without responses, image responses, and responses
     // taking less than 50ms.
     const networkRecords = unfilteredNetworkRecords
         .filter(isPossibleBid)
-        .filter((r) => r.frameId == mainFrameId);
+        .filter((r) => r.frameId == mainResource.frameId);
 
     // We filter for URLs that are related to header bidding.
     // Then we create shallow copies of each record. This is because the records
