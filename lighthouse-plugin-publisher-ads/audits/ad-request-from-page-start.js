@@ -51,13 +51,21 @@ class AdRequestFromPageStart extends Audit {
     };
   }
   /**
-   * @return {LH.Audit.ScoreOptions}
-   */
+   * @return {{
+    *  simulate: LH.Audit.ScoreOptions, provided: LH.Audit.ScoreOptions
+    * }}
+    */
   static get defaultOptions() {
-    // 75th & 95th percentile with simulation.
     return {
-      scorePODR: 3500,
-      scoreMedian: 8000,
+      // 75th & 95th percentile with simulation.
+      simulate: {
+        scorePODR: 3500,
+        scoreMedian: 8000,
+      },
+      provided: {
+        scorePODR: 1500,
+        scoreMedian: 3500,
+      },
     };
   }
 
@@ -70,6 +78,11 @@ class AdRequestFromPageStart extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const metricData = {trace, devtoolsLog, settings: context.settings};
+    const scoreOptions = context.options[
+        context.settings.throttlingMethod == 'provided' ?
+          'provided' :
+          'simulate'
+    ];
 
     const {timing} = await ComputedAdRequestTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
@@ -81,8 +94,8 @@ class AdRequestFromPageStart extends Audit {
       numericValue: timing * 1e-3,
       score: Audit.computeLogNormalScore(
         timing,
-        context.options.scorePODR,
-        context.options.scoreMedian
+        scoreOptions.scorePODR,
+        scoreOptions.scoreMedian
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
