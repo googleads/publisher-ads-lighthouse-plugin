@@ -51,13 +51,21 @@ class TagLoadTime extends Audit {
   }
 
   /**
-   * @return {LH.Audit.ScoreOptions}
+   * @return {{
+   *  simulate: LH.Audit.ScoreOptions, provided: LH.Audit.ScoreOptions
+   * }}
    */
   static get defaultOptions() {
-    // 75th & 95th percentile with simulation.
     return {
-      scorePODR: 6000,
-      scoreMedian: 10000,
+      simulate: {
+        // 75th & 95th percentile with simulation.
+        scorePODR: 6000,
+        scoreMedian: 10000,
+      },
+      provided: {
+        scorePODR: 1000,
+        scoreMedian: 2000,
+      },
     };
   }
 
@@ -70,6 +78,11 @@ class TagLoadTime extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const metricData = {trace, devtoolsLog, settings: context.settings};
+    const scoreOptions = context.options[
+        context.settings.throttlingMethod == 'provided' ?
+          'provided' :
+          'simulate'
+    ];
 
     const {timing} = await ComputedTagLoadTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
@@ -83,8 +96,8 @@ class TagLoadTime extends Audit {
       numericValue: timing * 1e-3, // seconds
       score: Audit.computeLogNormalScore(
         timing,
-        context.options.scorePODR,
-        context.options.scoreMedian
+        scoreOptions.scorePODR,
+        scoreOptions.scoreMedian
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
