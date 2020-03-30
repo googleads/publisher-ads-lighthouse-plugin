@@ -16,8 +16,8 @@ const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const {isAdIframe} = require('../utils/resource-classification');
 const {isBoxInViewport} = require('../utils/geometry');
+const {isGptIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Few or no ads loaded outside viewport',
@@ -67,7 +67,7 @@ class AdsInViewport extends Audit {
   static audit(artifacts) {
     const viewport = artifacts.ViewportDimensions;
     const slots = artifacts.IFrameElements
-        .filter((iframe) => isAdIframe(iframe) &&
+        .filter((iframe) => isGptIframe(iframe) &&
           iframe.clientRect.height * iframe.clientRect.width > 1);
 
     if (!slots.length) {

@@ -61,7 +61,7 @@ function isAdSenseImplTag(url) {
   url = toURL(url);
   const matchesHost = url.host === 'pagead2.googlesyndication.com';
   const matchesPath =
-      /(^\/pagead\/js\/.*\/show_ads_impl\.js)/.test(url.pathname);
+      /(^\/pagead\/js\/.*\/show_ads_impl.*?\.js)/.test(url.pathname);
   return matchesHost && matchesPath;
 }
 
