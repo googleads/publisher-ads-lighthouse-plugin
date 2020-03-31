@@ -1,0 +1,20 @@
+# Avoid loading ads until they are nearly on-screen
+
+## Overview
+
+This audit ensures that no more than three ads are loaded outside the viewport.
+Ads outside of the viewport are less likely to be seen by users, so loading an
+excessive number of them can lower viewability rates and decrease page
+performance.
+
+## Recommendations
+
+Defer loading ads outside of the viewport until they are nearly on-screen. See
+the
+[Google Publisher Tag Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad)
+for an example.
+
+## More information
+
+[GPT Reference](https://developers.google.com/doubleclick-gpt/reference)  
+[Viewability best practices](https://support.google.com/admanager/answer/6199883)
