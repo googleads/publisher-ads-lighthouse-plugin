@@ -1,4 +1,4 @@
-# Publisher Ads Lighthouse Plugin (Beta)
+# Publisher Ads Lighthouse Plugin
 [![Linux Build Status](https://img.shields.io/travis/googleads/publisher-ads-lighthouse-plugin/master.svg)](https://travis-ci.org/googleads/publisher-ads-lighthouse-plugin)
 [![NPM lighthouse package](https://img.shields.io/npm/v/lighthouse-plugin-publisher-ads.svg)](https://npmjs.org/package/lighthouse-plugin-publisher-ads)
 
@@ -6,11 +6,11 @@ Publisher Ads Lighthouse Plugin is a tool to improve ad speed and overall qualit
 
 This tool is a plugin for [Lighthouse](https://github.com/GoogleChrome/lighthouse), an open-sourced tool integrated into Chrome dev tools that is widely used by developers.
 
-We are currently in beta and still in the development process. In order to help us improve please [file an issue](https://github.com/googleads/publisher-ads-lighthouse-plugin/issues) to let us know of any issues or suggestions you may have.
+In order to help us improve please [file an issue](https://github.com/googleads/publisher-ads-lighthouse-plugin/issues) to let us know of any issues or suggestions you may have.
 
 ## Web App
 
-We currently have a web app version of Publisher Ads Lighthouse Plugin. It is currently in beta and can be accessed at [developers.google.com/publisher-ads-audits](https://developers.google.com/publisher-ads-audits/).
+We currently have a web app version of Publisher Ads Lighthouse Plugin. It can be accessed at [developers.google.com/publisher-ads-audits](https://developers.google.com/publisher-ads-audits/).
 
 ## Lighthouse Node CLI
 
