@@ -59,7 +59,7 @@ module.exports = {
     },
   },
   category: {
-    title: 'Publisher Ads [Beta]',
+    title: 'Publisher Ads',
     description: str_(UIStrings.categoryDescription),
     auditRefs: [
       // Measurements group.
