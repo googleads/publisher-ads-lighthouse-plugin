@@ -2,8 +2,14 @@
 
 ## Overview
 
-Ensures that ad tag library scripts are being loaded securely. This should only
-fail if the publisher has an unsecure website, since secure websites should
+Ensures that ad tag library scripts are being requested securely. This not only
+provides better security for your users, it also improves performance. Since ad
+requests issued by GPT always use HTTPS, loading the library itself from the
+[recommended host](./loads-gpt-from-sgdn) via HTTPS ensures that the browser
+only needs to open 1 connection for all requests related to ad serving.
+
+
+Note: This should only fail on non-secure websites, as most secure websites will
 automatically load scripts using HTTPS.
 
 ## Recommendations

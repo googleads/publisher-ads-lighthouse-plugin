@@ -2,9 +2,15 @@
 
 ## Overview
 
-This audit ensures ad tag library scripts are loaded asynchronously. Requesting
-scripts synchronously leads to content being blocked until those scripts are
-loaded.
+This audit ensures ad tag library scripts are loaded asynchronously.
+
+By default, JavaScript execution is synchronous. This means that once a script
+is encountered, no other content can be loaded until that script has been
+downloaded, parsed, and executed. Opting into asynchronous execution prevents
+this, allowing the browser to continue processing other resources while the
+specified script is loaded in the background. This keeps your page responsive
+while scripts are loading and decreses the time necessary to load all critical
+components.
 
 ## Recommendations
 
