@@ -61,10 +61,14 @@ class AdRequestFromPageStart extends Audit {
       simulate: {
         scorePODR: 3500,
         scoreMedian: 8000,
+        // Derived from the existing PODR and median points.
+        p10: 4350,
       },
       provided: {
         scorePODR: 1500,
         scoreMedian: 3500,
+        // Derived from the existing PODR and median points.
+        p10: 1900,
       },
     };
   }
@@ -93,9 +97,8 @@ class AdRequestFromPageStart extends Audit {
     return {
       numericValue: timing * 1e-3,
       score: Audit.computeLogNormalScore(
-        timing,
-        scoreOptions.scorePODR,
-        scoreOptions.scoreMedian
+        {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
+        timing
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };

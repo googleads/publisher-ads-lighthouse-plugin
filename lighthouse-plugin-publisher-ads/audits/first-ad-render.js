@@ -65,6 +65,8 @@ class FirstAdRender extends Audit {
         default: {
           scorePODR: 8500,
           scoreMedian: 15000,
+          // Derived from the existing PODR and median points.
+          p10: 9400,
         },
         // 75th & 95th percentile with simulation.
         // Specific to LR due to patch of
@@ -73,11 +75,15 @@ class FirstAdRender extends Audit {
         lightrider: {
           scorePODR: 11000,
           scoreMedian: 22000,
+          // Derived from the existing PODR and median points.
+          p10: 12900,
         },
       },
       provided: {
         scorePODR: 2700,
         scoreMedian: 3700,
+        // Derived from the existing PODR and median points.
+        p10: 2750,
       },
 
     };
@@ -115,9 +121,8 @@ class FirstAdRender extends Audit {
     return {
       numericValue: timing * 1e-3,
       score: Audit.computeLogNormalScore(
-        timing,
-        scoreOptions.scorePODR,
-        scoreOptions.scoreMedian
+        {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
+        timing
       ),
       displayValue:
         str_(UIStrings.displayValue, {timeInMs: timing}),
