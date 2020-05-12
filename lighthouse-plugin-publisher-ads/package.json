@@ -1,7 +1,6 @@
 {
   "name": "lighthouse-plugin-publisher-ads",
-  "version": "1.5.7-beta",
-  "type": "module",
+  "version": "1.0.0",
   "description": "A Lighthouse plugin to improve ad speed and overall quality through a series of automated audits.",
   "author": "Google Ads",
   "license": "Apache-2.0",
@@ -32,7 +31,7 @@
     "yargs": "^16.1.1"
   },
   "peerDependencies": {
-    "lighthouse": "8.6.0"
+    "lighthouse": ">=5.6.0"
   },
   "devDependencies": {
     "@types/yargs": "^15.0.11",
