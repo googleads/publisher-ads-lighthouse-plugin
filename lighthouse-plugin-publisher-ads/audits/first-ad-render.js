@@ -57,12 +57,37 @@ class FirstAdRender extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
+<<<<<<< HEAD
         p10: 12900,
         median: 22000,
       },
       provided: {
         p10: 2750,
         median: 3700,
+=======
+        default: {
+          scorePODR: 8500,
+          scoreMedian: 15000,
+          // Derived from the existing PODR and median points.
+          p10: 9400,
+        },
+        // 75th & 95th percentile with simulation.
+        // Specific to LR due to patch of
+        // https://github.com/GoogleChrome/lighthouse/pull/9910. Will update
+        // values after next LH release.
+        lightrider: {
+          scorePODR: 11000,
+          scoreMedian: 22000,
+          // Derived from the existing PODR and median points.
+          p10: 12900,
+        },
+      },
+      provided: {
+        scorePODR: 2700,
+        scoreMedian: 3700,
+        // Derived from the existing PODR and median points.
+        p10: 2750,
+>>>>>>> 45d51e7 (add p10 score-curve control points)
       },
 
     };
@@ -100,8 +125,13 @@ class FirstAdRender extends Audit {
       numericValue: timing,
       numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
+<<<<<<< HEAD
         scoreOptions,
         timing,
+=======
+        {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
+        timing
+>>>>>>> 45d51e7 (add p10 score-curve control points)
       ),
       displayValue:
       str_(UIStrings.displayValue, {timeInMs: timing}),

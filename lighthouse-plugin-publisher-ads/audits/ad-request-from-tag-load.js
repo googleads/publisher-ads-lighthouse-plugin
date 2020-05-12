@@ -29,7 +29,15 @@ const UIStrings = {
   displayValue: '{timeInMs, number, seconds} s',
 };
 
+<<<<<<< HEAD
 const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
+=======
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+// Point of diminishing returns.
+const PODR = 300; // ms
+const MEDIAN = 1000; // ms
+const P10 = 450; // ms
+>>>>>>> 45d51e7 (add p10 score-curve control points)
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -104,8 +112,13 @@ class AdRequestFromTagLoad extends Audit {
 
     return {
       numericValue: adReqTimeMs * 1e-3,
+<<<<<<< HEAD
       numericUnit: 'unitless',
       score: Audit.computeLogNormalScore(scoreOptions, adReqTimeMs),
+=======
+      score: Audit.computeLogNormalScore({p10: P10, median: MEDIAN},
+        adReqTimeMs),
+>>>>>>> 45d51e7 (add p10 score-curve control points)
       displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }
