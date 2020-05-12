@@ -22,9 +22,14 @@
   "dependencies": {
     "@tusbar/cache-control": "^0.3.1",
     "@types/esprima": "^4.0.2",
+<<<<<<< HEAD
     "lighthouse": "10.1.1",
     "lodash.clonedeep": "^4.5.0",
     "yargs": "16.1.1"
+=======
+    "lighthouse": "^6.0.0-beta.0",
+    "yargs": "^13.3.0"
+>>>>>>> 7ec706d (bump dep to lighthouse beta)
   },
   "devDependencies": {
     "@lhci/cli": "0.12.x",
