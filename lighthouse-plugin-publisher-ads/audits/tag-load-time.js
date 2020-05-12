@@ -99,6 +99,7 @@ class TagLoadTime extends Audit {
     // first party rendering.
     return {
       numericValue: timing * 1e-3, // seconds
+      numericUnit: 'millisecond', // TODO: seconds or ms ???????/
       score: Audit.computeLogNormalScore(
         {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
         timing
