@@ -104,8 +104,9 @@ class FirstAdRender extends Audit {
     const {timing} = await ComputedAdRenderTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
-      return auditNotApplicable.NoAdRendered;
+      const naAuditProduct = auditNotApplicable.NoAdRendered;
+      naAuditProduct.runWarnings = [runWarning.NoAdRendered];
+      return naAuditProduct;
     }
 
     let scoreOptions = context.options[
