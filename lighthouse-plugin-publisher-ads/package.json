@@ -1,7 +1,7 @@
 {
-  "name": "@paulirish/lighthouse-plugin-publisher-ads",
-  "version": "1.0.01",
-  "description": "A Lighthouse plugin to improve ad speed and overall quality through a series of automated audits.",
+  "name": "lighthouse-plugin-publisher-ads-alphaignore",
+  "version": "1.0.1-beta.4",
+  "description": "Ignore this package. It will be unpublished.",
   "author": "Google Ads",
   "license": "Apache-2.0",
   "repository": "googleads/publisher-ads-lighthouse-plugin",
