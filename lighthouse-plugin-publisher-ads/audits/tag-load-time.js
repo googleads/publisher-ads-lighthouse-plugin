@@ -113,8 +113,13 @@ class TagLoadTime extends Audit {
     // NOTE: score is relative to page response time to avoid counting time for
     // first party rendering.
     return {
+<<<<<<< HEAD
       numericValue: timing,
       numericUnit: 'millisecond',
+=======
+      numericValue: timing * 1e-3, // seconds
+      numericUnit: 'millisecond', // TODO: seconds or ms ???????/
+>>>>>>> d215ba3 (untested fixes about numericUnit)
       score: Audit.computeLogNormalScore(
 <<<<<<< HEAD
         scoreOptions,

@@ -110,7 +110,11 @@ class AdRequestFromPageStart extends Audit {
     }
 
     return {
+<<<<<<< HEAD
       numericValue: timing,
+=======
+      numericValue: timing * 1e-3,
+>>>>>>> d215ba3 (untested fixes about numericUnit)
       numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
 <<<<<<< HEAD
