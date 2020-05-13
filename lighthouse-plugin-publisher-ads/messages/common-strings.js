@@ -47,7 +47,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * Returns object for a notApplicable audit given a message string
  * @param {string} message
- * @return {Object}
+ * @return {LH.Audit.Product}
  */
 const notApplicableObj = (message) => ({
   notApplicable: true,
@@ -57,7 +57,7 @@ const notApplicableObj = (message) => ({
 
 /**
  * Returns notApplicable object for a given property.
- * @return {Object}
+ * @return {LH.Audit.Product}
  */
 const auditNotApplicable = {
   Default: notApplicableObj(UIStrings.NOT_APPLICABLE__DEFAULT),

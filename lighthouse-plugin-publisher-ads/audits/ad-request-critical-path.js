@@ -166,6 +166,7 @@ class AdRequestCriticalPath extends Audit {
 
     return {
       numericValue: depth,
+      numericUnit: 'unitless',
       score: failed ? 0 : 1,
       displayValue: str_(UIStrings.displayValue, {serialResources: depth}),
       details: {

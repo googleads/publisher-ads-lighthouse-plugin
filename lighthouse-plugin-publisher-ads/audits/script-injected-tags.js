@@ -179,6 +179,7 @@ class StaticAdTags extends Audit {
         str_(UIStrings.failureDisplayValue, {tags: tableView.length}) : '',
       score: Number(!failed),
       numericValue: tableView.length,
+      numericUnit: 'unitless',
       details: StaticAdTags.makeTableDetails(HEADINGS, tableView),
     };
   }

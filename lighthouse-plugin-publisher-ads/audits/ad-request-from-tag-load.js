@@ -29,8 +29,7 @@ const UIStrings = {
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-// Point of diminishing returns.
-const PODR = 300; // ms
+const P10 = 450; // ms
 const MEDIAN = 1000; // ms
 
 /**
@@ -79,7 +78,9 @@ class AdRequestFromTagLoad extends Audit {
 
     return {
       numericValue: adReqTimeMs * 1e-3,
-      score: Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN),
+      numericUnit: 'unitless',
+      score: Audit.computeLogNormalScore({p10: P10, median: MEDIAN},
+        adReqTimeMs),
       displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }

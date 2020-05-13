@@ -115,6 +115,7 @@ class GptBidsInParallel extends Audit {
     const failed = tableView.length > 0;
     return {
       numericValue: tableView.length,
+      numericUnit: 'unitless',
       score: failed ? 0 : 1,
       details: failed ?
         GptBidsInParallel.makeTableDetails(HEADINGS, tableView) : undefined,

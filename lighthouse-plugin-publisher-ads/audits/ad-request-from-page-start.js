@@ -57,14 +57,13 @@ class AdRequestFromPageStart extends Audit {
     */
   static get defaultOptions() {
     return {
-      // 75th & 95th percentile with simulation.
       simulate: {
-        scorePODR: 3500,
-        scoreMedian: 8000,
+        p10: 4350,
+        median: 8000,
       },
       provided: {
-        scorePODR: 1500,
-        scoreMedian: 3500,
+        p10: 1900,
+        median: 3500,
       },
     };
   }
@@ -86,16 +85,17 @@ class AdRequestFromPageStart extends Audit {
 
     const {timing} = await ComputedAdRequestTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(runWarning.NoAds);
-      return auditNotApplicable.NoAds;
+      const naAuditProduct = auditNotApplicable.NoAds;
+      naAuditProduct.runWarnings = [runWarning.NoAds];
+      return naAuditProduct;
     }
 
     return {
       numericValue: timing * 1e-3,
+      numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
-        timing,
-        scoreOptions.scorePODR,
-        scoreOptions.scoreMedian
+        scoreOptions,
+        timing
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };

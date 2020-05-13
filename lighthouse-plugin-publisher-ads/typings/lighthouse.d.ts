@@ -50,9 +50,8 @@ declare module 'lighthouse' {
       static get DEFAULT_PASS(): string;
 
       static computeLogNormalScore(
-        measuredValue : number,
-        diminishingReturnsValue: number,
-        medianValue: number
+        controlPoints : {median: number, p10: number},
+        value: number,
       ): number;
     }
 

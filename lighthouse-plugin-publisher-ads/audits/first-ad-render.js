@@ -53,31 +53,19 @@ class FirstAdRender extends Audit {
 
   /**
    * @return {{
-   *   simulate: {
-   *    default: LH.Audit.ScoreOptions, lightrider: LH.Audit.ScoreOptions
-   *   },
+   *   simulate: LH.Audit.ScoreOptions,
    *   provided: LH.Audit.ScoreOptions
    * }}
    */
   static get defaultOptions() {
     return {
       simulate: {
-        default: {
-          scorePODR: 8500,
-          scoreMedian: 15000,
-        },
-        // 75th & 95th percentile with simulation.
-        // Specific to LR due to patch of
-        // https://github.com/GoogleChrome/lighthouse/pull/9910. Will update
-        // values after next LH release.
-        lightrider: {
-          scorePODR: 11000,
-          scoreMedian: 22000,
-        },
+        p10: 12900,
+        median: 22000,
       },
       provided: {
-        scorePODR: 2700,
-        scoreMedian: 3700,
+        p10: 2750,
+        median: 3700,
       },
 
     };
@@ -98,26 +86,23 @@ class FirstAdRender extends Audit {
     const {timing} = await ComputedAdRenderTime.request(metricData, context);
 
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(runWarning.NoAdRendered);
-      return auditNotApplicable.NoAdRendered;
+      const naAuditProduct = auditNotApplicable.NoAdRendered;
+      naAuditProduct.runWarnings = [runWarning.NoAdRendered];
+      return naAuditProduct;
     }
 
-    let scoreOptions = context.options[
+    const scoreOptions = context.options[
         context.settings.throttlingMethod == 'provided' ?
           'provided' :
           'simulate'
     ];
-    if (scoreOptions.lightrider) {
-      scoreOptions =
-        scoreOptions[global.isLightrider ? 'lightrider' : 'default'];
-    }
 
     return {
       numericValue: timing * 1e-3,
+      numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
-        timing,
-        scoreOptions.scorePODR,
-        scoreOptions.scoreMedian
+        scoreOptions,
+        timing
       ),
       displayValue:
         str_(UIStrings.displayValue, {timeInMs: timing}),

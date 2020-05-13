@@ -96,6 +96,9 @@ class LongTasks extends ComputedMetric {
         selfTime: timing.duration, // TODO: subtract child time
         attributableURLs: Array.from(node.getEvaluateScriptURLs()),
         children: [],
+        parent: node.parent,
+        unbounded: node.unbounded,
+        group: node.group,
       });
     }
     return tasks;

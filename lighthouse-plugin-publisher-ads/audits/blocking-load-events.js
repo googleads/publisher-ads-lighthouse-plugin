@@ -237,6 +237,7 @@ class BlockingLoadEvents extends Audit {
     }
     return {
       numericValue: blockingEvents.length,
+      numericUnit: 'unitless',
       score: failed ? 0 : 1,
       displayValue: failed && blockedTime ?
         str_(UIStrings.displayValue, {timeInMs: blockedTime}) :

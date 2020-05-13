@@ -120,6 +120,7 @@ class BottleneckRequests extends Audit {
     }
     return {
       numericValue: criticalRequests.length,
+      numericUnit: 'unitless',
       score: failed ? 0 : 1,
       displayValue: failed ? str_(UIStrings.displayValue, {blockedTime}) : '',
       details:
