@@ -90,12 +90,14 @@ class AdRequestFromPageStart extends Audit {
 
     const {timing} = await ComputedAdRequestTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(runWarning.NoAds);
-      return auditNotApplicable.NoAds;
+      const naAuditProduct = auditNotApplicable.NoAds;
+      naAuditProduct.runWarnings = [runWarning.NoAds];
+      return naAuditProduct;
     }
 
     return {
       numericValue: timing * 1e-3,
+      numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
         {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
         timing

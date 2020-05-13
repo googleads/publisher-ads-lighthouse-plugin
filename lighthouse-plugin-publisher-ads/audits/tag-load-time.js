@@ -90,14 +90,16 @@ class TagLoadTime extends Audit {
 
     const {timing} = await ComputedTagLoadTime.request(metricData, context);
     if (!(timing > 0)) { // Handle NaN, etc.
-      context.LighthouseRunWarnings.push(runWarning.NoTag);
-      return auditNotApplicable.NoTag;
+      const naAuditProduct = auditNotApplicable.NoTag;
+      naAuditProduct.runWarnings = [runWarning.NoTag];
+      return naAuditProduct;
     }
 
     // NOTE: score is relative to page response time to avoid counting time for
     // first party rendering.
     return {
-      numericValue: timing * 1e-3, // seconds
+      numericValue: timing * 1e-3, // seconds => ms
+      numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
         {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
         timing
