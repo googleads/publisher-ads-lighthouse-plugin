@@ -84,6 +84,7 @@ class AdsInViewport extends Audit {
 
     return {
       numericValue: visibleCount / slots.length,
+      numericUnit: 'unitless',
       score: nonvisible.length > 3 ? 0 : 1,
       displayValue: nonvisible.length ?
         str_(UIStrings.failureDisplayValue, {hiddenAds: nonvisible.length}) :

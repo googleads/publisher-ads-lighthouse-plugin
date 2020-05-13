@@ -146,7 +146,8 @@ function checkIfTaskIsBlocking(idlePeriod, mainThreadTasks, timerEvents) {
     // Check if timer is blocking.
     if (task.event.name == 'TimerFire' &&
         idlePeriod.endTime - task.startTime < PROXIMITY_MS_THRESHOLD) {
-      const timerId = task.event.args.data.timerId;
+      const timerId =
+        task.event.args.data && task.event.args.data.timerId || '';
       const start = timerEvents.find((t) =>
         // @ts-ignore
         t.name == 'TimerInstall' && t.args.data.timerId == timerId);
@@ -313,6 +314,7 @@ class IdleNetworkTimes extends Audit {
 
     return {
       numericValue: maxIdleTime,
+      numericUnit: 'millisecond',
       score: failed ? 0 : 1,
       displayValue:
         str_(UIStrings.displayValue, {timeInMs: (totalIdleTime)}),

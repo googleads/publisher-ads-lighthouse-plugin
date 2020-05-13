@@ -67,6 +67,7 @@ class LoadsGptFromSgdn extends Audit {
     return {
       score: Number(passed),
       numericValue: Number(!passed),
+      numericUnit: 'unitless',
     };
   }
 }

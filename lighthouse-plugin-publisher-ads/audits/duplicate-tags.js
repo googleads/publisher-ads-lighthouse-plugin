@@ -107,6 +107,7 @@ class DuplicateTags extends Audit {
 
     return {
       numericValue: dups.length,
+      numericUnit: 'unitless',
       score: dups.length ? 0 : 1,
       details: DuplicateTags.makeTableDetails(HEADINGS, dups),
       displayValue: dups.length ?

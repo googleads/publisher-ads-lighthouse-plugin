@@ -78,6 +78,7 @@ class AdRequestFromTagLoad extends Audit {
 
     return {
       numericValue: adReqTimeMs * 1e-3,
+      numericUnit: 'unitless',
       score: Audit.computeLogNormalScore({p10: P10, median: MEDIAN},
         adReqTimeMs),
       displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),

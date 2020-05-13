@@ -80,6 +80,7 @@ class ViewportAdDensity extends Audit {
     return {
       score,
       numericValue: adArea / viewArea,
+      numericUnit: 'unitless',
       displayValue: str_(UIStrings.displayValue, {adDensity}),
     };
   }

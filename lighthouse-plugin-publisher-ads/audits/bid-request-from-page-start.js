@@ -91,6 +91,7 @@ class BidRequestFromPageStart extends Audit {
 
     return {
       numericValue: timing * 1e-3,
+      numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
         scoreOptions,
         timing

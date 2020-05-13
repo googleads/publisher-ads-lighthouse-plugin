@@ -156,6 +156,7 @@ class AdRenderBlockingResources extends Audit {
     return {
       score: failed ? 0 : 1,
       numericValue: tableView.length,
+      numericUnit: 'unitless',
       displayValue,
       details: {
         opportunity,

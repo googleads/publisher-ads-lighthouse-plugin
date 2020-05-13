@@ -235,6 +235,7 @@ class SerialHeaderBidding extends Audit {
     const hasSerialHeaderBidding = serialBids.length > 1;
     return {
       numericValue: Number(hasSerialHeaderBidding),
+      numericUnit: 'unitless',
       score: hasSerialHeaderBidding ? 0 : 1,
       details: hasSerialHeaderBidding ?
         SerialHeaderBidding.makeTableDetails(HEADINGS, serialBids) : undefined,

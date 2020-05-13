@@ -84,6 +84,7 @@ class AsyncAdTags extends Audit {
     return {
       score: Number(passed),
       numericValue: numSync,
+      numericUnit: 'unitless',
     };
   }
 }

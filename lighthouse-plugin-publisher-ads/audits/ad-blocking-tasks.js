@@ -162,6 +162,7 @@ class AdBlockingTasks extends Audit {
     return {
       score: failed ? 0 : 1,
       numericValue: blockedTime,
+      numericUnit: 'millisecond',
       displayValue: failed ?
         str_(UIStrings.failureDisplayValue, {timeInMs: blockedTime}) :
         '',

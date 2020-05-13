@@ -93,6 +93,7 @@ class AdTopOfViewport extends Audit {
     return {
       score,
       numericValue: topSlot.midpoint,
+      numericUnit: 'unitless',
       // No displayValue if passing, no changes to be made.
       displayValue: score ? '' :
         str_(UIStrings.failureDisplayValue, {valueInPx: topSlot.midpoint}),
