@@ -57,18 +57,13 @@ class AdRequestFromPageStart extends Audit {
     */
   static get defaultOptions() {
     return {
-      // 75th & 95th percentile with simulation.
       simulate: {
-        scorePODR: 3500,
-        scoreMedian: 8000,
-        // Derived from the existing PODR and median points.
         p10: 4350,
+        median: 8000,
       },
       provided: {
-        scorePODR: 1500,
-        scoreMedian: 3500,
-        // Derived from the existing PODR and median points.
         p10: 1900,
+        median: 3500,
       },
     };
   }
@@ -99,7 +94,7 @@ class AdRequestFromPageStart extends Audit {
       numericValue: timing * 1e-3,
       numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
-        {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
+        scoreOptions,
         timing
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),

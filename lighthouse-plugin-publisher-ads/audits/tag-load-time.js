@@ -58,17 +58,12 @@ class TagLoadTime extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        // 75th & 95th percentile with simulation.
-        scorePODR: 6000,
-        scoreMedian: 10000,
-        // Derived from the existing PODR and median points.
         p10: 6500,
+        median: 10000,
       },
       provided: {
-        scorePODR: 1000,
-        scoreMedian: 2000,
-        // Derived from the existing PODR and median points.
         p10: 1200,
+        median: 2000,
       },
     };
   }
@@ -101,7 +96,7 @@ class TagLoadTime extends Audit {
       numericValue: timing * 1e-3, // seconds => ms
       numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
-        {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
+        scoreOptions,
         timing
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),

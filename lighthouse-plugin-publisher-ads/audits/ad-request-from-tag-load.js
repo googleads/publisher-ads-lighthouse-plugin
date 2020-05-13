@@ -29,10 +29,8 @@ const UIStrings = {
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-// Point of diminishing returns.
-const PODR = 300; // ms
-const MEDIAN = 1000; // ms
 const P10 = 450; // ms
+const MEDIAN = 1000; // ms
 
 /**
  * Audit to determine time for first ad request relative to tag load.

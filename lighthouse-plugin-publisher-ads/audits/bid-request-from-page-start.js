@@ -59,17 +59,12 @@ class BidRequestFromPageStart extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        // 75th & 95th percentile with simulation.
-        scorePODR: 7500,
-        scoreMedian: 15500,
-        // Derived from the existing PODR and median points.
         p10: 8900,
+        median: 15500,
       },
       provided: {
-        scorePODR: 1500,
-        scoreMedian: 3500,
-        // Derived from the existing PODR and median points.
         p10: 1900,
+        median: 3500,
       },
     };
   }
@@ -97,7 +92,7 @@ class BidRequestFromPageStart extends Audit {
     return {
       numericValue: timing * 1e-3,
       score: Audit.computeLogNormalScore(
-        {p10: scoreOptions.p10, median: scoreOptions.scoreMedian},
+        scoreOptions,
         timing
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
