@@ -37,11 +37,10 @@ module.exports = [
           scoreDisplayMode: 'informative',
           // It's important that the critical path does not include the render
           // blocking resources.
-          numericValue: 4,
+          numericValue: 2,
           details: {
             items: [
               {url: 'http://localhost:8081/slowly-inject-gpt.js'},
-              {url: 'http://securepubads.g.doubleclick.net/tag/js/gpt.js'},
               {url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'},
               // Use a Regexp to ignore the version of pubads_impl.
               {url: /.*securepubads.g.doubleclick.net.*pubads_impl.*/},

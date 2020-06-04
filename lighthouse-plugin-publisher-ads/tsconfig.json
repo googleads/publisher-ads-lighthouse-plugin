@@ -18,6 +18,7 @@
     "**/*.js",
     "**/*.d.ts",
     "../node_modules/lighthouse/lighthouse-core/report/html/renderer/util.js",
+    "../node_modules/lighthouse/lighthouse-core/report/html/renderer/i18n.js",
     "../node_modules/lighthouse/lighthouse-core/lib/network-request.js",
     "../node_modules/lighthouse/lighthouse-core/lib/url-shim.js",
     "../node_modules/lighthouse/lighthouse-core/lib/dependency-graph/*.js"
