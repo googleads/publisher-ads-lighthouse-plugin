@@ -19,43 +19,36 @@ const smokeTests = [
     id: 'duplicate-tags',
     expectations: require('./expectations/duplicate-tags.js'),
     config: require('./config.js'),
-    batch: 'pub-ads',
   },
   {
     id: 'lazy-load',
     expectations: require('./expectations/lazy-load.js'),
     config: require('./config.js'),
-    batch: 'pub-ads',
   },
   {
     id: 'long-tasks',
     expectations: require('./expectations/long-tasks.js'),
     config: require('./config.js'),
-    batch: 'pub-ads',
   },
   {
     id: 'render-blocking-tasks',
     expectations: require('./expectations/render-blocking-tags.js'),
     config: require('./config.js'),
-    batch: 'pub-ads',
   },
   {
     id: 'script-injected',
     expectations: require('./expectations/script-injected.js'),
     config: require('./config.js'),
-    batch: 'pub-ads',
   },
   {
     id: 'top-of-viewport',
     expectations: require('./expectations/top-of-viewport.js'),
     config: require('./config.js'),
-    batch: 'pub-ads',
   },
   {
     id: 'not-applicable',
     expectations: require('./expectations/not-applicable.js'),
     config: require('./config.js'),
-    batch: 'pub-ads',
   },
 ];
 
