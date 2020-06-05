@@ -46,6 +46,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/serial-header-bidding`},
     {path: `${PLUGIN_PATH}/audits/tag-load-time`},
     {path: `${PLUGIN_PATH}/audits/viewport-ad-density`},
+    {path: `${PLUGIN_PATH}/audits/cumulative-ad-shift`},
   ],
   groups: {
     'metrics': {
@@ -67,6 +68,7 @@ module.exports = {
       {id: 'bid-request-from-page-start', weight: 4, group: 'metrics'},
       {id: 'ad-request-from-page-start', weight: 20, group: 'metrics'},
       {id: 'first-ad-render', weight: 10, group: 'metrics'},
+      {id: 'cumulative-ad-shift', weight: 10, group: 'metrics'},
       // Performance group.
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
