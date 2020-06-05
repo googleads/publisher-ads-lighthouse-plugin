@@ -35,7 +35,7 @@ module.exports = [
         },
         'viewport-ad-density': {
           score: 0,
-          numericValue: '.452 +/- .001',
+          numericValue: '.408 +/- .001',
         },
         'ads-in-viewport': {
           score: 0,

@@ -32,6 +32,6 @@ module.exports = {
   settings: {
     onlyCategories: ['lighthouse-plugin-publisher-ads'],
     // TODO(jburger): Use simulation once properly implemented.
-    throttlingMethod: 'devtools',
+    throttlingMethod: 'simulate',
   },
 };
