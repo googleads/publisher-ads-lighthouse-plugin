@@ -103,7 +103,6 @@ class CumulativeAdShift extends Audit {
    * Computes the ad shift score for the page.
    * @param {LH.TraceEvent[]} traceEvents
    * @param {Artifacts['IFrameElement'][]} iframes
-   * @return {number}
    */
   static compute(traceEvents, iframes) {
     const shiftEvents = traceEvents
@@ -113,18 +112,29 @@ class CumulativeAdShift extends Audit {
     // passed to the ad tag) rather than the iframe itself.
     const ads = iframes.filter(isGptIframe);
 
-    const adShifts = [];
-    for (const shiftEvent of shiftEvents) {
-      if (this.isAdShift(shiftEvent, ads)) {
-        adShifts.push(shiftEvent);
+    let cumulativeAdShift = 0;
+    let numAdShifts = 0;
+    let cumulativeShift = 0;
+    let numShifts = 0;
+    for (const event of shiftEvents) {
+      if (!event.args || !event.args.data || !event.args.data.is_main_frame) {
+        continue;
+      }
+      // @ts-ignore
+      cumulativeShift += event.args.data.score;
+      numShifts++;
+      if (this.isAdShift(event, ads)) {
+        // @ts-ignore
+        cumulativeAdShift += event.args.data.score;
+        numAdShifts++;
       }
     }
-    let cumulativeAdShift = 0;
-    for (const shift of adShifts) {
-      // @ts-ignore args.data is not null per checks in isAdShift.
-      cumulativeAdShift += shift.args.data.score;
-    }
-    return cumulativeAdShift;
+    return {
+      cumulativeAdShift,
+      numAdShifts,
+      cumulativeShift,
+      numShifts,
+    };
   }
 
   /**
@@ -134,13 +144,15 @@ class CumulativeAdShift extends Audit {
    */
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const score = this.compute(trace.traceEvents, artifacts.IFrameElements);
-
+    const details = this.compute(trace.traceEvents, artifacts.IFrameElements);
+    const rawScore = details.cumulativeAdShift;
     return {
-      numericValue: score,
+      numericValue: rawScore,
       numericUnit: 'unitless',
-      score: Audit.computeLogNormalScore(context.options, score),
-      displayValue: score.toLocaleString(context.settings.locale),
+      score: Audit.computeLogNormalScore(context.options, rawScore),
+      displayValue: rawScore.toLocaleString(context.settings.locale),
+      // @ts-ignore Add more fields for logging
+      details,
     };
   }
 }
