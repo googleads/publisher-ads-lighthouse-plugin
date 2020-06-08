@@ -19,11 +19,19 @@ const {URL} = require('url');
 /**
  * Converts the given url to a URL, if it's not already a URL. Otherwise returns
  * the same URL object (not a copy).
+ * This function is guaranteed not to throw. Be sure to validate URL format
+ * before calling this method if needed.
  * @param {URL|string} urlOrStr
  * @return {URL}
  */
 function toURL(urlOrStr) {
-  return (typeof urlOrStr === 'string') ? new URL(urlOrStr) : urlOrStr;
+  let url;
+  try {
+    url = (typeof urlOrStr === 'string') ? new URL(urlOrStr) : urlOrStr;
+  } catch (e) {
+    url = new URL('http://_'); // error
+  }
+  return url;
 }
 
 /**
@@ -344,6 +352,7 @@ module.exports = {
   isBidRelatedRequest,
   isBidRequest,
   isStaticRequest,
+  toURL,
   trimUrl,
   getAbbreviatedUrl,
 };

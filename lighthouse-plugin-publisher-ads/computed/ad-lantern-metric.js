@@ -19,8 +19,7 @@ const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-nod
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 // eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
-const {isBidRelatedRequest, isImpressionPing, isGoogleAds, isGptAdRequest, isGptTag, isGptImplTag} = require('../utils/resource-classification');
-const {URL} = require('url');
+const {isBidRelatedRequest, isImpressionPing, isGoogleAds, isGptAdRequest, isGptTag, isGptImplTag, toURL} = require('../utils/resource-classification');
 
 /** @typedef {LH.Gatherer.Simulation.GraphNode} GraphNode */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -57,7 +56,7 @@ function getCpuNodeUrls(cpuNode) {
  */
 function isAdTask(cpuNode) {
   return !!getCpuNodeUrls(cpuNode).find(
-    (url) => isBidRelatedRequest(url) || isGoogleAds(new URL(url)));
+    (url) => isBidRelatedRequest(url) || isGoogleAds(toURL(url)));
 }
 
 /**
@@ -174,7 +173,7 @@ class AdLanternMetric extends LanternMetric {
         return true;
       }
       const /** string */ url = node.record.url;
-      return isBidRelatedRequest(url) || isGoogleAds(new URL(url));
+      return isBidRelatedRequest(url) || isGoogleAds(toURL(url));
     });
     return optimisticGraph;
   }
