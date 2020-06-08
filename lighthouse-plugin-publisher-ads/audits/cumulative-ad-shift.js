@@ -18,7 +18,9 @@ const {isGptIframe} = require('../utils/resource-classification');
 const UIStrings = {
   title: 'Cumulative ad shift',
   failureTitle: 'Reduce ad-related layout shift',
-  description: 'TODO',
+  description: 'Measures [layout shifts](https://web.dev/cls) that were ' +
+    'caused by ads or happened near ads. Avoid layout shifts to improve ' +
+    'user experience.',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -66,7 +68,7 @@ class CumulativeAdShift extends Audit {
     // TODO tune this
     return {
       p10: 0.05,
-      median: 0.15,
+      median: 0.2,
     };
   }
 
