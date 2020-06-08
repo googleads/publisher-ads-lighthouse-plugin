@@ -1,4 +1,3 @@
-// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,18 +12,32 @@
 // limitations under the License.
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isGptIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Cumulative ad shift',
-  failureTitle: 'Reduce ad-induced layout shift',
+  failureTitle: 'Reduce ad-related layout shift',
   description: 'TODO',
-  displayValue: '{timeInMs, number} shifterinos',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+
+/**
+ * @param {number[]} points
+ * @return {{left: number, top: number, right: number, bottom: number,
+ *     height: number, width: number}}
+ */
+function toRect(points) {
+  return {
+    left: points[0],
+    top: points[1],
+    width: points[2],
+    height: points[3],
+    right: points[0] + points[2],
+    bottom: points[1] + points[3],
+  };
+}
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -47,47 +60,71 @@ class CumulativeAdShift extends Audit {
   }
 
   /**
-   * @return {{
-    *  simulate: LH.Audit.ScoreOptions, provided: LH.Audit.ScoreOptions
-    * }}
+   * @return {LH.Audit.ScoreOptions}
     */
   static get defaultOptions() {
     // TODO tune this
     return {
-      simulate: {
-        p10: 8900,
-        median: 15500,
-      },
-      provided: {
-        p10: 1900,
-        median: 3500,
-      },
+      p10: 0.05,
+      median: 0.15,
     };
   }
 
-  static async compute(traceEvents, iframes) {
-    const shiftEvents = traceEvents
-      .filter(e => e.name === 'LayoutShift')
-      .map(e => e.args && e.args.data);;
+  /**
+   * @param {LH.TraceEvent} shiftEvent
+   * @param {Artifacts['IFrameElement'][]} ads
+   */
+  static isAdShift(shiftEvent, ads) {
+    if (!shiftEvent.args || !shiftEvent.args.data) {
+      return false;
+    }
+    for (const ad of ads) {
+      // Names come from external JSON
+      // eslint-disable-next-line camelcase
+      for (const node of shiftEvent.args.data.impacted_nodes || []) {
+        // eslint-disable-next-line camelcase
+        const /* number[] */ oldRect = node.old_rect || [];
+        const shift = toRect(oldRect);
+        const adRect = ad.clientRect;
 
-    const ads = iframes.filter(isGptFrame)
-
-    const adShifts = [];
-    for (const shiftEvent of shiftEvents) {
-      const [left, top, width, height] = shiftEvent.old_rect;
-
-      for (const ad of ads) {
-        const overlapX = Math.max(left, iframe.left) > Math.min(x + width, iframe.right);
-        const overlapY = Math.max(top, iframe.top) > Math.min(top + height, iframe.bottom);
+        const overlapX =
+          !(shift.right < adRect.left || adRect.right < shift.left);
+        const overlapY =
+          !(shift.bottom < adRect.top || adRect.bottom < shift.top);
         if (overlapX && overlapY) {
-          adShifts.push(shiftEvent);
-          continue;
+          return true;
         }
       }
     }
-    for (const shift of adShifts) {
-      console.log(shift);
+    return false;
+  }
+
+  /**
+   * Computes the ad shift score for the page.
+   * @param {LH.TraceEvent[]} traceEvents
+   * @param {Artifacts['IFrameElement'][]} iframes
+   * @return {number}
+   */
+  static compute(traceEvents, iframes) {
+    const shiftEvents = traceEvents
+        .filter((e) => e.name === 'LayoutShift');
+
+    // Maybe we should look at the parent elements (created by the publisher and
+    // passed to the ad tag) rather than the iframe itself.
+    const ads = iframes.filter(isGptIframe);
+
+    const adShifts = [];
+    for (const shiftEvent of shiftEvents) {
+      if (this.isAdShift(shiftEvent, ads)) {
+        adShifts.push(shiftEvent);
+      }
     }
+    let cumulativeAdShift = 0;
+    for (const shift of adShifts) {
+      // @ts-ignore args.data is not null per checks in isAdShift.
+      cumulativeAdShift += shift.args.data.score;
+    }
+    return cumulativeAdShift;
   }
 
   /**
@@ -97,19 +134,13 @@ class CumulativeAdShift extends Audit {
    */
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {trace, devtoolsLog, settings: context.settings};
-    console.log(trace);
-    this.compute(trace.traceEvents, artifacts.IframeElements);
+    const score = this.compute(trace.traceEvents, artifacts.IFrameElements);
 
     return {
-      numericValue: timing * 1e-3,
-      numericUnit: 'millisecond',
-      score: Audit.computeLogNormalScore(
-        scoreOptions,
-        timing
-      ),
-      displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
+      numericValue: score,
+      numericUnit: 'unitless',
+      score: Audit.computeLogNormalScore(context.options, score),
+      displayValue: score.toLocaleString(context.settings.locale),
     };
   }
 }
