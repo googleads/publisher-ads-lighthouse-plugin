@@ -13,7 +13,8 @@
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {Audit} = require('lighthouse');
-const {isGptIframe} = require('../utils/resource-classification');
+const {getScriptUrl} = require('../utils/network-timing');
+const {isGptIframe, isGptImplTag} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Cumulative ad shift',
@@ -109,15 +110,21 @@ class CumulativeAdShift extends Audit {
   static compute(traceEvents, iframes) {
     const shiftEvents = traceEvents
         .filter((e) => e.name === 'LayoutShift');
+    const gptLoadEvent =
+      traceEvents.find((e) => isGptImplTag(getScriptUrl(e) || '')) ||
+      {ts: Infinity};
+    const gptLoadTs = gptLoadEvent.ts || Infinity;
 
     // Maybe we should look at the parent elements (created by the publisher and
     // passed to the ad tag) rather than the iframe itself.
     const ads = iframes.filter(isGptIframe);
 
-    let cumulativeAdShift = 0;
-    let numAdShifts = 0;
     let cumulativeShift = 0;
     let numShifts = 0;
+    let cumulativeAdShift = 0;
+    let numAdShifts = 0;
+    let cumulativePreGptAdShift = 0;
+    let numPreGptAdShifts = 0;
     for (const event of shiftEvents) {
       if (!event.args || !event.args.data || !event.args.data.is_main_frame) {
         continue;
@@ -129,13 +136,20 @@ class CumulativeAdShift extends Audit {
         // @ts-ignore
         cumulativeAdShift += event.args.data.score;
         numAdShifts++;
+        if (event.ts < gptLoadTs) {
+          // @ts-ignore
+          cumulativePreGptAdShift += event.args.data.score;
+          numPreGptAdShifts++;
+        }
       }
     }
     return {
-      cumulativeAdShift,
-      numAdShifts,
       cumulativeShift,
       numShifts,
+      cumulativeAdShift,
+      numAdShifts,
+      cumulativePreGptAdShift,
+      numPreGptAdShifts,
     };
   }
 
@@ -147,6 +161,7 @@ class CumulativeAdShift extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const details = this.compute(trace.traceEvents, artifacts.IFrameElements);
+    console.log(details);
     const rawScore = details.cumulativeAdShift;
     return {
       numericValue: rawScore,
