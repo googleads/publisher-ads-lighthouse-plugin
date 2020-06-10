@@ -19,9 +19,10 @@ const {isGptIframe, isGptImplTag} = require('../utils/resource-classification');
 const UIStrings = {
   title: 'Cumulative ad shift',
   failureTitle: 'Reduce ad-related layout shift',
-  description: 'Measures [layout shifts](https://web.dev/cls) that were ' +
-    'caused by ads or happened near ads. Avoid layout shifts to improve ' +
-    'user experience.',
+  description:
+      'Measures [layout shifts](https://web.dev/cls) that were ' +
+          'caused by ads or happened near ads. Avoid layout shifts to improve ' +
+          'user experience.',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -64,7 +65,7 @@ class CumulativeAdShift extends Audit {
 
   /**
    * @return {LH.Audit.ScoreOptions}
-    */
+   */
   static get defaultOptions() {
     // TODO tune this
     return {
@@ -91,9 +92,9 @@ class CumulativeAdShift extends Audit {
         const adRect = ad.clientRect;
 
         const overlapX =
-          !(shift.right < adRect.left || adRect.right < shift.left);
+            !(shift.right < adRect.left || adRect.right < shift.left);
         const overlapY =
-          !(shift.bottom < adRect.top || adRect.bottom < shift.top);
+            !(shift.bottom < adRect.top || adRect.bottom < shift.top);
         if (overlapX && overlapY) {
           return true;
         }
@@ -108,11 +109,10 @@ class CumulativeAdShift extends Audit {
    * @param {Artifacts['IFrameElement'][]} iframes
    */
   static compute(traceEvents, iframes) {
-    const shiftEvents = traceEvents
-        .filter((e) => e.name === 'LayoutShift');
+    const shiftEvents = traceEvents.filter((e) => e.name === 'LayoutShift');
     const gptLoadEvent =
-      traceEvents.find((e) => isGptImplTag(getScriptUrl(e) || '')) ||
-      {ts: Infinity};
+        traceEvents.find((e) => isGptImplTag(getScriptUrl(e) || '')) ||
+        {ts: Infinity};
     const gptLoadTs = gptLoadEvent.ts || Infinity;
 
     // Maybe we should look at the parent elements (created by the publisher and
