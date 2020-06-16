@@ -15,6 +15,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {Audit} = require('lighthouse');
 const {getScriptUrl} = require('../utils/network-timing');
 const {isAdIframe, isImplTag} = require('../utils/resource-classification');
+const {overlaps, toClientRect} = require('../utils/geometry');
 
 const UIStrings = {
   title: 'Cumulative ad shift',
@@ -26,22 +27,6 @@ const UIStrings = {
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-
-/**
- * @param {number[]} points
- * @return {{left: number, top: number, right: number, bottom: number,
- *     height: number, width: number}}
- */
-function toRect(points) {
-  return {
-    left: points[0],
-    top: points[1],
-    width: points[2],
-    height: points[3],
-    right: points[0] + points[2],
-    bottom: points[1] + points[3],
-  };
-}
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -88,14 +73,9 @@ class CumulativeAdShift extends Audit {
       for (const node of shiftEvent.args.data.impacted_nodes || []) {
         // eslint-disable-next-line camelcase
         const /* number[] */ oldRect = node.old_rect || [];
-        const shift = toRect(oldRect);
+        const shiftRect = toClientRect(oldRect);
         const adRect = ad.clientRect;
-
-        const overlapX =
-            !(shift.right < adRect.left || adRect.right < shift.left);
-        const overlapY =
-            !(shift.bottom < adRect.top || adRect.bottom < shift.top);
-        if (overlapX && overlapY) {
+        if (overlaps(shiftRect, adRect)) {
           return true;
         }
       }

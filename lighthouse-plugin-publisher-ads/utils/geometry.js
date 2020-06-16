@@ -40,8 +40,39 @@ function boxViewableArea(clientRect, viewport) {
     (Math.min(bottom, innerHeight) - Math.max(top, 0));
 }
 
+/**
+ * Converts points (from a TraceEvent) to a ClientRect.
+ * @param {number[]} points
+ * @return {ClientRect}
+ */
+function toClientRect(points) {
+  return {
+    left: points[0],
+    top: points[1],
+    width: points[2],
+    height: points[3],
+    right: points[0] + points[2],
+    bottom: points[1] + points[3],
+  };
+}
+
+/**
+ * Checks ClientRect a overlaps ClientRect b. Note that this returns true for
+ * overlapping perimeters.
+ * @param {ClientRect} a
+ * @param {ClientRect} b
+ * @return {boolean}
+ */
+function overlaps(a, b) {
+  const overlapX = !(a.right < b.left || b.right < a.left);
+  const overlapY = !(a.bottom < b.top || b.bottom < a.top);
+  return overlapX && overlapY;
+}
+
 module.exports = {
-  isBoxInViewport,
   boxViewableArea,
+  isBoxInViewport,
+  overlaps,
+  toClientRect,
 };
 
