@@ -45,14 +45,14 @@ function boxViewableArea(clientRect, viewport) {
  * @param {number[]} points
  * @return {ClientRect}
  */
-function toClientRect(points) {
+function toClientRect([left, top, width, height]) {
   return {
-    left: points[0],
-    top: points[1],
-    width: points[2],
-    height: points[3],
-    right: points[0] + points[2],
-    bottom: points[1] + points[3],
+    left,
+    top,
+    width,
+    height,
+    right: left + width,
+    bottom: top + height,
   };
 }
 
