@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getScriptUrl} = require('../utils/network-timing');
 const {isAdIframe, isImplTag} = require('../utils/resource-classification');
@@ -45,7 +46,7 @@ class CumulativeAdShift extends Audit {
       description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'IFrameElements'],
+      requiredArtifacts: ['traces', 'IFrameElements'],
     };
   }
 
@@ -86,20 +87,11 @@ class CumulativeAdShift extends Audit {
 
   /**
    * Computes the ad shift score for the page.
-   * @param {LH.TraceEvent[]} traceEvents
-   * @param {Artifacts['IFrameElement'][]} iframes
+   * @param {LH.TraceEvent[]} shiftEvents
+   * @param {Artifacts['IFrameElement'][]} ads
+   * @param {number} tagLoadTs
    */
-  static compute(traceEvents, iframes) {
-    const shiftEvents = traceEvents.filter((e) => e.name === 'LayoutShift');
-    const gptLoadEvent =
-        traceEvents.find((e) => isImplTag(getScriptUrl(e) || '')) ||
-        {ts: Infinity};
-    const gptLoadTs = gptLoadEvent.ts || Infinity;
-
-    // Maybe we should look at the parent elements (created by the publisher and
-    // passed to the ad tag) rather than the iframe itself.
-    const ads = iframes.filter(isAdIframe);
-
+  static compute(shiftEvents, ads, tagLoadTs) {
     let cumulativeShift = 0;
     let numShifts = 0;
     let cumulativeAdShift = 0;
@@ -119,7 +111,7 @@ class CumulativeAdShift extends Audit {
         // @ts-ignore
         cumulativeAdShift += event.args.data.score;
         numAdShifts++;
-        if (event.ts < gptLoadTs) {
+        if (event.ts < tagLoadTs) {
           // @ts-ignore
           cumulativePreImplTagAdShift += event.args.data.score;
           numPreImplTagAdShifts++;
@@ -143,8 +135,25 @@ class CumulativeAdShift extends Audit {
    */
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const details = this.compute(trace.traceEvents, artifacts.IFrameElements);
-    console.log(details);
+    const shiftEvents =
+      trace.traceEvents.filter((e) => e.name === 'LayoutShift');
+    if (!shiftEvents.length) {
+      return auditNotApplicable.NoLayoutShifts;
+    }
+
+    const tagLoadEvent =
+        trace.traceEvents.find((e) => isImplTag(getScriptUrl(e) || '')) ||
+        {ts: Infinity};
+
+    // Maybe we should look at the parent elements (created by the publisher and
+    // passed to the ad tag) rather than the iframe itself.
+    const ads = artifacts.IFrameElements.filter(isAdIframe);
+    if (!ads.length) {
+      // TODO count shifts for the container element here.
+      return auditNotApplicable.NoAdRendered;
+    }
+
+    const details = this.compute(shiftEvents, ads, tagLoadEvent.ts);
     const rawScore = details.cumulativeAdShift;
     return {
       numericValue: rawScore,
