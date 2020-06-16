@@ -14,7 +14,7 @@
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {Audit} = require('lighthouse');
 const {getScriptUrl} = require('../utils/network-timing');
-const {isGptIframe, isGptImplTag} = require('../utils/resource-classification');
+const {isAdIframe, isImplTag} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Cumulative ad shift',
@@ -111,20 +111,20 @@ class CumulativeAdShift extends Audit {
   static compute(traceEvents, iframes) {
     const shiftEvents = traceEvents.filter((e) => e.name === 'LayoutShift');
     const gptLoadEvent =
-        traceEvents.find((e) => isGptImplTag(getScriptUrl(e) || '')) ||
+        traceEvents.find((e) => isImplTag(getScriptUrl(e) || '')) ||
         {ts: Infinity};
     const gptLoadTs = gptLoadEvent.ts || Infinity;
 
     // Maybe we should look at the parent elements (created by the publisher and
     // passed to the ad tag) rather than the iframe itself.
-    const ads = iframes.filter(isGptIframe);
+    const ads = iframes.filter(isAdIframe);
 
     let cumulativeShift = 0;
     let numShifts = 0;
     let cumulativeAdShift = 0;
     let numAdShifts = 0;
-    let cumulativePreGptAdShift = 0;
-    let numPreGptAdShifts = 0;
+    let cumulativePreImplTagAdShift = 0;
+    let numPreImplTagAdShifts = 0;
     for (const event of shiftEvents) {
       if (!event.args || !event.args.data || !event.args.data.is_main_frame ||
           // @ts-ignore Sometimes the initial navigation counts as recent input.
@@ -140,8 +140,8 @@ class CumulativeAdShift extends Audit {
         numAdShifts++;
         if (event.ts < gptLoadTs) {
           // @ts-ignore
-          cumulativePreGptAdShift += event.args.data.score;
-          numPreGptAdShifts++;
+          cumulativePreImplTagAdShift += event.args.data.score;
+          numPreImplTagAdShifts++;
         }
       }
     }
@@ -150,8 +150,8 @@ class CumulativeAdShift extends Audit {
       numShifts,
       cumulativeAdShift,
       numAdShifts,
-      cumulativePreGptAdShift,
-      numPreGptAdShifts,
+      cumulativePreImplTagAdShift,
+      numPreImplTagAdShifts,
     };
   }
 
