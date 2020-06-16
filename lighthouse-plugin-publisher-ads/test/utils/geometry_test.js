@@ -155,4 +155,19 @@ describe('geometry', () => {
       });
     });
   });
+
+  describe('toClientRect', () => {
+    it('should build a correct rect', () => {
+      const points = [100, 1000, 300, 250];
+      const expectedRect = {
+        left: 100,
+        right: 400,
+        top: 1000,
+        bottom: 1250,
+        width: 300,
+        height: 250,
+      };
+      expect(geometry.toClientRect(points)).to.deep.equal(expectedRect);
+    });
+  });
 });
