@@ -64,11 +64,11 @@ module.exports = {
     description: str_(UIStrings.categoryDescription),
     auditRefs: [
       // Measurements group.
-      {id: 'tag-load-time', weight: 4, group: 'metrics'},
-      {id: 'bid-request-from-page-start', weight: 4, group: 'metrics'},
-      {id: 'ad-request-from-page-start', weight: 20, group: 'metrics'},
+      {id: 'tag-load-time', weight: 5, group: 'metrics'},
+      {id: 'bid-request-from-page-start', weight: 5, group: 'metrics'},
+      {id: 'ad-request-from-page-start', weight: 25, group: 'metrics'},
       {id: 'first-ad-render', weight: 10, group: 'metrics'},
-      {id: 'cumulative-ad-shift', weight: 0, group: 'metrics'},
+      {id: 'cumulative-ad-shift', weight: 5, group: 'metrics'},
       // Performance group.
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},
