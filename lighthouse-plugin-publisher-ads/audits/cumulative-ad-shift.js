@@ -126,7 +126,9 @@ class CumulativeAdShift extends Audit {
     let cumulativePreGptAdShift = 0;
     let numPreGptAdShifts = 0;
     for (const event of shiftEvents) {
-      if (!event.args || !event.args.data || !event.args.data.is_main_frame) {
+      if (!event.args || !event.args.data || !event.args.data.is_main_frame ||
+          // @ts-ignore Sometimes the initial navigation counts as recent input.
+          event.args.data.had_recent_input) {
         continue;
       }
       // @ts-ignore
