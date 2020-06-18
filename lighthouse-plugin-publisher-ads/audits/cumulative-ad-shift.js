@@ -57,7 +57,7 @@ class CumulativeAdShift extends Audit {
     // TODO tune this
     return {
       p10: 0.05,
-      median: 0.2,
+      median: 0.25,
     };
   }
 
