@@ -217,7 +217,7 @@ function isAdIframe(iframe) {
 
 /**
  * Checks if the url is loading either the AdSense or GPT impl script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isImplTag(url) {

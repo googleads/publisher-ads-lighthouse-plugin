@@ -32,6 +32,7 @@ const UIStrings = {
   NOT_APPLICABLE__NO_TAGS: 'No tags requested',
   NOT_APPLICABLE__NO_TASKS: 'No tasks to compare',
   NOT_APPLICABLE__NO_VALID_AD_WIDTHS: 'No requested ads contain ads of valid width',
+  NOT_APPLICABLE__NO_LAYOUT_SHIFTS: 'No layout shift events found',
 
   ERRORS__AREA_LARGER_THAN_VIEWPORT: 'Calculated ad area is larger than viewport',
   ERRORS__VIEWPORT_AREA_ZERO: 'Viewport area is zero',
@@ -70,6 +71,7 @@ const auditNotApplicable = {
   NoEventMatchingReq: notApplicableObj(
     UIStrings.NOT_APPLICABLE__NO_EVENT_MATCHING_REQ),
   NoGpt: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_GPT),
+  NoLayoutShifts: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_LAYOUT_SHIFTS),
   NoRecords: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_RECORDS),
   NoVisibleSlots: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_VISIBLE_SLOTS),
   NoTag: notApplicableObj(UIStrings.NOT_APPLICABLE__NO_TAG),

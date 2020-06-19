@@ -212,6 +212,7 @@ module.exports = {
   getBidStartTime,
   getPageStartTime,
   getPageResponseTime,
+  getScriptUrl,
   getTimingsByRecord,
   getScriptEvaluationTimes,
 };

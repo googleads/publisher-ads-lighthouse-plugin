@@ -155,4 +155,81 @@ describe('geometry', () => {
       });
     });
   });
+
+  describe('toClientRect', () => {
+    it('should build a correct rect', () => {
+      const points = [100, 1000, 300, 250];
+      const expectedRect = {
+        left: 100,
+        right: 400,
+        top: 1000,
+        bottom: 1250,
+        width: 300,
+        height: 250,
+      };
+      expect(geometry.toClientRect(points)).to.deep.equal(expectedRect);
+    });
+  });
+
+  describe('overlaps', () => {
+    it('should pass on nested rectangles', () => {
+      const inner =
+        {top: 20, bottom: 40, height: 20, left: 20, right: 40, width: 20};
+      const outer =
+        {top: 0, bottom: 100, height: 100, left: 0, right: 100, width: 20};
+      expect(geometry.overlaps(inner, outer)).to.equal(true);
+      expect(geometry.overlaps(outer, inner)).to.equal(true);
+    });
+
+    it('should pass on equal rectangles', () => {
+      const rect =
+        {top: 20, bottom: 40, height: 20, left: 20, right: 40, width: 20};
+      expect(geometry.overlaps(rect, rect)).to.equal(true);
+    });
+
+    it('should pass on rectangles with overlapping horizontal edge', () => {
+      const top =
+        {top: 20, bottom: 40, height: 20, left: 20, right: 40, width: 20};
+      const bottom =
+        {top: 40, bottom: 60, height: 20, left: 30, right: 35, width: 5};
+      expect(geometry.overlaps(top, bottom)).to.equal(true);
+      expect(geometry.overlaps(bottom, top)).to.equal(true);
+    });
+
+    it('should pass on rectangles with overlapping vertical edge', () => {
+      const left =
+        {top: 30, bottom: 35, height: 5, left: 0, right: 20, width: 20};
+      const right =
+        {top: 20, bottom: 40, height: 20, left: 20, right: 40, width: 20};
+      expect(geometry.overlaps(left, right)).to.equal(true);
+      expect(geometry.overlaps(right, left)).to.equal(true);
+    });
+
+    it('should pass when overlaps', () => {
+      const a =
+        {top: 20, bottom: 40, height: 20, left: 20, right: 40, width: 20};
+      const b =
+        {top: 30, bottom: 50, height: 20, left: 30, right: 50, width: 20};
+      expect(geometry.overlaps(a, b)).to.equal(true);
+      expect(geometry.overlaps(a, b)).to.equal(true);
+    });
+
+    it('should fail on mismatching horizontal dimensions', () => {
+      const top =
+        {top: 20, bottom: 40, height: 20, left: 20, right: 40, width: 20};
+      const bottom =
+        {top: 50, bottom: 70, height: 20, left: 30, right: 35, width: 5};
+      expect(geometry.overlaps(top, bottom)).to.equal(false);
+      expect(geometry.overlaps(bottom, top)).to.equal(false);
+    });
+
+    it('should fail on mismatching vertical dimensions', () => {
+      const left =
+        {top: 30, bottom: 35, height: 5, left: 0, right: 20, width: 20};
+      const right =
+        {top: 20, bottom: 40, height: 20, left: 30, right: 50, width: 20};
+      expect(geometry.overlaps(left, right)).to.equal(false);
+      expect(geometry.overlaps(right, left)).to.equal(false);
+    });
+  });
 });
