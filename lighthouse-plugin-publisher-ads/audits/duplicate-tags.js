@@ -42,6 +42,7 @@ const tags = [
   'securepubads.g.doubleclick.net/tag/js/gpt.js',
   'pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
   'pagead2.googlesyndication.com/pagead/js/show_ads.js',
+  'cdn.ampproject.org/v0/amp-ad-0.1.js',
 ];
 
 /**

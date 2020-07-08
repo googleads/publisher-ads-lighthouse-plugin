@@ -132,6 +132,20 @@ function isGptTag(url) {
     'securepubads.g.doubleclick.net'].includes(host);
   const matchesPath =
     ['/tag/js/gpt.js', '/tag/js/gpt_mobile.js'].includes(pathname);
+  return ( matchesHost && matchesPath ) || isAMPTag(url);
+}
+
+/**
+ * Checks if the url is loading an amp-ad-{version}.js script.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isAMPTag(url) {
+  const {host, pathname} = toURL(url);
+  const matchesHost = ['cdn.ampproject.org'].includes(host);
+  const matchesPath =
+    ['/v0/amp-ad-0.1.js'].includes(pathname);
+
   return matchesHost && matchesPath;
 }
 
@@ -143,6 +157,18 @@ function isGptTag(url) {
 function isGptImplTag(url) {
   return (
     /(^\/gpt\/pubads_impl([a-z_]*)((?<!rendering)_)\d+\.js)/
+        .test(toURL(url).pathname)
+  );
+}
+
+/**
+ * Checks if the url is for AMP implementation tag.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isAMPImplTag(url) {
+  return (
+    /^\/[a-z_]*\/\d+\/v0\/amp-ad-network-doubleclick-impl-0.1.js/
         .test(toURL(url).pathname)
   );
 }
@@ -167,7 +193,7 @@ function isGptAdRequest(request) {
   return (
     url.pathname === '/gampad/ads' &&
     url.host === 'securepubads.g.doubleclick.net' &&
-    request.resourceType === 'XHR'
+    ( request.resourceType === 'XHR' || request.resourceType === 'Fetch' )
   );
 }
 
@@ -221,7 +247,7 @@ function isAdIframe(iframe) {
  * @return {boolean}
  */
 function isImplTag(url) {
-  return isAdSenseTag(url) || isGptImplTag(url);
+  return isAdSenseTag(url) || isGptImplTag(url) || isAMPImplTag(url);
 }
 
 /**
