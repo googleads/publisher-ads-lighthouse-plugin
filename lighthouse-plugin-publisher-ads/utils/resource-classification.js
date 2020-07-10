@@ -136,8 +136,7 @@ function isGptTag(url) {
 }
 
 /**
- *  Checks if the url is loading a gpt.js, or an amp-ad-{version}.js script.
- *
+ * Checks if the url is loading a gpt.js, or an amp-ad-{version}.js script.
  * @param {URL|string} url
  * @return {boolean}
  */
@@ -205,6 +204,31 @@ function isGptAdRequest(request) {
     url.host === 'securepubads.g.doubleclick.net' &&
     ( request.resourceType === 'XHR' || request.resourceType === 'Fetch' )
   );
+}
+
+
+/**
+ * Checks if a network request is an AMP ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isAMPAdRequest(request) {
+  if (!request) return false;
+  const url = new URL(request.url);
+  return (
+    url.pathname === '/gampad/ads' &&
+    url.host === 'securepubads.g.doubleclick.net' &&
+    ( request.resourceType === 'Fetch' )
+  );
+}
+
+/**
+ * Checks if a network request is an AMP or GPT ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isAMPOrGptAdRequest(request) {
+  return isGptAdRequest(request) || isAMPAdRequest(request);
 }
 
 /**
@@ -393,4 +417,6 @@ module.exports = {
   getAbbreviatedUrl,
   isAMPTag,
   isGptOrAmpTag,
+  isAMPAdRequest,
+  isAMPOrGptAdRequest,
 };
