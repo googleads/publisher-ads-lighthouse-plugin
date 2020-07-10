@@ -132,7 +132,17 @@ function isGptTag(url) {
     'securepubads.g.doubleclick.net'].includes(host);
   const matchesPath =
     ['/tag/js/gpt.js', '/tag/js/gpt_mobile.js'].includes(pathname);
-  return ( matchesHost && matchesPath ) || isAMPTag(url);
+  return ( matchesHost && matchesPath );
+}
+
+/**
+ *  Checks if the url is loading a gpt.js, or an amp-ad-{version}.js script.
+ *
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isGptOrAmpTag(url) {
+  return isGptTag(url) || isAMPTag(url);
 }
 
 /**
@@ -381,4 +391,6 @@ module.exports = {
   toURL,
   trimUrl,
   getAbbreviatedUrl,
+  isAMPTag,
+  isGptOrAmpTag,
 };
