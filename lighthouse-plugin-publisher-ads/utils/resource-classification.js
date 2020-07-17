@@ -140,7 +140,7 @@ function isGptTag(url) {
  * @param {URL|string} url
  * @return {boolean}
  */
-function isGptOrAmpTag(url) {
+function isGptOrAMPTag(url) {
   return isGptTag(url) || isAMPTag(url);
 }
 
@@ -416,7 +416,7 @@ module.exports = {
   trimUrl,
   getAbbreviatedUrl,
   isAMPTag,
-  isGptOrAmpTag,
+  isGptOrAMPTag,
   isAMPAdRequest,
   isAMPOrGptAdRequest,
 };

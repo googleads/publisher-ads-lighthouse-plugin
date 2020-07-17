@@ -19,7 +19,7 @@ const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-nod
 const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
 // eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
-const {isBidRelatedRequest, isImpressionPing, isGoogleAds, isAMPOrGptAdRequest, isGptTag, isGptImplTag, toURL} = require('../utils/resource-classification');
+const {isBidRelatedRequest, isImpressionPing, isGoogleAds, isAMPOrGptAdRequest, isGptOrAMPTag, isGptImplTag, toURL} = require('../utils/resource-classification');
 
 /** @typedef {LH.Gatherer.Simulation.GraphNode} GraphNode */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -81,7 +81,7 @@ function addEdges(graph) {
     if (node.type !== BaseNode.TYPES.NETWORK) {
       return;
     }
-    if (isGptTag(node.record.url) && node.record.resourceType === 'Script') {
+    if (isGptOrAMPTag(node.record.url) && node.record.resourceType === 'Script') {
       gptJsNodes.push(node);
     } else if (isAMPOrGptAdRequest(node.record)) {
       adRequestNodes.push(node);

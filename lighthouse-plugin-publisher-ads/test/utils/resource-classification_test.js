@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const {expect} = require('chai');
-const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isGptOrAmpTag, isAMPAdRequest} = require('../../utils/resource-classification');
+const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isGptOrAMPTag, isAMPAdRequest} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {
@@ -261,7 +261,7 @@ describe('resource-classification', () => {
       });
     }
   });
-  describe('#isGptOrAmpTag', () => {
+  describe('#isGptOrAMPTag', () => {
     const testCases = [
       {
         description: 'Standard tag matches',
@@ -296,7 +296,7 @@ describe('resource-classification', () => {
     ];
     for (const {description, url, expectation} of testCases) {
       it(`should return ${expectation} for ${description}`, () => {
-        const results = isGptOrAmpTag(url);
+        const results = isGptOrAMPTag(url);
         expect(results).to.equal(expectation);
       });
     }
