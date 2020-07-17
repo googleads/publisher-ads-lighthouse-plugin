@@ -202,7 +202,7 @@ function isGptAdRequest(request) {
   return (
     url.pathname === '/gampad/ads' &&
     url.host === 'securepubads.g.doubleclick.net' &&
-    ( request.resourceType === 'XHR' || request.resourceType === 'Fetch' )
+    ( request.resourceType === 'XHR' )
   );
 }
 
