@@ -192,6 +192,15 @@ function isGpt(url) {
 }
 
 /**
+ * Checks if the url is loading amp-ad script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isAMP(url) {
+  return isAMPTag(url) || isAMPImplTag(url);
+}
+
+/**
  * Checks if a network request is a GPT ad request.
  * @param {LH.Artifacts.NetworkRequest} request
  * @return {boolean}
@@ -202,7 +211,7 @@ function isGptAdRequest(request) {
   return (
     url.pathname === '/gampad/ads' &&
     url.host === 'securepubads.g.doubleclick.net' &&
-    ( request.resourceType === 'XHR' )
+    request.resourceType === 'XHR'
   );
 }
 
@@ -240,12 +249,21 @@ function isGptIframe(iframe) {
 }
 
 /**
+ * @param {Artifacts['IFrameElement']} iframe
+ * @return {boolean}
+ */
+function isAMPIframe(iframe) {
+  console.log( iframe.id );
+  return /(^google_ads_iframe_)/.test(iframe.id);
+}
+
+/**
  * Checks if the url is loading an AdSense or GPT loader script.
  * @param {URL} url
  * @return {boolean}
  */
 function isAdTag(url) {
-  return isAdSenseTag(url) || isGptTag(url);
+  return isAdSenseTag(url) || isGptTag(url) || isAMPTag(url);
 }
 
 /**
@@ -254,7 +272,7 @@ function isAdTag(url) {
  * @return {boolean}
  */
 function isAdScript(url) {
-  return isAdSense(url) || isGpt(url);
+  return isAdSense(url) || isGpt(url) || isAMP(url);
 }
 
 /**
@@ -263,7 +281,9 @@ function isAdScript(url) {
  * @return {boolean}
  */
 function isAdRequest(request) {
-  return isAdSenseAdRequest(request) || isGptAdRequest(request);
+  return isAdSenseAdRequest(request) ||
+    isGptAdRequest(request) ||
+    isAMPAdRequest(request);
 }
 
 /**
@@ -272,7 +292,7 @@ function isAdRequest(request) {
  * @return {boolean}
  */
 function isAdIframe(iframe) {
-  return isAdSenseIframe(iframe) || isGptIframe(iframe);
+  return isAdSenseIframe(iframe) || isGptIframe(iframe) || isAMPIframe(iframe);
 }
 
 /**

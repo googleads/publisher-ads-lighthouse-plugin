@@ -16,7 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {isGptOrAMPTag} = require('../utils/resource-classification');
+const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
@@ -60,7 +60,7 @@ class LoadsGptFromSgdn extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const tagUrl = networkRecords.map((r) =>
-      new URL(r.url)).find(isGptOrAMPTag);
+      new URL(r.url)).find(isGptTag);
     if (!tagUrl) {
       return auditNotApplicable.NoGpt;
     }
