@@ -231,15 +231,6 @@ function isGptIframe(iframe) {
 }
 
 /**
- * @param {Artifacts['IFrameElement']} iframe
- * @return {boolean}
- */
-function isAMPIframe(iframe) {
-  console.log( iframe.id, /(^google_ads_iframe_)/.test(iframe.id) );
-  return /(^google_ads_iframe_)/.test(iframe.id);
-}
-
-/**
  * Checks if the url is loading an AdSense or GPT loader script.
  * @param {URL} url
  * @return {boolean}
@@ -274,7 +265,7 @@ function isAdRequest(request) {
  * @return {boolean}
  */
 function isAdIframe(iframe) {
-  return isAdSenseIframe(iframe) || isGptIframe(iframe) || isAMPIframe(iframe);
+  return isAdSenseIframe(iframe) || isGptIframe(iframe);
 }
 
 /**
