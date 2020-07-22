@@ -223,15 +223,6 @@ function isAMPAdRequest(request) {
 }
 
 /**
- * Checks if a network request is an AMP or GPT ad request.
- * @param {LH.Artifacts.NetworkRequest} request
- * @return {boolean}
- */
-function isAMPOrGptAdRequest(request) {
-  return isGptAdRequest(request) || isAMPAdRequest(request);
-}
-
-/**
  * @param {Artifacts['IFrameElement']} iframe
  * @return {boolean}
  */
@@ -428,5 +419,4 @@ module.exports = {
   getAbbreviatedUrl,
   isAMPTag,
   isAMPAdRequest,
-  isAMPOrGptAdRequest,
 };
