@@ -59,12 +59,11 @@ class LoadsGptFromSgdn extends Audit {
   static async audit(artifacts, context) {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const tagUrl = networkRecords.map((r) =>
-      new URL(r.url)).find(isGptTag);
-    if (!tagUrl) {
+    const gptUrl = networkRecords.map((r) => new URL(r.url)).find(isGptTag);
+    if (!gptUrl) {
       return auditNotApplicable.NoGpt;
     }
-    const passed = (tagUrl.host === 'securepubads.g.doubleclick.net' || tagUrl.host === 'cdn.ampproject.org');
+    const passed = (gptUrl.host === 'securepubads.g.doubleclick.net');
     return {
       score: Number(passed),
       numericValue: Number(!passed),
