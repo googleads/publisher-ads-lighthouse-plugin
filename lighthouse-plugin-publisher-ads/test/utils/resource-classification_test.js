@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const {expect} = require('chai');
-const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isGptOrAMPTag, isAMPAdRequest} = require('../../utils/resource-classification');
+const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isAMPAdRequest} = require('../../utils/resource-classification');
 const {URL} = require('url');
 
 describe('resource-classification', () => {
@@ -257,46 +257,6 @@ describe('resource-classification', () => {
     for (const {description, url, expectation} of testCases) {
       it(`should return ${expectation} for ${description}`, () => {
         const results = isAMPTag(url);
-        expect(results).to.equal(expectation);
-      });
-    }
-  });
-  describe('#isGptOrAMPTag', () => {
-    const testCases = [
-      {
-        description: 'Standard tag matches',
-        url: new URL('https://cdn.ampproject.org/v0/amp-ad-0.1.js'),
-        expectation: true,
-      },
-      {
-        description: 'URLs that load gpt.js',
-        url: new URL('http://securepubads.g.doubleclick.net/tag/js/gpt.js'),
-        expectation: true,
-      },
-      {
-        description: 'URLs that load gpt.js with hash',
-        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js#foo'),
-        expectation: true,
-      },
-      {
-        description: 'URLs that load gpt.js with query string',
-        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js?foo=bar'),
-        expectation: true,
-      },
-      {
-        description: 'URLs that load gpt.js with query string and hash',
-        url: new URL('https://securepubads.g.doubleclick.net/tag/js/gpt.js?foo=bar#baz'),
-        expectation: true,
-      },
-      {
-        description: 'URLs that don\'t load gpt.js',
-        url: new URL('https://facebook.com/foo?bar=baz'),
-        expectation: false,
-      },
-    ];
-    for (const {description, url, expectation} of testCases) {
-      it(`should return ${expectation} for ${description}`, () => {
-        const results = isGptOrAMPTag(url);
         expect(results).to.equal(expectation);
       });
     }

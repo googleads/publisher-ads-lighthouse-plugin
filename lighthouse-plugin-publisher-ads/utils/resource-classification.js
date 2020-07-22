@@ -136,15 +136,6 @@ function isGptTag(url) {
 }
 
 /**
- * Checks if the url is loading a gpt.js, or an amp-ad-{version}.js script.
- * @param {URL|string} url
- * @return {boolean}
- */
-function isGptOrAMPTag(url) {
-  return isGptTag(url) || isAMPTag(url);
-}
-
-/**
  * Checks if the url is loading an amp-ad-{version}.js script.
  * @param {URL|string} url
  * @return {boolean}
@@ -253,7 +244,7 @@ function isGptIframe(iframe) {
  * @return {boolean}
  */
 function isAMPIframe(iframe) {
-  console.log( iframe.id );
+  console.log( iframe.id, /(^google_ads_iframe_)/.test(iframe.id) );
   return /(^google_ads_iframe_)/.test(iframe.id);
 }
 
@@ -436,7 +427,6 @@ module.exports = {
   trimUrl,
   getAbbreviatedUrl,
   isAMPTag,
-  isGptOrAMPTag,
   isAMPAdRequest,
   isAMPOrGptAdRequest,
 };
