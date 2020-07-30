@@ -16,6 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
+const {isAdScript, toURL} =  require('../utils/resource-classification')
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
@@ -101,7 +102,8 @@ class BottleneckRequests extends Audit {
     const CRITICAL_DURATION_MS = 1000;
     /** @param {SimpleRequest} r @return {boolean} */
     const isBottleneck = (r) =>
-      r.selfTime > CRITICAL_SELF_TIME_MS || r.duration > CRITICAL_DURATION_MS;
+      !isAdScript(toURL(r.url)) &&
+      (r.selfTime > CRITICAL_SELF_TIME_MS || r.duration > CRITICAL_DURATION_MS);
     // selfTime is more costly than duration so weigh it more than duration.
     /** @param {SimpleRequest} r @return {number} */
     const cost = (r) => r.selfTime * 3 + r.duration;
