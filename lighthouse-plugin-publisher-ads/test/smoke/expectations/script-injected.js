@@ -51,15 +51,9 @@ module.exports = [
           },
         },
         'bottleneck-requests': {
-          score: 0,
+          score: 1,
           details: {
-            items: [
-              {
-                url: new RegExp(
-                  /(.*\/gpt\/pubads_impl([a-z_]*)((?<!rendering)_)\d+\.js)/, 'g'),
-              },
-              {url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'},
-            ],
+            items: [],
           },
         },
       },
