@@ -23,11 +23,11 @@ module.exports = [
       finalUrl: 'http://localhost:8081/long-tasks.html',
       audits: {
         'tag-load-time': {
-          numericValue: '3.25 +/- 1',
+          numericValue: '3250 +/- 1000',
         },
         'first-ad-render': {
           // TODO(jburger): Update when https://github.com/GoogleChrome/lighthouse/issues/9417 is implemented.
-          numericValue: '5.5 +/- 1',
+          numericValue: '5500 +/- 1000',
         },
         'loads-gpt-from-sgdn': {
           score: 0,
