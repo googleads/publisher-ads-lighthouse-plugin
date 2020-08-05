@@ -16,7 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
-const {isAdScript, toURL} =  require('../utils/resource-classification')
+const {isAdScript, toURL} = require('../utils/resource-classification');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
