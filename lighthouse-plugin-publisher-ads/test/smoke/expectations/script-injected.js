@@ -50,6 +50,7 @@ module.exports = [
             ],
           },
         },
+        // TODO(jburger): Update test to include useful coverage for this audit.
         'bottleneck-requests': {
           score: 1,
           details: {
