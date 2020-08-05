@@ -101,8 +101,6 @@ class CumulativeAdShift extends Audit {
     let numPreImplTagAdShifts = 0;
     for (const event of shiftEvents) {
       if (!event.args || !event.args.data || !event.args.data.is_main_frame ||
-         // Should remove the had_recent_input check after Lighthouse 6.2 is
-         // released.
          // @ts-ignore Sometimes the initial navigation counts as recent input.
          event.args.data.had_recent_input) {
         continue;

@@ -67,6 +67,7 @@ const STATICALLY_LOADABLE_TAGS = [
   /static\.criteo\.net\/js\/.*\/publishertag\.js/,
   /www\.googletagservices\.com\/tag\/js\/gpt\.js/,
   /pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js/,
+  /cdn\.ampproject\.org\/v0\/amp-ad-\d+\.\d+\.js/,
 ];
 
 /**

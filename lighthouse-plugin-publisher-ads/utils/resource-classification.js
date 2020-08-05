@@ -132,6 +132,20 @@ function isGptTag(url) {
     'securepubads.g.doubleclick.net'].includes(host);
   const matchesPath =
     ['/tag/js/gpt.js', '/tag/js/gpt_mobile.js'].includes(pathname);
+  return ( matchesHost && matchesPath );
+}
+
+/**
+ * Checks if the url is loading an amp-ad-{version}.js script.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isAMPTag(url) {
+  const {host, pathname} = toURL(url);
+  const matchesHost = ['cdn.ampproject.org'].includes(host);
+  const matchesPath =
+    ['/v0/amp-ad-0.1.js'].includes(pathname);
+
   return matchesHost && matchesPath;
 }
 
@@ -148,12 +162,33 @@ function isGptImplTag(url) {
 }
 
 /**
+ * Checks if the url is for AMP implementation tag.
+ * @param {URL|string} url
+ * @return {boolean}
+ */
+function isAMPImplTag(url) {
+  return (
+    /^\/[a-z_]*\/\d+\/v0\/amp-ad-network-doubleclick-impl-0.1.js/
+        .test(toURL(url).pathname)
+  );
+}
+
+/**
  * Checks if the url is loading a gpt.js or pubads_impl_*.js script.
  * @param {URL} url
  * @return {boolean}
  */
 function isGpt(url) {
   return isGptTag(url) || isGptImplTag(url);
+}
+
+/**
+ * Checks if the url is loading amp-ad script.
+ * @param {URL} url
+ * @return {boolean}
+ */
+function isAMP(url) {
+  return isAMPTag(url) || isAMPImplTag(url);
 }
 
 /**
@@ -171,6 +206,22 @@ function isGptAdRequest(request) {
   );
 }
 
+
+/**
+ * Checks if a network request is an AMP ad request.
+ * @param {LH.Artifacts.NetworkRequest} request
+ * @return {boolean}
+ */
+function isAMPAdRequest(request) {
+  if (!request) return false;
+  const url = new URL(request.url);
+  return (
+    url.pathname === '/gampad/ads' &&
+    url.host === 'securepubads.g.doubleclick.net' &&
+    ( request.resourceType === 'Fetch' )
+  );
+}
+
 /**
  * @param {Artifacts['IFrameElement']} iframe
  * @return {boolean}
@@ -185,7 +236,7 @@ function isGptIframe(iframe) {
  * @return {boolean}
  */
 function isAdTag(url) {
-  return isAdSenseTag(url) || isGptTag(url);
+  return isAdSenseTag(url) || isGptTag(url) || isAMPTag(url);
 }
 
 /**
@@ -194,7 +245,7 @@ function isAdTag(url) {
  * @return {boolean}
  */
 function isAdScript(url) {
-  return isAdSense(url) || isGpt(url);
+  return isAdSense(url) || isGpt(url) || isAMP(url);
 }
 
 /**
@@ -203,7 +254,9 @@ function isAdScript(url) {
  * @return {boolean}
  */
 function isAdRequest(request) {
-  return isAdSenseAdRequest(request) || isGptAdRequest(request);
+  return isAdSenseAdRequest(request) ||
+    isGptAdRequest(request) ||
+    isAMPAdRequest(request);
 }
 
 /**
@@ -221,7 +274,7 @@ function isAdIframe(iframe) {
  * @return {boolean}
  */
 function isImplTag(url) {
-  return isAdSenseTag(url) || isGptImplTag(url);
+  return isAdSenseTag(url) || isGptImplTag(url) || isAMPImplTag(url);
 }
 
 /**
@@ -355,4 +408,6 @@ module.exports = {
   toURL,
   trimUrl,
   getAbbreviatedUrl,
+  isAMPTag,
+  isAMPAdRequest,
 };
