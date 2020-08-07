@@ -2,8 +2,8 @@
 
 ## Overview
 
-Measures the total amount of user-visible layout shift that were caused by or
-occurred near ads.
+Measures the total amount of user-visible layout shift that caused by or
+occurring near ads.
 
 
 ## Recommendations
