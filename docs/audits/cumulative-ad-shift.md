@@ -2,9 +2,10 @@
 
 ## Overview
 
-Measures the total amount of user-visible layout shift that caused by or
-occurring near ads.
-
+Cumulative Ad Shift measures the total amount of user-visible layout shift using
+the [Layout Instability API](https://wicg.github.io/layout-instability/) by
+summing the [layout shift score](https://web.dev/cls/#layout-shift-score) for
+all layout shifts where the ad iframe shifted or caused the layout shift.
 
 ## Recommendations
 
