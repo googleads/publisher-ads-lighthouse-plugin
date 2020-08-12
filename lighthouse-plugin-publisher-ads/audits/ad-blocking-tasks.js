@@ -167,9 +167,6 @@ class AdBlockingTasks extends Audit {
         str_(UIStrings.failureDisplayValue, {timeInMs: blockedTime}) :
         '',
       details: AdBlockingTasks.makeTableDetails(HEADINGS, filteredBlocking),
-      extendedInfo: {
-        rawBlocking: blocking,
-      },
     };
   }
 }

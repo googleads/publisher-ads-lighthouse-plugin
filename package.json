@@ -33,6 +33,6 @@
     "mocha": "^5.1.1",
     "sinon": "^5.0.7",
     "static-server": "^2.2.1",
-    "typescript": "^3.5.1"
+    "typescript": "^3.9"
   }
 }

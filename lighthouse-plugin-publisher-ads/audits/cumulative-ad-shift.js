@@ -156,7 +156,8 @@ class CumulativeAdShift extends Audit {
     return {
       numericValue: rawScore,
       numericUnit: 'unitless',
-      score: Audit.computeLogNormalScore(context.options, rawScore),
+      score: Audit.computeLogNormalScore(
+        {p10: context.options.p10, median: context.options.median}, rawScore),
       displayValue: rawScore.toLocaleString(context.settings.locale),
       // @ts-ignore Add more fields for logging
       details,
