@@ -99,9 +99,7 @@ class CumulativeAdShift extends Audit {
     let cumulativePreImplTagAdShift = 0;
     let numPreImplTagAdShifts = 0;
     for (const event of shiftEvents) {
-      if (!event.args || !event.args.data || !event.args.data.is_main_frame ||
-          // @ts-ignore Sometimes the initial navigation counts as recent input.
-          event.args.data.had_recent_input) {
+      if (!event.args || !event.args.data || !event.args.data.is_main_frame) {
         continue;
       }
       // @ts-ignore
@@ -158,7 +156,8 @@ class CumulativeAdShift extends Audit {
     return {
       numericValue: rawScore,
       numericUnit: 'unitless',
-      score: Audit.computeLogNormalScore(context.options, rawScore),
+      score: Audit.computeLogNormalScore(
+        {p10: context.options.p10, median: context.options.median}, rawScore),
       displayValue: rawScore.toLocaleString(context.settings.locale),
       // @ts-ignore Add more fields for logging
       details,
