@@ -23,9 +23,10 @@ const UIStrings = {
   title: 'Cumulative ad shift',
   failureTitle: 'Reduce ad-related layout shift',
   description:
-      'Measures [layout shifts](https://web.dev/cls) that were ' +
-          'caused by ads or happened near ads. Avoid layout shifts to improve ' +
-          'user experience.',
+      'Measures layout shifts that were caused by ads or happened near ads. ' +
+          'Reducing cumulative ad-related layout shift will improve user ' +
+          'experience. [Learn more]' +
+          '(https://developers.google.com/publisher-ads-audits/reference/audits/cumulative-ad-shift).',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
