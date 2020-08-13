@@ -1,4 +1,4 @@
-# Reduce ad layout shift
+# Reduce ad-related layout shift
 
 ## Overview
 
