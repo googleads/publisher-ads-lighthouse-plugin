@@ -27,7 +27,7 @@ The following ad tag library scripts are measured for tag load time:
 
 | Library              | Script                                      |
 |----------------------|---------------------------------------------|
-| AMP Doubleclick      | `cdn.ampproject.org/v0/amp-ad-doubleclick-impl-<version>.js` |
+| AMP DoubleClick      | `cdn.ampproject.org/v0/amp-ad-doubleclick-impl-<version>.js` |
 | AdSense              | `pagead2.googlesyndication.com/pagead/js/<version>/show_ads_impl_<version>.js` |
 | Google Publisher Tag | `securepubads.g.doubleclick.net/gpt/pubads_impl_<version>.js` |
 

@@ -29,7 +29,7 @@ one of:
 
 | Library              | Host                             | Path          |
 |----------------------|----------------------------------|---------------|
-| AMP Doubleclick      | `securepubads.g.doubleclick.net` | `/gampad/ads` |
+| AMP DoubleClick      | `securepubads.g.doubleclick.net` | `/gampad/ads` |
 | AdSense              | `googleads.g.doubleclick.net`    | `/pagead/ads` |
 | Google Publisher Tag | `securepubads.g.doubleclick.net` | `/gampad/ads` |
 
@@ -37,7 +37,7 @@ and identifies "tag load" as the earliest execution of:
 
 | Library              | Script                                      |
 |----------------------|---------------------------------------------|
-| AMP Doubleclick      | `cdn.ampproject.org/v0/amp-ad-doubleclick-impl-<version>.js` |
+| AMP DoubleClick      | `cdn.ampproject.org/v0/amp-ad-doubleclick-impl-<version>.js` |
 | AdSense              | `pagead2.googlesyndication.com/pagead/js/<version>/show_ads_impl_<version>.js` |
 | Google Publisher Tag | `securepubads.g.doubleclick.net/gpt/pubads_impl_<version>.js` |
 
