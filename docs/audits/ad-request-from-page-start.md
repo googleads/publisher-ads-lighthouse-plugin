@@ -24,6 +24,7 @@ one of:
 
 | Library              | Host                             | Path          |
 |----------------------|----------------------------------|---------------|
+| AMP Doubleclick      | `securepubads.g.doubleclick.net` | `/gampad/ads` |
 | AdSense              | `googleads.g.doubleclick.net`    | `/pagead/ads` |
 | Google Publisher Tag | `securepubads.g.doubleclick.net` | `/gampad/ads` |
 
