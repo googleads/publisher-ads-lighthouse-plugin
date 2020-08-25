@@ -22,11 +22,11 @@ likely to affect this metric.
 This metric identifies "first ad request" as the earliest recorded request to
 one of:
 
-| Library              | Host                             | Path          |
-|----------------------|----------------------------------|---------------|
-| AMP DoubleClick      | `securepubads.g.doubleclick.net` | `/gampad/ads` |
-| AdSense              | `googleads.g.doubleclick.net`    | `/pagead/ads` |
-| Google Publisher Tag | `securepubads.g.doubleclick.net` | `/gampad/ads` |
+| Library               | Host                             | Path          |
+|-----------------------|----------------------------------|---------------|
+| AMP Google Ad Manager | `securepubads.g.doubleclick.net` | `/gampad/ads` |
+| AdSense               | `googleads.g.doubleclick.net`    | `/pagead/ads` |
+| Google Publisher Tag  | `securepubads.g.doubleclick.net` | `/gampad/ads` |
 
 [Avoiding Common GPT Implementation Mistakes](https://developers.google.com/doubleclick-gpt/common_implementation_mistakes)  
 [Tagging best practices to minimize page latency](https://support.google.com/admanager/answer/7485975)

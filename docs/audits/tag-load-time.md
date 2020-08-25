@@ -25,11 +25,11 @@ this time:
 
 The following ad tag library scripts are measured for tag load time:
 
-| Library              | Script                                      |
-|----------------------|---------------------------------------------|
-| AMP DoubleClick      | `cdn.ampproject.org/v0/amp-ad-doubleclick-impl-<version>.js` |
-| AdSense              | `pagead2.googlesyndication.com/pagead/js/<version>/show_ads_impl_<version>.js` |
-| Google Publisher Tag | `securepubads.g.doubleclick.net/gpt/pubads_impl_<version>.js` |
+| Library               | Script                                      |
+|-----------------------|---------------------------------------------|
+| AMP Google Ad Manager | `cdn.ampproject.org/v0/amp-ad-doubleclick-impl-<version>.js` |
+| AdSense               | `pagead2.googlesyndication.com/pagead/js/<version>/show_ads_impl_<version>.js` |
+| Google Publisher Tag  | `securepubads.g.doubleclick.net/gpt/pubads_impl_<version>.js` |
 
 [Avoiding Common GPT Implementation Mistakes](https://developers.google.com/doubleclick-gpt/common_implementation_mistakes)  
 [Tagging best practices to minimize page latency](https://support.google.com/admanager/answer/7485975)
