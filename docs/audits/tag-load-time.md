@@ -23,25 +23,13 @@ this time:
 
 ## More information
 
-The following ad tag library scripts are supported:
+The following ad tag library scripts are measured for tag load time:
 
-<table>
-  <tr>
-    <th>Library</th>
-    <th>Script(s)</th>
-  </tr>
-  <tr>
-    <td>AdSense</td>
-    <td>
-      <p><code>pagead2.googlesyndication.com/pagead/js/adsbygoogle.js</code></p>
-      <p><code>pagead2.googlesyndication.com/pagead/show_ads.js</code></p>
-    </td>
-  </tr>
-  <tr>
-    <td>Google Publisher Tag</td>
-    <td><code>.../gpt/pubads_impl_&lt;version&gt;.js</code></td>
-  </tr>
-</table>
+| Library               | Script                                      |
+|-----------------------|---------------------------------------------|
+| AMP Google Ad Manager | `cdn.ampproject.org/v0/amp-ad-doubleclick-impl-<version>.js` |
+| AdSense               | `pagead2.googlesyndication.com/pagead/js/<version>/show_ads_impl_<version>.js` |
+| Google Publisher Tag  | `securepubads.g.doubleclick.net/gpt/pubads_impl_<version>.js` |
 
 [Avoiding Common GPT Implementation Mistakes](https://developers.google.com/doubleclick-gpt/common_implementation_mistakes)  
 [Tagging best practices to minimize page latency](https://support.google.com/admanager/answer/7485975)
