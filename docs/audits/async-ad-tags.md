@@ -16,6 +16,20 @@ components.
 
 Include the async attribute in the script tag definition. For example:
 
+### AdSense
+
+```HTML
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+```
+
+### AdSense (auto ads)
+
+```HTML
+<script async data-ad-client="ca-pub-xxxxxxxxxxxxxxxx" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+```
+
+### Google Publisher Tag
+
 ```HTML
 <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
 ```
