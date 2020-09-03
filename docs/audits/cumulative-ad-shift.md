@@ -2,9 +2,9 @@
 
 ## Overview
 
-Cumulative Ad Shift measures the total amount of user-visible layout shift using
-the [Layout Instability API](https://wicg.github.io/layout-instability/) by
-summing the [layout shift score](https://web.dev/cls/#layout-shift-score) for
+Cumulative Layout Shift measures the total amount of user-visible layout shift
+using the [Layout Instability API](https://wicg.github.io/layout-instability/)
+by summing the [layout shift score](https://web.dev/cls/#layout-shift-score) for
 all layout shifts where the ad iframe shifted or caused the layout shift.
 
 ## Recommendations
@@ -21,5 +21,6 @@ at the GPT developer site.
 
 ## More information
 
-[Cumulative Layout Shift (CLS)](https://web.dev/cls/)  
+[Cumulative Layout Shift (CLS)](https://web.dev/cls/)
+
 [Optimize Cumulative Layout Shift](https://web.dev/optimize-cls/)
