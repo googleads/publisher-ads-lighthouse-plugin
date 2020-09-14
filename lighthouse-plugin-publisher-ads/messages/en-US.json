@@ -259,6 +259,18 @@
     "message": "No bottleneck requests found",
     "description": ""
   },
+  "audits/cumulative-ad-shift.js | description": {
+    "message": "Measures layout shifts that were caused by ads or happened near ads. Reducing cumulative ad-related layout shift will improve user experience. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/cumulative-ad-shift).",
+    "description": ""
+  },
+  "audits/cumulative-ad-shift.js | failureTitle": {
+    "message": "Reduce ad-related layout shift",
+    "description": ""
+  },
+  "audits/cumulative-ad-shift.js | title": {
+    "message": "Cumulative ad shift",
+    "description": ""
+  },
   "audits/duplicate-tags.js | columnFrameId": {
     "message": "Frame ID",
     "description": ""
@@ -565,6 +577,10 @@
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_GPT": {
     "message": "GPT not requested",
+    "description": ""
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_LAYOUT_SHIFTS": {
+    "message": "No layout shift events found",
     "description": ""
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_RECORDS": {
