@@ -10,11 +10,12 @@
     "debug": "mocha debug lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
     "test": "mocha lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
     "smoke": "node lighthouse-plugin-publisher-ads/test/smoke/run-smoke.js",
-    "type-check": "tsc -p lighthouse-plugin-publisher-ads/tsconfig.json"
+    "type-check": "tsc -p lighthouse-plugin-publisher-ads/tsconfig.json",
+    "collect-strings": "node lighthouse-plugin-publisher-ads/messages/collect-strings.js"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn test && yarn type-check"
+      "pre-commit": "yarn lint && yarn test && yarn type-check && yarn collect-strings"
     }
   },
   "dependencies": {
