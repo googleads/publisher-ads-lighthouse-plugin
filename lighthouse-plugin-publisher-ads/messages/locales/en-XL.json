@@ -194,6 +194,15 @@
   "audits/bottleneck-requests.js | title": {
     "message": "N̂ó b̂ót̂t́l̂én̂éĉḱ r̂éq̂úêśt̂ś f̂óûńd̂"
   },
+  "audits/cumulative-ad-shift.js | description": {
+    "message": "M̂éâśûŕêś l̂áŷóût́ ŝh́îf́t̂ś t̂h́ât́ ŵér̂é ĉáûśêd́ b̂ý âd́ŝ ór̂ h́âṕp̂én̂éd̂ ńêár̂ ád̂ś. R̂éd̂úĉín̂ǵ ĉúm̂úl̂át̂ív̂é âd́-r̂él̂át̂éd̂ ĺâýôút̂ śĥíf̂t́ ŵíl̂ĺ îḿp̂ŕôv́ê úŝér̂ éx̂ṕêŕîén̂ćê. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/ćûḿûĺât́îv́ê-ád̂-śĥíf̂t́)."
+  },
+  "audits/cumulative-ad-shift.js | failureTitle": {
+    "message": "R̂éd̂úĉé âd́-r̂él̂át̂éd̂ ĺâýôút̂ śĥíf̂t́"
+  },
+  "audits/cumulative-ad-shift.js | title": {
+    "message": "Ĉúm̂úl̂át̂ív̂é âd́ ŝh́îf́t̂"
+  },
   "audits/duplicate-tags.js | columnFrameId": {
     "message": "F̂ŕâḿê ÍD̂"
   },
@@ -424,6 +433,9 @@
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_GPT": {
     "message": "ĜṔT̂ ńôt́ r̂éq̂úêśt̂éd̂"
+  },
+  "messages/common-strings.js | NOT_APPLICABLE__NO_LAYOUT_SHIFTS": {
+    "message": "N̂ó l̂áŷóût́ ŝh́îf́t̂ év̂én̂t́ŝ f́ôún̂d́"
   },
   "messages/common-strings.js | NOT_APPLICABLE__NO_RECORDS": {
     "message": "N̂ó ŝúĉćêśŝf́ûĺ n̂ét̂ẃôŕk̂ ŕêćôŕd̂ś"

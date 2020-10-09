@@ -1,6 +1,6 @@
 {
   "name": "lighthouse-plugin-publisher-ads-wrapper",
-  "version": "1.2.0-beta.0",
+  "version": "1.2.0",
   "description": "Wrapper for Publisher Ads Lighthouse Plugin.",
   "author": "Google Ads",
   "license": "Apache-2.0",
@@ -10,17 +10,19 @@
     "debug": "mocha debug lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
     "test": "mocha lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
     "smoke": "node lighthouse-plugin-publisher-ads/test/smoke/run-smoke.js",
-    "type-check": "tsc -p lighthouse-plugin-publisher-ads/tsconfig.json"
+    "type-check": "tsc -p lighthouse-plugin-publisher-ads/tsconfig.json",
+    "collect-strings": "node lighthouse-plugin-publisher-ads/messages/collect-strings.js"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn test && yarn type-check"
+      "pre-commit": "yarn lint && yarn test && yarn type-check && yarn collect-strings"
     }
   },
   "dependencies": {
     "@tusbar/cache-control": "^0.3.1",
     "@types/esprima": "^4.0.2",
-    "lighthouse": "^6.0.0",
+    "lighthouse": "^6.2.0",
+    "lodash.clonedeep": "^4.5.0",
     "yargs": "^13.3.0"
   },
   "devDependencies": {
@@ -33,6 +35,6 @@
     "mocha": "^5.1.1",
     "sinon": "^5.0.7",
     "static-server": "^2.2.1",
-    "typescript": "^3.5.1"
+    "typescript": "^3.9"
   }
 }
