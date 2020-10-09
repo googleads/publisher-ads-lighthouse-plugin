@@ -13,5 +13,6 @@ Include the following information
 - What is the actual behavior
 - Steps to reproduce
   - Environment (CLI or web service)
+  - Version
   - Site
   - Settings
