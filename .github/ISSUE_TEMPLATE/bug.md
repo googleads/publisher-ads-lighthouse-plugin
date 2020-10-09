@@ -14,5 +14,5 @@ Include the following information
 - Steps to reproduce
   - Environment (CLI or web service)
   - Version
-  - Site
+  - URL
   - Settings
