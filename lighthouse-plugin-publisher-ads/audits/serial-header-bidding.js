@@ -22,7 +22,7 @@ const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isCacheable} = require('../utils/network');
-const {isGoogleAds, getHeaderBidder, getAbbreviatedUrl} = require('../utils/resource-classification');
+const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
@@ -91,7 +91,7 @@ function constructRecords(records, recordType, timings) {
     const timing = timings.get(record);
     if (!timing) continue;
     results.push(Object.assign({}, timing, {
-      url: getAbbreviatedUrl(record.url),
+      url: record.url,
       type: recordType,
     }));
   }
