@@ -33,7 +33,7 @@ module.exports = [
     ],
   },
   {
-    label: 'Amazon',
+    label: 'Amazon Ads',
     patterns: [
       '^https?://[a-z-_.]*[.]amazon-adsystem[.]com/.*bid.*',
     ],

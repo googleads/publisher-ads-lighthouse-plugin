@@ -19,7 +19,7 @@ const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-nod
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
 const {assert} = require('./asserts');
-const {getAbbreviatedUrl, trimUrl} = require('../utils/resource-classification');
+const {getNameOrTld, trimUrl} = require('../utils/resource-classification');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isAdRequest, getHeaderBidder} = require('./resource-classification');
@@ -255,7 +255,7 @@ function buildNetworkSummary(networkRecords, traceEvents) {
 /**
  * @typedef {Object} SimpleRequest
  * @property {string} url
- * @property {string} abbreviatedUrl
+ * @property {string} nameOrTld
  * @property {string} type
  * @property {number} startTime
  * @property {number} endTime
@@ -277,7 +277,10 @@ function areSimilarRequests(r1, r2) {
   if (r1.type && r2.type && r1.type != r2.type) {
     return false;
   }
-  return r1.abbreviatedUrl == r2.abbreviatedUrl;
+  if (r1.type == 'Script') {
+    return false; // Don't merge script records.
+  }
+  return r1.nameOrTld == r2.nameOrTld;
 }
 
 /**
@@ -291,8 +294,8 @@ function computeSummaries(requests) {
   // the same URL below, using a similar algorithm to std::unique.
   // Within a url, we sort by time to make overlap checks easier.
   requests.sort((a, b) => {
-    if (a.abbreviatedUrl != b.abbreviatedUrl) {
-      return a.abbreviatedUrl < b.abbreviatedUrl ? -1 : 1;
+    if (a.nameOrTld != b.nameOrTld) {
+      return a.nameOrTld < b.nameOrTld ? -1 : 1;
     }
     if (a.type != b.type) {
       return a.type < b.type ? -1 : 1;
@@ -311,7 +314,6 @@ function computeSummaries(requests) {
       if (!next || !areSimilarRequests(next, current)) {
         break;
       }
-      current.url = current.abbreviatedUrl;
       current.endTime = Math.max(current.endTime, next.endTime);
       current.duration = current.endTime - current.startTime;
       i++;
@@ -398,7 +400,7 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
       duration: endTime - startTime,
       selfTime: 0, // Computed below.
       url: trimUrl(req.url),
-      abbreviatedUrl: getAbbreviatedUrl(req.url),
+      nameOrTld: getNameOrTld(req.url),
       type: req.resourceType,
       record: req,
     };

@@ -44,14 +44,14 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  */
 const HEADINGS = [
   {
+    key: 'nameOrTld',
+    itemType: 'text',
+    text: str_(UIStrings.columnType),
+  },
+  {
     key: 'url',
     itemType: 'url',
     text: str_(UIStrings.columnUrl),
-  },
-  {
-    key: 'type',
-    itemType: 'text',
-    text: str_(UIStrings.columnType),
   },
   {
     key: 'startTime',

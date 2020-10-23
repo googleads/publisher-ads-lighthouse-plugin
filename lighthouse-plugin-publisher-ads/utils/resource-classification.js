@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const bidderPatterns = require('./bidder-patterns');
+const thirdPartyWeb = require('lighthouse/lighthouse-core/lib/third-party-web');
 const {isCacheable} = require('../utils/network');
 const {URL} = require('url');
 
@@ -75,10 +76,11 @@ function isAdSenseImplTag(url) {
 
 /**
  * Checks if the url is loading an AdSense loader or impl script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isAdSense(url) {
+  url = toURL(url);
   return isAdSenseTag(url) || isAdSenseImplTag(url);
 }
 
@@ -175,10 +177,11 @@ function isAMPImplTag(url) {
 
 /**
  * Checks if the url is loading a gpt.js or pubads_impl_*.js script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isGpt(url) {
+  url = toURL(url);
   return isGptTag(url) || isGptImplTag(url);
 }
 
@@ -367,18 +370,30 @@ function trimUrl(url) {
 }
 
 /**
- * Returns an abbreviated version of the URL, with a shortened path and no query
- * string.
  * @param {string} url
  * @return {string}
  */
-function getAbbreviatedUrl(url) {
-  const u = new URL(trimUrl(url));
-  const parts = u.pathname.split('/');
-  if (parts.length > 4) {
-    u.pathname = [...parts.splice(0, 4), '...'].join('/');
+function getNameOrTld(url) {
+  const bidderLabel = getHeaderBidder(url);
+  if (bidderLabel) {
+    return bidderLabel;
   }
-  return u.toString();
+  if (isGpt(url)) {
+    return 'GPT';
+  }
+  if (isAdSense(url)) {
+    return 'AdSense';
+  }
+  if (isAMPTag(url)) {
+    return 'AMP tag';
+  }
+  const thirdPartyEntity = thirdPartyWeb.getEntity(url);
+  if (thirdPartyEntity) {
+    return thirdPartyEntity.name;
+  }
+  const {host} = new URL(url);
+  const [tld] = host.match(/([^.]*(\.[a-z]{2,3}){1,2})$/) || [];
+  return tld || host;
 }
 
 module.exports = {
@@ -407,7 +422,7 @@ module.exports = {
   isStaticRequest,
   toURL,
   trimUrl,
-  getAbbreviatedUrl,
+  getNameOrTld,
   isAMPTag,
   isAMPAdRequest,
 };
