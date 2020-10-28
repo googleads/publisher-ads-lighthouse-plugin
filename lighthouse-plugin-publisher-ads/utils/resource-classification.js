@@ -37,10 +37,11 @@ function toURL(urlOrStr) {
 
 /**
  * Checks if the url is from a Google ads host.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isGoogleAds(url) {
+  url = toURL(url);
   return /(^|\.)(doubleclick.net|google(syndication|tagservices).com)$/
       .test(url.hostname);
 }
@@ -131,6 +132,7 @@ function isGptTag(url) {
   const {host, pathname} = toURL(url);
   const matchesHost = [
     'www.googletagservices.com',
+    'pagead2.googlesyndication.com',
     'securepubads.g.doubleclick.net'].includes(host);
   const matchesPath =
     ['/tag/js/gpt.js', '/tag/js/gpt_mobile.js'].includes(pathname);
@@ -157,10 +159,9 @@ function isAMPTag(url) {
  * @return {boolean}
  */
 function isGptImplTag(url) {
-  return (
+  return isGoogleAds(url) &&
     /(^\/gpt\/pubads_impl([a-z_]*)((?<!rendering)_)\d+\.js)/
-        .test(toURL(url).pathname)
-  );
+        .test(toURL(url).pathname);
 }
 
 /**
@@ -204,8 +205,8 @@ function isGptAdRequest(request) {
   const url = new URL(request.url);
   return (
     url.pathname === '/gampad/ads' &&
-    url.host === 'securepubads.g.doubleclick.net' &&
-    request.resourceType === 'XHR'
+    request.resourceType === 'XHR' &&
+    isGoogleAds(request.url)
   );
 }
 

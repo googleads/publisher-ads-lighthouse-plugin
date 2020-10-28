@@ -19,20 +19,9 @@
 module.exports = [
   {
     lhr: {
-      requestedUrl: 'http://localhost:8081/duplicate-tags.html',
-      finalUrl: 'http://localhost:8081/duplicate-tags.html',
+      requestedUrl: 'http://localhost:8081/limited-ads-dynamic-loading.html',
+      finalUrl: 'http://localhost:8081/limited-ads-dynamic-loading.html',
       audits: {
-        'duplicate-tags': {
-          score: 0,
-          details: {
-            items: [
-              {
-                script: '/tag/js/gpt.js',
-                numReqs: 2, // Two script reqs, ignore third prefetch request
-              },
-            ],
-          },
-        },
         'loads-gpt-from-official-source': {
           score: 1,
         },
