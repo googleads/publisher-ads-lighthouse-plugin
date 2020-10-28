@@ -15,14 +15,13 @@
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable, auditError} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {boxViewableArea} = require('../utils/geometry');
 const {isAdIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
-  title: 'Ad density in the document is within recommended range',
-  failureTitle: 'Reduce ad density in the document',
-  description: 'The ads-to-content ratio inside the document can have an ' +
-  'impact on user experience and ultimately user retention. The Better Ads ' +
+  title: 'Ad density is within recommended range',
+  failureTitle: 'Reduce ad density',
+  description: 'Ad density, the ads-to-content ratio, can impact user ' +
+  'experience and ultimately user retention. The Better Ads ' +
   'Standard [recommends having an ad density below 30%]' +
   '(https://www.betterads.org/mobile-ad-density-higher-than-30/). ' +
   '[Learn more](' +
@@ -71,11 +70,11 @@ class ViewportAdDensity extends Audit {
     // We measure document length based on the bottom ad so that it isn't skewed
     // by lazy loading.
     const adsBottom =
-      Math.max(...slots.map(s => s.clientRect.top + s.clientRect.height / 2));
+      Math.max(...slots.map((s) => s.clientRect.top + s.clientRect.height / 2));
     const documentLength = adsBottom + viewport.innerHeight;
 
     const adHeights =
-      slots.map(s => s.clientRect.height).reduce((a, b) => a + b, 0);
+      slots.map((s) => s.clientRect.height).reduce((a, b) => a + b, 0);
 
     const adDensity = adHeights / documentLength;
     const score = adDensity > 0.3 ? 0 : 1;
