@@ -427,16 +427,16 @@
     "message": "Ad tag is loaded over HTTPS",
     "description": ""
   },
-  "audits/loads-gpt-from-sgdn.js | description": {
-    "message": "Load GPT from 'securepubads.g.doubleclick.net' to reduce GPT load time. By loading GPT from the same host as ad requests, browsers can avoid an additional DNS lookup and HTTP connection. Example:`<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">`. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-sgdn).",
+  "audits/loads-gpt-from-official-source.js | description": {
+    "message": "Load GPT from 'securepubads.g.doubleclick.net' for standard integrations from 'pagead2.googlesyndication.com' for limited ads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-official-source).",
     "description": ""
   },
-  "audits/loads-gpt-from-sgdn.js | failureTitle": {
-    "message": "Load GPT from recommended host",
+  "audits/loads-gpt-from-official-source.js | failureTitle": {
+    "message": "Load GPT from an official source",
     "description": ""
   },
-  "audits/loads-gpt-from-sgdn.js | title": {
-    "message": "GPT tag is loaded from recommended host",
+  "audits/loads-gpt-from-official-source.js | title": {
+    "message": "GPT tag is loaded from an official source",
     "description": ""
   },
   "audits/script-injected-tags.js | columnLoadTime": {
