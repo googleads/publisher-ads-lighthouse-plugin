@@ -71,6 +71,16 @@ function isLongTask(cpuNode) {
 }
 
 /**
+ * Adds a dependency edge between a nd b, where a came before b.
+ * @param {CpuNode|NetworkNode} a
+ * @param {CpuNode|NetworkNode} b
+ */
+function addEdge(a, b) {
+  if (a === b || a.endTime > b.startTime) return;
+  a.addDependent(b);
+}
+
+/**
  * Inserts edges between bid requests and ad requests.
  * @param {BaseNode} graph
  */
@@ -92,31 +102,23 @@ function addEdges(graph) {
       return;
     }
     if (isGptImplTag(node.record.url)) {
+      const gptImplNode = node;
       for (const gptJsNode of gptJsNodes) {
-        if (gptJsNode.record.endTime <= node.record.startTime) {
-          node.addDependency(gptJsNode);
-        }
+        addEdge(gptJsNode, gptImplNode);
       }
     }
     if (isBidRelatedRequest(node.record)) {
+      const bidNode = node;
       for (const adNode of adRequestNodes) {
-        // TODO(warrengm): Check for false positives. We don't worry too much
-        // since we're focussing on the first few requests.
-        if (adNode.record.startTime >= node.record.endTime) {
-          node.addDependent(adNode);
-        }
+        addEdge(bidNode, adNode);
       }
     }
     if (isImpressionPing(node.record.url)) {
+      const impressionNode = node;
       for (const adNode of adRequestNodes) {
-        if (adNode.record.endTime > node.record.startTime) {
-          continue;
-        }
-        adNode.addDependent(node);
+        addEdge(adNode, impressionNode);
         for (const dependent of adNode.getDependents()) {
-          if (dependent.endTime <= node.startTime) {
-            dependent.addDependency(node);
-          }
+          addEdge(dependent, impressionNode);
         }
       }
     }
