@@ -32,6 +32,29 @@ const UIStrings = {
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
+/**
+ * @param {LH.Artifacts.IFrameElement[]} slots
+ * @return {number
+ */
+function computeAdLength(slots) {
+  // We compute ad density along the vertical axis per the spec. On mobile
+  // this is straightforward since we can assume single-column layouts, but not
+  // so on desktop. On desktop we take a sample of various vertical lines and
+  // return the greatest sum of ad heights along one of those lines.
+  const leftBound = Math.min(...slots.map((s) => s.clientRect.left));
+  const rightBound = Math.max(...slots.map((s) => s.clientRect.right));
+  const pxIncr = 50;
+
+  let result = 0;
+  for (let x = leftBound; x <= rightBound; x += pxIncr) {
+    const adHeights = slots
+        .filter((s) => s.clientRect.left <= x && x <= s.clientRect.right)
+        .map((s) => s.clientRect.height).reduce((a, b) => a + b, 0);
+    result = Math.max(result, adHeights);
+  }
+  return result;
+}
+
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
   /**
@@ -67,16 +90,15 @@ class ViewportAdDensity extends Audit {
       throw new Error(auditError.ViewportAreaZero);
     }
 
+    const adsLength = computeAdLength(slots);
+
     // We measure document length based on the bottom ad so that it isn't skewed
     // by lazy loading.
     const adsBottom =
       Math.max(...slots.map((s) => s.clientRect.top + s.clientRect.height / 2));
     const documentLength = adsBottom + viewport.innerHeight;
 
-    const adHeights =
-      slots.map((s) => s.clientRect.height).reduce((a, b) => a + b, 0);
-
-    const adDensity = adHeights / documentLength;
+    const adDensity = adsLength / documentLength;
     const score = adDensity > 0.3 ? 0 : 1;
     return {
       score,
