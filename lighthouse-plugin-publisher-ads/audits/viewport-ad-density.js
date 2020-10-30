@@ -35,7 +35,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * @param {LH.Artifacts.IFrameElement[]} slots
  * @param {LH.Artifacts.ViewportDimensions} viewport
- * @return {number
+ * @return {number}
  */
 function computeAdLength(slots, viewport) {
   // We compute ad density along the vertical axis per the spec. On mobile
@@ -44,10 +44,10 @@ function computeAdLength(slots, viewport) {
   // return the greatest sum of ad heights along one of those lines.
 
   /** @type {Set<number>} */
-  const scanLines = new Set(slots.flatMap((s) => [
-    s.clientRect.left,
-    s.clientRect.right,
-  ]).map((x) => Math.min(Math.max(1, x), viewport.innerWidth - 1)));
+  const scanLines = new Set([
+    ...slots.map((s) => s.clientRect.left),
+    ...slots.map((s) => s.clientRect.right),
+  ].map((x) => Math.min(Math.max(1, x), viewport.innerWidth - 1)));
 
   slots = slots.sort((a, b) => a.clientRect.top !== b.clientRect.top ?
     a.clientRect.top - b.clientRect.top :
