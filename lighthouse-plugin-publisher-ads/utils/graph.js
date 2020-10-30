@@ -22,7 +22,7 @@ const {assert} = require('./asserts');
 const {getNameOrTld, trimUrl} = require('../utils/resource-classification');
 const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
 const {getTimingsByRecord} = require('../utils/network-timing');
-const {isAdRequest, getHeaderBidder} = require('./resource-classification');
+const {isAdRequest, isAdSense, isGpt, getHeaderBidder} = require('./resource-classification');
 
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 /** @typedef {LH.TraceEvent} TraceEvent */
@@ -370,15 +370,17 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
   const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
   const maybeFirstAdRequest = networkRecords.find(isAdRequest);
-  const criticalRequests = new Set();
   if (maybeFirstAdRequest == null) {
     return Promise.resolve([]);
   }
+  const criticalRequests = new Set();
   const firstAdRequest = assert(maybeFirstAdRequest);
+  const tagRequests = networkRecords.filter((r) =>
+    isGpt(r.url) || isAdSense(r.url));
   const bidRequests = networkRecords.filter((r) =>
     !!getHeaderBidder(r.url) && r.endTime <= firstAdRequest.startTime);
   const summary = buildNetworkSummary(networkRecords, trace.traceEvents);
-  for (const req of [firstAdRequest, ...bidRequests]) {
+  for (const req of [firstAdRequest, ...bidRequests, ...tagRequests]) {
     linkGraph(summary, req, criticalRequests);
   }
 
