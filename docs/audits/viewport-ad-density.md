@@ -1,10 +1,12 @@
-# Reduce ad density in initial viewport
+# Reduce ad density
 
 ## Overview
 
-This audit ensures that visible ads take up no more than 30% of the initial
-viewport. An ad density greater than this has been found to negatively impact
-user experience[^1].
+This audit ensures that ads take up no more than 30% of the page vertically. On
+mobile, we check the density of all ads on the page together. On desktop we
+measure ad density on each column separately and check that no column exceeds
+the recommended threshold. An ad density greater than 30% has been found to
+negatively impact user experience[^1].
 
 ## Recommendations
 
