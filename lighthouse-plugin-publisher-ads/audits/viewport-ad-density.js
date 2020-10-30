@@ -34,23 +34,27 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 
 /**
  * @param {LH.Artifacts.IFrameElement[]} slots
+ * @param {LH.Artifacts.ViewportDimensions} viewport
  * @return {number
  */
-function computeAdLength(slots) {
+function computeAdLength(slots, viewport) {
   // We compute ad density along the vertical axis per the spec. On mobile
   // this is straightforward since we can assume single-column layouts, but not
   // so on desktop. On desktop we take a sample of various vertical lines and
   // return the greatest sum of ad heights along one of those lines.
-  const leftBound = Math.min(...slots.map((s) => s.clientRect.left));
-  const rightBound = Math.max(...slots.map((s) => s.clientRect.right));
-  const pxIncr = 50;
 
-  slots = slots.sort((a, b) => a.clientRect.top == b.clientRect.top ?
+  /** @type {Set<number>} */
+  const scanLines = new Set(slots.flatMap((s) => [
+    s.clientRect.left,
+    s.clientRect.right,
+  ]).map((x) => Math.min(Math.max(1, x), viewport.innerWidth - 1)));
+
+  slots = slots.sort((a, b) => a.clientRect.top !== b.clientRect.top ?
     a.clientRect.top - b.clientRect.top :
     a.clientRect.bottom - b.clientRect.bottom);
 
   let result = 0;
-  for (let x = leftBound; x <= rightBound; x += pxIncr) {
+  for (const x of scanLines) {
     let adLengthAlongAxis = 0;
     let bottomSoFar = 0;
     for (const slot of slots) {
@@ -58,9 +62,11 @@ function computeAdLength(slots) {
         continue;
       }
       if (slot.isPositionFixed) {
+        // Count position:fixed ads towards ad density even if they overlap.
         adLengthAlongAxis += slot.clientRect.height;
         continue;
       }
+      // Else we exclude overlapping heights from density calculation.
       const delta =
         slot.clientRect.bottom - Math.max(bottomSoFar, slot.clientRect.top);
       if (delta > 0) {
@@ -108,7 +114,7 @@ class ViewportAdDensity extends Audit {
       throw new Error(auditError.ViewportAreaZero);
     }
 
-    const adsLength = computeAdLength(slots);
+    const adsLength = computeAdLength(slots, viewport);
 
     // We measure document length based on the bottom ad so that it isn't skewed
     // by lazy loading.
@@ -116,8 +122,7 @@ class ViewportAdDensity extends Audit {
       Math.max(...slots.map((s) => s.clientRect.top + s.clientRect.height / 2));
     const documentLength = adsBottom + viewport.innerHeight;
 
-    console.log(adsLength, documentLength);
-    const adDensity = adsLength / documentLength;
+    const adDensity = Math.min(1, adsLength / documentLength);
     const score = adDensity > 0.3 ? 0 : 1;
     return {
       score,
