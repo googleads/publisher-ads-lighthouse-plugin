@@ -44,9 +44,10 @@ describe('ViewportAdDensity', () => {
       expect(result).to.have.property('notApplicable', true);
     });
 
-    it('should return ad density inside viewport', async () => {
+    it('should return ad density along a vertical axis', async () => {
       const IFrameElements = [
         generateSlot({left: 0, top: 100, w: 50, h: 50}), // in
+        generateSlot({left: 25, top: 50, w: 50, h: 50}), // in
         generateSlot({left: 100, top: 0, w: 50, h: 50}), // in
         generateSlot({left: 0, top: 200, w: 50, h: 50}), // out
         generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
@@ -55,7 +56,7 @@ describe('ViewportAdDensity', () => {
 
       const artifacts = {IFrameElements, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('numericValue', 50 / 600);
+      expect(result).to.have.property('numericValue', 150 / 425);
     });
 
     it('should throw error if ad area exceeds viewport area', async () => {
@@ -65,7 +66,8 @@ describe('ViewportAdDensity', () => {
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
-      expect(() => ViewportAdDensity.audit(artifacts)).to.throw();
+      const result = ViewportAdDensity.audit(artifacts);
+      expect(result).to.have.property('numericValue', 700 / 900);
     });
 
     it('should throw error if viewport area is zero', async () => {

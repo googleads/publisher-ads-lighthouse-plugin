@@ -45,12 +45,30 @@ function computeAdLength(slots) {
   const rightBound = Math.max(...slots.map((s) => s.clientRect.right));
   const pxIncr = 50;
 
+  slots = slots.sort((a, b) => a.clientRect.top == b.clientRect.top ?
+    a.clientRect.top - b.clientRect.top :
+    a.clientRect.bottom - b.clientRect.bottom);
+
   let result = 0;
   for (let x = leftBound; x <= rightBound; x += pxIncr) {
-    const adHeights = slots
-        .filter((s) => s.clientRect.left <= x && x <= s.clientRect.right)
-        .map((s) => s.clientRect.height).reduce((a, b) => a + b, 0);
-    result = Math.max(result, adHeights);
+    let adLengthAlongAxis = 0;
+    let bottomSoFar = 0;
+    for (const slot of slots) {
+      if (x < slot.clientRect.left || x > slot.clientRect.right) {
+        continue;
+      }
+      if (slot.isPositionFixed) {
+        adLengthAlongAxis += slot.clientRect.height;
+        continue;
+      }
+      const delta =
+        slot.clientRect.bottom - Math.max(bottomSoFar, slot.clientRect.top);
+      if (delta > 0) {
+        adLengthAlongAxis += delta;
+      }
+      bottomSoFar = Math.max(bottomSoFar, slot.clientRect.bottom);
+    }
+    result = Math.max(result, adLengthAlongAxis);
   }
   return result;
 }
@@ -98,6 +116,7 @@ class ViewportAdDensity extends Audit {
       Math.max(...slots.map((s) => s.clientRect.top + s.clientRect.height / 2));
     const documentLength = adsBottom + viewport.innerHeight;
 
+    console.log(adsLength, documentLength);
     const adDensity = adsLength / documentLength;
     const score = adDensity > 0.3 ? 0 : 1;
     return {
