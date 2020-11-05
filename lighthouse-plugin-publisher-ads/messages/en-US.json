@@ -428,7 +428,7 @@
     "description": ""
   },
   "audits/loads-gpt-from-official-source.js | description": {
-    "message": "Load GPT from 'securepubads.g.doubleclick.net' for standard integrationsor from 'pagead2.googlesyndication.com' for limited ads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-official-source).",
+    "message": "Load GPT from 'securepubads.g.doubleclick.net' for standard integrations or from 'pagead2.googlesyndication.com' for limited ads. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-official-source).",
     "description": ""
   },
   "audits/loads-gpt-from-official-source.js | failureTitle": {

@@ -11,14 +11,15 @@ performance.
 
 ## Recommendations
 
-Ensure that GPT is being loaded from an official source. Standard integrations
-should use:
+Ensure that GPT is being loaded from an official source. For standard
+integrations, use:
 
 ```HTML
 <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
 ```
 
-Integrations with limited ads should use:
+For integrations with [limited ads](https://support.google.com/admanager/answer/9882911),
+use:
 
 ```HTML
 <script async src="https://pagead2.googlesyndication.com/tag/js/gpt.js"></script>

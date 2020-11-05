@@ -23,8 +23,8 @@ const UIStrings = {
   title: 'GPT tag is loaded from an official source',
   failureTitle: 'Load GPT from an official source',
   description:
-  'Load GPT from \'securepubads.g.doubleclick.net\' for standard integrations' +
-  'or from \'pagead2.googlesyndication.com\' for limited ads. ' +
+  'Load GPT from \'securepubads.g.doubleclick.net\' for standard ' +
+  'integrations or from \'pagead2.googlesyndication.com\' for limited ads. ' +
   '[Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-official-source' +
   ').',
