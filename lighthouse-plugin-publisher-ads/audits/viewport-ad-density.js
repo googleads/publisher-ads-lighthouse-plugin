@@ -120,6 +120,8 @@ class ViewportAdDensity extends Audit {
     // by lazy loading.
     const adsBottom =
       Math.max(...slots.map((s) => s.clientRect.top + s.clientRect.height / 2));
+    // TODO(warrengm): Implement a DocumentDimensions gatherer to ensure that
+    // we don't exceed the footer.
     const documentLength = adsBottom + viewport.innerHeight;
 
     const adDensity = Math.min(1, adsLength / documentLength);
