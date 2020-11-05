@@ -17,12 +17,11 @@
   "main": "plugin.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha test/{audits,utils}/*.js",
-    "type-check": "tsc -p ."
+    "test": "mocha test/{audits,utils}/*.js"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint && yarn test && yarn type-check"
+      "pre-commit": "yarn lint && yarn test"
     }
   },
   "dependencies": {
