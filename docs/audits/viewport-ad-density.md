@@ -15,6 +15,12 @@ a reduced size.
 
 ## More information
 
+On mobile devices, we assume a single column layout and so all ads on the page
+are included in the ad density calculation. On desktop, we divide the page into
+multiple vertical slices to account for multi-column layouts. The audit measures
+ad density in each slice individually to ensure no individual slice exceeds the
+maximum recommended threshold.
+
 [Ad Experience: Ad Density Higher Than 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/)  
 [What publishers need to know now about creating a better ad experience](https://www.thinkwithgoogle.com/marketing-resources/better-ad-standards/)
 
