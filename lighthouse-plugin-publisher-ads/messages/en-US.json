@@ -508,19 +508,19 @@
     "description": ""
   },
   "audits/viewport-ad-density.js | description": {
-    "message": "The ads-to-content ratio inside the viewport can have an impact on user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density).",
+    "message": "Ad density, the ads-to-content ratio, can impact user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density).",
     "description": ""
   },
   "audits/viewport-ad-density.js | displayValue": {
-    "message": "{adDensity, number, percent} covered by ads",
+    "message": "{adDensity, number, percent} ad density",
     "description": ""
   },
   "audits/viewport-ad-density.js | failureTitle": {
-    "message": "Reduce ad density in initial viewport",
+    "message": "Reduce ad density",
     "description": ""
   },
   "audits/viewport-ad-density.js | title": {
-    "message": "Ad density in initial viewport is within recommended range",
+    "message": "Ad density is within recommended range",
     "description": ""
   },
   "messages/common-strings.js | ERRORS__AREA_LARGER_THAN_VIEWPORT": {

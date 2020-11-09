@@ -88,7 +88,6 @@ const runWarning = {
 };
 
 const auditError = {
-  AreaLargerThanViewport: str_(UIStrings.ERRORS__AREA_LARGER_THAN_VIEWPORT),
   ViewportAreaZero: str_(UIStrings.ERRORS__VIEWPORT_AREA_ZERO),
 };
 
