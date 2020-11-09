@@ -393,7 +393,7 @@ function getNameOrTld(url) {
     return thirdPartyEntity.name;
   }
   const {host} = new URL(url);
-  const [tld] = host.match(/([^.]*(\.[a-z]{2,3}){1,2})$/) || [];
+  const [tld = ''] = host.match(/([^.]*(\.[a-z]{2,3}){1,2})$/) || [];
   return tld || host;
 }
 

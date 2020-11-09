@@ -105,7 +105,7 @@ class FirstAdRender extends Audit {
         timing
       ),
       displayValue:
-        str_(UIStrings.displayValue, {timeInMs: timing}),
+      str_(UIStrings.displayValue, {timeInMs: timing}),
     };
   }
 }
