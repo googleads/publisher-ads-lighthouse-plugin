@@ -27,6 +27,7 @@ import 'lighthouse/types/config';
 import 'lighthouse/types/externs';
 import 'lighthouse/types/gatherer';
 import 'lighthouse/types/html-renderer';
+import 'lighthouse/types/i18n';
 import 'lighthouse/types/isomorphic-fetch';
 import 'lighthouse/types/jsonlint-mod';
 import 'lighthouse/types/lhr';
