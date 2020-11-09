@@ -381,16 +381,16 @@
     "message": "T̂áĝ ĺôád̂ t́îḿê"
   },
   "audits/viewport-ad-density.js | description": {
-    "message": "T̂h́ê ád̂ś-t̂ó-ĉón̂t́êńt̂ ŕât́îó îńŝíd̂é t̂h́ê v́îéŵṕôŕt̂ ćâń ĥáv̂é âń îḿp̂áĉt́ ôń ûśêŕ êx́p̂ér̂íêńĉé âńd̂ úl̂t́îḿât́êĺŷ úŝér̂ ŕêt́êńt̂íôń. T̂h́ê B́êt́t̂ér̂ Ád̂ś Ŝt́âńd̂ár̂d́ [r̂éĉóm̂ḿêńd̂ś ĥáv̂ín̂ǵ âń âd́ d̂én̂śît́ŷ b́êĺôẃ 30%](ĥt́t̂ṕŝ://ẃŵẃ.b̂ét̂t́êŕâd́ŝ.ór̂ǵ/m̂ób̂íl̂é-âd́-d̂én̂śît́ŷ-h́îǵĥér̂-t́ĥán̂-30/). [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/v́îéŵṕôŕt̂-ád̂-d́êńŝít̂ý)."
+    "message": "Âd́ d̂én̂śît́ŷ, t́ĥé âd́ŝ-t́ô-ćôńt̂én̂t́ r̂át̂íô, ćâń îḿp̂áĉt́ ûśêŕ êx́p̂ér̂íêńĉé âńd̂ úl̂t́îḿât́êĺŷ úŝér̂ ŕêt́êńt̂íôń. T̂h́ê B́êt́t̂ér̂ Ád̂ś Ŝt́âńd̂ár̂d́ [r̂éĉóm̂ḿêńd̂ś ĥáv̂ín̂ǵ âń âd́ d̂én̂śît́ŷ b́êĺôẃ 30%](ĥt́t̂ṕŝ://ẃŵẃ.b̂ét̂t́êŕâd́ŝ.ór̂ǵ/m̂ób̂íl̂é-âd́-d̂én̂śît́ŷ-h́îǵĥér̂-t́ĥán̂-30/). [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/v́îéŵṕôŕt̂-ád̂-d́êńŝít̂ý)."
   },
   "audits/viewport-ad-density.js | displayValue": {
-    "message": "{adDensity, number, percent} ĉóv̂ér̂éd̂ b́ŷ ád̂ś"
+    "message": "{adDensity, number, percent} âd́ d̂én̂śît́ŷ"
   },
   "audits/viewport-ad-density.js | failureTitle": {
-    "message": "R̂éd̂úĉé âd́ d̂én̂śît́ŷ ín̂ ín̂ít̂íâĺ v̂íêẃp̂ór̂t́"
+    "message": "R̂éd̂úĉé âd́ d̂én̂śît́ŷ"
   },
   "audits/viewport-ad-density.js | title": {
-    "message": "Âd́ d̂én̂śît́ŷ ín̂ ín̂ít̂íâĺ v̂íêẃp̂ór̂t́ îś ŵít̂h́îń r̂éĉóm̂ḿêńd̂éd̂ ŕâńĝé"
+    "message": "Âd́ d̂én̂śît́ŷ íŝ ẃît́ĥín̂ ŕêćôḿm̂én̂d́êd́ r̂án̂ǵê"
   },
   "messages/common-strings.js | ERRORS__AREA_LARGER_THAN_VIEWPORT": {
     "message": "Ĉál̂ćûĺât́êd́ âd́ âŕêá îś l̂ár̂ǵêŕ t̂h́âń v̂íêẃp̂ór̂t́"

@@ -44,9 +44,10 @@ describe('ViewportAdDensity', () => {
       expect(result).to.have.property('notApplicable', true);
     });
 
-    it('should return ad density inside viewport', async () => {
+    it('should return ad density along a vertical axis', async () => {
       const IFrameElements = [
         generateSlot({left: 0, top: 100, w: 50, h: 50}), // in
+        generateSlot({left: 25, top: 50, w: 50, h: 50}), // in
         generateSlot({left: 100, top: 0, w: 50, h: 50}), // in
         generateSlot({left: 0, top: 200, w: 50, h: 50}), // out
         generateSlot({left: 0, top: 0, w: 0, h: 0}), // hidden
@@ -55,17 +56,40 @@ describe('ViewportAdDensity', () => {
 
       const artifacts = {IFrameElements, ViewportDimensions};
       const result = ViewportAdDensity.audit(artifacts);
-      expect(result).to.have.property('numericValue', 50 / 600);
+      expect(result).to.have.property('numericValue', 150 / 425);
     });
 
-    it('should throw error if ad area exceeds viewport area', async () => {
+    it('should de-dupe overlapping ads', async () => {
+      const IFrameElements = [
+        generateSlot({left: 0, top: 0, w: 1000, h: 100}),
+        generateSlot({left: 0, top: 25, w: 600, h: 50}),
+      ];
+
+      const artifacts = {IFrameElements, ViewportDimensions};
+      const result = ViewportAdDensity.audit(artifacts);
+      expect(result).to.have.property('numericValue', 100 / 250);
+    });
+
+    it('should de-dupe overlapping ads when unsorted', async () => {
+      const IFrameElements = [
+        generateSlot({left: 0, top: 0, w: 1000, h: 100}),
+        generateSlot({left: 0, top: 25, w: 600, h: 50}),
+      ];
+
+      const artifacts = {IFrameElements, ViewportDimensions};
+      const result = ViewportAdDensity.audit(artifacts);
+      expect(result).to.have.property('numericValue', 100 / 250);
+    });
+
+    it('should clamp values at 100% density', async () => {
       const IFrameElements = [
         generateSlot({left: 0, top: 0, w: 1000, h: 400}),
         generateSlot({left: 0, top: 0, w: 600, h: 700}),
       ];
 
       const artifacts = {IFrameElements, ViewportDimensions};
-      expect(() => ViewportAdDensity.audit(artifacts)).to.throw();
+      const result = ViewportAdDensity.audit(artifacts);
+      expect(result).to.have.property('numericValue', 1);
     });
 
     it('should throw error if viewport area is zero', async () => {
@@ -78,17 +102,17 @@ describe('ViewportAdDensity', () => {
     });
 
     const positiveTests = [
-      {left: 10, top: 10, w: 10, h: 10, overlap: 100, pos: 'inside'},
+      {left: 10, top: 10, w: 10, h: 10, density: 10 / 215, pos: 'inside'},
       // Cases overlapping an edge of the viewport
-      {left: -10, top: 0, w: 20, h: 200, overlap: 2000, pos: 'left edge'},
-      {left: 0, top: -10, w: 300, h: 20, overlap: 3000, pos: 'top edge'},
-      {left: 290, top: 0, w: 20, h: 200, overlap: 2000, pos: 'right edge'},
-      {left: 0, top: 190, w: 300, h: 20, overlap: 3000, pos: 'bottom edge'},
+      {left: -10, top: 0, w: 20, h: 200, density: 2 / 3, pos: 'left edge'},
+      {left: 0, top: -10, w: 300, h: 20, density: 10 / 200, pos: 'top edge'},
+      {left: 290, top: 0, w: 20, h: 200, density: 2 / 3, pos: 'right edge'},
+      {left: 0, top: 190, w: 300, h: 20, density: 1 / 20, pos: 'bottom edge'},
       // Cases overlapping a corner of the viewport
-      {left: -10, top: -10, w: 20, h: 20, overlap: 100, pos: 'top left corner'},
-      {left: 290, top: -10, w: 20, h: 20, overlap: 100, pos: 'top right corner'},
-      {left: -10, top: 190, w: 20, h: 20, overlap: 100, pos: 'bottom left corner'},
-      {left: 290, top: 190, w: 20, h: 20, overlap: 100, pos: 'bottom right corner'},
+      {left: -10, top: -10, w: 20, h: 20, density: 0.05, pos: 'top left corner'},
+      {left: 290, top: -10, w: 20, h: 20, density: 0.05, pos: 'top right corner'},
+      {left: -10, top: 190, w: 20, h: 20, density: 0.05, pos: 'bottom left corner'},
+      {left: 290, top: 190, w: 20, h: 20, density: 0.05, pos: 'bottom right corner'},
     ];
 
     positiveTests.forEach(async (test) =>
@@ -96,7 +120,7 @@ describe('ViewportAdDensity', () => {
         const IFrameElements = [generateSlot(test)];
         const artifacts = {IFrameElements, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
-        expect(result).to.have.property('numericValue', test.overlap / 60000);
+        expect(result).to.have.property('numericValue', test.density);
       })
     );
 
@@ -105,7 +129,6 @@ describe('ViewportAdDensity', () => {
       {left: -20, top: 0, w: 20, h: 200, pos: 'left edge'},
       {left: 0, top: -20, w: 300, h: 20, pos: 'top edge'},
       {left: 300, top: 0, w: 20, h: 200, pos: 'right edge'},
-      {left: 0, top: 200, w: 300, h: 20, pos: 'bottom edge'},
       // Cases outside a corner of the viewport
       {left: -20, top: -20, w: 20, h: 20, pos: 'top left corner'},
       {left: 300, top: -20, w: 20, h: 20, pos: 'top right corner'},
