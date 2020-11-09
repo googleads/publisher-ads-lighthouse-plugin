@@ -36,16 +36,6 @@ module.exports = [
         'loads-gpt-from-official-source': {
           score: 1,
         },
-        'script-injected-tags': {
-          score: 0,
-          details: {
-            items: [
-              {
-                url: '/tag/js/gpt.js',
-              },
-            ],
-          },
-        },
       },
     },
   },

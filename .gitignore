@@ -19,3 +19,5 @@
 
 # vimdiff files
 *.orig
+
+*/.DS_STORE

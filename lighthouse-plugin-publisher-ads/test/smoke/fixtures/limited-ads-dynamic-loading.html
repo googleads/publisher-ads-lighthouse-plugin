@@ -29,8 +29,8 @@
       setTimeout(() => {
         const gptScript = document.createElement('script');
         gptScript.src = 'https://pagead2.googlesyndication.com/tag/js/gpt.js';
-        document.appendChild(gptScript);
-      });
+        document.body.appendChild(gptScript);
+      }, 200);
 
       googletag.cmd.push(() => {
         googletag.defineSlot('/6355419/Travel', [728, 90], `ad`)

@@ -29,9 +29,6 @@ module.exports = [
           // TODO(jburger): Update when https://github.com/GoogleChrome/lighthouse/issues/9417 is implemented.
           numericValue: '5500 +/- 1000',
         },
-        'loads-gpt-from-sgdn': {
-          score: 0,
-        },
         'ad-blocking-tasks': {
           score: 0,
           details: {

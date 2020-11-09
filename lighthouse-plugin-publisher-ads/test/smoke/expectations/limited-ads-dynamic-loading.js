@@ -30,7 +30,7 @@ module.exports = [
           details: {
             items: [
               {
-                url: '/tag/js/gpt.js',
+                url: 'https://pagead2.googlesyndication.com/tag/js/gpt.js',
               },
             ],
           },
