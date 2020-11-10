@@ -50,6 +50,11 @@ const smokeTests = [
     expectations: require('./expectations/not-applicable.js'),
     config: require('./config.js'),
   },
+  {
+    id: 'limited-ads-dynamic-loading',
+    expectations: require('./expectations/limited-ads-dynamic-loading.js'),
+    config: require('./config.js'),
+  },
 ];
 
 module.exports = smokeTests;

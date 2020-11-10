@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+// Copyright 2020 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,22 +19,21 @@
 module.exports = [
   {
     lhr: {
-      requestedUrl: 'http://localhost:8081/duplicate-tags.html',
-      finalUrl: 'http://localhost:8081/duplicate-tags.html',
+      requestedUrl: 'http://localhost:8081/limited-ads-dynamic-loading.html',
+      finalUrl: 'http://localhost:8081/limited-ads-dynamic-loading.html',
       audits: {
-        'duplicate-tags': {
+        'loads-gpt-from-official-source': {
+          score: 1,
+        },
+        'script-injected-tags': {
           score: 0,
           details: {
             items: [
               {
-                script: '/tag/js/gpt.js',
-                numReqs: 2, // Two script reqs, ignore third prefetch request
+                url: 'https://pagead2.googlesyndication.com/tag/js/gpt.js',
               },
             ],
           },
-        },
-        'loads-gpt-from-official-source': {
-          score: 0,
         },
       },
     },

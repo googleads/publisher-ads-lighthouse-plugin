@@ -174,6 +174,16 @@ describe('resource-classification', () => {
   describe('#isGptTag', () => {
     const testCases = [
       {
+        description: 'URLs that load gpt.js from GTS',
+        url: new URL('http://www.googletagservices.com/tag/js/gpt.js'),
+        expectation: true,
+      },
+      {
+        description: 'URLs that load gpt.js from pagead2',
+        url: new URL('http://pagead2.googlesyndication.com/tag/js/gpt.js'),
+        expectation: true,
+      },
+      {
         description: 'URLs that load gpt.js',
         url: new URL('http://securepubads.g.doubleclick.net/tag/js/gpt.js'),
         expectation: true,
@@ -211,6 +221,11 @@ describe('resource-classification', () => {
       {
         description: 'Standard tag matches',
         url: new URL('https://securepubads.g.doubleclick.net/gpt/pubads_impl_19700101.js?1234'),
+        expectation: true,
+      },
+      {
+        description: 'Standard tag matches on pagead2',
+        url: new URL('https://pagead2.googlesyndication.com/gpt/pubads_impl_19700101.js?1234'),
         expectation: true,
       },
       {

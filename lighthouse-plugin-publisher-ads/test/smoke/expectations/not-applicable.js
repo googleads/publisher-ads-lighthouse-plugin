@@ -41,7 +41,7 @@ module.exports = [
         'first-ad-render': {scoreDisplayMode: 'notApplicable'},
         'gpt-bids-parallel': {scoreDisplayMode: 'notApplicable'},
         'loads-ad-tag-over-https': {scoreDisplayMode: 'notApplicable'},
-        'loads-gpt-from-sgdn': {scoreDisplayMode: 'notApplicable'},
+        'loads-gpt-from-official-source': {scoreDisplayMode: 'notApplicable'},
         'script-injected-tags': {scoreDisplayMode: 'notApplicable'},
         'serial-header-bidding': {scoreDisplayMode: 'notApplicable'},
         'tag-load-time': {scoreDisplayMode: 'notApplicable'},

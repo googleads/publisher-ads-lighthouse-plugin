@@ -20,14 +20,13 @@ const {isGptTag} = require('../utils/resource-classification');
 const {URL} = require('url');
 
 const UIStrings = {
-  title: 'GPT tag is loaded from recommended host',
-  failureTitle: 'Load GPT from recommended host',
-  description: 'Load GPT from \'securepubads.g.doubleclick.net\' to reduce ' +
-  'GPT load time. By loading GPT from the same host as ad requests, browsers ' +
-  'can avoid an additional DNS lookup and HTTP connection. Example:`' +
-  '<script async src=\"https://securepubads.g.doubleclick.net/tag/js/gpt.js\">' +
-  '`. [Learn more](' +
-  'https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-sgdn' +
+  title: 'GPT tag is loaded from an official source',
+  failureTitle: 'Load GPT from an official source',
+  description:
+  'Load GPT from \'securepubads.g.doubleclick.net\' for standard ' +
+  'integrations or from \'pagead2.googlesyndication.com\' for limited ads. ' +
+  '[Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/loads-gpt-from-official-source' +
   ').',
 };
 
@@ -36,14 +35,14 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 /**
  * Simple audit that checks if gpt is loaded over from updated host.
  */
-class LoadsGptFromSgdn extends Audit {
+class LoadsGptFromOfficalSource extends Audit {
   /**
    * @return {LH.Audit.Meta}
    * @override
    */
   static get meta() {
     return {
-      id: 'loads-gpt-from-sgdn',
+      id: 'loads-gpt-from-official-source',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
@@ -63,7 +62,10 @@ class LoadsGptFromSgdn extends Audit {
     if (!gptUrl) {
       return auditNotApplicable.NoGpt;
     }
-    const passed = (gptUrl.host === 'securepubads.g.doubleclick.net');
+    const passed = [
+      'securepubads.g.doubleclick.net',
+      'pagead2.googlesyndication.com',
+    ].includes(gptUrl.host);
     return {
       score: Number(passed),
       numericValue: Number(!passed),
@@ -72,5 +74,5 @@ class LoadsGptFromSgdn extends Audit {
   }
 }
 
-module.exports = LoadsGptFromSgdn;
+module.exports = LoadsGptFromOfficalSource;
 module.exports.UIStrings = UIStrings;
