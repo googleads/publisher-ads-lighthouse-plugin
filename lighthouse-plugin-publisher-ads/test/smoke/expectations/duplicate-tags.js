@@ -34,7 +34,7 @@ module.exports = [
           },
         },
         'loads-gpt-from-official-source': {
-          score: 1,
+          score: 0,
         },
       },
     },
