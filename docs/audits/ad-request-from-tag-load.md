@@ -32,5 +32,5 @@ one of:
 | AdSense              | `googleads.g.doubleclick.net`    | `/pagead/ads` |
 | Google Publisher Tag | `securepubads.g.doubleclick.net` | `/gampad/ads` |
 
-[Avoiding Common GPT Implementation Mistakes](https://developers.google.com/doubleclick-gpt/common_implementation_mistakes)  
+[Avoiding Common GPT Implementation Mistakes](https://developers.google.com/publisher-tag/common_implementation_mistakes)
 [Tagging best practices to minimize page latency](https://support.google.com/admanager/answer/7485975)

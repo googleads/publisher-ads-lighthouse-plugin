@@ -21,4 +21,4 @@ example:
 ## More information
 
 [Assessing Loading Performance in Real Life with Navigation and Resource Timing](https://developers.google.com/web/fundamentals/performance/navigation-and-resource-timing)  
-[Get Started with Google Publisher Tags](https://developers.google.com/doubleclick-gpt/guides/get-started)
+[Get Started with Google Publisher Tags](https://developers.google.com/publisher-tag/guides/get-started)
