@@ -11,10 +11,10 @@ performance.
 
 Defer loading ads outside of the viewport until they are nearly on-screen. See
 the
-[Google Publisher Tag Lazy Loading API](https://developers.google.com/doubleclick-gpt/reference#googletag.PubAdsService_enableLazyLoad)
+[Google Publisher Tag Lazy Loading API](https://developers.google.com/publisher-tag/reference#googletag.PubAdsService_enableLazyLoad)
 for an example.
 
 ## More information
 
-[GPT Reference](https://developers.google.com/doubleclick-gpt/reference)  
+[GPT Reference](https://developers.google.com/publisher-tag/reference)
 [Viewability best practices](https://support.google.com/admanager/answer/6199883)

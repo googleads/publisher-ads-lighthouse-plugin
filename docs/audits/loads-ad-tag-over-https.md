@@ -63,4 +63,4 @@ The following ad tag library scripts are supported:
   </tr>
 </table>
 
-[Get Started with Google Publisher Tags](https://developers.google.com/doubleclick-gpt/guides/get-started)
+[Get Started with Google Publisher Tags](https://developers.google.com/publisher-tag/guides/get-started)

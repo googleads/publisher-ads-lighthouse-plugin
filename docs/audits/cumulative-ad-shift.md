@@ -16,7 +16,7 @@ To avoid layout shift, it's important to set sizes for ad elements before the
 ad tag loads. This can be difficult or impossible to do perfectly—especially for
 ad slots that accept dynamically sized ads—but there are best practices you can
 follow to minimize layout shift in most cases. For more information, see the
-[guide to minimizing layout shift](https://developers.google.com/doubleclick-gpt/guides/minimize-layout-shift)
+[guide to minimizing layout shift](https://developers.google.com/publisher-tag/guides/minimize-layout-shift)
 at the GPT developer site.
 
 ## More information
