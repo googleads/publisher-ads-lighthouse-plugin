@@ -1,5 +1,8 @@
-name: CI
-on: [push]
+name: LHCI
+on: 
+  push:
+    branches: [master]
+  pull_request:
 jobs:
   lhci:
     name: Lighthouse
