@@ -54,13 +54,13 @@ async function run() {
         process.exit(0);
       })
       .catch((e) => {
-        process.stdout.write(e.stdout);
-        process.stderr.write(e.stderr);
+        process.stdout.write(e.stdout || String(e));
+        process.stderr.write(e.stderr || String(e));
         process.exit(1);
       });
 }
 
 run().catch((e) => {
-  process.stderr.write(e.stderr);
+  process.stderr.write(e.stderr || String(e));
   process.exit(1);
 });
