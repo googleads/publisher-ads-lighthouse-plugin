@@ -148,7 +148,7 @@ class AdRequestCriticalPath extends Audit {
     const tableView =
       (await computeAdRequestWaterfall(trace, devtoolsLog, context))
           .filter((r) => r.startTime > 0 && r.startTime < r.endTime
-          && r.endTime < adRequestTime.timing
+          && r.endTime < adRequestTime.timing,
           );
     if (!tableView.length) {
       return auditNotApplicable.NoAds;

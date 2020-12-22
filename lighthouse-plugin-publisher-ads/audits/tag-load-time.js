@@ -58,8 +58,8 @@ class TagLoadTime extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        p10: 6500,
-        median: 10000,
+        p10: 4350,
+        median: 8000,
       },
       provided: {
         p10: 1200,
@@ -97,7 +97,7 @@ class TagLoadTime extends Audit {
       numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
         scoreOptions,
-        timing
+        timing,
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
