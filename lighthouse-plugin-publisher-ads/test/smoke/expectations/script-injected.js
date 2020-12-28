@@ -47,6 +47,10 @@ module.exports = [
                 script: 'http://localhost:8081/slowly-inject-gpt.js',
                 duration: '4050 +/- 50',
               },
+              {
+                script: 'Other',
+                duration: '720 +/- 100',
+              },
             ],
           },
         },
