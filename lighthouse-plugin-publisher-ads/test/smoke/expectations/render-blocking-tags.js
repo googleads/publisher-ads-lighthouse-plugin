@@ -43,10 +43,7 @@ module.exports = [
               {url: 'http://localhost:8081/slowly-inject-gpt.js'},
               {url: 'https://securepubads.g.doubleclick.net/tag/js/gpt.js'},
               // Use a Regexp to ignore the version of pubads_impl.
-              // TODO(warrengm): Fix this test. pubads_impl is being dropped in
-              // simulation because it finishes loading after the ad request is
-              // sent.
-              // {url: /.*securepubads.g.doubleclick.net.*pubads_impl.*/},
+              {url: /.*securepubads.g.doubleclick.net.*pubads_impl.*/},
             ],
           },
         },
