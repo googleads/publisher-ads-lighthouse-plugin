@@ -49,7 +49,7 @@ module.exports = [
               },
               {
                 script: 'Other',
-                duration: '720 +/- 100',
+                duration: '500 +/- 500',
               },
             ],
           },
