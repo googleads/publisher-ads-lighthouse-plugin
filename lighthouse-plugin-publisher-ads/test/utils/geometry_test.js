@@ -59,7 +59,7 @@ describe('geometry', () => {
         it(`should handle slots on the ${test.pos} as seen`, () => {
           expect(isBoxInViewport(generateSlot(test).clientRect, viewport))
               .to.equal(true);
-        })
+        }),
       );
     });
 
@@ -81,7 +81,7 @@ describe('geometry', () => {
         it(`should handle slots outside the ${test.pos} as not seen`, () => {
           expect(isBoxInViewport(generateSlot(test).clientRect, viewport))
               .to.equal(false);
-        })
+        }),
       );
 
       it('should return false if slot has no area', async () => {
@@ -119,7 +119,7 @@ describe('geometry', () => {
           const result = boxViewableArea(
             generateSlot(test).clientRect, viewport);
           expect(result).to.equal(test.overlap);
-        })
+        }),
       );
     });
 
@@ -141,7 +141,7 @@ describe('geometry', () => {
         it(`should return zero for slots outside the ${test.pos}`, () => {
           expect(boxViewableArea(generateSlot(test).clientRect, viewport))
               .to.equal(0);
-        })
+        }),
       );
 
       it('should return zero if slot has no area', async () => {

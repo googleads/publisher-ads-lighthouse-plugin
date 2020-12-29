@@ -108,7 +108,7 @@ class LongTasks extends ComputedMetric {
    * @param {LH.Trace} trace
    * @param {LH.DevtoolsLog} devtoolsLog
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.TaskNode[]>} networkRecords
+   * @return {Promise<LH.Artifacts.TaskNode[]>}
    */
   static async computeObservedResult(trace, devtoolsLog, context) {
     const tasks = await MainThreadTasks.request(trace, context);
@@ -123,12 +123,24 @@ class LongTasks extends ComputedMetric {
   /**
    * @param {{devtoolsLog: LH.DevtoolsLog, trace: LH.Trace}} data
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.TaskNode[]>} networkRecords
+   * @return {Promise<LH.Artifacts.TaskNode[]>}
    */
   static async compute_({trace, devtoolsLog}, context) {
     return context.settings.throttlingMethod == 'simulate' ?
       this.computeSimulatedResult(trace, devtoolsLog, context) :
       this.computeObservedResult(trace, devtoolsLog, context);
+  }
+
+  /**
+   * @param {unknown} artifacts
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Artifacts.TaskNode[]>}
+   */
+  static async request(artifacts, context) {
+    // Implement request() to make the compiler happy. It will be implemented
+    // below with decoration. Long term we should find a good way to have the
+    // compiler infer this.
+    throw Error('Not implemented -- class not decorated');
   }
 }
 

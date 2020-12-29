@@ -37,7 +37,7 @@ module.exports = [
           scoreDisplayMode: 'informative',
           // It's important that the critical path does not include the render
           // blocking resources.
-          numericValue: 2,
+          numericValue: 3,
           details: {
             items: [
               {url: 'http://localhost:8081/slowly-inject-gpt.js'},

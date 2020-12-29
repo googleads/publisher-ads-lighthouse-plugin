@@ -22,7 +22,7 @@
  */
 // TODO(jburger): Make Chrome run in headless mode.
 module.exports = {
-  extends: 'lighthouse:full',
+  extends: 'lighthouse:default',
   plugins: ['lighthouse-plugin-publisher-ads'],
   passes: [
     {
