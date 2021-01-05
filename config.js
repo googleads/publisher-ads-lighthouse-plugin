@@ -21,7 +21,7 @@
  * @const {LH.Config}
  */
 module.exports = {
-  extends: 'lighthouse:full',
+  extends: 'lighthouse:default',
   plugins: ['lighthouse-plugin-publisher-ads'],
   passes: [
     {

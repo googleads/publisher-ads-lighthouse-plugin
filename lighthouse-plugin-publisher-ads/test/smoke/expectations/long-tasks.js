@@ -23,11 +23,11 @@ module.exports = [
       finalUrl: 'http://localhost:8081/long-tasks.html',
       audits: {
         'tag-load-time': {
-          numericValue: '3250 +/- 1000',
+          numericValue: '6800 +/- 1000',
         },
         'first-ad-render': {
           // TODO(jburger): Update when https://github.com/GoogleChrome/lighthouse/issues/9417 is implemented.
-          numericValue: '5500 +/- 1000',
+          numericValue: '7100 +/- 1000',
         },
         'ad-blocking-tasks': {
           score: 0,

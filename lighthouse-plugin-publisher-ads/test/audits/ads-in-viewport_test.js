@@ -73,7 +73,7 @@ describe('AdsInViewport', () => {
         const IFrameElements = [generateSlot(test)];
         const artifacts = {IFrameElements, ViewportDimensions};
         expect(AdsInViewport.audit(artifacts)).to.have.property('numericValue', 1);
-      })
+      }),
     );
 
     const negativeTests = [
@@ -94,7 +94,7 @@ describe('AdsInViewport', () => {
         const IFrameElements = [generateSlot(test)];
         const artifacts = {IFrameElements, ViewportDimensions};
         expect(AdsInViewport.audit(artifacts)).to.have.property('numericValue', 0);
-      })
+      }),
     );
 
     it('should be not applicable if no slots have area', async () => {

@@ -79,6 +79,18 @@ class BidRequestTime extends ComputedMetric {
     const bidRequestTimeMs = (bidStartTime - pageStartTime) * 1000;
     return {timing: bidRequestTimeMs};
   }
+
+  /**
+   * @param {unknown} artifacts
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Artifacts.Metric>}
+   */
+  static async request(artifacts, context) {
+    // Implement request() to make the compiler happy. It will be implemented
+    // below with decoration. Long term we should find a good way to have the
+    // compiler infer this.
+    throw Error('Not implemented -- class not decorated');
+  }
 }
 
 // Decorate the class.
