@@ -1,25 +1,25 @@
 # Lighthouse CI Usage
 
-In order to prevent unexpected ad performance regressions, 
-[Lighthouse CI](https://github.com/GoogleChrome/lighthouse-ci) can be integrated 
-with your existing CI to ensure that scores do not regress with code changes.
+To monitor Lighthouse scores and prevent unexpected ad performance regressions, 
+you can integrate [Lighthouse CI (LHCI)](https://github.com/GoogleChrome/lighthouse-ci) 
+with your existing CI.
 
-"Lighthouse CI is a suite of tools that make continuously running, saving, 
+>Lighthouse CI is a suite of tools that make continuously running, saving, 
 retrieving, and asserting against 
 [Lighthouse](https://github.com/GoogleChrome/lighthouse) results as easy as 
-possible."
+possible.
 
 Today, this tool is compatible with GitHub Actions, Travis CI, Circle CI, GitLab CI, Jenkins, and Google Cloudbuild.
 
-If not familiar with Lighthouse CI, please familiarize yourself with their 
+If not familiar with LHCI, please familiarize yourself with their 
 [Getting Started documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/getting-started.md#github-app-method-recommended) 
 prior to starting.
 
 ## Config
 
-Lighthouse CI natively supports plugin usage and Publisher Ads Audits can be 
-easily included. Simply include the plugin in the generated reports by setting 
-the `settings.plugins` attribute in the `lighthouserc.js` `collect` config.
+LHCI natively supports plugins, including Publisher Ads Audits. To run
+Publisher Ads Audits in your LHCI reports, simply set the `settings.plugins` 
+attribute in the `lighthouserc.js` `collect` config.
 
 Example:
 ```
@@ -45,11 +45,15 @@ due to changes in the plugin.
 
 ## Assertions
 
-The assertion framework can be used to ensure that scores and metrics remain 
-within a desired threshold.
+Using the assertion framework, you can ensure that scores and metrics remain 
+within a desired threshold. 
 
-The simplest setup would involve only asserting the score of the 
-`lighthouse-plugin-publisher-ads` category:
+See [official documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#assert) to learn more.
+
+A simple setup could assert that the Publisher Ads Audits category passes with a
+100% score.
+
+Example:
 ```
 module.exports = {
   ci: {
@@ -66,9 +70,9 @@ module.exports = {
   }
 ```
 
-With the above example, we are ensuring that all audits are passing with a final
- score of 100%. If a change is ever pushed reducing this score, it will be caught 
- by CI checks, in our specific CI setup this would prevent merging until resolved.
+With the above example, you ensure that all audits pass with a final score of 
+100%. If a code chance ever reduces the score, this setup will catch it and stop 
+it from being merged.
 
 While the above example may be sufficient for your use case, lower level
 assertions will be beneficial for ensuring consistent performance across the 
@@ -106,14 +110,11 @@ module.exports = {
   }
 ```
 
-Learn more about assertions 
-[here](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#assert).
-
 ## Example
 
-A Lighthouse CI 
-[usage example](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouserc.js)
- exists in this repository, ran against 2 mock pages. This example utilizes GitHub Actions and the 
- Lighthouse CI GitHub app for the simplest setup. However, the same assertions 
- can be integrated with 
+There is an
+[example LHCI configuration](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouserc.js)
+in this repository that checks 2 mock pages. It utilizes GitHub Actions and the 
+ Lighthouse CI GitHub app to demonstrate a simple setup. However, the same 
+ assertions can be integrated with 
  [many other popular CI providers](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/getting-started.md#configure-your-ci-provider).
