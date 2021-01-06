@@ -121,7 +121,7 @@ describe('ViewportAdDensity', () => {
         const artifacts = {IFrameElements, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
         expect(result).to.have.property('numericValue', test.density);
-      })
+      }),
     );
 
     const negativeTests = [
@@ -142,7 +142,7 @@ describe('ViewportAdDensity', () => {
         const artifacts = {IFrameElements, ViewportDimensions};
         const result = ViewportAdDensity.audit(artifacts);
         expect(result).to.have.property('numericValue', 0);
-      })
+      }),
     );
 
     it('should be not applicable if no slot has area', async () => {

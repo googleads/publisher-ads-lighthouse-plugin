@@ -177,6 +177,7 @@ class AdLanternMetric extends LanternMetric {
       const /** string */ url = node.record.url;
       return isBidRelatedRequest(url) || isGoogleAds(toURL(url));
     });
+    addEdges(pessimisticGraph);
     return optimisticGraph;
   }
 

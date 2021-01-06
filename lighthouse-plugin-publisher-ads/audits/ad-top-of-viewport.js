@@ -99,7 +99,7 @@ class AdTopOfViewport extends Audit {
         str_(UIStrings.failureDisplayValue, {valueInPx: topSlot.midpoint}),
       details: AdTopOfViewport.makeTableDetails(
         HEADINGS,
-        score ? [] : [{slot: topSlot.id}]
+        score ? [] : [{slot: topSlot.id}],
       ),
     };
   }

@@ -108,7 +108,7 @@ async function findStaticallyLoadableTags(artifacts, context) {
   const criticalRequests =
     await computeAdRequestWaterfall(trace, devtoolsLog, context);
   for (const {record} of criticalRequests) {
-    if (record.resourceType !== 'Script') {
+    if (!record || record.resourceType !== 'Script') {
       // Don't count resources that aren't scripts.
       continue;
     }

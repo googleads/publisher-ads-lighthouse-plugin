@@ -47,20 +47,20 @@ async function run() {
   });
   execAsync(
     'cd node_modules/lighthouse && ' +
-    'node lighthouse-cli/test/smokehouse/frontends/smokehouse-bin.js --tests-path ../../lighthouse-plugin-publisher-ads/test/smoke/smoke-test-dfns.js --retries 3'
+    'node lighthouse-cli/test/smokehouse/frontends/smokehouse-bin.js --tests-path ../../lighthouse-plugin-publisher-ads/test/smoke/smoke-test-dfns.js --retries 3',
   )
       .then((result) => {
         process.stdout.write(result.stdout);
         process.exit(0);
       })
       .catch((e) => {
-        process.stdout.write(e.stdout);
-        process.stderr.write(e.stderr);
+        process.stdout.write(e.stdout || String(e));
+        process.stderr.write(e.stderr || String(e));
         process.exit(1);
       });
 }
 
 run().catch((e) => {
-  process.stderr.write(e.stderr);
+  process.stderr.write(e.stderr || String(e));
   process.exit(1);
 });

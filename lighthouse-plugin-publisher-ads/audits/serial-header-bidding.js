@@ -133,7 +133,7 @@ function isPossibleBid(rec) {
  */
 function clearQueryString(url) {
   const u = new URL(url);
-  delete u.search;
+  u.search = '';
   return u.toString();
 }
 

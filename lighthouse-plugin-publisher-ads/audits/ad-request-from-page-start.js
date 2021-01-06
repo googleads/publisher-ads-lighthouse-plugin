@@ -95,7 +95,7 @@ class AdRequestFromPageStart extends Audit {
       numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
         scoreOptions,
-        timing
+        timing,
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
