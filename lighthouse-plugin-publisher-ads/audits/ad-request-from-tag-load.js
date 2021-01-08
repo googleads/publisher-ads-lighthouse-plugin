@@ -29,8 +29,6 @@ const UIStrings = {
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-const P10 = 450; // ms
-const MEDIAN = 1000; // ms
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -51,6 +49,25 @@ class AdRequestFromTagLoad extends Audit {
       requiredArtifacts: ['devtoolsLogs', 'traces'],
     };
   }
+
+  /**
+   * @return {{
+    *  simulate: LH.Audit.ScoreOptions, provided: LH.Audit.ScoreOptions,
+    * }}
+    */
+  static get defaultOptions() {
+    return {
+      simulate: {
+        p10: 1000,
+        median: 2000,
+      },
+      provided: {
+        p10: 450,
+        median: 1000,
+      },
+    };
+  }
+
 
   /**
    * @param {LH.Artifacts} artifacts
@@ -76,11 +93,13 @@ class AdRequestFromTagLoad extends Audit {
 
     const adReqTimeMs = (adStartTime - tagEndTime);
 
+    const scoreOptions = context.options[context.settings.throttlingMethod]
+       || context.options['provided'];
+
     return {
       numericValue: adReqTimeMs * 1e-3,
       numericUnit: 'unitless',
-      score: Audit.computeLogNormalScore({p10: P10, median: MEDIAN},
-        adReqTimeMs),
+      score: Audit.computeLogNormalScore(scoreOptions, adReqTimeMs),
       displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }

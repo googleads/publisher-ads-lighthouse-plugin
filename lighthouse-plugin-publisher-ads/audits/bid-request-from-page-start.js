@@ -59,12 +59,12 @@ class BidRequestFromPageStart extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        p10: 8900,
-        median: 15500,
+        p10: 4350,
+        median: 8000,
       },
       provided: {
-        p10: 1900,
-        median: 3500,
+        p10: 1200,
+        median: 2000,
       },
     };
   }
