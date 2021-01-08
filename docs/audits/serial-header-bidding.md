@@ -8,9 +8,10 @@ can be made in parallel to speed up ad loading.
 
 ## Recommendations
 
-Issue header bidding requests in parallel, rather than sequentially. If you're
-using a header bidding library, the library documentation may have
-recommendations on how to do this.
+Issue header bidding requests in parallel, rather than sequentially. This means
+that you should send all bid requests at the same time instead of issuing one
+request at time. If you're using a header bidding library, the library
+documentation may have recommendations on how to do this.
 
 ## More information
 
