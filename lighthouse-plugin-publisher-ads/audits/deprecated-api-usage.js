@@ -13,20 +13,19 @@
 // limitations under the License.
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const log = require('lighthouse-logger');
 const {Audit} = require('lighthouse');
 const {isGpt} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'Deprecated GPT API Usage',
-  failureTitle: 'Reduce deprecated GPT API usage',
-  description: 'Measures occurences of deprecated GPT API usage based on log messages. ' +
-  'Reducing deprecated API usage can prevent errors which may impact user experience.',
+  failureTitle: 'Avoid deprecated GPT APIs',
+  description: 'Deprecated GPT API methods should be avoided to ensure your ' +
+  'page is tagged correctly. [Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/deprecated-gpt-api-usage' +
+  ').',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
-
-/** @typedef {{ignoredPatterns?: Array<RegExp|string>}} AuditOptions */
 
 /**
  * Audit that checks for the presence of warning and error messages which
@@ -47,64 +46,29 @@ class DeprecatedApiUsage extends Audit {
     };
   }
 
-  /** @return {AuditOptions} */
-  static defaultOptions() {
-    return {};
-  }
-
-  /**
-   * @template {{description: string | undefined}} T
-   * @param {Array<T>} items
-   * @param {AuditOptions} options
-   * @return {Array<T>}
-   */
-  static filterAccordingToOptions(items, options) {
-    const {ignoredPatterns, ...restOfOptions} = options;
-    const otherOptionKeys = Object.keys(restOfOptions);
-    if (otherOptionKeys.length) log.warn(this.meta.id, 'Unrecognized options');
-    if (!ignoredPatterns) return items;
-
-    return items.filter(({description}) => {
-      if (!description) return true;
-      for (const pattern of ignoredPatterns) {
-        if (pattern instanceof RegExp && pattern.test(description)) {
-          return false;
-        }
-        if (typeof pattern === 'string' && description.includes(pattern)) {
-          return false;
-        }
-      }
-
-      return true;
-    });
-  }
-
   /**
    * @param {LH.Artifacts} artifacts
-   * @param {LH.Audit.Context} context
    * @return {LH.Audit.Product}
    */
-  static audit(artifacts, context) {
-    /** @type {AuditOptions} */
-    const auditOptions = context.options;
-
+  static audit(artifacts) {
     /** @type {Array<{
      * source: string,
      * description: string|undefined,
-     * url: string|undefined}>} */
-    const consoleRows = artifacts.ConsoleMessages
+     * url: string|undefined,
+     * timestamp: number|undefined}>} */
+    const tableRows = artifacts.ConsoleMessages
         .filter((item) => item.level === 'warning' || item.level === 'error')
         .filter((item) => item.url && isGpt(item.url))
-        .filter((item) => item.text.toLowerCase().includes('deprecated'))
+        .filter((item) =>
+          item.text.toLowerCase().includes('deprecated') ||
+          item.text.toLowerCase().includes('discouraged'))
         .map((item) => ({
           source: item.source,
           description: item.text,
           url: item.url,
-        }));
-
-    const tableRows =
-      DeprecatedApiUsage.filterAccordingToOptions(consoleRows, auditOptions)
-          .sort((a, b) => (a.description || '').localeCompare(b.description || ''));
+          timestamp: item.timestamp,
+        }))
+        .sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
 
     /** @type {LH.Audit.Details.Table['headings']} */
     const headings = [
