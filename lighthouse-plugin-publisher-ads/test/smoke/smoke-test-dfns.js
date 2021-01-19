@@ -16,6 +16,16 @@
 /** @type {Array<Smokehouse.TestDfn>} */
 const smokeTests = [
   {
+    id: 'deprecated-api-usage',
+    expectations: require('./expectations/deprecated-api-usage.js'),
+    config: require('./config.js'),
+  },
+  {
+    id: 'gpt-errors-overall',
+    expectations: require('./expectations/gpt-errors-overall.js'),
+    config: require('./config.js'),
+  },
+  {
     id: 'duplicate-tags',
     expectations: require('./expectations/duplicate-tags.js'),
     config: require('./config.js'),
