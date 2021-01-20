@@ -47,6 +47,8 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/tag-load-time`},
     {path: `${PLUGIN_PATH}/audits/viewport-ad-density`},
     {path: `${PLUGIN_PATH}/audits/cumulative-ad-shift`},
+    {path: `${PLUGIN_PATH}/audits/deprecated-api-usage`},
+    {path: `${PLUGIN_PATH}/audits/gpt-errors-overall`},
   ],
   groups: {
     'metrics': {
@@ -86,6 +88,8 @@ module.exports = {
       {id: 'viewport-ad-density', weight: 2, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
+      {id: 'deprecated-gpt-api-usage', weight: 1, group: 'ads-best-practices'},
+      {id: 'gpt-errors-overall', weight: 5, group: 'ads-best-practices'},
     ],
   },
 };
