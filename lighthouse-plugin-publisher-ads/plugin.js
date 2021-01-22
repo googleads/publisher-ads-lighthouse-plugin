@@ -79,7 +79,7 @@ module.exports = {
       {id: 'blocking-load-events', weight: 1, group: 'ads-performance'},
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
-      {id: 'ad-request-critical-path', weight: 1, group: 'ads-performance'},
+      {id: 'ad-request-critical-path', weight: 0, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 2, group: 'ads-best-practices'},
@@ -88,8 +88,8 @@ module.exports = {
       {id: 'viewport-ad-density', weight: 2, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
-      {id: 'deprecated-gpt-api-usage', weight: 1, group: 'ads-best-practices'},
-      {id: 'gpt-errors-overall', weight: 5, group: 'ads-best-practices'},
+      {id: 'deprecated-gpt-api-usage', weight: 0, group: 'ads-best-practices'},
+      {id: 'gpt-errors-overall', weight: 0, group: 'ads-best-practices'},
     ],
   },
 };

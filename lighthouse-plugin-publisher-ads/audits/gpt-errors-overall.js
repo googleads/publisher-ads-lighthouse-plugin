@@ -42,6 +42,7 @@ class GptErrorsOverall extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
+      scoreDisplayMode: 'informative',
       requiredArtifacts: ['ConsoleMessages'],
     };
   }
