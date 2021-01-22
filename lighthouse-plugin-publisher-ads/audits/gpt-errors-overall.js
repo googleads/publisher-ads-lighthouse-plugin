@@ -23,6 +23,7 @@ const UIStrings = {
   '[Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/gpt-errors-overall' +
   ').',
+  displayValue: '{numErrors, plural, =1 {1 error} other {# errors}} found',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -83,6 +84,7 @@ class GptErrorsOverall extends Audit {
     return {
       score: Number(numErrors === 0),
       details,
+      displayValue: str_(UIStrings.displayValue, {numErrors}),
     };
   }
 }
