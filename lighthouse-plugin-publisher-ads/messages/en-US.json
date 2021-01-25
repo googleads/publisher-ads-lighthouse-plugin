@@ -271,6 +271,22 @@
     "message": "Cumulative ad shift",
     "description": ""
   },
+  "audits/deprecated-api-usage.js | description": {
+    "message": "Deprecated GPT API methods should be avoided to ensure your page is tagged correctly. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/deprecated-gpt-api-usage).",
+    "description": ""
+  },
+  "audits/deprecated-api-usage.js | displayValue": {
+    "message": "{numErrors, plural, =1 {1 error} other {# errors}} found",
+    "description": ""
+  },
+  "audits/deprecated-api-usage.js | failureTitle": {
+    "message": "Avoid deprecated GPT APIs",
+    "description": ""
+  },
+  "audits/deprecated-api-usage.js | title": {
+    "message": "Deprecated GPT API Usage",
+    "description": ""
+  },
   "audits/duplicate-tags.js | columnFrameId": {
     "message": "Frame ID",
     "description": ""
@@ -357,6 +373,22 @@
   },
   "audits/gpt-bids-parallel.js | title": {
     "message": "GPT and bids loaded in parallel",
+    "description": ""
+  },
+  "audits/gpt-errors-overall.js | description": {
+    "message": "Fix GPT errors to ensure your page is tagged as intended. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/gpt-errors-overall).",
+    "description": ""
+  },
+  "audits/gpt-errors-overall.js | displayValue": {
+    "message": "{numErrors, plural, =1 {1 error} other {# errors}} found",
+    "description": ""
+  },
+  "audits/gpt-errors-overall.js | failureTitle": {
+    "message": "Fix GPT errors",
+    "description": ""
+  },
+  "audits/gpt-errors-overall.js | title": {
+    "message": "GPT Errors",
     "description": ""
   },
   "audits/idle-network-times.js | causeDomContentLoaded": {

@@ -203,6 +203,18 @@
   "audits/cumulative-ad-shift.js | title": {
     "message": "Ĉúm̂úl̂át̂ív̂é âd́ ŝh́îf́t̂"
   },
+  "audits/deprecated-api-usage.js | description": {
+    "message": "D̂ép̂ŕêćât́êd́ ĜṔT̂ ÁP̂Í m̂ét̂h́ôd́ŝ śĥóûĺd̂ b́ê áv̂óîd́êd́ t̂ó êńŝúr̂é ŷóûŕ p̂áĝé îś t̂áĝǵêd́ ĉór̂ŕêćt̂ĺŷ. [Ĺêár̂ń m̂ór̂é](ĥt́t̂ṕŝ://d́êv́êĺôṕêŕŝ.ǵôóĝĺê.ćôḿ/p̂úb̂ĺîśĥér̂-ád̂ś-âúd̂ít̂ś/r̂éf̂ér̂én̂ćê/áûd́ît́ŝ/d́êṕr̂éĉát̂éd̂-ǵp̂t́-âṕî-úŝáĝé)."
+  },
+  "audits/deprecated-api-usage.js | displayValue": {
+    "message": "{numErrors, plural, =1 {1 êŕr̂ór̂} other {# ér̂ŕôŕŝ}} f́ôún̂d́"
+  },
+  "audits/deprecated-api-usage.js | failureTitle": {
+    "message": "Âv́ôíd̂ d́êṕr̂éĉát̂éd̂ ǴP̂T́ ÂṔÎś"
+  },
+  "audits/deprecated-api-usage.js | title": {
+    "message": "D̂ép̂ŕêćât́êd́ ĜṔT̂ ÁP̂Í Ûśâǵê"
+  },
   "audits/duplicate-tags.js | columnFrameId": {
     "message": "F̂ŕâḿê ÍD̂"
   },
@@ -268,6 +280,18 @@
   },
   "audits/gpt-bids-parallel.js | title": {
     "message": "ĜṔT̂ án̂d́ b̂íd̂ś l̂óâd́êd́ îń p̂ár̂ál̂ĺêĺ"
+  },
+  "audits/gpt-errors-overall.js | description": {
+    "message": "F̂íx̂ ǴP̂T́ êŕr̂ór̂ś t̂ó êńŝúr̂é ŷóûŕ p̂áĝé îś t̂áĝǵêd́ âś îńt̂én̂d́êd́. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/ĝṕt̂-ér̂ŕôŕŝ-óv̂ér̂ál̂ĺ)."
+  },
+  "audits/gpt-errors-overall.js | displayValue": {
+    "message": "{numErrors, plural, =1 {1 êŕr̂ór̂} other {# ér̂ŕôŕŝ}} f́ôún̂d́"
+  },
+  "audits/gpt-errors-overall.js | failureTitle": {
+    "message": "F̂íx̂ ǴP̂T́ êŕr̂ór̂ś"
+  },
+  "audits/gpt-errors-overall.js | title": {
+    "message": "ĜṔT̂ Ér̂ŕôŕŝ"
   },
   "audits/idle-network-times.js | causeDomContentLoaded": {
     "message": "D̂ÓM̂Ćôńt̂én̂t́L̂óâd́êd́ Êv́êńt̂"

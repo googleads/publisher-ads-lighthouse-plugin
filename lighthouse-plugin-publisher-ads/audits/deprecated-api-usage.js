@@ -23,6 +23,7 @@ const UIStrings = {
   'page is tagged correctly. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/deprecated-gpt-api-usage' +
   ').',
+  displayValue: '{numErrors, plural, =1 {1 error} other {# errors}} found',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -42,6 +43,7 @@ class DeprecatedApiUsage extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
+      scoreDisplayMode: 'informative',
       requiredArtifacts: ['ConsoleMessages'],
     };
   }
@@ -82,6 +84,7 @@ class DeprecatedApiUsage extends Audit {
     return {
       score: Number(numErrors === 0),
       details,
+      displayValue: str_(UIStrings.displayValue, {numErrors}),
     };
   }
 }
