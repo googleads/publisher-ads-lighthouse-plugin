@@ -275,6 +275,10 @@
     "message": "Deprecated GPT API methods should be avoided to ensure your page is tagged correctly. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/deprecated-gpt-api-usage).",
     "description": ""
   },
+  "audits/deprecated-api-usage.js | displayValue": {
+    "message": "{numErrors, plural, =1 {1 error} other {# errors}} found",
+    "description": ""
+  },
   "audits/deprecated-api-usage.js | failureTitle": {
     "message": "Avoid deprecated GPT APIs",
     "description": ""
@@ -373,6 +377,10 @@
   },
   "audits/gpt-errors-overall.js | description": {
     "message": "Fix GPT errors to ensure your page is tagged as intended. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/gpt-errors-overall).",
+    "description": ""
+  },
+  "audits/gpt-errors-overall.js | displayValue": {
+    "message": "{numErrors, plural, =1 {1 error} other {# errors}} found",
     "description": ""
   },
   "audits/gpt-errors-overall.js | failureTitle": {
