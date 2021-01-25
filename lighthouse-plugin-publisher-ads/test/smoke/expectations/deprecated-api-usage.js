@@ -23,7 +23,7 @@ module.exports = [
       finalUrl: 'http://localhost:8081/deprecated-api-usage.html',
       audits: {
         'deprecated-gpt-api-usage': {
-          score: 0,
+          score: null,
           details: {
             items: [
               {

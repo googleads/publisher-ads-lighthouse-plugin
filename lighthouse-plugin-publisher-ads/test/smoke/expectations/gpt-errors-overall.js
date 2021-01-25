@@ -23,7 +23,7 @@ module.exports = [
       finalUrl: 'http://localhost:8081/gpt-errors-overall.html',
       audits: {
         'gpt-errors-overall': {
-          score: 0,
+          score: null,
           details: {
             items: [
               {
