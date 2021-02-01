@@ -2,7 +2,7 @@
 
 To monitor Lighthouse scores and prevent unexpected ad performance regressions, 
 you can integrate [Lighthouse CI (LHCI)](https://github.com/GoogleChrome/lighthouse-ci) 
-with your existing CI.
+into your existing Continuous Integration (CI) workflow.
 
 >Lighthouse CI is a suite of tools that make continuously running, saving, 
 retrieving, and asserting against 
@@ -11,7 +11,7 @@ possible.
 
 Today, this tool is compatible with GitHub Actions, Travis CI, Circle CI, GitLab CI, Jenkins, and Google Cloudbuild.
 
-If not familiar with LHCI, please familiarize yourself with their 
+If you haven't used LHCI before, please familiarize yourself with their 
 [Getting Started documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/getting-started.md#github-app-method-recommended) 
 prior to starting.
 
@@ -39,9 +39,8 @@ Additionally, you must ensure that `lighthouse-plugins-publisher-ads` is
 installed in your CI environment. The can be done by adding the line 
 `npm install -g lighthouse-plugin-publisher-ads@1.3.x` to your CI build rule. 
 
-We recommend setting a 
-specific major and minor versions (ex: 1.3.x) to ensure that unexpected regressions are not 
-due to changes in the plugin.
+We recommend setting a specific patch version (ex: 1.3.1) to ensure 
+that unexpected regressions are not due to changes in the plugin.
 
 ## Assertions
 
@@ -71,7 +70,7 @@ module.exports = {
 ```
 
 With the above example, you ensure that all audits pass with a final score of 
-100%. If a code chance ever reduces the score, this setup will catch it and stop 
+100%. If a code change ever reduces the score, this setup will catch it and stop 
 it from being merged.
 
 While the above example may be sufficient for your use case, lower level

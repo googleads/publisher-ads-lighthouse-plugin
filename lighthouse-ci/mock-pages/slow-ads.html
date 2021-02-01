@@ -22,11 +22,6 @@
     <script>googletag = window.googletag || {cmd: []};</script>
     <script src="./slowly-inject-gpt.js"></script>
     <script>
-      function longTask(duration) {
-        const start = new Date().getTime();
-        // Busy countdown
-        while (new Date().getTime() - start < duration);
-      }
       const numAds = 10;
       function initAds() {
         longTask(5000);
