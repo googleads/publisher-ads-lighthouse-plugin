@@ -58,8 +58,8 @@ class AdRequestFromPageStart extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        p10: 4350,
-        median: 8000,
+        p10: 6500,
+        median: 10000,
       },
       provided: {
         p10: 1900,
