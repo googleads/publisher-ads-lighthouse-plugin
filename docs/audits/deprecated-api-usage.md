@@ -2,7 +2,7 @@
 
 ## Overview
 
-This audit ensures that deprecated Google Publisher Tag (GPT) APIs are not used.
+This audit ensures that the page does not used any deprecated Google Publisher Tag (GPT) APIs.
 Deprecated APIs are googletag methods or configuration options which are no longer maintained or documented. As these APIs 
 may be partly or wholly removed from GPT, their use is discouraged and unpredictable behavior could come from their 
 continued use.

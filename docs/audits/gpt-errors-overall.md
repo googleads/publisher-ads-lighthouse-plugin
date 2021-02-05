@@ -2,8 +2,8 @@
 
 ## Overview
 
-This audit ensures that no warnings or errors related to Google Publisher Tags (GPT) are present. Reducing errorscan help 
-ensure that user experience is consistent and working as intended.
+This audit ensures that no warnings or errors related to Google Publisher Tags (GPT) are present. Reducing errors can help 
+ensure that user experience is consistent and the page is tagged as intended.
 
 ## Recommendations
 
