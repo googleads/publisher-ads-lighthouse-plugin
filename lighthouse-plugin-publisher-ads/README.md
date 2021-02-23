@@ -60,6 +60,12 @@ Some common options are:
 -   `--extra-headers "{\"Cookie\":\"monster=blue\"}"` to include additional
     cookies on all requests.
 
+#### Continuous Integration
+
+This plugin can be integrated with your existing CI using Lighthouse CI to 
+ensure that ad performance hasn't regressed. 
+[Learn More.](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouse-ci/README.md)
+
 ### Tests
 ```sh
 # Lint and test all files.
