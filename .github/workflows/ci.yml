@@ -1,6 +1,5 @@
 name: LHCI
 on: [push]
-  pull_request:
 jobs:
   lhci:
     name: Lighthouse
