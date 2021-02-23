@@ -42,7 +42,7 @@ module.exports = {
             // Performance category assertions.
             'categories:performance': [
               'error',
-              {'minScore': .97},
+              {'minScore': .9},
             ],
             // Assert that specific metrics fall within desired range.
             'first-contentful-paint': [
@@ -59,11 +59,11 @@ module.exports = {
             ],
             'interactive': [
               'error',
-              {'maxNumericValue': 4500},
+              {'maxNumericValue': 5000},
             ],
             'total-blocking-time': [
               'error',
-              {'maxNumericValue': 200}, // <= .2s
+              {'maxNumericValue': 400}, // <= .4s
             ],
             'cumulative-layout-shift': [
               'error',
@@ -79,16 +79,16 @@ module.exports = {
             // Plugin category assertions.
             'categories:lighthouse-plugin-publisher-ads': [
               'error',
-              {'minScore': .3}, // <= 30% score
+              {'minScore': .2}, // <= 20% score
             ],
             // Assert that specific metrics fall within desired range.
             'ad-request-from-page-start': [
               'error',
-              {'maxNumericValue': 23000}, // <= 23s
+              {'maxNumericValue': 24000}, // <= 24s
             ],
             'first-ad-render': [
               'error',
-              {'maxNumericValue': 24000}, // <= 24s
+              {'maxNumericValue': 27000}, // <= 27s
             ],
             'cumulative-layout-shift': [
               'error',

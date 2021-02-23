@@ -293,6 +293,11 @@ aws4@^1.8.0:
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.8.0.tgz#f0e003d9ca9e7f59c7a508945d7b2ef9a04a542f"
   integrity sha512-ReZxvNHIOv88FlT7rxcXIIC0fPt4KZqZbOlivyWtXLt8ESx84zd3kMC6iK5jVeS2qt+g7ftS7ye4fi06X5rtRQ==
 
+axe-core@4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.1.1.tgz#70a7855888e287f7add66002211a423937063eaf"
+  integrity sha512-5Kgy8Cz6LPC9DJcNb3yjAXTu3XihQgEdnIg50c//zOC/MyLP0Clg+Y8Sh9ZjjnvBrDZU4DgXS9C3T9r4/scGZQ==
+
 axe-core@4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.1.2.tgz#7cf783331320098bfbef620df3b3c770147bc224"
@@ -1927,6 +1932,46 @@ lighthouse-stack-packs@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/lighthouse-stack-packs/-/lighthouse-stack-packs-1.4.0.tgz#bf98e0fb04a091ec2d73648842698b41070968ef"
   integrity sha512-wdv94WUjaqUwtW8DOapng45Yah62c5O5geNVeoSQlnoagfbTO/YbiwNlfzDIF1xNKRkPlsfr/oWHhXsaHXDivg==
+
+lighthouse@7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-7.0.0.tgz#3b070f129269889e853fcab629ded9418e417112"
+  integrity sha512-HxSbbg1WUZFsdUm0U6MCffr6J6marWW8kTlsAGaGh9oE7SFmxHh7eslK5u2sz70QXQZcZf8bfWRIkSx94dFbQA==
+  dependencies:
+    axe-core "4.1.1"
+    chrome-launcher "^0.13.4"
+    configstore "^5.0.1"
+    cssstyle "1.2.1"
+    details-element-polyfill "^2.4.0"
+    http-link-header "^0.8.0"
+    inquirer "^7.3.3"
+    intl "^1.2.5"
+    intl-messageformat "^4.4.0"
+    intl-pluralrules "^1.0.3"
+    jpeg-js "^0.4.1"
+    js-library-detector "^6.4.0"
+    jsonld "^1.5.0"
+    jsonlint-mod "^1.7.5"
+    lighthouse-logger "^1.2.0"
+    lighthouse-stack-packs "^1.4.0"
+    lodash.get "^4.4.2"
+    lodash.isequal "^4.5.0"
+    lodash.set "^4.3.2"
+    lookup-closest-locale "6.0.4"
+    metaviewport-parser "0.2.0"
+    open "^6.4.0"
+    parse-cache-control "1.0.1"
+    ps-list "^7.2.0"
+    raven "^2.2.1"
+    rimraf "^2.6.1"
+    robots-parser "^2.0.1"
+    semver "^5.3.0"
+    speedline-core "^1.4.3"
+    third-party-web "^0.12.2"
+    update-notifier "^4.1.0"
+    ws "3.3.2"
+    yargs "^16.1.1"
+    yargs-parser "^20.2.4"
 
 lighthouse@^7.1.0:
   version "7.1.0"
