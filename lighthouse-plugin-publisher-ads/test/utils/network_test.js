@@ -59,6 +59,7 @@ describe('utils/network', () => {
             statusCode: 200,
             resourceType,
             responseHeaders: [{name, value: cacheControl}],
+            protocol: 'https:',
           };
           expect(network.isCacheable(record)).to.equal(expectation);
         });
@@ -69,6 +70,7 @@ describe('utils/network', () => {
       const record = {
         statusCode: 200,
         resourceType: 'Script',
+        protocol: 'https',
       };
       expect(network.isCacheable(record)).to.equal(false);
     });

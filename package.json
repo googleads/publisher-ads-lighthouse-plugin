@@ -21,13 +21,13 @@
   "dependencies": {
     "@tusbar/cache-control": "^0.3.1",
     "@types/esprima": "^4.0.2",
-    "lighthouse": "^7.1.0",
+    "lighthouse": "^7.3.0",
     "lodash.clonedeep": "^4.5.0",
-    "yargs": "^13.3.0"
+    "yargs": "16.1.1"
   },
   "devDependencies": {
     "@lhci/cli": "0.7.x",
-    "@types/yargs": "^12.0.1",
+    "@types/yargs": "^15.0.11",
     "chai": "^4.1.2",
     "eslint": "^6.0.1",
     "eslint-config-google": "^0.12.0",
