@@ -8,20 +8,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdRequestTime = require('../computed/ad-request-time');
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const LongTasks = require('../computed/long-tasks');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isAdRelated, getNameOrTld} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 const UIStrings = {
   /* Title of the audit */
   title: 'Total ad JS blocking time',
   failureTitle: 'Reduce ad JS blocking time',
-  description: 'Ad-related scripts are blocking the main thread.' ,
+  description: 'Ad-related scripts are blocking the main thread.',
   failureDisplayValue: '{timeInMs, number, seconds} s blocked',
   columnName: 'Name',
   columnBlockingTime: 'Blocking Time',
