@@ -25,13 +25,13 @@ module.exports = {
             'tag-load-time': [
               'error',
               {
-                'maxNumericValue': 2200, // <= 2.2s
+                'maxNumericValue': 2300, // <= 2.3s
               },
             ],
             'ad-request-from-page-start': [
               'error',
               {
-                'maxNumericValue': 2300, // <= 2.3s
+                'maxNumericValue': 2500, // <= 2.5s
               },
             ],
             'first-ad-render': [
