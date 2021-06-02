@@ -88,7 +88,7 @@ module.exports = {
       {id: 'viewport-ad-density', weight: 2, group: 'ads-best-practices'},
       {id: 'ad-top-of-viewport', weight: 2, group: 'ads-best-practices'},
       {id: 'duplicate-tags', weight: 1, group: 'ads-best-practices'},
-      {id: 'deprecated-gpt-api-usage', weight: 0, group: 'ads-best-practices'},
+      {id: 'deprecated-api-usage', weight: 0, group: 'ads-best-practices'},
       {id: 'gpt-errors-overall', weight: 0, group: 'ads-best-practices'},
     ],
   },
