@@ -46,6 +46,8 @@ module.exports = [
         'serial-header-bidding': {scoreDisplayMode: 'notApplicable'},
         'tag-load-time': {scoreDisplayMode: 'notApplicable'},
         'viewport-ad-density': {scoreDisplayMode: 'notApplicable'},
+        'gpt-errors-overall': {scoreDisplayMode: 'notApplicable'},
+        'deprecated-api-usage': {scoreDisplayMode: 'notApplicable'},
       },
     },
   },
