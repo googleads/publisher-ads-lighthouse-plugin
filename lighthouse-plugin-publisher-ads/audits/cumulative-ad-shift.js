@@ -66,21 +66,32 @@ class CumulativeAdShift extends Audit {
    * @param {LH.TraceEvent} shiftEvent
    * @param {Artifacts['IFrameElement'][]} ads
    */
-  static isAdShift(shiftEvent, ads) {
+  static isAdExpansion(shiftEvent, ads) {
     if (!shiftEvent.args || !shiftEvent.args.data) {
       return false;
     }
-    for (const ad of ads) {
-      // Names come from external JSON
+    let topmostOldRect;
+    let isExpansion = false;
+    // Names come from external JSON
+    // eslint-disable-next-line camelcase
+    for (const node of shiftEvent.args.data.impacted_nodes || []) {
       // eslint-disable-next-line camelcase
-      for (const node of shiftEvent.args.data.impacted_nodes || []) {
-        // eslint-disable-next-line camelcase
-        const /* number[] */ oldRect = node.old_rect || [];
-        const shiftRect = toClientRect(oldRect);
-        const adRect = ad.clientRect;
-        if (overlaps(shiftRect, adRect)) {
-          return true;
-        }
+      const oldRect = toClientRect(node.old_rect || []);
+      if (!topmostOldRect || oldRect.top < topmostOldRect.top) {
+        topmostOldRect = oldRect;
+        const newRect = toClientRect(node.new_rect || []);
+        // Check if the ad expanded, i.e. the impacted node was shifted down.
+        isExpansion = (oldRect.top < newRect.top);
+      }
+    }
+    if (!topmostOldRect || !isExpansion) {
+      return false;
+    }
+    for (const ad of ads) {
+      const adRect = ad.clientRect;
+      if (topmostOldRect.top >= adRect.top
+          && overlaps(topmostOldRect, adRect)) {
+        return true;
       }
     }
     return false;
@@ -106,7 +117,7 @@ class CumulativeAdShift extends Audit {
       // @ts-ignore
       cumulativeShift += event.args.data.score;
       numShifts++;
-      if (this.isAdShift(event, ads)) {
+      if (this.isAdExpansion(event, ads)) {
         // @ts-ignore
         cumulativeAdShift += event.args.data.score;
         numAdShifts++;
