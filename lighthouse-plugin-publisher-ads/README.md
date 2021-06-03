@@ -17,6 +17,7 @@ We currently have a web app version of Publisher Ads Lighthouse Plugin. It can b
 Publisher Ads Audits is available as a [node package](https://npmjs.org/package/lighthouse-plugin-publisher-ads) which can be used with the Lighthouse CLI.
 
 ### Setup
+
 ```sh
 mkdir pub-ads-audits-wrapper && cd pub-ads-audits-wrapper && \
 npm init -y && \
@@ -24,8 +25,10 @@ yarn add -D lighthouse && \
 yarn add -D lighthouse-plugin-publisher-ads
 ```
 
-### Usage {
->From within `wrapper` directory
+### Usage
+
+From within `wrapper` directory created above:
+
 ```sh
 yarn lighthouse {url} --plugins=lighthouse-plugin-publisher-ads
 ```
