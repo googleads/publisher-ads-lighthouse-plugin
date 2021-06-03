@@ -65,6 +65,11 @@ const smokeTests = [
     expectations: require('./expectations/limited-ads-dynamic-loading.js'),
     config: require('./config.js'),
   },
+  {
+    id: 'cumulative-ad-shift',
+    expectations: require('./expectations/cumulative-ad-shift.js'),
+    config: require('./config.js'),
+  },
 ];
 
 module.exports = smokeTests;
