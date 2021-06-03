@@ -71,28 +71,24 @@ class CumulativeAdShift extends Audit {
     if (!shiftEvent.args || !shiftEvent.args.data) {
       return false;
     }
-    let topmostOldRect;
-    let isExpansion = false;
-    // Names come from external JSON
-    // eslint-disable-next-line camelcase
-    for (const node of shiftEvent.args.data.impacted_nodes || []) {
-      // eslint-disable-next-line camelcase
-      const oldRect = toClientRect(node.old_rect || []);
-      if (!topmostOldRect || oldRect.top < topmostOldRect.top) {
-        topmostOldRect = oldRect;
-        const newRect = toClientRect(node.new_rect || []);
-        // Check if the ad expanded, i.e. the impacted node was shifted down.
-        isExpansion = (oldRect.top < newRect.top);
-      }
-    }
-    if (!topmostOldRect || !isExpansion) {
-      return false;
-    }
     for (const ad of ads) {
       const adRect = ad.clientRect;
-      if (topmostOldRect.top >= adRect.top
-          && overlaps(topmostOldRect, adRect)) {
-        return true;
+      // Names come from external JSON
+      // eslint-disable-next-line camelcase
+      const impactedNodes = shiftEvent.args.data.impacted_nodes || [];
+      for (const node of impactedNodes) {
+        // eslint-disable-next-line camelcase
+        const oldRect = toClientRect(node.old_rect || []);
+        const newRect = toClientRect(node.new_rect || []);
+        if (oldRect.top > newRect.top || oldRect.height !== newRect.height) {
+          // It wasn't a downward shift. I.e. this element wasn't pushed down
+          // by an ad.
+          continue;
+        }
+        if (oldRect.top >= adRect.top && newRect.top > adRect.bottom &&
+            overlaps(oldRect, adRect)) {
+          return true;
+        }
       }
     }
     return false;
@@ -107,15 +103,15 @@ class CumulativeAdShift extends Audit {
     if (!shiftEvent.args || !shiftEvent.args.data) {
       return false;
     }
-    const frameTimeMicros = 17 * 1000; // 16 milliseconds in microseconds
+    const frameTimeMicros = 16 * 1000; // 16 milliseconds in microseconds
     // Check if any task occurred in the previous frame.
-    const containingTask = tasks.find((t) => {
+    const attributedTask = tasks.find((t) => {
       const ts = t.ts;
       // @ts-ignore
       const dur = t.tdur || t.dur || 0;
       return ts < shiftEvent.ts && shiftEvent.ts - ts - dur < frameTimeMicros;
     });
-    return !!containingTask;
+    return !!attributedTask;
   }
 
   /**
