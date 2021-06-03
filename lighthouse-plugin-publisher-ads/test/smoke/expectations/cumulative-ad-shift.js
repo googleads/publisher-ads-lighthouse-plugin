@@ -23,10 +23,10 @@ module.exports = [
       finalUrl: 'http://localhost:8081/layout-shift.html',
       audits: {
         'cumulative-ad-shift': {
-          score: null,
+          displayValue: '0.04',
           details: {
-            numShifts: 2,
-            numAdShifts: 2,
+            numShifts: 4,
+            numAdShifts: 4,
           },
         },
       },

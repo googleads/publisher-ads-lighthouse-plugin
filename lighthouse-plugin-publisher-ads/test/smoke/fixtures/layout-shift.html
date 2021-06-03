@@ -38,15 +38,24 @@
               .addService(googletag.pubads());
       });
       googletag.cmd.push(function() {
-        googletag.pubads().enableSingleRequest();
+        // googletag.pubads().enableSingleRequest();
         googletag.enableServices();
+        googletag.pubads().addEventListener('slotRenderEnded', function(evt) {
+          setTimeout(function() {
+            const el = document.getElementById(evt.slot.getSlotElementId());
+            el.style.height = '40px';
+          }, 1000);
+        });
       });
     </script>
   </head>
   <body>
+    <p> Hi! </p>
     <div id="div0" style="width: 728px;">
       <script>
-        googletag.cmd.push(function() { googletag.display('div0'); });
+        setTimeout(function() {
+          googletag.cmd.push(function() { googletag.display('div0'); });
+        }, 1000);
       </script>
     </div>
 
