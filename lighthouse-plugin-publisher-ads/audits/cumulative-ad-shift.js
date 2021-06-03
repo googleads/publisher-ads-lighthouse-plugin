@@ -65,6 +65,7 @@ class CumulativeAdShift extends Audit {
   /**
    * @param {LH.TraceEvent} shiftEvent
    * @param {Artifacts['IFrameElement'][]} ads
+   * @return {boolean}
    */
   static isAdExpansion(shiftEvent, ads) {
     if (!shiftEvent.args || !shiftEvent.args.data) {
@@ -100,6 +101,7 @@ class CumulativeAdShift extends Audit {
   /**
    * @param {LH.TraceEvent} shiftEvent
    * @param {LH.TraceEvent[]} tasks
+   * @return {boolean}
    */
   static isAttributableToTask(shiftEvent, tasks) {
     if (!shiftEvent.args || !shiftEvent.args.data) {
