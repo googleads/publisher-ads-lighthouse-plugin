@@ -71,20 +71,19 @@ class CumulativeAdShift extends Audit {
     if (!shiftEvent.args || !shiftEvent.args.data) {
       return false;
     }
-    for (const ad of ads) {
-      const adRect = ad.clientRect;
-      // Names come from external JSON
+    // Names come from external JSON
+    // eslint-disable-next-line camelcase
+    for (const node of shiftEvent.args.data.impacted_nodes || []) {
       // eslint-disable-next-line camelcase
-      const impactedNodes = shiftEvent.args.data.impacted_nodes || [];
-      for (const node of impactedNodes) {
-        // eslint-disable-next-line camelcase
-        const oldRect = toClientRect(node.old_rect || []);
-        const newRect = toClientRect(node.new_rect || []);
-        if (oldRect.top > newRect.top || oldRect.height !== newRect.height) {
-          // It wasn't a downward shift. I.e. this element wasn't pushed down
-          // by an ad.
-          continue;
-        }
+      const oldRect = toClientRect(node.old_rect || []);
+      const newRect = toClientRect(node.new_rect || []);
+      if (oldRect.top > newRect.top || oldRect.height !== newRect.height) {
+        // It wasn't a downward shift. I.e. this element wasn't pushed down
+        // by an ad.
+        continue;
+      }
+      for (const ad of ads) {
+        const adRect = ad.clientRect;
         if (oldRect.top >= adRect.top && newRect.top > adRect.bottom &&
             overlaps(oldRect, adRect)) {
           return true;
