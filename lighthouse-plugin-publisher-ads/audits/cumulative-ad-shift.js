@@ -16,7 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getScriptUrl} = require('../utils/network-timing');
-const {isAdIframe, isGpt, isImplTag} = require('../utils/resource-classification');
+const {isAdIframe, isAdRelated, isImplTag} = require('../utils/resource-classification');
 const {overlaps, toClientRect} = require('../utils/geometry');
 
 const UIStrings = {
@@ -172,7 +172,7 @@ class CumulativeAdShift extends Audit {
       return auditNotApplicable.NoLayoutShifts;
     }
     const scriptEvents =
-        trace.traceEvents.filter((e) => isGpt(getScriptUrl(e) || ''));
+        trace.traceEvents.filter((e) => isAdRelated(getScriptUrl(e) || ''));
 
     const tagLoadEvent =
         scriptEvents.find((e) => isImplTag(getScriptUrl(e) || '')) ||
