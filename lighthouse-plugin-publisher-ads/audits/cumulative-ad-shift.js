@@ -16,7 +16,7 @@ const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getScriptUrl} = require('../utils/network-timing');
-const {isAdIframe, isImplTag} = require('../utils/resource-classification');
+const {isAdIframe, isGpt, isImplTag} = require('../utils/resource-classification');
 const {overlaps, toClientRect} = require('../utils/geometry');
 
 const UIStrings = {
@@ -98,12 +98,32 @@ class CumulativeAdShift extends Audit {
   }
 
   /**
+   * @param {LH.TraceEvent} shiftEvent
+   * @param {LH.TraceEvent[]} tasks
+   */
+  static isAttributableToTask(shiftEvent, tasks) {
+    if (!shiftEvent.args || !shiftEvent.args.data) {
+      return false;
+    }
+    const frameTimeMicros = 17 * 1000; // 16 milliseconds in microseconds
+    // Check if any task occurred in the previous frame.
+    const containingTask = tasks.find((t) => {
+      const ts = t.ts;
+      // @ts-ignore
+      const dur = t.tdur || t.dur || 0;
+      return ts < shiftEvent.ts && shiftEvent.ts - ts - dur < frameTimeMicros;
+    });
+    return !!containingTask;
+  }
+
+  /**
    * Computes the ad shift score for the page.
    * @param {LH.TraceEvent[]} shiftEvents
+   * @param {LH.TraceEvent[]} scriptEvents
    * @param {Artifacts['IFrameElement'][]} ads
    * @param {number} tagLoadTs
    */
-  static compute(shiftEvents, ads, tagLoadTs) {
+  static compute(shiftEvents, scriptEvents, ads, tagLoadTs) {
     let cumulativeShift = 0;
     let numShifts = 0;
     let cumulativeAdShift = 0;
@@ -117,7 +137,8 @@ class CumulativeAdShift extends Audit {
       // @ts-ignore
       cumulativeShift += event.args.data.score;
       numShifts++;
-      if (this.isAdExpansion(event, ads)) {
+      if (this.isAdExpansion(event, ads) ||
+          this.isAttributableToTask(event, scriptEvents)) {
         // @ts-ignore
         cumulativeAdShift += event.args.data.score;
         numAdShifts++;
@@ -150,9 +171,11 @@ class CumulativeAdShift extends Audit {
     if (!shiftEvents.length) {
       return auditNotApplicable.NoLayoutShifts;
     }
+    const scriptEvents =
+        trace.traceEvents.filter((e) => isGpt(getScriptUrl(e) || ''));
 
     const tagLoadEvent =
-        trace.traceEvents.find((e) => isImplTag(getScriptUrl(e) || '')) ||
+        scriptEvents.find((e) => isImplTag(getScriptUrl(e) || '')) ||
         {ts: Infinity};
 
     // Maybe we should look at the parent elements (created by the publisher and
@@ -163,7 +186,8 @@ class CumulativeAdShift extends Audit {
       return auditNotApplicable.NoAdRendered;
     }
 
-    const details = this.compute(shiftEvents, ads, tagLoadEvent.ts);
+    const details =
+        this.compute(shiftEvents, scriptEvents, ads, tagLoadEvent.ts);
     const rawScore = details.cumulativeAdShift;
     return {
       numericValue: rawScore,
