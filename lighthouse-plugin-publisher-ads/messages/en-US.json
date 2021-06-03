@@ -539,6 +539,30 @@
     "message": "Tag load time",
     "description": ""
   },
+  "audits/total-ad-blocking-time.js | columnBlockingTime": {
+    "message": "Blocking Time",
+    "description": ""
+  },
+  "audits/total-ad-blocking-time.js | columnName": {
+    "message": "Name",
+    "description": ""
+  },
+  "audits/total-ad-blocking-time.js | description": {
+    "message": "Ad-related scripts are blocking the main thread.",
+    "description": ""
+  },
+  "audits/total-ad-blocking-time.js | failureDisplayValue": {
+    "message": "{timeInMs, number, seconds} s blocked",
+    "description": ""
+  },
+  "audits/total-ad-blocking-time.js | failureTitle": {
+    "message": "Reduce ad JS blocking time",
+    "description": ""
+  },
+  "audits/total-ad-blocking-time.js | title": {
+    "message": "Total ad JS blocking time",
+    "description": "Title of the audit"
+  },
   "audits/viewport-ad-density.js | description": {
     "message": "Ad density, the ads-to-content ratio, can impact user experience and ultimately user retention. The Better Ads Standard [recommends having an ad density below 30%](https://www.betterads.org/mobile-ad-density-higher-than-30/). [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density).",
     "description": ""

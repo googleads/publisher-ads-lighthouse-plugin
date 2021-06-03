@@ -188,7 +188,7 @@ function isGpt(url) {
 
 /**
  * Checks if the url is loading amp-ad script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isAMP(url) {
@@ -236,7 +236,7 @@ function isGptIframe(iframe) {
 
 /**
  * Checks if the url is loading an AdSense or GPT loader script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isAdTag(url) {
@@ -245,7 +245,7 @@ function isAdTag(url) {
 
 /**
  * Checks if the url is loading an AdSense or GPT loader or impl script.
- * @param {URL} url
+ * @param {URL|string} url
  * @return {boolean}
  */
 function isAdScript(url) {
@@ -397,6 +397,21 @@ function getNameOrTld(url) {
   return tld || host;
 }
 
+/**
+ * @param {string} url
+ * @return {boolean}
+ */
+function isAdRelated(url) {
+  if (isAdScript(url) || getHeaderBidder(url)) {
+    return true;
+  }
+  const thirdPartyEntity = thirdPartyWeb.getEntity(url);
+  if (thirdPartyEntity) {
+    return thirdPartyEntity.categories.includes('ad');
+  }
+  return false;
+}
+
 module.exports = {
   isGoogleAds,
   isGptAdRequest,
@@ -426,4 +441,5 @@ module.exports = {
   getNameOrTld,
   isAMPTag,
   isAMPAdRequest,
+  isAdRelated,
 };
