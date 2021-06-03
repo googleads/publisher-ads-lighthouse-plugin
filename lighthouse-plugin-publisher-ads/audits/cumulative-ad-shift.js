@@ -84,7 +84,7 @@ class CumulativeAdShift extends Audit {
       }
       for (const ad of ads) {
         const adRect = ad.clientRect;
-        if (oldRect.top >= adRect.top && newRect.top > adRect.bottom &&
+        if ((oldRect.top >= adRect.top || newRect.top >= adRect.bottom) &&
             overlaps(oldRect, adRect)) {
           return true;
         }
@@ -102,14 +102,10 @@ class CumulativeAdShift extends Audit {
     if (!shiftEvent.args || !shiftEvent.args.data) {
       return false;
     }
-    const frameTimeMicros = 16 * 1000; // 16 milliseconds in microseconds
+    const timeWindow = 50 * 1000; // 50 milliseconds in microseconds
     // Check if any task occurred in the previous frame.
-    const attributedTask = tasks.find((t) => {
-      const ts = t.ts;
-      // @ts-ignore
-      const dur = t.tdur || t.dur || 0;
-      return ts < shiftEvent.ts && shiftEvent.ts - ts - dur < frameTimeMicros;
-    });
+    const attributedTask = tasks.find((t) =>
+      t.ts < shiftEvent.ts && (shiftEvent.ts - t.ts) < timeWindow);
     return !!attributedTask;
   }
 
@@ -127,6 +123,7 @@ class CumulativeAdShift extends Audit {
     let numAdShifts = 0;
     let cumulativePreImplTagAdShift = 0;
     let numPreImplTagAdShifts = 0;
+
     for (const event of shiftEvents) {
       if (!event.args || !event.args.data || !event.args.data.is_main_frame) {
         continue;
