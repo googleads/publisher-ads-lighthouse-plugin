@@ -40,11 +40,6 @@
       googletag.cmd.push(function() {
         googletag.pubads().enableSingleRequest();
         googletag.enableServices();
-        googletag.pubads().addEventListener('slotRenderEnded', function(e) {
-          setTimeout(function() {
-            googletag.pubads().clear([e.slot]);
-          }, 1000);
-        });
       });
     </script>
   </head>
