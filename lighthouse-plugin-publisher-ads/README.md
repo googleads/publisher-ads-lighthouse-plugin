@@ -24,11 +24,20 @@ yarn add -D lighthouse && \
 yarn add -D lighthouse-plugin-publisher-ads
 ```
 
-### Usage
+### Usage {
 >From within `wrapper` directory
 ```sh
 yarn lighthouse {url} --plugins=lighthouse-plugin-publisher-ads
 ```
+
+Common additional arguments include:
+
+-   `--view`: Open report in Chrome after execution.
+-   `--only-categories=performance,lighthouse-plugin-publisher-ads` to only run page and ad performance audits
+-   `--preset=desktop` and `--preset=mobile` to run on the desktop or mobile version of the site.
+-   `--extra-headers "{\"Cookie\":\"monster=blue\"}"` to include additional
+    cookies on all requests.
+
 See [Lighthouse documentation](https://github.com/GoogleChrome/lighthouse/#cli-options) for additional options.
 
 ## Development
@@ -41,24 +50,13 @@ cd publisher-ads-lighthouse-plugin
 yarn
 ```
 
-### Usage
+Afterwards you can run the plugin on its own with:
 
 ```sh
-node index.js <url>
+node index.js <url> [..options]
 ```
 
-Available options:
--   `--view`: Open report in Chrome after execution.
--   `--full`: Run all Lighthouse categories.
--   Any other [Lighthouse flags](https://github.com/GoogleChrome/lighthouse/#cli-options).
-
-Some common options are:
-
--   `--additional-trace-categories=performance` to include general web
-    performance audits.
--   `--emulated-form-factor=desktop` to run on the desktop version of the site.
--   `--extra-headers "{\"Cookie\":\"monster=blue\"}"` to include additional
-    cookies on all requests.
+See the [Usage](#usage) section for supported options
 
 #### Continuous Integration
 
