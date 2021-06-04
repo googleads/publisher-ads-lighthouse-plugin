@@ -55,7 +55,7 @@ jobs:
           node-version: 12.x
       - run: yarn install --frozen-lockfile --network-timeout 1000000
       - run: sudo apt-get install xvfb
-      - run: yarn smoke
+      - run: xvfb-run --auto-servernum yarn smoke
 
   lhci:
     name: Lighthouse CI
