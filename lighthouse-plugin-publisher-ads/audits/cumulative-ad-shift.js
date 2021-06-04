@@ -154,14 +154,55 @@ class CumulativeAdShift extends Audit {
   }
 
   /**
+   * Returns a list of layout shift events within the greatest session window.
+   * @param {LH.TraceEvent[]} traceEvents
+   * @return {LH.TraceEvent[]}
+   */
+  static getLayoutShiftEvents(traceEvents) {
+    const gapMicros = 1 * 1e6; // 1 second
+    const windowLimitMicros = 5 * 1e6; // 5 seconds
+
+    let maxCumulativeScore = 0;
+    /** @type {LH.TraceEvent[]} */ let maxWindow = [];
+    let currentRunningScore = 0;
+    /** @type {LH.TraceEvent[]} */ let currentWindow = [];
+
+    for (const currentEvent of traceEvents) {
+      if (currentEvent.name !== 'LayoutShift' || !currentEvent.args ||
+          !currentEvent.args.data) {
+        continue;
+      }
+      if (currentWindow.length) {
+        const firstEvent = currentWindow[0];
+        const lastEvent = currentWindow[currentWindow.length - 1];
+        if (lastEvent.ts - firstEvent.ts > windowLimitMicros ||
+            currentEvent.ts - lastEvent.ts > gapMicros) {
+          if (currentRunningScore > maxCumulativeScore) {
+            maxWindow = currentWindow;
+            maxCumulativeScore = currentRunningScore;
+          }
+          currentWindow = [];
+          currentRunningScore = 0;
+        }
+      }
+      currentWindow.push(currentEvent);
+      const data = currentEvent.args.data;
+      currentRunningScore += data.weighted_score_delta || data.score || 0;
+    }
+    if (!maxWindow.length) {
+      maxWindow = currentWindow;
+    }
+    return maxWindow;
+  }
+
+  /**
    * @param {LH.Artifacts} artifacts
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Audit.Product>}
    */
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const shiftEvents =
-      trace.traceEvents.filter((e) => e.name === 'LayoutShift');
+    const shiftEvents = this.getLayoutShiftEvents(trace.traceEvents);
     if (!shiftEvents.length) {
       return auditNotApplicable.NoLayoutShifts;
     }
