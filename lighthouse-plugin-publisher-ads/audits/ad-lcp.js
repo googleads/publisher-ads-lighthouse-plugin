@@ -9,21 +9,24 @@
 // limitations under the License.
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const LongTasks = require('../computed/long-tasks');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+// @ts-ignore
+const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {getAttributableUrl} = require('../utils/tasks');
-const {isAdRelated, getNameOrTld} = require('../utils/resource-classification');
+const {isAdRelated} = require('../utils/resource-classification');
 
 const UIStrings = {
   /* Title of the audit */
-  title: 'Total ad JS blocking time',
-  failureTitle: 'Reduce ad JS blocking time',
-  description: 'Ad-related scripts are blocking the main thread.',
-  failureDisplayValue: '{timeInMs, number, seconds} s blocked',
-  columnName: 'Name',
-  columnBlockingTime: 'Blocking Time',
+  title: 'Ad largest contentful paint',
+  description: 'Checks largest contentful paint events inside of ad iframes',
+  displayValueNoImpact: 'Ads did not impact LCP',
+  displayValueMayImprove: 'Ads may improve LCP (All-Frames)',
+  displayValueMayImpact: 'Ads may impact LCP (All-Frames)',
+  columnSize: 'Size',
+  columnTime: 'Time',
+  nameAdLcp: 'Ad LCP',
+  nameMainFrameLcp: 'Main Frame LCP',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -41,12 +44,18 @@ const HEADINGS = [
   {
     key: 'name',
     itemType: 'text',
-    text: str_(UIStrings.columnName),
+    text: '',
   },
   {
-    key: 'blockingTime',
+    key: 'size',
+    itemType: 'numeric',
+    text: str_(UIStrings.columnSize),
+    granularity: 1,
+  },
+  {
+    key: 'time',
     itemType: 'ms',
-    text: str_(UIStrings.columnBlockingTime),
+    text: str_(UIStrings.columnTime),
     granularity: 1,
   },
 ];
@@ -61,27 +70,9 @@ class AdLcp extends Audit {
     return {
       id: 'ad-lcp',
       title: str_(UIStrings.title),
-      failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['traces', 'devtoolsLogs'],
-    };
-  }
-
-  /**
-   * @return {{
-    *  simulate: LH.Audit.ScoreOptions, provided: LH.Audit.ScoreOptions,
-    * }}
-    */
-  static get defaultOptions() {
-    return {
-      simulate: {
-        p10: 290,
-        median: 600,
-      },
-      provided: {
-        p10: 150,
-        median: 350,
-      },
+      scoreDisplayMode: 'informative',
+      requiredArtifacts: ['traces', 'devtoolsLogs', 'URL'],
     };
   }
 
@@ -92,27 +83,83 @@ class AdLcp extends Audit {
    * @override
    */
   static async audit(artifacts, context) {
-    const LONG_TASK_DUR_MS = 50;
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    if (!networkRecords.find((r) => isAdRelated(r.url))) {
+
+    const {
+      mainFrameIds,
+      timeOriginEvt,
+      largestContentfulPaintAllFramesEvt: lcpAfEvt,
+      largestContentfulPaintEvt: lcpMfEvt, // Mf is main frame
+    } = await TraceOfTab.request(trace, context);
+
+    /** @type Set<string> */ const adFrameIds = new Set(networkRecords
+        .filter((r) => isAdRelated(r.url) && r.frameId !== mainFrameIds.frameId)
+        .map((r) => r.frameId || 'unknown'));
+
+    if (!adFrameIds.size) {
       return auditNotApplicable.NoAdRelatedReq;
     }
 
+    let lcpAdEvt;
     for (const evt of trace.traceEvents) {
-      if (evt.name === 'largestContentfulPaint::Candidate') {
-        console.log(evt)
+      if (!evt.args || !evt.args.data) continue;
+      if (evt.name === 'largestContentfulPaint::Candidate' &&
+          !evt.args.data.is_main_frame &&
+          adFrameIds.has(evt.args.frame || '--')) {
+        if (!lcpAdEvt || evt.ts > lcpAdEvt.ts) {
+          lcpAdEvt = evt;
+        }
       }
     }
 
+    if (!lcpAfEvt || !lcpAfEvt.args || !lcpAfEvt.args.data ||
+        !lcpMfEvt || !lcpMfEvt.args || !lcpMfEvt.args.data ||
+        !lcpAdEvt || !lcpAdEvt.args || !lcpAdEvt.args.data) {
+      return auditNotApplicable.Default;
+    }
+
+    /** @type {string} */ let displayValue;
+    if (lcpAfEvt.args.data.isMainFrame ||
+        Number(lcpAdEvt.args.data.size) < lcpMfEvt.args.data.size) {
+      // The ad is smaller than the main frame LCP, no impact.
+      displayValue = UIStrings.displayValueNoImpact;
+    } else if (lcpAdEvt.ts >= lcpMfEvt.ts) {
+      // Ad LCP happened later, may impact all frames LCP
+      displayValue = UIStrings.displayValueMayImpact;
+    } else if (lcpAdEvt.ts < lcpMfEvt.ts) {
+      // Ad LCP happened before, may improve all frames LCP. Unlikely to
+      // happen on real pages.
+      displayValue = UIStrings.displayValueMayImprove;
+    } else {
+      return auditNotApplicable.Default;
+    }
+
+    const tableView = [
+      {
+        name: UIStrings.nameAdLcp,
+        size: lcpAdEvt.args.data.size,
+        time: (lcpAdEvt.ts - timeOriginEvt.ts) / 1000,
+      },
+      {
+        name: UIStrings.nameMainFrameLcp,
+        size: lcpMfEvt.args.data.size,
+        time: (lcpMfEvt.ts - timeOriginEvt.ts) / 1000,
+      },
+    ];
+
     return {
-      score: Audit.computeLogNormalScore(scoreOptions, totalAdJsBlockingTime),
-      numericValue: totalAdJsBlockingTime,
-      numericUnit: 'millisecond',
-      displayValue:
-        str_(UIStrings.failureDisplayValue, {timeInMs: totalAdJsBlockingTime}),
-      details: AdLcp.makeTableDetails(HEADINGS, tableDetails),
+      // Score is not important since audit is only informative.
+      score: lcpAfEvt.args.data.isMainFrame,
+      displayValue,
+      // TODO: add a table for the LCP time and size for ads vs. main frame
+      details: {
+        ...AdLcp.makeTableDetails(HEADINGS, tableView),
+        lcpAdEvt,
+        lcpAfEvt,
+        lcpMfEvt,
+      },
     };
   }
 }
