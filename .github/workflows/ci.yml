@@ -4,8 +4,8 @@ on:
     branches: [master]
   pull_request:
 jobs:
-  unit:
-    name: Unit Tests
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: git clone
@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 12.x
       - run: yarn install --frozen-lockfile --network-timeout 1000000
-      - run: yarn test
+      - run: yarn lint
 
   type:
     name: Type Check
@@ -30,8 +30,8 @@ jobs:
       - run: yarn install --frozen-lockfile --network-timeout 1000000
       - run: yarn type-check
 
-  lint:
-    name: Lint
+  unit:
+    name: Unit Tests
     runs-on: ubuntu-latest
     steps:
       - name: git clone
@@ -41,10 +41,10 @@ jobs:
         with:
           node-version: 12.x
       - run: yarn install --frozen-lockfile --network-timeout 1000000
-      - run: yarn lint
+      - run: yarn test
 
   smoke:
-    name: Smoke
+    name: Smoke Tests
     runs-on: ubuntu-latest
     steps:
       - name: git clone
