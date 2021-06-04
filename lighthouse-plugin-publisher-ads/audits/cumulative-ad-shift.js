@@ -158,7 +158,7 @@ class CumulativeAdShift extends Audit {
    * @param {LH.TraceEvent[]} traceEvents
    * @return {LH.TraceEvent[]}
    */
-  static getLayoutShiftEvents(traceEvents) {
+  static getLayoutShiftEventsByWindow(traceEvents) {
     const gapMicros = 1 * 1e6; // 1 second
     const windowLimitMicros = 5 * 1e6; // 5 seconds
 
@@ -202,7 +202,7 @@ class CumulativeAdShift extends Audit {
    */
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const shiftEvents = this.getLayoutShiftEvents(trace.traceEvents);
+    const shiftEvents = this.getLayoutShiftEventsByWindow(trace.traceEvents);
     if (!shiftEvents.length) {
       return auditNotApplicable.NoLayoutShifts;
     }
