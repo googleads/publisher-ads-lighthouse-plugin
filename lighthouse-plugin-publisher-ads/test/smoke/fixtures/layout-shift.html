@@ -38,13 +38,11 @@
               .addService(googletag.pubads());
       });
       googletag.cmd.push(function() {
-        // googletag.pubads().enableSingleRequest();
         googletag.enableServices();
         googletag.pubads().addEventListener('slotRenderEnded', function(evt) {
           setTimeout(function() {
-            const el = document.getElementById(evt.slot.getSlotElementId());
-            el.style.height = '40px';
-          }, 1000);
+            googletag.pubads().clear([evt.slot]);
+          }, Math.round(1000 + 1000 * Math.random()));
         });
       });
     </script>

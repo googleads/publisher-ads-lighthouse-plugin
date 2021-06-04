@@ -175,14 +175,15 @@ class CumulativeAdShift extends Audit {
     // Maybe we should look at the parent elements (created by the publisher and
     // passed to the ad tag) rather than the iframe itself.
     const ads = artifacts.IFrameElements.filter(isAdIframe);
-    if (!ads.length) {
+    const details =
+        this.compute(shiftEvents, scriptEvents, ads, tagLoadEvent.ts);
+    const rawScore = details.cumulativeAdShift;
+
+    if (!ads.length && !rawScore) {
       // TODO count shifts for the container element here.
       return auditNotApplicable.NoAdRendered;
     }
 
-    const details =
-        this.compute(shiftEvents, scriptEvents, ads, tagLoadEvent.ts);
-    const rawScore = details.cumulativeAdShift;
     return {
       numericValue: rawScore,
       numericUnit: 'unitless',
