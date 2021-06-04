@@ -52,12 +52,6 @@ const HEADINGS = [
     text: str_(UIStrings.columnSize),
     granularity: 1,
   },
-  {
-    key: 'time',
-    itemType: 'ms',
-    text: str_(UIStrings.columnTime),
-    granularity: 1,
-  },
 ];
 
 /** @inheritDoc */
