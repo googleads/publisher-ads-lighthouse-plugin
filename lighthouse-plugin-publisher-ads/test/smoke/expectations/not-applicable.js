@@ -47,7 +47,7 @@ module.exports = [
         'tag-load-time': {scoreDisplayMode: 'notApplicable'},
         'viewport-ad-density': {scoreDisplayMode: 'notApplicable'},
         'gpt-errors-overall': {scoreDisplayMode: 'notApplicable'},
-        'deprecated-api-usage': {scoreDisplayMode: 'notApplicable'},
+        'deprecated-gpt-api-usage': {scoreDisplayMode: 'notApplicable'},
       },
     },
   },

@@ -41,7 +41,7 @@ class DeprecatedApiUsage extends Audit {
    */
   static get meta() {
     return {
-      id: 'deprecated-api-usage',
+      id: 'deprecated-gpt-api-usage',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
