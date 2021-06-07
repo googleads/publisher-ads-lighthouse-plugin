@@ -13,8 +13,10 @@
 // limitations under the License.
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
-const {isGpt} = require('../utils/resource-classification');
+const {isGpt, isGptImplTag} = require('../utils/resource-classification');
 
 const UIStrings = {
   title: 'GPT Errors',
@@ -44,15 +46,24 @@ class GptErrorsOverall extends Audit {
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
       scoreDisplayMode: 'informative',
-      requiredArtifacts: ['ConsoleMessages'],
+      requiredArtifacts: ['ConsoleMessages', 'devtoolsLogs'],
     };
   }
 
   /**
    * @param {LH.Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Audit.Product>}
    */
-  static audit(artifacts) {
+  static async audit(artifacts, context) {
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const network = await NetworkRecords.request(devtoolsLog, context);
+
+    const pubadsImpl = network.find((r) => isGptImplTag(r.url));
+    if (!pubadsImpl) {
+      return auditNotApplicable.NoGpt;
+    }
+
     /** @type {Array<{
      * source: string,
      * description: string|undefined,
