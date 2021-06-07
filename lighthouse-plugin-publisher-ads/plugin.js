@@ -49,6 +49,7 @@ module.exports = {
     {path: `${PLUGIN_PATH}/audits/cumulative-ad-shift`},
     {path: `${PLUGIN_PATH}/audits/deprecated-api-usage`},
     {path: `${PLUGIN_PATH}/audits/gpt-errors-overall`},
+    {path: `${PLUGIN_PATH}/audits/total-ad-blocking-time`},
   ],
   groups: {
     'metrics': {
@@ -71,6 +72,7 @@ module.exports = {
       {id: 'ad-request-from-page-start', weight: 25, group: 'metrics'},
       {id: 'first-ad-render', weight: 10, group: 'metrics'},
       {id: 'cumulative-ad-shift', weight: 5, group: 'metrics'},
+      {id: 'total-ad-blocking-time', weight: 2, group: 'metrics'},
       // Performance group.
       {id: 'gpt-bids-parallel', weight: 1, group: 'ads-performance'},
       {id: 'serial-header-bidding', weight: 1, group: 'ads-performance'},

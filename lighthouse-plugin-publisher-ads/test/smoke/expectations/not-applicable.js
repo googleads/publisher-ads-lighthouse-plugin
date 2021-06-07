@@ -45,6 +45,7 @@ module.exports = [
         'script-injected-tags': {scoreDisplayMode: 'notApplicable'},
         'serial-header-bidding': {scoreDisplayMode: 'notApplicable'},
         'tag-load-time': {scoreDisplayMode: 'notApplicable'},
+        'total-ad-blocking-time': {scoreDisplayMode: 'notApplicable'},
         'viewport-ad-density': {scoreDisplayMode: 'notApplicable'},
         'gpt-errors-overall': {scoreDisplayMode: 'notApplicable'},
         'deprecated-gpt-api-usage': {scoreDisplayMode: 'notApplicable'},
