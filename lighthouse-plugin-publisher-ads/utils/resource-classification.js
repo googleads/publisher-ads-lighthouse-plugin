@@ -398,10 +398,11 @@ function getNameOrTld(url) {
 }
 
 /**
- * @param {string} url
+ * @param {LH.Artifacts.NetworkRequest|string} requestOrUrl
  * @return {boolean}
  */
-function isAdRelated(url) {
+function isAdRelated(requestOrUrl) {
+  const url = typeof requestOrUrl == 'string' ? requestOrUrl : requestOrUrl.url;
   if (isAdScript(url) || getHeaderBidder(url)) {
     return true;
   }
