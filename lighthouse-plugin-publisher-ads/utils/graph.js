@@ -369,7 +369,10 @@ function computeSelfTimes(requests) {
 async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
   const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
-  const maybeFirstAdRequest = networkRecords.find(isAdRequest);
+  const maybeFirstAdRequest =
+    networkRecords.find(isAdRequest) ||
+    networkRecords.find((r) => !!getHeaderBidder(r.url)) ||
+    networkRecords.find((r) => !!isGpt(r.url) || isAdSense(r.url));
   if (maybeFirstAdRequest == null) {
     return Promise.resolve([]);
   }
