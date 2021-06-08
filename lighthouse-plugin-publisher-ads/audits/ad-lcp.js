@@ -19,7 +19,8 @@ const {isAdRelated} = require('../utils/resource-classification');
 const UIStrings = {
   /* Title of the audit */
   title: 'Ad largest contentful paint',
-  description: 'Checks largest contentful paint events inside of ad iframes',
+  description: 'Audits the size of contentful paints inside of ad iframes ' +
+      'and compares it to contentful paints on the main page.',
   displayValueNoImpact: 'Ads did not impact LCP',
   displayValueMayImprove: 'Ads may improve LCP (All-Frames)',
   displayValueMayImpact: 'Ads may impact LCP (All-Frames)',
