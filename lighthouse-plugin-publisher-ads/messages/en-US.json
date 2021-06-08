@@ -36,7 +36,7 @@
     "description": ""
   },
   "audits/ad-lcp.js | description": {
-    "message": "Checks largest contentful paint events inside of ad iframes",
+    "message": "Audits the size of contentful paints inside of ad iframes and compares it to contentful paints on the main page.",
     "description": ""
   },
   "audits/ad-lcp.js | displayValueMayImpact": {
