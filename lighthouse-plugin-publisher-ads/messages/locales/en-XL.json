@@ -411,7 +411,7 @@
     "message": "N̂ám̂é"
   },
   "audits/total-ad-blocking-time.js | description": {
-    "message": "Âd́-r̂él̂át̂éd̂ śĉŕîṕt̂ś âŕê b́l̂óĉḱîńĝ t́ĥé m̂áîń t̂h́r̂éâd́."
+    "message": "Âd́-r̂él̂át̂éd̂ śĉŕîṕt̂ś âŕê b́l̂óĉḱîńĝ t́ĥé m̂áîń t̂h́r̂éâd́. [L̂éâŕn̂ ḿôŕê](h́t̂t́p̂ś://d̂év̂él̂óp̂ér̂ś.ĝóôǵl̂é.ĉóm̂/ṕûb́l̂íŝh́êŕ-âd́ŝ-áûd́ît́ŝ/ŕêf́êŕêńĉé/âúd̂ít̂ś/t̂ót̂ál̂-ád̂-b́l̂óĉḱîńĝ-t́îḿê)."
   },
   "audits/total-ad-blocking-time.js | failureDisplayValue": {
     "message": "{timeInMs, number, seconds} ŝ b́l̂óĉḱêd́"
