@@ -4,15 +4,15 @@
 
 This audit measures how much [blocking time](https://web.dev/tbt/) is
 attributable to ads scripts. This captures time where the JS thread is blocked
-by an ad script for long enough to be noticeable by users when it impacts
-input delay or content loading.
+by an ad-related script for long enough to be noticeable by users when it
+affects input delay or content loading.
 
 ## Recommendations
 
 The most important factor in ad JS blocking time is how many ads are being
 loaded. Our recommendations are:
 
-- Load fewer ads or reduce ad density, if feasible
-- Lazy load ads below the fold
+- [Load fewer ads or reduce ad density](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density), if feasible
+- [Lazy load ads below the fold](https://developers.google.com/publisher-ads-audits/reference/audits/ads-in-viewport)
 - Reduce batch sizes if using Single Request Architecture (SRA) in GPT.
 
