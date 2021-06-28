@@ -10,7 +10,7 @@ can directly affect input delay or content loading.
 ## Recommendations
 
 The most important factor in ad JS blocking time is how many ads are being
-loaded. Our recommendations are:
+loaded at once. Our recommendations are:
 
 - [Load fewer ads at once or reduce ad density](https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density), if feasible
 - [Lazy load ads below the fold](https://developers.google.com/publisher-ads-audits/reference/audits/ads-in-viewport)
@@ -18,9 +18,8 @@ loaded. Our recommendations are:
 
 ## More information
 
-The metric sums the _blocking time_ of each JS task coming from an ad-related
-script. See [web.dev](https://web.dev/lighthouse-total-blocking-time/#what-tbt-measures)
-for more information about this is defined.
+To learn how blocking time is defined, see this article on
+[Total Blocking Time](https://web.dev/lighthouse-total-blocking-time/#what-tbt-measures)
 
 A script is considered to be ad-related if it is either an ad tag or labeled as
-an "ad" script by https://github.com/patrickhulce/third-party-web.
+an "ad" script by [Third Party Web](https://github.com/patrickhulce/third-party-web).
