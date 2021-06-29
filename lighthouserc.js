@@ -25,7 +25,7 @@ module.exports = {
             'tag-load-time': [
               'error',
               {
-                'maxNumericValue': 2300, // <= 2.3s
+                'maxNumericValue': 2350, // <= 2.35s
               },
             ],
             'ad-request-from-page-start': [
