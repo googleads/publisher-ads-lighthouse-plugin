@@ -1,4 +1,4 @@
-Lazy load ads until they are nearly on-screen
+# Lazy load ads below the fold
 
 ## Overview
 
