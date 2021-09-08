@@ -20,7 +20,10 @@ const UIStrings = {
   /* Title of the audit */
   title: 'Total ad JS blocking time',
   failureTitle: 'Reduce ad JS blocking time',
-  description: 'Ad-related scripts are blocking the main thread.',
+  description: 'Ad-related scripts are blocking the main thread. ' +
+  '[Learn more](' +
+  'https://developers.google.com/publisher-ads-audits/reference/audits/total-ad-blocking-time' +
+  ').',
   failureDisplayValue: '{timeInMs, number, seconds} s blocked',
   columnName: 'Name',
   columnBlockingTime: 'Blocking Time',

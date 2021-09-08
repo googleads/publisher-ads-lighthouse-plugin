@@ -548,7 +548,7 @@
     "description": ""
   },
   "audits/total-ad-blocking-time.js | description": {
-    "message": "Ad-related scripts are blocking the main thread.",
+    "message": "Ad-related scripts are blocking the main thread. [Learn more](https://developers.google.com/publisher-ads-audits/reference/audits/total-ad-blocking-time).",
     "description": ""
   },
   "audits/total-ad-blocking-time.js | failureDisplayValue": {
