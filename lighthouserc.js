@@ -42,7 +42,7 @@ module.exports = {
             // Performance category assertions.
             'categories:performance': [
               'error',
-              {'minScore': .9},
+              {'minScore': .85},
             ],
             // Assert that specific metrics fall within desired range.
             'first-contentful-paint': [
@@ -51,7 +51,7 @@ module.exports = {
             ],
             'speed-index': [
               'error',
-              {'maxNumericValue': 1500}, // <= 1.5s
+              {'maxNumericValue': 2000}, // <= 2s
             ],
             'largest-contentful-paint': [
               'error',
@@ -63,7 +63,7 @@ module.exports = {
             ],
             'total-blocking-time': [
               'error',
-              {'maxNumericValue': 400}, // <= .4s
+              {'maxNumericValue': 750}, // <= .75s
             ],
             'cumulative-layout-shift': [
               'error',
