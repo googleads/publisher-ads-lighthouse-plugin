@@ -63,7 +63,7 @@ hover over the source link to see all of the calls leading up to the request.
 
 ## More information
 
-This audit operates against a whitelist of ad scripts which are known to be safe
+This audit operates against a allowlist of ad scripts which are known to be safe
 to load statically. The current list is:
 
 <table>
