@@ -195,7 +195,7 @@ function checkIfTagIsBlocking(idlePeriod, blockingTags, pageStartTime) {
 /**
  * Checks waiting on load events is the cause of the idle period.
  * @param {IdlePeriod} idlePeriod
- * @param {LH.Artifacts.TraceTimes} timings
+ * @param {LH.Artifacts.NavigationTraceTimes} timings
  * @return {boolean} True if waiting on load is the suspected cause, false
  *     otherwise.
  */
@@ -223,7 +223,7 @@ function checkIfLoadIsBlocking(idlePeriod, timings) {
  * @param {IdlePeriod} idlePeriod
  * @param {LH.Artifacts.TaskNode[]} mainThreadTasks
  * @param {LH.TraceEvent[]} timerEvents
- * @param {LH.Artifacts.TraceTimes} timings
+ * @param {LH.Artifacts.NavigationTraceTimes} timings
  * @param {LH.Artifacts.TagBlockingFirstPaint[]} blockingTags
  * @param {number} pageStartTime
  */
