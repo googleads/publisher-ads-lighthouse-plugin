@@ -20,7 +20,7 @@ const {isAdIframe} = require('../utils/resource-classification');
 const UIStrings = {
   title: 'Ad density is within recommended range',
   failureTitle: 'Reduce ad density',
-  description: 'Ad density, the ads-to-page-height ratio, can impact user ' +
+  description: 'Ad density, the ads to page-height ratio, can impact user ' +
   'experience and ultimately user retention. The Better Ads ' +
   'Standard [recommends having an ad density below 30%]' +
   '(https://www.betterads.org/mobile-ad-density-higher-than-30/). ' +
