@@ -94,6 +94,10 @@ module.exports = {
               'error',
               {'maxNumericValue': 3.54}, // <= 3.54
             ],
+            'viewport-ad-density': [
+              'error',
+              {'maxNumericValue': .33}, // <= 33% density
+            ],
             'ad-blocking-tasks': [
               'error',
               {'maxLength': 2}, // No more than 2 blocking tasks.
