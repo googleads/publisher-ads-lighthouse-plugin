@@ -8,7 +8,7 @@ This tool is a plugin for [Lighthouse](https://github.com/GoogleChrome/lighthous
 
 In order to help us improve please [file an issue](https://github.com/googleads/publisher-ads-lighthouse-plugin/issues) to let us know of any issues or suggestions you may have.
 
-:warning: | Publisher Ads Audits for Lighthouse audit results are not an indication of compliance or non-compliance with any [Google Publisher Policies](https://support.google.com/publisherpolicies/answer/10502938).
+:warning: | Publisher Ads Audits for Lighthouse audit results aren't an indication of compliance or non-compliance with any [Google Publisher Policies](https://support.google.com/publisherpolicies/answer/10502938).
 :---: | :---
 
 ## Web App
