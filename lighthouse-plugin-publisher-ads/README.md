@@ -1,16 +1,19 @@
-# Publisher Ads Lighthouse Plugin
+# Publisher Ads Audits for Lighthouse
 [![Linux Build Status](https://img.shields.io/travis/googleads/publisher-ads-lighthouse-plugin/master.svg)](https://travis-ci.org/googleads/publisher-ads-lighthouse-plugin)
 [![NPM lighthouse package](https://img.shields.io/npm/v/lighthouse-plugin-publisher-ads.svg)](https://npmjs.org/package/lighthouse-plugin-publisher-ads)
 
-Publisher Ads Lighthouse Plugin is a tool to improve ad speed and overall quality through a series of automated audits. At the moment, this is primarily targeted at sites using Google Ad Manager. This tool will aid in resolving discovered problems, providing a tool to be used to evaluate effectiveness of iterative changes while suggesting actionable feedback.
+Publisher Ads Audits for Lighthouse is a tool to improve ad speed and overall quality through a series of automated audits. At the moment, this is primarily targeted at sites using Google Ad Manager. This tool will aid in resolving discovered problems, providing a tool to be used to evaluate effectiveness of iterative changes while suggesting actionable feedback.
 
 This tool is a plugin for [Lighthouse](https://github.com/GoogleChrome/lighthouse), an open-sourced tool integrated into Chrome dev tools that is widely used by developers.
 
 In order to help us improve please [file an issue](https://github.com/googleads/publisher-ads-lighthouse-plugin/issues) to let us know of any issues or suggestions you may have.
 
+:warning: | Publisher Ads Audits for Lighthouse audit results aren't an indication of compliance or non-compliance with any [Google Publisher Policies](https://support.google.com/publisherpolicies/answer/10502938).
+:---: | :---
+
 ## Web App
 
-We currently have a web app version of Publisher Ads Lighthouse Plugin. It can be accessed at [developers.google.com/publisher-ads-audits](https://developers.google.com/publisher-ads-audits/).
+We currently have a web app version of Publisher Ads Audits for Lighthouse. It can be accessed at [developers.google.com/publisher-ads-audits](https://developers.google.com/publisher-ads-audits/).
 
 ## Lighthouse Node CLI
 
