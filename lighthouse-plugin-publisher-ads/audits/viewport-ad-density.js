@@ -35,10 +35,11 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  * @return {number}
  */
 function computeAdLength(slots, viewport) {
-  // We compute ad to page-height ratio along the vertical axis per the spec. On mobile
-  // this is straightforward since we can assume single-column layouts, but not
-  // so on desktop. On desktop we take a sample of various vertical lines and
-  // return the greatest sum of ad heights along one of those lines.
+  // We compute ad to page-height ratio along the vertical axis per the spec.
+  // On mobile this is straightforward since we can assume single-column
+  // layouts, but not so on desktop. On desktop we take a sample of various
+  // vertical lines and return the greatest sum of ad heights along one of
+  // those lines.
 
   /** @type {Set<number>} */
   const scanLines = new Set([
@@ -59,7 +60,8 @@ function computeAdLength(slots, viewport) {
         continue;
       }
       if (slot.isPositionFixed) {
-        // Count position:fixed ads towards ad to page-height ratio even if they overlap.
+        // Count position:fixed ads towards ad to page-height ratio even if
+        // they overlap.
         adLengthAlongAxis += slot.clientRect.height;
         continue;
       }
