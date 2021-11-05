@@ -2191,10 +2191,10 @@ lighthouse@7.3.0:
     yargs "^16.1.1"
     yargs-parser "^20.2.4"
 
-lighthouse@^8.4.0:
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-8.4.0.tgz#2da669456e0640d21bbc0edae8950e8066e6ee9c"
-  integrity sha512-O4DE/UFvn63iu1hRNFRYY+ZzEHfN463fBSxUuux4cFXRd5c398FgL6VDiZgmy28jQ9U6lYmsKZW1xLcWLEuO+g==
+lighthouse@^8.6.0:
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-8.6.0.tgz#e50ca532aca2ca7fec409caea6bddd940450041a"
+  integrity sha512-/H7aDL3//Gr0M1v8GGq6k0OTNty7nDVuU/o1cg6opYkfHRz1V3Nhydqz6aBzfXhUQx6iJRnxgRCPya+ZLA2vbg==
   dependencies:
     axe-core "4.2.3"
     chrome-launcher "^0.14.0"
