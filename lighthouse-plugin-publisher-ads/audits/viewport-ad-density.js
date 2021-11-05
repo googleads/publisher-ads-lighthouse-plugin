@@ -18,16 +18,13 @@ const {Audit} = require('lighthouse');
 const {isAdIframe} = require('../utils/resource-classification');
 
 const UIStrings = {
-  title: 'Ad density is within recommended range',
-  failureTitle: 'Reduce ad density',
-  description: 'Ad density, the ads to page-height ratio, can impact user ' +
-  'experience and ultimately user retention. The Better Ads ' +
-  'Standard [recommends having an ad density below 30%]' +
-  '(https://www.betterads.org/mobile-ad-density-higher-than-30/). ' +
-  '[Learn more](' +
+  title: 'Ads to page-height ratio is within recommended range',
+  failureTitle: 'Reduce ads to page-height ratio',
+  description: 'The ads to page-height ratio can impact user ' +
+  'experience and ultimately user retention. [Learn more](' +
   'https://developers.google.com/publisher-ads-audits/reference/audits/viewport-ad-density' +
   ').',
-  displayValue: '{adDensity, number, percent} ad density',
+  displayValue: '{adDensity, number, percent} ads to page-height ratio',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
@@ -38,10 +35,11 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  * @return {number}
  */
 function computeAdLength(slots, viewport) {
-  // We compute ad density along the vertical axis per the spec. On mobile
-  // this is straightforward since we can assume single-column layouts, but not
-  // so on desktop. On desktop we take a sample of various vertical lines and
-  // return the greatest sum of ad heights along one of those lines.
+  // We compute ads to page-height ratio along the vertical axis per the spec.
+  // On mobile this is straightforward since we can assume single-column
+  // layouts, but not so on desktop. On desktop we take a sample of various
+  // vertical lines and return the greatest sum of ad heights along one of
+  // those lines.
 
   /** @type {Set<number>} */
   const scanLines = new Set([
@@ -62,7 +60,8 @@ function computeAdLength(slots, viewport) {
         continue;
       }
       if (slot.isPositionFixed) {
-        // Count position:fixed ads towards ad density even if they overlap.
+        // Count position:fixed ads towards ads to page-height ratio even if
+        // they overlap.
         adLengthAlongAxis += slot.clientRect.height;
         continue;
       }
