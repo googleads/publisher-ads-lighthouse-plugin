@@ -80,18 +80,18 @@ declare module 'lighthouse-logger' {
   }
 }
 
-declare module 'lighthouse/lighthouse-core/computed/network-records' {
+declare module 'lighthouse/lighthouse-core/computed/network-records.js' {
   export function request(devToolsLog: LH.DevtoolsLog, context: LH.Audit.Context): Promise<Array<LH.Artifacts.NetworkRequest>>;
 }
 
-declare module 'lighthouse/lighthouse-core/computed/page-dependency-graph' {
+declare module 'lighthouse/lighthouse-core/computed/page-dependency-graph.js' {
   export function getNetworkInitiators(record: LH.Artifacts.NetworkRequest): Array<string>;
 }
 
-declare module 'lighthouse/lighthouse-core/computed/main-thread-tasks' {
+declare module 'lighthouse/lighthouse-core/computed/main-thread-tasks.js' {
   export function request(trace: LH.Trace, context: LH.Audit.Context): Promise<Array<TaskNode>>;
 }
 
-declare module 'lighthouse/lighthouse-core/lib/i18n/i18n'; {
+declare module 'lighthouse/lighthouse-core/lib/i18n/i18n.js'; {
   export function createMessageInstanceIdFn(filename: string, fileStrings: Record<string, string>);
 }

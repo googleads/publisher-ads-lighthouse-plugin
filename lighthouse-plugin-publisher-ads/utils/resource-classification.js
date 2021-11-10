@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const bidderPatterns = require('./bidder-patterns');
-const thirdPartyWeb = require('lighthouse/lighthouse-core/lib/third-party-web');
+const thirdPartyWeb = require('lighthouse/lighthouse-core/lib/third-party-web.js');
 const {isCacheable} = require('../utils/network');
 const {URL} = require('url');
 
