@@ -39,7 +39,7 @@ async function main() {
   }
 
   // @ts-ignore let LH handle the CLI
-  await require('lighthouse/lighthouse-cli/bin').begin();
+  await require('lighthouse/lighthouse-cli/bin.js').begin();
 }
 
 if (require.main == module) {

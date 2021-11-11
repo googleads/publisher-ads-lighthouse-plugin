@@ -14,9 +14,9 @@
 
 const AdLanternMetric = require('../computed/ad-lantern-metric');
 // @ts-ignore
-const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
+const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
+const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph.js');
 const {isAdRequest, isBidRequest, isImplTag, isImpressionPing} = require('./resource-classification');
 const {URL} = require('url');
 
