@@ -13,8 +13,8 @@ identify areas for improvement and track that improvement over time.
 The goal here is to reduce the time it takes for the first ad request to be
 made. Ensuring that other, more specific audits are passing should have a major
 impact on this metric. In particular, audits affecting
-[tag load time](./tag-load-time) and
-[latency of first ad request (from tag load)](./ad-request-from-tag-load) are
+[tag load time](./tag-load-time.md) and
+[latency of first ad request (from tag load)](./ad-request-from-tag-load.md) are
 likely to affect this metric.
 
 ## More information

@@ -29,4 +29,4 @@ This audit displays the top 10 longest tasks by execution time, sorted by start
 time (ascending).
 
 [Are long JavaScript tasks delaying your Time to Interactive?](https://web.dev/long-tasks-devtools)  
-[Inspect Network Activity In Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/network-performance/)
+[Inspect Network Activity In Chrome DevTools](https://developer.chrome.com/docs/devtools/network/)

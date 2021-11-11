@@ -15,9 +15,9 @@ request to be made. Ensuring that other, more specific audits are passing should
 have a major impact on this metric. In particular, the following audits are
 likely to affect this time:
 
-* [Ad request waterfall](./ad-request-critical-path)
-* [Avoid long tasks that block ad-related network requests](./ad-blocking-tasks)
-* [Load GPT and bids in parallel](./gpt-bids-parallel)
+* [Ad request waterfall](./ad-request-critical-path.md)
+* [Avoid long tasks that block ad-related network requests](./ad-blocking-tasks.md)
+* [Load GPT and bids in parallel](./gpt-bids-parallel.md)
 
 ## More information
 
