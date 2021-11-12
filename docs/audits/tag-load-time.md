@@ -15,11 +15,11 @@ load. Ensuring that other, more specific audits are passing should have a major
 impact on this metric. In particular, the following audits are likely to affect
 this time:
 
-* [Ad request waterfall](./ad-request-critical-path)
-* [Avoid render-blocking resources](./ad-render-blocking-resources)
-* [Load ad scripts statically](./script-injected-tags)
-* [Load ad tag asynchronously](./async-ad-tags)
-* [Load GPT from recommended host](./loads-gpt-from-sgdn)
+* [Ad request waterfall](./ad-request-critical-path.md)
+* [Avoid render-blocking resources](./ad-render-blocking-resources.md)
+* [Load ad scripts statically](./script-injected-tags.md)
+* [Load ad tag asynchronously](./async-ad-tags.md)
+* [Load GPT from recommended host](./loads-gpt-from-sgdn.md)
 
 ## More information
 

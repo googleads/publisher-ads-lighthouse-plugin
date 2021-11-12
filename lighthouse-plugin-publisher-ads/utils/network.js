@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // @ts-ignore
-const CacheHeaders = require('lighthouse/lighthouse-core/audits/byte-efficiency/uses-long-cache-ttl');
+const CacheHeaders = require('lighthouse/lighthouse-core/audits/byte-efficiency/uses-long-cache-ttl.js');
 // @ts-ignore
 const {parse: parseCacheControl} = require('@tusbar/cache-control');
 

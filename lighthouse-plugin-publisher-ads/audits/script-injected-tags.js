@@ -13,8 +13,8 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
+const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');

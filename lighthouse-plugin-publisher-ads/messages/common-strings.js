@@ -41,7 +41,7 @@ const UIStrings = {
   WARNINGS__NO_AD_RENDERED: 'No ads were rendered when rendering this page.',
   WARNINGS__NO_TAG: 'The GPT tag was not requested.',
 };
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 

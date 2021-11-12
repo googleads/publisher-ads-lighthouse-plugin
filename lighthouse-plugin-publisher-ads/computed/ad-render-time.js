@@ -14,9 +14,9 @@
 
 const AdLanternMetric = require('./ad-lantern-metric');
 // @ts-ignore
-const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric');
+const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric.js');
 // @ts-ignore
-const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact');
+const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact.js');
 const {getPageStartTime, getImpressionStartTime} = require('../utils/network-timing');
 const {isImpressionPing} = require('../utils/resource-classification');
 

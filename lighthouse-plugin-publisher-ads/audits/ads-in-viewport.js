@@ -15,7 +15,7 @@
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 const {isBoxInViewport} = require('../utils/geometry');
 const {isGptIframe} = require('../utils/resource-classification');
 

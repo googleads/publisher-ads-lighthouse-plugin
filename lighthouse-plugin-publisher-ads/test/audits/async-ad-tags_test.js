@@ -13,8 +13,8 @@
 // limitations under the License.
 
 const AsyncAdTags = require('../../audits/async-ad-tags');
-const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const MainResource = require('lighthouse/lighthouse-core/computed/main-resource.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
 const sinon = require('sinon');
 const {expect} = require('chai');
 

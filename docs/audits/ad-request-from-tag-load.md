@@ -15,12 +15,12 @@ made. Ensuring that other, more specific audits are passing should have a major
 impact on this metric. In particular, the following audits are likely to affect
 this time:
 
-* [Ad request waterfall](./ad-request-critical-path)
-* [Avoid bottleneck requests](./bottleneck-requests)
-* [Avoid long tasks that block ad-related network requests](./ad-blocking-tasks)
-* [Avoid waiting on load events](./blocking-load-events)
-* [Load GPT and bids in parallel](./gpt-bids-parallel)
-* [Parallelize bid requests](./serial-header-bidding)
+* [Ad request waterfall](./ad-request-critical-path.md)
+* [Avoid bottleneck requests](./bottleneck-requests.md)
+* [Avoid long tasks that block ad-related network requests](./ad-blocking-tasks.md)
+* [Avoid waiting on load events](./blocking-load-events.md)
+* [Load GPT and bids in parallel](./gpt-bids-parallel.md)
+* [Parallelize bid requests](./serial-header-bidding.md)
 
 ## More information
 
