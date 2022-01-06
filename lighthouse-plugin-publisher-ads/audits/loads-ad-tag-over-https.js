@@ -17,8 +17,6 @@ const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-reco
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isAdTag} = require('../utils/resource-classification');
-const {URL} = require('url');
-
 const UIStrings = {
   title: 'Ad tag is loaded over HTTPS',
   failureTitle: 'Load ad tag over HTTPS',

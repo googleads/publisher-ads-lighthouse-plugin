@@ -14,7 +14,6 @@ const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isAdScript} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 const UIStrings = {
   /* Title of the audit */
