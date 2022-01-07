@@ -15,7 +15,6 @@
 const array = require('../../utils/array');
 const {expect} = require('chai');
 const {isGoogleAds} = require('../../utils/resource-classification');
-const {URL} = require('url');
 
 describe('array', () => {
   describe('#count', () => {

@@ -14,7 +14,6 @@
 
 const {expect} = require('chai');
 const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isAMPAdRequest} = require('../../utils/resource-classification');
-const {URL} = require('url');
 
 describe('resource-classification', () => {
   describe('#isGoogleAds', () => {

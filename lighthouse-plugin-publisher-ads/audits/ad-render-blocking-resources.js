@@ -19,7 +19,6 @@ const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isAdTag} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 const UIStrings = {
   title: 'Minimal render-blocking resources found',

@@ -20,7 +20,6 @@ const NetworkRequest = require('lighthouse/lighthouse-core/lib/network-request.j
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {containsAnySubstring} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 const UIStrings = {
   title: 'No duplicate tags found',
