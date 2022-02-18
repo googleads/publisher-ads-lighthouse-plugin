@@ -402,6 +402,11 @@ function getNameOrTld(url) {
  */
 function isAdRelated(requestOrUrl) {
   const url = typeof requestOrUrl == 'string' ? requestOrUrl : requestOrUrl.url;
+
+  if (!url) {
+    return false;
+  }
+
   if (isAdScript(url) || getHeaderBidder(url)) {
     return true;
   }
