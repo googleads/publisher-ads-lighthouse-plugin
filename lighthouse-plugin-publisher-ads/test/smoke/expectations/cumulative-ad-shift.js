@@ -26,7 +26,7 @@ module.exports = [
           numericValue: '0.4 +/- 0.1',
           details: {
             numShifts: 4,
-            numAdShifts: 3,
+            numAdShifts: '3 +/- 1',
           },
         },
       },
