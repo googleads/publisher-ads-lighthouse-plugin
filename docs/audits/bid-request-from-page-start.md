@@ -22,4 +22,4 @@ likely to affect this time:
 ## More information
 
 This metric identifies "first bid request" as the earliest recorded request to a
-[supported ad exchange or supply side platform](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouse-plugin-publisher-ads/utils/bidder-patterns.js).
+[supported ad exchange or supply side platform](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/HEAD/lighthouse-plugin-publisher-ads/utils/bidder-patterns.js).

@@ -17,6 +17,6 @@ documentation may have recommendations on how to do this.
 
 The list of supported ad exchanges and supply side platforms this audit
 evaluates can be found in
-[our GitHub repository](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouse-plugin-publisher-ads/utils/bidder-patterns.js).
+[our GitHub repository](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/HEAD/lighthouse-plugin-publisher-ads/utils/bidder-patterns.js).
 
 [How to reduce the latency of header bidding with Prebid.js](http://prebid.org/overview/how-to-reduce-latency-of-header-bidding.html)
