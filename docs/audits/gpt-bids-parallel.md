@@ -60,4 +60,4 @@ googletag.cmd.push(function() {
 
 The list of supported ad exchanges and supply side platforms this audit
 evaluates can be found in
-[our GitHub repository](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouse-plugin-publisher-ads/utils/bidder-patterns.js).
+[our GitHub repository](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/HEAD/lighthouse-plugin-publisher-ads/utils/bidder-patterns.js).
