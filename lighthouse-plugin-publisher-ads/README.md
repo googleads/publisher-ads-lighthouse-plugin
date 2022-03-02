@@ -67,7 +67,7 @@ Some common options are:
 
 This plugin can be integrated with your existing CI using Lighthouse CI to 
 ensure that ad performance hasn't regressed. 
-[Learn More.](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouse-ci/README.md)
+[Learn More.](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/HEAD/lighthouse-ci/README.md)
 
 ### Tests
 ```sh
@@ -78,7 +78,7 @@ yarn test
 
 ## Contributions
 
-See [CONTRIBUTING.md](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/HEAD/CONTRIBUTING.md)
 
 
 
