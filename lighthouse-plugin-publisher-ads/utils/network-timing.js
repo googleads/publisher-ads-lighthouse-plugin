@@ -18,7 +18,6 @@ const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulato
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
 const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph.js');
 const {isAdRequest, isBidRequest, isImplTag, isImpressionPing} = require('./resource-classification');
-const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */

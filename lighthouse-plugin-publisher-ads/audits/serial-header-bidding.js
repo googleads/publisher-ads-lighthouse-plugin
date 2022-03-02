@@ -23,7 +23,6 @@ const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isCacheable} = require('../utils/network');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */

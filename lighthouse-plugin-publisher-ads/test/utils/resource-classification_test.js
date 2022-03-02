@@ -13,8 +13,7 @@
 // limitations under the License.
 
 const {expect} = require('chai');
-const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isAMPAdRequest} = require('../../utils/resource-classification');
-const {URL} = require('url');
+const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isAMPAdRequest, isAdRelated} = require('../../utils/resource-classification');
 
 describe('resource-classification', () => {
   describe('#isGoogleAds', () => {
@@ -272,6 +271,65 @@ describe('resource-classification', () => {
     for (const {description, url, expectation} of testCases) {
       it(`should return ${expectation} for ${description}`, () => {
         const results = isAMPTag(url);
+        expect(results).to.equal(expectation);
+      });
+    }
+  });
+  describe('#isAdRelated', () => {
+    const testCases = [
+      {
+        description: 'undefined url property',
+        requestOrUrl: {},
+        expectation: false,
+      },
+      {
+        description: 'empty string url',
+        requestOrUrl: '',
+        expectation: false,
+      },
+      {
+        description: 'empty string url property',
+        requestOrUrl: {
+          url: '',
+        },
+        expectation: false,
+      },
+      {
+        description: 'ad script url passed as the url property',
+        requestOrUrl: {
+          url: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+        },
+        expectation: true,
+      },
+      {
+        description: 'ad script url',
+        requestOrUrl: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js',
+        expectation: true,
+      },
+      {
+        description: 'header bidder url',
+        requestOrUrl: 'https://acdn.adnxs.com/prebid/foo.js',
+        expectation: true,
+      },
+      {
+        description: 'url that is a known third party in the ad category',
+        requestOrUrl: 'https://t.mookie1.com/foo.js',
+        expectation: true,
+      },
+      {
+        description: 'url that is a known third party, but not in the ad category',
+        requestOrUrl: 'https://beacon-v2.helpscout.net/',
+        expectation: false,
+      },
+      {
+        description: 'url that is not an ad script, header bidder, or known third party',
+        requestOrUrl: 'https://foo.com',
+        expectation: false,
+      },
+    ];
+    for (const {description, requestOrUrl, expectation} of testCases) {
+      it(`should return ${expectation} for ${description}`, () => {
+        const results = isAdRelated(requestOrUrl);
         expect(results).to.equal(expectation);
       });
     }

@@ -19,7 +19,6 @@ const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metr
 const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact.js');
 const {getPageStartTime, getTagEndTime} = require('../utils/network-timing');
 const {isImplTag} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 // @ts-ignore
 // eslint-disable-next-line max-len
