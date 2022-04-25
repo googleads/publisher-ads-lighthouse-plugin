@@ -65,6 +65,7 @@ module.exports = {
   category: {
     title: 'Publisher Ads',
     description: str_(UIStrings.categoryDescription),
+    supportedModes: ['navigation'],
     auditRefs: [
       // Measurements group.
       {id: 'tag-load-time', weight: 5, group: 'metrics'},
