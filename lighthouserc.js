@@ -25,18 +25,18 @@ module.exports = {
             'tag-load-time': [
               'error',
               {
-                'maxNumericValue': 2350, // <= 2.35s
+                'maxNumericValue': 2850, // <= 2.85s
               },
             ],
             'ad-request-from-page-start': [
               'error',
               {
-                'maxNumericValue': 2500, // <= 2.5s
+                'maxNumericValue': 2800, // <= 2.8s
               },
             ],
             'first-ad-render': [
               'error',
-              {'maxNumericValue': 2800}, // <= 2.8s
+              {'maxNumericValue': 3300}, // <= 3.3s
             ],
 
             // Performance category assertions.
