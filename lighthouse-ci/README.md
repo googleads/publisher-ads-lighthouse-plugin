@@ -12,7 +12,7 @@ possible.
 Today, this tool is compatible with GitHub Actions, Travis CI, Circle CI, GitLab CI, Jenkins, and Google Cloudbuild.
 
 If you haven't used LHCI before, please familiarize yourself with their 
-[Getting Started documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/getting-started.md#github-app-method-recommended) 
+[Getting Started documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/HEAD/docs/getting-started.md#github-app-method-recommended) 
 prior to starting.
 
 ## Config
@@ -47,7 +47,7 @@ that unexpected regressions are not due to changes in the plugin.
 Using the assertion framework, you can ensure that scores and metrics remain 
 within a desired threshold. 
 
-See [official documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/configuration.md#assert) to learn more.
+See [official documentation](https://github.com/GoogleChrome/lighthouse-ci/blob/HEAD/docs/configuration.md#assert) to learn more.
 
 A simple setup could assert that the Publisher Ads Audits category passes with a
 100% score.
