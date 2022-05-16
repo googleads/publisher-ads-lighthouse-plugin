@@ -14,8 +14,10 @@
 
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-// @ts-ignore
-const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab.js');
+// @ts-expect-error
+const ProcessedTrace = require('lighthouse/lighthouse-core/computed/processed-trace.js');
+// @ts-expect-error
+const ProcessedNavigation = require('lighthouse/lighthouse-core/computed/processed-navigation.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
@@ -177,7 +179,10 @@ class BlockingLoadEvents extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
-    const {timings, processEvents} = await TraceOfTab.request(trace, context);
+    const processedTrace = await ProcessedTrace.request(trace, context);
+    const {timings} = await ProcessedNavigation
+        .request(processedTrace, context);
+    const {processEvents} = processedTrace;
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =
       await getTimingsByRecord(trace, devtoolsLog, context);

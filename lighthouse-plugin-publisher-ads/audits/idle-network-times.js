@@ -15,8 +15,10 @@
 const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks.js');
 const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-// @ts-ignore
-const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab.js');
+// @ts-expect-error
+const ProcessedTrace = require('lighthouse/lighthouse-core/computed/processed-trace.js');
+// @ts-expect-error
+const ProcessedNavigation = require('lighthouse/lighthouse-core/computed/processed-navigation.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
@@ -269,7 +271,9 @@ class IdleNetworkTimes extends Audit {
     } catch (e) {
       // Ignore tracing errors.
     }
-    const {timings} = await TraceOfTab.request(trace, context);
+    const processedTrace = await ProcessedTrace.request(trace, context);
+    const {timings} = await ProcessedNavigation
+        .request(processedTrace, context);
 
     const timerEvents =
         trace.traceEvents.filter((t) => t.name.startsWith('Timer'));
