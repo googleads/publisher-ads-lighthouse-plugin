@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
-// @ts-ignore
-const TraceOfTab = require('lighthouse/lighthouse-core/computed/trace-of-tab');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
+const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
+// @ts-expect-error
+const ProcessedTrace = require('lighthouse/lighthouse-core/computed/processed-trace.js');
+// @ts-expect-error
+const ProcessedNavigation = require('lighthouse/lighthouse-core/computed/processed-navigation.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {computeAdRequestWaterfall} = require('../utils/graph');
@@ -195,7 +197,7 @@ function checkIfTagIsBlocking(idlePeriod, blockingTags, pageStartTime) {
 /**
  * Checks waiting on load events is the cause of the idle period.
  * @param {IdlePeriod} idlePeriod
- * @param {LH.Artifacts.TraceTimes} timings
+ * @param {LH.Artifacts.NavigationTraceTimes} timings
  * @return {boolean} True if waiting on load is the suspected cause, false
  *     otherwise.
  */
@@ -223,7 +225,7 @@ function checkIfLoadIsBlocking(idlePeriod, timings) {
  * @param {IdlePeriod} idlePeriod
  * @param {LH.Artifacts.TaskNode[]} mainThreadTasks
  * @param {LH.TraceEvent[]} timerEvents
- * @param {LH.Artifacts.TraceTimes} timings
+ * @param {LH.Artifacts.NavigationTraceTimes} timings
  * @param {LH.Artifacts.TagBlockingFirstPaint[]} blockingTags
  * @param {number} pageStartTime
  */
@@ -269,7 +271,9 @@ class IdleNetworkTimes extends Audit {
     } catch (e) {
       // Ignore tracing errors.
     }
-    const {timings} = await TraceOfTab.request(trace, context);
+    const processedTrace = await ProcessedTrace.request(trace, context);
+    const {timings} = await ProcessedNavigation
+        .request(processedTrace, context);
 
     const timerEvents =
         trace.traceEvents.filter((t) => t.name.startsWith('Timer'));

@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isAdTag} = require('../utils/resource-classification');
-const {URL} = require('url');
-
 const UIStrings = {
   title: 'Ad tag is loaded over HTTPS',
   failureTitle: 'Load ad tag over HTTPS',

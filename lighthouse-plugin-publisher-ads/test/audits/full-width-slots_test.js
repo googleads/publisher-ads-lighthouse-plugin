@@ -15,7 +15,7 @@
 const chai = require('chai');
 const FullWidthSlots = require('../../audits/full-width-slots');
 const expect = chai.expect;
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
 const sinon = require('sinon');
 
 describe('FullWidthSlots', async () => {

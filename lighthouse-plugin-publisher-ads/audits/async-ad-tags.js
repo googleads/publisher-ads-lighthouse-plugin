@@ -13,14 +13,13 @@
 // limitations under the License.
 
 const array = require('../utils/array.js');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 // @ts-ignore
-const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const MainResource = require('lighthouse/lighthouse-core/computed/main-resource.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {isAdTag, isStaticRequest} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 const UIStrings = {
   title: 'Ad tag is loaded asynchronously',

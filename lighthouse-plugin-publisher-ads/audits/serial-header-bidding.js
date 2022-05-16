@@ -13,17 +13,16 @@
 // limitations under the License.
 
 const ComputedAdRequestTime = require('../computed/ad-request-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 // @ts-ignore
-const MainResource = require('lighthouse/lighthouse-core/computed/main-resource');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const MainResource = require('lighthouse/lighthouse-core/computed/main-resource.js');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {bucket} = require('../utils/array');
 const {getTimingsByRecord} = require('../utils/network-timing');
 const {isCacheable} = require('../utils/network');
 const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */

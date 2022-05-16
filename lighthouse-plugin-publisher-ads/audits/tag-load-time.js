@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const ComputedTagLoadTime = require('../computed/tag-load-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 const {auditNotApplicable, runWarning} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 

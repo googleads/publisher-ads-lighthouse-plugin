@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const LoadsAdTagOverHttps = require('../../audits/loads-ad-tag-over-https');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records');
+const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
 const sinon = require('sinon');
 const {expect} = require('chai');
 

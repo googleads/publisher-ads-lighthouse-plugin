@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const ComputedBidRequestTime = require('../computed/bid-request-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 

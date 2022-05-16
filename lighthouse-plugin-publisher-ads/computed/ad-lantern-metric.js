@@ -16,7 +16,7 @@ const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-n
 // eslint-disable-next-line no-unused-vars
 const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
 // @ts-ignore Remove request() below after importing the type.
-const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric');
+const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric.js');
 // eslint-disable-next-line no-unused-vars
 const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
 const {isBidRelatedRequest, isImpressionPing, isGoogleAds, isGptAdRequest, isGptTag, isGptImplTag, toURL} = require('../utils/resource-classification');

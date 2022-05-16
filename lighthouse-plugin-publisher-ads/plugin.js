@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 const {group} = require('./messages/common-strings');
 
 const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';

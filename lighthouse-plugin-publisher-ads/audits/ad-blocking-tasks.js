@@ -8,13 +8,12 @@
 // limitations under the License.
 
 const AdRequestTime = require('../computed/ad-request-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n');
+const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 const LongTasks = require('../computed/long-tasks');
 const {auditNotApplicable} = require('../messages/common-strings');
 const {Audit} = require('lighthouse');
 const {getAttributableUrl} = require('../utils/tasks');
 const {isAdScript} = require('../utils/resource-classification');
-const {URL} = require('url');
 
 const UIStrings = {
   /* Title of the audit */
