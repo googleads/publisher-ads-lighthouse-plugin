@@ -19,7 +19,7 @@ this time:
 * [Avoid render-blocking resources](./ad-render-blocking-resources.md)
 * [Load ad scripts statically](./script-injected-tags.md)
 * [Load ad tag asynchronously](./async-ad-tags.md)
-* [Load GPT from recommended host](./loads-gpt-from-sgdn.md)
+* [Load GPT from recommended host](./loads-gpt-from-official-source.md)
 
 ## More information
 
