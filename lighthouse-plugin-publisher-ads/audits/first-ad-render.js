@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const ComputedAdRenderTime = require('../computed/ad-render-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable, runWarning} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
+import ComputedAdRenderTime from '../computed/ad-render-time.js';
+
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import {auditNotApplicable, runWarning} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
 
 const UIStrings = {
   title: 'Latency of first ad render',
@@ -27,7 +28,7 @@ const UIStrings = {
   displayValue: '{timeInMs, number, seconds} s',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Measures the first ad render time.
@@ -35,7 +36,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 class FirstAdRender extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     // @ts-ignore
@@ -109,5 +110,5 @@ class FirstAdRender extends Audit {
     };
   }
 }
-module.exports = FirstAdRender;
-module.exports.UIStrings = UIStrings;
+export default FirstAdRender;
+export {UIStrings};

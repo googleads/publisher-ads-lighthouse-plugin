@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
 // @ts-ignore
-const MainResource = require('lighthouse/lighthouse-core/computed/main-resource.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const NetworkRequest = require('lighthouse/lighthouse-core/lib/network-request.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {containsAnySubstring} = require('../utils/resource-classification');
+import MainResource from 'lighthouse/lighthouse-core/computed/main-resource.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import {NetworkRequest} from 'lighthouse/lighthouse-core/lib/network-request.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {containsAnySubstring} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'No duplicate tags found',
@@ -34,7 +36,7 @@ const UIStrings = {
   columnFrameId: 'Frame ID',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 const tags = [
   'googletagservices.com/tag/js/gpt.js',
@@ -59,7 +61,7 @@ const HEADINGS = [
 class DuplicateTags extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -117,5 +119,5 @@ class DuplicateTags extends Audit {
   }
 }
 
-module.exports = DuplicateTags;
-module.exports.UIStrings = UIStrings;
+export default DuplicateTags;
+export {UIStrings};

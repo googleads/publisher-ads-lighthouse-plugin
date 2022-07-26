@@ -1,3 +1,5 @@
+// LHCI currently does not support .cjs, so generate a json config with:
+//    node -e 'console.log(JSON.stringify(require("./lighthouserc.cjs"), null, 2))' > lighthouserc.json
 module.exports = {
   ci: {
     upload: {

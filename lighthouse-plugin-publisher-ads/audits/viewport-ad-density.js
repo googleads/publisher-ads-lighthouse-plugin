@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable, auditError} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {isAdIframe} = require('../utils/resource-classification');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import {auditNotApplicable, auditError} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {isAdIframe} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'Ads to page-height ratio is within recommended range',
@@ -27,7 +28,7 @@ const UIStrings = {
   displayValue: '{adDensity, number, percent} ads to page-height ratio',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * @param {LH.Artifacts.IFrameElement[]} slots
@@ -82,7 +83,7 @@ function computeAdLength(slots, viewport) {
 class ViewportAdDensity extends Audit {
   /**
    * @return {AuditMetadata}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -134,5 +135,5 @@ class ViewportAdDensity extends Audit {
   }
 }
 
-module.exports = ViewportAdDensity;
-module.exports.UIStrings = UIStrings;
+export default ViewportAdDensity;
+export {UIStrings};

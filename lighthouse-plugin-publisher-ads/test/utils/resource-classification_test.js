@@ -12,10 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {expect} = require('chai');
-const {isGoogleAds, isGptAdRequest, isImpressionPing, isGptTag, isGptImplTag, isAMPTag, isAMPAdRequest, isAdRelated} = require('../../utils/resource-classification');
+import chai from 'chai';
 
-describe('resource-classification', () => {
+const {expect} = chai;
+
+import {
+  isGoogleAds,
+  isGptAdRequest,
+  isImpressionPing,
+  isGptTag,
+  isGptImplTag,
+  isAMPTag,
+  isAMPAdRequest,
+  isAdRelated,
+} from '../../utils/resource-classification.js';
+
+describe('resource-classification.js', () => {
   describe('#isGoogleAds', () => {
     const testCases = [
       {

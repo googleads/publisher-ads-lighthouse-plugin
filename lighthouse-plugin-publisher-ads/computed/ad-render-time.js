@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdLanternMetric = require('./ad-lantern-metric');
+import AdLanternMetric from './ad-lantern-metric.js';
+
 // @ts-ignore
-const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric.js');
+import ComputedMetric from 'lighthouse/lighthouse-core/computed/metrics/metric.js';
+
 // @ts-ignore
-const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact.js');
-const {getPageStartTime, getImpressionStartTime} = require('../utils/network-timing');
-const {isImpressionPing} = require('../utils/resource-classification');
+import {makeComputedArtifact} from 'lighthouse/lighthouse-core/computed/computed-artifact.js';
+
+import {getPageStartTime, getImpressionStartTime} from '../utils/network-timing.js';
+import {isImpressionPing} from '../utils/resource-classification.js';
 
 // @ts-ignore
 // eslint-disable-next-line max-len
@@ -52,7 +55,7 @@ class AdRenderTime extends ComputedMetric {
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Artifacts.LanternMetric>}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static async computeSimulatedMetric(data, context) {
     // @ts-ignore request does not exist on LanternAdRenderTime
@@ -63,7 +66,7 @@ class AdRenderTime extends ComputedMetric {
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Artifacts.Metric>}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static async computeObservedMetric(data, context) {
     const {networkRecords} = data;
@@ -91,5 +94,5 @@ class AdRenderTime extends ComputedMetric {
 // eslint-disable-next-line no-class-assign
 AdRenderTime = makeComputedArtifact(AdRenderTime);
 
-module.exports = AdRenderTime;
+export default AdRenderTime;
 

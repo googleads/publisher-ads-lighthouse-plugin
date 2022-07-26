@@ -12,14 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {computeAdRequestWaterfall} = require('../utils/graph');
-const {isAdScript, toURL} = require('../utils/resource-classification');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {computeAdRequestWaterfall} from '../utils/graph.js';
+import {isAdScript, toURL} from '../utils/resource-classification.js';
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
-/** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
+/** @typedef {import('../utils/graph.js').SimpleRequest} SimpleRequest */
 
 const UIStrings = {
   title: 'No bottleneck requests found',
@@ -37,7 +38,7 @@ const UIStrings = {
   columnDuration: 'Total Time',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 
 /**
@@ -71,7 +72,7 @@ const HEADINGS = [
 class BottleneckRequests extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -131,5 +132,5 @@ class BottleneckRequests extends Audit {
   }
 }
 
-module.exports = BottleneckRequests;
-module.exports.UIStrings = UIStrings;
+export default BottleneckRequests;
+export {UIStrings};

@@ -12,22 +12,31 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdLanternMetric = require('../computed/ad-lantern-metric');
-const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js');
+import AdLanternMetric from '../computed/ad-lantern-metric.js';
+
+import {BaseNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/base-node.js';
+
 // @ts-ignore
-const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric.js');
+import ComputedMetric from 'lighthouse/lighthouse-core/computed/metrics/metric.js';
+
 // eslint-disable-next-line no-unused-vars
-const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
-const {getAttributableUrl} = require('../utils/tasks');
+import {CPUNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js';
+
+import {getAttributableUrl} from '../utils/tasks.js';
+
 // @ts-ignore
-const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator.js');
-const MainThreadTasks = require('lighthouse/lighthouse-core/computed/main-thread-tasks.js');
+import LoadSimulator from 'lighthouse/lighthouse-core/computed/load-simulator.js';
+
+import MainThreadTasks from 'lighthouse/lighthouse-core/computed/main-thread-tasks.js';
+
 // @ts-ignore
-const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact.js');
+import {makeComputedArtifact} from 'lighthouse/lighthouse-core/computed/computed-artifact.js';
+
 // eslint-disable-next-line no-unused-vars
-const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph.js');
+import {NetworkNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/network-node.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import PageDependencyGraph from 'lighthouse/lighthouse-core/computed/page-dependency-graph.js';
 
 const PROVIDED_LONG_TASK_THRESHOLD_MS = 50;
 const SIMULATED_LONG_TASK_THRESHOLD_MS = 100;
@@ -149,4 +158,4 @@ class LongTasks extends ComputedMetric {
 // eslint-disable-next-line no-class-assign
 LongTasks = makeComputedArtifact(LongTasks);
 
-module.exports = LongTasks;
+export default LongTasks;

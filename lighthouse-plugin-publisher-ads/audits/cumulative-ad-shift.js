@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {getScriptUrl} = require('../utils/network-timing');
-const {isAdIframe, isAdRelated, isImplTag} = require('../utils/resource-classification');
-const {overlaps, toClientRect} = require('../utils/geometry');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {getScriptUrl} from '../utils/network-timing.js';
+import {isAdIframe, isAdRelated, isImplTag} from '../utils/resource-classification.js';
+import {overlaps, toClientRect} from '../utils/geometry.js';
 
 const UIStrings = {
   title: 'Cumulative ad shift',
@@ -29,7 +30,7 @@ const UIStrings = {
           '(https://developers.google.com/publisher-ads-audits/reference/audits/cumulative-ad-shift).',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -37,7 +38,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 class CumulativeAdShift extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -237,5 +238,5 @@ class CumulativeAdShift extends Audit {
   }
 }
 
-module.exports = CumulativeAdShift;
-module.exports.UIStrings = UIStrings;
+export default CumulativeAdShift;
+export {UIStrings};

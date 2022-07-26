@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const ComputedAdRequestTime = require('../computed/ad-request-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable, runWarning} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
+import ComputedAdRequestTime from '../computed/ad-request-time.js';
+
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import {auditNotApplicable, runWarning} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
 
 const UIStrings = {
   title: 'First ad request time',
@@ -29,7 +30,7 @@ const UIStrings = {
   displayValue: '{timeInMs, number, seconds} s',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Audit to determine time for first ad request relative to page start.
@@ -37,7 +38,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 class AdRequestFromPageStart extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -102,5 +103,5 @@ class AdRequestFromPageStart extends Audit {
   }
 }
 
-module.exports = AdRequestFromPageStart;
-module.exports.UIStrings = UIStrings;
+export default AdRequestFromPageStart;
+export {UIStrings};

@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const ComputedAdRequestTime = require('../computed/ad-request-time');
-const ComputedTagLoadTime = require('../computed/tag-load-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
+import ComputedAdRequestTime from '../computed/ad-request-time.js';
+
+import ComputedTagLoadTime from '../computed/tag-load-time.js';
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
 
 const UIStrings = {
   title: 'Latency of first ad request, from tag load',
@@ -28,7 +29,7 @@ const UIStrings = {
   displayValue: '{timeInMs, number, seconds} s',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -36,7 +37,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 class AdRequestFromTagLoad extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -105,5 +106,5 @@ class AdRequestFromTagLoad extends Audit {
   }
 }
 
-module.exports = AdRequestFromTagLoad;
-module.exports.UIStrings = UIStrings;
+export default AdRequestFromTagLoad;
+export {UIStrings};

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
 const UIStrings = {
   GROUPS__METRICS: 'Metrics',
   GROUPS__ADS_PERFORMANCE: 'Ad Speed',
@@ -41,9 +43,8 @@ const UIStrings = {
   WARNINGS__NO_AD_RENDERED: 'No ads were rendered when rendering this page.',
   WARNINGS__NO_TAG: 'The GPT tag was not requested.',
 };
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Returns object for a notApplicable audit given a message string
@@ -97,5 +98,4 @@ const group = {
   AdsBestPractices: str_(UIStrings.GROUPS__ADS_BEST_PRACTICES),
 };
 
-module.exports = {auditNotApplicable, runWarning, auditError, group};
-module.exports.UIStrings = UIStrings;
+export {auditNotApplicable, runWarning, auditError, group, UIStrings};

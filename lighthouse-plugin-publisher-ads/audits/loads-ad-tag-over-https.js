@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {isAdTag} = require('../utils/resource-classification');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {isAdTag} from '../utils/resource-classification.js';
+
 const UIStrings = {
   title: 'Ad tag is loaded over HTTPS',
   failureTitle: 'Load ad tag over HTTPS',
@@ -31,7 +33,7 @@ const UIStrings = {
   ').',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 
 /**
@@ -42,7 +44,7 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
 class LoadsAdTagOverHttps extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -96,5 +98,5 @@ class LoadsAdTagOverHttps extends Audit {
   }
 }
 
-module.exports = LoadsAdTagOverHttps;
-module.exports.UIStrings = UIStrings;
+export default LoadsAdTagOverHttps;
+export {UIStrings};

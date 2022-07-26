@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const array = require('../utils/array.js');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {computeAdRequestWaterfall} = require('../utils/graph');
-const {getScriptEvaluationTimes} = require('../utils/network-timing');
+import * as array from '../utils/array.js';
+
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import PageDependencyGraph from 'lighthouse/lighthouse-core/computed/page-dependency-graph.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {computeAdRequestWaterfall} from '../utils/graph.js';
+import {getScriptEvaluationTimes} from '../utils/network-timing.js';
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -40,7 +41,7 @@ const UIStrings = {
   columnLoadTime: 'Load Time',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -124,7 +125,7 @@ async function findStaticallyLoadableTags(artifacts, context) {
 class StaticAdTags extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -186,5 +187,5 @@ class StaticAdTags extends Audit {
   }
 }
 
-module.exports = StaticAdTags;
-module.exports.UIStrings = UIStrings;
+export default StaticAdTags;
+export {UIStrings};

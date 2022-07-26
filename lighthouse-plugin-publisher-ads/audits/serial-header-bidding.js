@@ -12,17 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const ComputedAdRequestTime = require('../computed/ad-request-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
+import ComputedAdRequestTime from '../computed/ad-request-time.js';
+
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
 // @ts-ignore
-const MainResource = require('lighthouse/lighthouse-core/computed/main-resource.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {bucket} = require('../utils/array');
-const {getTimingsByRecord} = require('../utils/network-timing');
-const {isCacheable} = require('../utils/network');
-const {isGoogleAds, getHeaderBidder} = require('../utils/resource-classification');
+import MainResource from 'lighthouse/lighthouse-core/computed/main-resource.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {bucket} from '../utils/array.js';
+import {getTimingsByRecord} from '../utils/network-timing.js';
+import {isCacheable} from '../utils/network.js';
+import {isGoogleAds, getHeaderBidder} from '../utils/resource-classification.js';
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -40,7 +43,7 @@ const UIStrings = {
   columnDuration: 'Duration',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 // Min record duration (s) to be considered a bid.
 const MIN_BID_DURATION = .05;
@@ -143,7 +146,7 @@ function clearQueryString(url) {
 class SerialHeaderBidding extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -242,5 +245,5 @@ class SerialHeaderBidding extends Audit {
   }
 }
 
-module.exports = SerialHeaderBidding;
-module.exports.UIStrings = UIStrings;
+export default SerialHeaderBidding;
+export {UIStrings};

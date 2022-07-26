@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const array = require('../../utils/array');
-const {expect} = require('chai');
-const {isGoogleAds} = require('../../utils/resource-classification');
+import * as array from '../../utils/array.js';
+
+import chai from 'chai';
+import {isGoogleAds} from '../../utils/resource-classification.js';
+
+const {expect} = chai;
 
 describe('array', () => {
   describe('#count', () => {

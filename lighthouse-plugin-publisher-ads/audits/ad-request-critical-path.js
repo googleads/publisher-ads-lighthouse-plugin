@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {computeAdRequestWaterfall} = require('../utils/graph');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {computeAdRequestWaterfall} from '../utils/graph.js';
 
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
-/** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
+/** @typedef {import('../utils/graph.js').SimpleRequest} SimpleRequest */
 
 const UIStrings = {
   title: 'Ad request waterfall',
@@ -35,7 +36,7 @@ const UIStrings = {
   columnEndTime: 'End',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -118,7 +119,7 @@ function computeIdleTimes(blockingRequests) {
 class AdRequestCriticalPath extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -173,5 +174,5 @@ class AdRequestCriticalPath extends Audit {
   }
 }
 
-module.exports = AdRequestCriticalPath;
-module.exports.UIStrings = UIStrings;
+export default AdRequestCriticalPath;
+export {UIStrings};

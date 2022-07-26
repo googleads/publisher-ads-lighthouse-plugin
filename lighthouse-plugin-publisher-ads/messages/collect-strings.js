@@ -18,11 +18,29 @@
 
 /* eslint-disable no-console, max-len */
 
-const esprima = require('esprima');
-const fs = require('fs');
-const path = require('path');
+import esprima from 'esprima';
 
-const LH_ROOT = path.join(__dirname, '../');
+import fs from 'fs';
+import path from 'path';
+import url, {pathToFileURL} from 'url';
+
+/**
+ * @param {ImportMeta} importMeta
+ */
+function getModulePath(importMeta) {
+  return url.fileURLToPath(importMeta.url);
+}
+
+/**
+ * @param {ImportMeta} importMeta
+ */
+function getModuleDirectory(importMeta) {
+  return path.dirname(getModulePath(importMeta));
+}
+
+const moduleDir = getModuleDirectory(import.meta);
+
+const LH_ROOT = path.join(moduleDir, '../');
 const UISTRINGS_REGEX = /UIStrings = (.|\s)*?\};\n/im;
 
 /**
@@ -60,28 +78,28 @@ function computeDescription(ast, property, startRange) {
  * @param {string} dir
  * @param {Record<string, ICUMessageDefn>} strings
  */
-function collectAllStringsInDir(dir, strings = {}) {
+async function collectAllStringsInDir(dir, strings = {}) {
   for (const name of fs.readdirSync(dir)) {
     const fullPath = path.join(dir, name);
     const relativePath = path.relative(LH_ROOT, fullPath);
     if (ignoredPathComponents.some((p) => fullPath.includes(p))) continue;
 
     if (fs.statSync(fullPath).isDirectory()) {
-      collectAllStringsInDir(fullPath, strings);
+      await collectAllStringsInDir(fullPath, strings);
     } else {
       if (name.endsWith('.js')) {
         if (!process.env.CI) console.log('Collecting from', relativePath);
         const content = fs.readFileSync(fullPath, 'utf8');
-        const exportVars = require(fullPath);
+        const exportVars = await import(pathToFileURL(fullPath).href);
         const regexMatches = !!UISTRINGS_REGEX.test(content);
-        const exportsUIStrings = !!exportVars.UIStrings;
-        if (!regexMatches && !exportsUIStrings) continue;
+        const exportedUIStrings = exportVars.UIStrings || exportVars.default?.UIStrings;
+        if (!regexMatches && !exportedUIStrings) continue;
 
-        if (regexMatches && !exportsUIStrings) {
+        if (regexMatches && !exportedUIStrings) {
           throw new Error('UIStrings defined but not exported');
         }
 
-        if (exportsUIStrings && !regexMatches) {
+        if (exportedUIStrings && !regexMatches) {
           throw new Error('UIStrings exported but no definition found');
         }
 
@@ -166,7 +184,7 @@ function writeStringsToLocaleFormat(locale, strings) {
   fs.writeFileSync(fullPath, JSON.stringify(output, null, 2) + '\n');
 }
 
-const strings = collectAllStringsInDir(LH_ROOT);
+const strings = await collectAllStringsInDir(LH_ROOT);
 const psuedoLocalizedStrings = createPsuedoLocaleStrings(strings);
 console.log('Collected from LH core!');
 

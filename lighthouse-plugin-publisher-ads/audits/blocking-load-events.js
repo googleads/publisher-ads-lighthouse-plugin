@@ -12,16 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+
 // @ts-expect-error
-const ProcessedTrace = require('lighthouse/lighthouse-core/computed/processed-trace.js');
+import ProcessedTrace from 'lighthouse/lighthouse-core/computed/processed-trace.js';
+
 // @ts-expect-error
-const ProcessedNavigation = require('lighthouse/lighthouse-core/computed/processed-navigation.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {computeAdRequestWaterfall} = require('../utils/graph');
-const {getTimingsByRecord} = require('../utils/network-timing');
+import ProcessedNavigation from 'lighthouse/lighthouse-core/computed/processed-navigation.js';
+
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {computeAdRequestWaterfall} from '../utils/graph.js';
+import {getTimingsByRecord} from '../utils/network-timing.js';
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -42,7 +46,7 @@ const UIStrings = {
   columnFunctionName: 'Function',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -55,7 +59,7 @@ const HEADINGS = [
   {key: 'functionName', itemType: 'text', text: str_(UIStrings.columnFunctionName)},
 ];
 
-/** @typedef {import('../utils/graph').SimpleRequest} SimpleRequest */
+/** @typedef {import('../utils/graph.js').SimpleRequest} SimpleRequest */
 
 /**
  * @param {SimpleRequest} request
@@ -158,7 +162,7 @@ function quantifyBlockedTime(blockingEvent, networkRecords, timingsByRecord) {
 class BlockingLoadEvents extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -252,5 +256,5 @@ class BlockingLoadEvents extends Audit {
   }
 }
 
-module.exports = BlockingLoadEvents;
-module.exports.UIStrings = UIStrings;
+export default BlockingLoadEvents;
+export {UIStrings};

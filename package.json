@@ -1,12 +1,13 @@
 {
   "name": "lighthouse-plugin-publisher-ads-wrapper",
   "version": "1.5.6",
+  "type": "module",
   "description": "Wrapper for Publisher Ads Lighthouse Plugin.",
   "author": "Google Ads",
   "license": "Apache-2.0",
-  "main": "index.js",
+  "main": "index.cjs",
   "scripts": {
-    "lint": "eslint -c lighthouse-plugin-publisher-ads/.eslintrc.js .",
+    "lint": "eslint -c lighthouse-plugin-publisher-ads/.eslintrc.cjs .",
     "debug": "mocha debug lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
     "test": "mocha lighthouse-plugin-publisher-ads/test/{audits,utils}/*.js",
     "smoke": "node lighthouse-plugin-publisher-ads/test/smoke/run-smoke.js",
@@ -21,13 +22,15 @@
   "dependencies": {
     "@tusbar/cache-control": "^0.3.1",
     "@types/esprima": "^4.0.2",
-    "lighthouse": "^8.6.0",
+    "lighthouse": "9.5.0-dev.20220728",
     "lodash.clonedeep": "^4.5.0",
     "yargs": "16.1.1"
   },
   "devDependencies": {
     "@lhci/cli": "0.7.x",
+    "@types/lodash": "^4.14.178",
     "@types/yargs": "^15.0.11",
+    "@typescript-eslint/parser": "^5.31.0",
     "chai": "^4.1.2",
     "eslint": "^6.0.1",
     "eslint-config-google": "^0.12.0",
@@ -36,6 +39,6 @@
     "mocha": "^8.3.2",
     "sinon": "^5.0.7",
     "static-server": "^2.2.1",
-    "typescript": "^4.1.2"
+    "typescript": "^4.7.4"
   }
 }

@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+
 // @ts-ignore
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {getTimingsByRecord} = require('../utils/network-timing');
-const {isAdTag} = require('../utils/resource-classification');
+import {auditNotApplicable} from '../messages/common-strings.js';
+
+import {Audit} from 'lighthouse';
+import {getTimingsByRecord} from '../utils/network-timing.js';
+import {isAdTag} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'Minimal render-blocking resources found',
@@ -38,7 +41,7 @@ const UIStrings = {
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 const THRESHOLD_MS = 100;
 
@@ -70,7 +73,7 @@ const HEADINGS = [
 class AdRenderBlockingResources extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -165,5 +168,5 @@ class AdRenderBlockingResources extends Audit {
   }
 }
 
-module.exports = AdRenderBlockingResources;
-module.exports.UIStrings = UIStrings;
+export default AdRenderBlockingResources;
+export {UIStrings};

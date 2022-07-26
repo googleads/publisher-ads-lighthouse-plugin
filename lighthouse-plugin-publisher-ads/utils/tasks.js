@@ -40,4 +40,4 @@ function getAttributableUrl(longTask, knownScripts = new Set()) {
   return childUrl;
 }
 
-module.exports = {getAttributableUrl};
+export {getAttributableUrl};

@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdsInViewport = require('../../audits/ads-in-viewport');
-const {expect} = require('chai');
+import AdsInViewport from '../../audits/ads-in-viewport.js';
+
+import chai from 'chai';
+
+const {expect} = chai;
 
 describe('AdsInViewport', () => {
   // From top left corner & dimensions

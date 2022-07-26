@@ -7,13 +7,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdRequestTime = require('../computed/ad-request-time');
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const LongTasks = require('../computed/long-tasks');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {getAttributableUrl} = require('../utils/tasks');
-const {isAdScript} = require('../utils/resource-classification');
+import AdRequestTime from '../computed/ad-request-time.js';
+
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import LongTasks from '../computed/long-tasks.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {getAttributableUrl} from '../utils/tasks.js';
+import {isAdScript} from '../utils/resource-classification.js';
 
 const UIStrings = {
   /* Title of the audit */
@@ -31,7 +32,7 @@ const UIStrings = {
   columnDuration: 'Duration',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 /**
  * @typedef {Object} TaskDetails
  * @property {number} startTime
@@ -70,7 +71,7 @@ const HEADINGS = [
 class AdBlockingTasks extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -170,5 +171,5 @@ class AdBlockingTasks extends Audit {
   }
 }
 
-module.exports = AdBlockingTasks;
-module.exports.UIStrings = UIStrings;
+export default AdBlockingTasks;
+export {UIStrings};

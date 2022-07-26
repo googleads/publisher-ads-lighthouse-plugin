@@ -12,11 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {isAdRequest} = require('../utils/resource-classification');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {isAdRequest} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'Ad slots effectively use horizontal space',
@@ -29,13 +30,13 @@ const UIStrings = {
   'is underutilized',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /** @inheritDoc */
 class FullWidthSlots extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -100,5 +101,5 @@ class FullWidthSlots extends Audit {
   }
 }
 
-module.exports = FullWidthSlots;
-module.exports.UIStrings = UIStrings;
+export default FullWidthSlots;
+export {UIStrings};

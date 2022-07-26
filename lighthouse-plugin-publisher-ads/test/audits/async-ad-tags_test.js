@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AsyncAdTags = require('../../audits/async-ad-tags');
-const MainResource = require('lighthouse/lighthouse-core/computed/main-resource.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const sinon = require('sinon');
-const {expect} = require('chai');
+import AsyncAdTags from '../../audits/async-ad-tags.js';
+
+import MainResource from 'lighthouse/lighthouse-core/computed/main-resource.js';
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import sinon from 'sinon';
+import chai from 'chai';
+
+const {expect} = chai;
 
 describe('AsyncAdTags', async () => {
   let sandbox;

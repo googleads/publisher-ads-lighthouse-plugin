@@ -12,14 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js');
+import {BaseNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/base-node.js';
+
 // eslint-disable-next-line no-unused-vars
-const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
+import {CPUNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js';
+
 // @ts-ignore Remove request() below after importing the type.
-const LanternMetric = require('lighthouse/lighthouse-core/computed/metrics/lantern-metric.js');
+import LanternMetric from 'lighthouse/lighthouse-core/computed/metrics/lantern-metric.js';
+
 // eslint-disable-next-line no-unused-vars
-const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
-const {isBidRelatedRequest, isImpressionPing, isGoogleAds, isGptAdRequest, isGptTag, isGptImplTag, toURL} = require('../utils/resource-classification');
+import {NetworkNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/network-node.js';
+
+import {
+  isBidRelatedRequest,
+  isImpressionPing,
+  isGoogleAds,
+  isGptAdRequest,
+  isGptTag,
+  isGptImplTag,
+  toURL,
+} from '../utils/resource-classification.js';
 
 /** @typedef {LH.Gatherer.Simulation.GraphNode} GraphNode */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -36,7 +48,7 @@ function getFrame(event) {
 
 /**
  * Returns a list of URLs associated with this CPU node.
- * @param {CpuNode} cpuNode
+ * @param {CPUNode} cpuNode
  * @return {string[]}
  */
 function getCpuNodeUrls(cpuNode) {
@@ -51,7 +63,7 @@ function getCpuNodeUrls(cpuNode) {
 
 /**
  * Checks if the given CPU node is related to bidding.
- * @param {CpuNode} cpuNode
+ * @param {CPUNode} cpuNode
  * @return {boolean}
  */
 function isAdTask(cpuNode) {
@@ -61,7 +73,7 @@ function isAdTask(cpuNode) {
 
 /**
  * Checks if the given CPU node is a long task.
- * @param {CpuNode} cpuNode
+ * @param {CPUNode} cpuNode
  * @return {boolean}
  */
 function isLongTask(cpuNode) {
@@ -72,8 +84,8 @@ function isLongTask(cpuNode) {
 
 /**
  * Adds a dependency edge between a nd b, where a came before b.
- * @param {CpuNode|NetworkNode} a
- * @param {CpuNode|NetworkNode} b
+ * @param {CPUNode|NetworkNode} a
+ * @param {CPUNode|NetworkNode} b
  */
 function addEdge(a, b) {
   if (a === b || a.endTime > b.startTime) return;
@@ -129,7 +141,7 @@ function addEdges(graph) {
 class AdLanternMetric extends LanternMetric {
   /**
    * @return {LH.Gatherer.Simulation.MetricCoefficients}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get COEFFICIENTS() {
     return {
@@ -144,7 +156,7 @@ class AdLanternMetric extends LanternMetric {
    * @param {BaseNode} graph Root of the dependency graph, i.e. the
    *     document node.
    * @return {BaseNode}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static getPessimisticGraph(graph) {
     // The pessimistic graph is the whole graph.
@@ -157,7 +169,7 @@ class AdLanternMetric extends LanternMetric {
    * @param {BaseNode} graph Root of the dependency graph, i.e. the
    *     document node.
    * @return {BaseNode}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static getOptimisticGraph(graph) {
     // @ts-ignore
@@ -185,7 +197,7 @@ class AdLanternMetric extends LanternMetric {
    * @param {LH.Gatherer.Simulation.Result} simulationResult
    * @param {Object} extras
    * @return {LH.Gatherer.Simulation.Result}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static getEstimateFromSimulation(simulationResult, extras) {
     throw new Error(
@@ -221,4 +233,4 @@ class AdLanternMetric extends LanternMetric {
   }
 }
 
-module.exports = AdLanternMetric;
+export default AdLanternMetric;

@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const {assert} = require('../utils/asserts');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {getCriticalGraph} = require('../utils/graph');
-const {getTimingsByRecord} = require('../utils/network-timing');
-const {isGptImplTag, isBidRequest, getHeaderBidder} = require('../utils/resource-classification');
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+
+import {assert} from '../utils/asserts.js';
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {getCriticalGraph} from '../utils/graph.js';
+import {getTimingsByRecord} from '../utils/network-timing.js';
+import {isGptImplTag, isBidRequest, getHeaderBidder} from '../utils/resource-classification.js';
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
@@ -56,7 +57,7 @@ const HEADINGS = [
 class GptBidsInParallel extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -123,5 +124,5 @@ class GptBidsInParallel extends Audit {
   }
 }
 
-module.exports = GptBidsInParallel;
-module.exports.UIStrings = UIStrings;
+export default GptBidsInParallel;
+export {UIStrings};

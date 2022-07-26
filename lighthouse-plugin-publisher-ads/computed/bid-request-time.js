@@ -12,13 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdLanternMetric = require('./ad-lantern-metric');
+import AdLanternMetric from './ad-lantern-metric.js';
+
 // @ts-ignore
-const ComputedMetric = require('lighthouse/lighthouse-core/computed/metrics/metric.js');
+import ComputedMetric from 'lighthouse/lighthouse-core/computed/metrics/metric.js';
+
 // @ts-ignore
-const makeComputedArtifact = require('lighthouse/lighthouse-core/computed/computed-artifact.js');
-const {getAdStartTime, getBidStartTime, getPageStartTime} = require('../utils/network-timing');
-const {isAdRequest, isBidRequest} = require('../utils/resource-classification');
+import {makeComputedArtifact} from 'lighthouse/lighthouse-core/computed/computed-artifact.js';
+
+import {getAdStartTime, getBidStartTime, getPageStartTime} from '../utils/network-timing.js';
+import {isAdRequest, isBidRequest} from '../utils/resource-classification.js';
 
 // @ts-ignore
 // eslint-disable-next-line max-len
@@ -56,7 +59,7 @@ class BidRequestTime extends ComputedMetric {
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Artifacts.LanternMetric>}
-   * @override
+   * /override TODO This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static async computeSimulatedMetric(data, context) {
     // @ts-ignore request does not exist on LanternBidRequestTime
@@ -66,7 +69,7 @@ class BidRequestTime extends ComputedMetric {
   /**
    * @param {LH.Artifacts.MetricComputationData} data
    * @return {Promise<LH.Artifacts.Metric>}
-   * @override
+   * /override TODO This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static async computeObservedMetric(data) {
     const {networkRecords} = data;
@@ -98,4 +101,4 @@ class BidRequestTime extends ComputedMetric {
 // eslint-disable-next-line no-class-assign
 BidRequestTime = makeComputedArtifact(BidRequestTime);
 
-module.exports = BidRequestTime;
+export default BidRequestTime;

@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const ViewportAdDensity = require('../../audits/viewport-ad-density');
-const {expect} = require('chai');
+import ViewportAdDensity from '../../audits/viewport-ad-density.js';
+
+import chai from 'chai';
+
+const {expect} = chai;
 
 describe('ViewportAdDensity', () => {
   // From top left corner & dimensions

@@ -13,10 +13,13 @@
 // limitations under the License.
 //
 //
-const network = require('../../utils/network');
-const {expect} = require('chai');
+import * as network from '../../utils/network.js';
 
-describe('utils/network', () => {
+import chai from 'chai';
+
+const {expect} = chai;
+
+describe('utils/network.js', () => {
   describe('isCacheable', () => {
     const testCases = [
       {

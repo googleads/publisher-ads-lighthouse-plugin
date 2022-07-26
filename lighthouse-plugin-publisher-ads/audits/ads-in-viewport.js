@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
+import {auditNotApplicable} from '../messages/common-strings.js';
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {isBoxInViewport} = require('../utils/geometry');
-const {isGptIframe} = require('../utils/resource-classification');
+import {Audit} from 'lighthouse';
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import {isBoxInViewport} from '../utils/geometry.js';
+import {isGptIframe} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'Few or no ads loaded outside viewport',
@@ -34,7 +34,7 @@ const UIStrings = {
   columnSlot: 'Slots Outside Viewport',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /**
  * Table headings for audits details sections.
@@ -48,7 +48,7 @@ const HEADINGS = [
 class AdsInViewport extends Audit {
   /**
    * @return {AuditMetadata}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -94,5 +94,5 @@ class AdsInViewport extends Audit {
   }
 }
 
-module.exports = AdsInViewport;
-module.exports.UIStrings = UIStrings;
+export default AdsInViewport;
+export {UIStrings};

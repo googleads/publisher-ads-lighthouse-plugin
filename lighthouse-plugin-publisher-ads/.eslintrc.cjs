@@ -19,8 +19,13 @@ module.exports = {
     node: true,
     mocha: true,
   },
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2020,
+    ecmaFeatures: {
+      globalReturn: true,
+      jsx: false,
+    },
     sourceType: 'script',
   },
   rules: {
@@ -29,6 +34,7 @@ module.exports = {
       {'MemberExpression': 2},
     ],
     'max-len': ['error', 80, {
+      ignorePattern: '^import |/override',
       ignoreStrings: true,
       ignoreUrls: true,
     }],

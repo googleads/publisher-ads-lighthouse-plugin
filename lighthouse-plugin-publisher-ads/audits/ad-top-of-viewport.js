@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {auditNotApplicable} = require('../messages/common-strings');
-const {Audit} = require('lighthouse');
-const {isAdIframe} = require('../utils/resource-classification');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import {auditNotApplicable} from '../messages/common-strings.js';
+import {Audit} from 'lighthouse';
+import {isAdIframe} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'No ad found at the very top of the viewport',
@@ -30,7 +31,7 @@ const UIStrings = {
   columnSlot: 'Top Slot ID',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 
 const SCROLL_PX_THRESHOLD = 100;
@@ -48,7 +49,7 @@ const HEADINGS = [
 class AdTopOfViewport extends Audit {
   /**
    * @return {AuditMetadata}
-   * @override
+   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
@@ -105,5 +106,5 @@ class AdTopOfViewport extends Audit {
   }
 }
 
-module.exports = AdTopOfViewport;
-module.exports.UIStrings = UIStrings;
+export default AdTopOfViewport;
+export {UIStrings};

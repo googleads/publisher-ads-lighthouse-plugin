@@ -21,7 +21,7 @@
  * @const {LH.Config}
  */
 // TODO(jburger): Make Chrome run in headless mode.
-module.exports = {
+export default {
   extends: 'lighthouse:default',
   plugins: ['lighthouse-plugin-publisher-ads'],
   passes: [

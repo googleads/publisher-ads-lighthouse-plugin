@@ -33,4 +33,4 @@ const networkRecords = [
   },
 ];
 
-module.exports = networkRecords;
+export default networkRecords;

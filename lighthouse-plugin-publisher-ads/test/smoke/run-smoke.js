@@ -14,13 +14,33 @@
 'use strict';
 
 /* eslint-disable no-console */
-const {promisify} = require('util'); // eslint-disable-line
-const execAsync = promisify(require('child_process').exec);
-const StaticServer = require('static-server');
-const {execSync} = require('child_process');
+import { promisify } from 'util'; // eslint-disable-line
+import {exec} from 'child_process';
+import url from 'url';
+import path from 'path';
+import StaticServer from 'static-server';
+import {execSync} from 'child_process';
+
+const execAsync = promisify(exec);
+
+/**
+ * @param {ImportMeta} importMeta
+ */
+function getModulePath(importMeta) {
+  return url.fileURLToPath(importMeta.url);
+}
+
+/**
+ * @param {ImportMeta} importMeta
+ */
+function getModuleDirectory(importMeta) {
+  return path.dirname(getModulePath(importMeta));
+}
+
+const moduleDir = getModuleDirectory(import.meta);
 
 const server = new StaticServer({
-  rootPath: `${__dirname}/fixtures`,
+  rootPath: `${moduleDir}/fixtures`,
   port: 8081,
 });
 

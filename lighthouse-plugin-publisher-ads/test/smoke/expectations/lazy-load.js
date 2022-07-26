@@ -16,7 +16,7 @@
 /**
  * Expected Lighthouse audit values for perf tests.
  */
-module.exports = [
+export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/lazy-load.html',
