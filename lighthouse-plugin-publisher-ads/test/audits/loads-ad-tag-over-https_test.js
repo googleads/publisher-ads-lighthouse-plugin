@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const LoadsAdTagOverHttps = require('../../audits/loads-ad-tag-over-https');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const sinon = require('sinon');
-const {expect} = require('chai');
+import LoadsAdTagOverHttps from '../../audits/loads-ad-tag-over-https.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import sinon from 'sinon';
+import chai from 'chai';
+
+const {expect} = chai;
 
 describe('LoadsAdTagOverHttps', async () => {
   let sandbox;

@@ -22,6 +22,6 @@ function assert(x) {
   return x;
 }
 
-module.exports = {
+export {
   assert,
 };

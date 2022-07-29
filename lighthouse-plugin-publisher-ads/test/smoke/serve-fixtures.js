@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 'use strict';
-const StaticServer = require('static-server');
+import StaticServer from 'static-server';
 
 const server = new StaticServer({
   rootPath: `${__dirname}/fixtures`,

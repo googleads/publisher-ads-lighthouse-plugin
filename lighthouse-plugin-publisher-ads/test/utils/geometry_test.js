@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const geometry = require('../../utils/geometry');
-const {expect} = require('chai');
+import * as geometry from '../../utils/geometry.js';
+
+import chai from 'chai';
+
+const {expect} = chai;
 
 describe('geometry', () => {
   // From top left corner & dimensions

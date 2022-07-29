@@ -11,61 +11,72 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-'use strict';
+
+import deprecatedApiUsage from './expectations/deprecated-api-usage.js';
+import duplicateTags from './expectations/duplicate-tags.js';
+import lazyLoad from './expectations/lazy-load.js';
+import longTasks from './expectations/long-tasks.js';
+import renderBlockingTags from './expectations/render-blocking-tags.js';
+import scriptInjected from './expectations/script-injected.js';
+import topOfViewport from './expectations/top-of-viewport.js';
+import notApplicable from './expectations/not-applicable.js';
+import limitedAdsDynamicLoading from './expectations/limited-ads-dynamic-loading.js';
+import cumulativeAdShift from './expectations/cumulative-ad-shift.js';
+import config from './config.js';
 
 /** @type {Array<Smokehouse.TestDfn>} */
 const smokeTests = [
   // TODO(jburger): Add back `gpt-error-overall` case once fix reaches prod.
   {
     id: 'deprecated-api-usage',
-    expectations: require('./expectations/deprecated-api-usage.js'),
-    config: require('./config.js'),
+    expectations: deprecatedApiUsage,
+    config,
   },
   {
     id: 'duplicate-tags',
-    expectations: require('./expectations/duplicate-tags.js'),
-    config: require('./config.js'),
+    expectations: duplicateTags,
+    config,
   },
   {
     id: 'lazy-load',
-    expectations: require('./expectations/lazy-load.js'),
-    config: require('./config.js'),
+    expectations: lazyLoad,
+    config,
   },
   {
     id: 'long-tasks',
-    expectations: require('./expectations/long-tasks.js'),
-    config: require('./config.js'),
+    expectations: longTasks,
+    config,
   },
   {
     id: 'render-blocking-tasks',
-    expectations: require('./expectations/render-blocking-tags.js'),
-    config: require('./config.js'),
+    expectations: renderBlockingTags,
+    config,
   },
   {
     id: 'script-injected',
-    expectations: require('./expectations/script-injected.js'),
-    config: require('./config.js'),
+    expectations: scriptInjected,
+    config,
   },
   {
     id: 'top-of-viewport',
-    expectations: require('./expectations/top-of-viewport.js'),
-    config: require('./config.js'),
+    expectations: topOfViewport,
+    config,
   },
   {
     id: 'not-applicable',
-    expectations: require('./expectations/not-applicable.js'),
-    config: require('./config.js'),
+    expectations: notApplicable,
+    config,
   },
   {
     id: 'limited-ads-dynamic-loading',
-    expectations: require('./expectations/limited-ads-dynamic-loading.js'),
-    config: require('./config.js'),
+    expectations: limitedAdsDynamicLoading,
+    config,
   },
   {
     id: 'cumulative-ad-shift',
-    expectations: require('./expectations/cumulative-ad-shift.js'),
-    config: require('./config.js'),
+    expectations: cumulativeAdShift,
+    config,
   },
 ];
 
-module.exports = smokeTests;
+export default smokeTests;

@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const bidderPatterns = require('./bidder-patterns');
-const thirdPartyWeb = require('lighthouse/lighthouse-core/lib/third-party-web.js');
-const {isCacheable} = require('../utils/network');
+import bidderPatterns from './bidder-patterns.js';
+import thirdPartyWeb from 'lighthouse/lighthouse-core/lib/third-party-web.js';
+import {isCacheable} from '../utils/network.js';
 
 /**
  * Converts the given url to a URL, if it's not already a URL. Otherwise returns
@@ -417,7 +417,7 @@ function isAdRelated(requestOrUrl) {
   return false;
 }
 
-module.exports = {
+export {
   isGoogleAds,
   isGptAdRequest,
   isImpressionPing,

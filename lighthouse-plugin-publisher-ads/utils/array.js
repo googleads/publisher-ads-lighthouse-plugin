@@ -68,6 +68,6 @@ function flatten(arrs) {
   return result;
 }
 
-module.exports = {
+export {
   count, bucket, flatten,
 };

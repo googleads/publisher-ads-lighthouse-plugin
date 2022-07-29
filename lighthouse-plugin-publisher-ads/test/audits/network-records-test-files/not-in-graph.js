@@ -87,4 +87,4 @@ const networkRecords = [
   // have entry that does not have a callframe reference it
 ];
 
-module.exports = networkRecords;
+export default networkRecords;

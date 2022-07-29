@@ -20,7 +20,7 @@
  * https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/config
  * @const {LH.Config}
  */
-module.exports = {
+const config = {
   extends: 'lighthouse:default',
   plugins: ['lighthouse-plugin-publisher-ads'],
   passes: [
@@ -29,3 +29,5 @@ module.exports = {
     },
   ],
 };
+
+export default config;

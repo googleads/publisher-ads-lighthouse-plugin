@@ -12,8 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/** @typedef {Omit<ClientRect, 'x'|'y'|'toJSON'>} Rect */
+
 /**
- * @param {ClientRect} clientRect
+ * @param {Rect} clientRect
  * @param {LH.Artifacts.ViewportDimensions} viewport
  * @return {boolean}
  */
@@ -26,7 +28,7 @@ function isBoxInViewport(clientRect, viewport) {
 }
 
 /**
- * @param {ClientRect} clientRect
+ * @param {Rect} clientRect
  * @param {LH.Artifacts.ViewportDimensions} viewport
  * @return {number}
  */
@@ -41,9 +43,9 @@ function boxViewableArea(clientRect, viewport) {
 }
 
 /**
- * Converts points (from a TraceEvent) to a ClientRect.
+ * Converts points (from a TraceEvent) to a Rect.
  * @param {number[]} points
- * @return {ClientRect}
+ * @return {Rect}
  */
 function toClientRect([left, top, width, height]) {
   return {
@@ -57,10 +59,10 @@ function toClientRect([left, top, width, height]) {
 }
 
 /**
- * Checks ClientRect a overlaps ClientRect b. Note that this returns true for
+ * Checks Rect a overlaps Rect b. Note that this returns true for
  * overlapping perimeters.
- * @param {ClientRect} a
- * @param {ClientRect} b
+ * @param {Rect} a
+ * @param {Rect} b
  * @return {boolean}
  */
 function overlaps(a, b) {
@@ -69,10 +71,9 @@ function overlaps(a, b) {
   return overlapX && overlapY;
 }
 
-module.exports = {
+export {
   boxViewableArea,
   isBoxInViewport,
   overlaps,
   toClientRect,
 };
-

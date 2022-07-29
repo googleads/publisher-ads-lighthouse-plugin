@@ -13,9 +13,10 @@
 // limitations under the License.
 
 // @ts-ignore
-const CacheHeaders = require('lighthouse/lighthouse-core/audits/byte-efficiency/uses-long-cache-ttl.js');
+import CacheHeaders from 'lighthouse/lighthouse-core/audits/byte-efficiency/uses-long-cache-ttl.js';
+
 // @ts-ignore
-const {parse: parseCacheControl} = require('@tusbar/cache-control');
+import {parse as parseCacheControl} from '@tusbar/cache-control';
 
 /**
  * @param {LH.Artifacts.NetworkRequest} req
@@ -53,6 +54,6 @@ function isCacheable(req) {
   return !!getHeader(req, 'expires') || !!getHeader(req, 'last-modified');
 }
 
-module.exports = {
+export {
   isCacheable,
 };

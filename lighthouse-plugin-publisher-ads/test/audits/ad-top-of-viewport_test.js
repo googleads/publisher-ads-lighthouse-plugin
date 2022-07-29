@@ -12,8 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdTopOfViewport = require('../../audits/ad-top-of-viewport');
-const {expect} = require('chai');
+import AdTopOfViewport from '../../audits/ad-top-of-viewport.js';
+
+import chai from 'chai';
+
+const {expect} = chai;
 
 describe('AdTopOfViewport', () => {
   // From top left corner & dimensions

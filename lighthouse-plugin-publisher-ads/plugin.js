@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const i18n = require('lighthouse/lighthouse-core/lib/i18n/i18n.js');
-const {group} = require('./messages/common-strings');
+import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+
+import {group} from './messages/common-strings.js';
 
 const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';
 
@@ -21,10 +22,10 @@ const UIStrings = {
   categoryDescription: 'A Lighthouse plugin to improve ad speed and overall quality that is targeted at sites using GPT or AdSense tag. ' +
       '[Learn more](https://developers.google.com/publisher-ads-audits/reference)',
 };
-const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
 
 /** @type {LH.Config.Plugin} */
-module.exports = {
+export default {
   audits: [
     {path: `${PLUGIN_PATH}/audits/ad-blocking-tasks`},
     {path: `${PLUGIN_PATH}/audits/ad-render-blocking-resources`},
@@ -96,10 +97,4 @@ module.exports = {
   },
 };
 
-// @ts-ignore Use `defineProperty` so that the strings can be referenced but not
-// iterated over (i.e. set enumerable=false). Otherwise the config would be
-// invalid for having additional keys.
-Object.defineProperty(module.exports, 'UIStrings', {
-  enumerable: false,
-  get: () => UIStrings,
-});
+export {UIStrings};

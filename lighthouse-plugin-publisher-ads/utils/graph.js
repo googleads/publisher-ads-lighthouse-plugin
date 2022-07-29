@@ -12,21 +12,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const BaseNode = require('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js');
+import {BaseNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/base-node.js';
+
 // eslint-disable-next-line no-unused-vars
-const CpuNode = require('lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js');
+import {CPUNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js';
+
 // eslint-disable-next-line no-unused-vars
-const NetworkNode = require('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const {assert} = require('./asserts');
-const {getNameOrTld, trimUrl} = require('../utils/resource-classification');
-const {getNetworkInitiators} = require('lighthouse/lighthouse-core/computed/page-dependency-graph.js');
-const {getTimingsByRecord} = require('../utils/network-timing');
-const {isAdRequest, isAdSense, isGpt, isBidRequest, isAdRelated} = require('./resource-classification');
+import {NetworkNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/network-node.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import {assert} from './asserts.js';
+import {getNameOrTld, trimUrl} from '../utils/resource-classification.js';
+import PageDependencyGraph from 'lighthouse/lighthouse-core/computed/page-dependency-graph.js';
+import {getTimingsByRecord} from '../utils/network-timing.js';
+import {isAdRequest, isAdSense, isGpt, isBidRequest, isAdRelated} from './resource-classification.js';
 
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 /** @typedef {LH.TraceEvent} TraceEvent */
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
+// eslint-disable-next-line max-len
+/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
 
 /**
  * @typedef {Object} NetworkSummary
@@ -36,7 +41,7 @@ const {isAdRequest, isAdSense, isGpt, isBidRequest, isAdRelated} = require('./re
  */
 
 /**
- * @param {BaseNode.Node} root The root node of the DAG.
+ * @param {Node} root The root node of the DAG.
  * @param {(req: NetworkRequest) => boolean} isTargetRequest
  * @return {?NetworkNode}
  */
@@ -58,12 +63,12 @@ function findTargetRequest(root, isTargetRequest) {
 /**
  * Returns all requests and CPU tasks in the loading graph of the target
  * requests.
- * @param {BaseNode.Node} root The root node of the DAG.
+ * @param {Node} root The root node of the DAG.
  * @param {(req: NetworkRequest) => boolean} isTargetRequest
  * @return {{requests: NetworkRequest[], traceEvents: TraceEvent[]}}
  */
 function getTransitiveClosure(root, isTargetRequest) {
-  /** @type {Set<BaseNode.Node>} */
+  /** @type {Set<Node>} */
   const closure = new Set();
   /** @type {?NetworkNode} */
   const firstTarget = findTargetRequest(root, isTargetRequest);
@@ -77,7 +82,7 @@ function getTransitiveClosure(root, isTargetRequest) {
     return {requests, traceEvents};
   }
 
-  /** @type {BaseNode.Node[]} */ const stack = [firstTarget];
+  /** @type {Node[]} */ const stack = [firstTarget];
 
   // Search target -> root
   while (stack.length) {
@@ -156,7 +161,7 @@ function addInitiatedRequests(
       .filter((r) => ['Script', 'XHR'].includes(r.resourceType || '') &&
           r.endTime < parentReq.startTime)
       .filter((r) => r.initiatorRequest == scriptReq ||
-        getNetworkInitiators(r).includes(scriptReq.url));
+        PageDependencyGraph.getNetworkInitiators(r).includes(scriptReq.url));
 
   for (const initiatedReq of initiatedRequests) {
     // TODO(warrengm): Check for JSONP and Fetch requests.
@@ -415,7 +420,7 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
   return result;
 }
 
-module.exports = {
+export {
   getTransitiveClosure,
   getCriticalGraph,
   computeAdRequestWaterfall,

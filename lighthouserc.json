@@ -1,0 +1,135 @@
+{
+  "ci": {
+    "upload": {
+      "target": "temporary-public-storage"
+    },
+    "collect": {
+      "staticDistDir": "./lighthouse-ci/mock-pages",
+      "settings": {
+        "onlyCategories": [
+          "lighthouse-plugin-publisher-ads",
+          "performance"
+        ],
+        "plugins": [
+          "lighthouse-plugin-publisher-ads"
+        ]
+      }
+    },
+    "assert": {
+      "assertMatrix": [
+        {
+          "matchingUrlPattern": ".*/fast-ads.html",
+          "assertions": {
+            "categories:lighthouse-plugin-publisher-ads": [
+              "error",
+              {
+                "minScore": 1
+              }
+            ],
+            "tag-load-time": [
+              "error",
+              {
+                "maxNumericValue": 2850
+              }
+            ],
+            "ad-request-from-page-start": [
+              "error",
+              {
+                "maxNumericValue": 2800
+              }
+            ],
+            "first-ad-render": [
+              "error",
+              {
+                "maxNumericValue": 3300
+              }
+            ],
+            "categories:performance": [
+              "error",
+              {
+                "minScore": 0.85
+              }
+            ],
+            "first-contentful-paint": [
+              "error",
+              {
+                "maxNumericValue": 750
+              }
+            ],
+            "speed-index": [
+              "error",
+              {
+                "maxNumericValue": 2000
+              }
+            ],
+            "largest-contentful-paint": [
+              "error",
+              {
+                "maxNumericValue": 750
+              }
+            ],
+            "interactive": [
+              "error",
+              {
+                "maxNumericValue": 5000
+              }
+            ],
+            "total-blocking-time": [
+              "error",
+              {
+                "maxNumericValue": 750
+              }
+            ],
+            "cumulative-layout-shift": [
+              "error",
+              {
+                "maxNumericValue": 0
+              }
+            ]
+          }
+        },
+        {
+          "matchingUrlPattern": ".*/slow-ads.html",
+          "assertions": {
+            "categories:lighthouse-plugin-publisher-ads": [
+              "error",
+              {
+                "minScore": 0.2
+              }
+            ],
+            "ad-request-from-page-start": [
+              "error",
+              {
+                "maxNumericValue": 24000
+              }
+            ],
+            "first-ad-render": [
+              "error",
+              {
+                "maxNumericValue": 27000
+              }
+            ],
+            "cumulative-layout-shift": [
+              "error",
+              {
+                "maxNumericValue": 3.54
+              }
+            ],
+            "viewport-ad-density": [
+              "error",
+              {
+                "maxNumericValue": 0.33
+              }
+            ],
+            "ad-blocking-tasks": [
+              "error",
+              {
+                "maxLength": 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

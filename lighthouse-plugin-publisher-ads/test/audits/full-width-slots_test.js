@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const chai = require('chai');
-const FullWidthSlots = require('../../audits/full-width-slots');
-const expect = chai.expect;
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const sinon = require('sinon');
+import chai from 'chai';
+
+import FullWidthSlots from '../../audits/full-width-slots.js';
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import sinon from 'sinon';
+
+const {expect} = chai;
 
 describe('FullWidthSlots', async () => {
   const ViewportDimensions = {

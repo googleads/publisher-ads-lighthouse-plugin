@@ -19,20 +19,23 @@
  *
  *   find node_modules/lighthouse/types node_modules/lighthouse/types/lhr -name '*.d.ts' -maxdepth 1 | sed -E "s#node_modules/(.*).d.ts#import '\1';#g"
  */
- import 'lighthouse/types/jest';
+ import 'lighthouse/types/user-flow';
  import 'lighthouse/types/audit';
  import 'lighthouse/types/smokehouse';
  import 'lighthouse/types/global-lh';
  import 'lighthouse/types/gatherer';
  import 'lighthouse/types/config';
+ import 'lighthouse/types/rollup-plugin-postprocess';
  import 'lighthouse/types/structured-data';
  import 'lighthouse/types/enquirer';
+ import 'lighthouse/types/test';
  import 'lighthouse/types/node-fetch';
  import 'lighthouse/types/protocol';
  import 'lighthouse/types/externs';
  import 'lighthouse/types/jsonlint-mod';
  import 'lighthouse/types/query-selector';
  import 'lighthouse/types/node';
+ import 'lighthouse/types/es-main';
  import 'lighthouse/types/artifacts';
  import 'lighthouse/types/lhr/settings';
  import 'lighthouse/types/lhr/lhr';

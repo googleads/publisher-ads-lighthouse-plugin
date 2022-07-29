@@ -12,19 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-const AdLanternMetric = require('../computed/ad-lantern-metric');
+import AdLanternMetric from '../computed/ad-lantern-metric.js';
+
 // @ts-ignore
-const LoadSimulator = require('lighthouse/lighthouse-core/computed/load-simulator.js');
-const NetworkRecords = require('lighthouse/lighthouse-core/computed/network-records.js');
-const PageDependencyGraph = require('lighthouse/lighthouse-core/computed/page-dependency-graph.js');
-const {isAdRequest, isBidRequest, isImplTag, isImpressionPing} = require('./resource-classification');
+import LoadSimulator from 'lighthouse/lighthouse-core/computed/load-simulator.js';
+
+import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import PageDependencyGraph from 'lighthouse/lighthouse-core/computed/page-dependency-graph.js';
+import {isAdRequest, isBidRequest, isImplTag, isImpressionPing} from './resource-classification.js';
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 /** @typedef {LH.Gatherer.Simulation.NodeTiming} NodeTiming */
 
 /* eslint-disable max-len */
-/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
-/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js')} NetworkNode */
+/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/network-node.js').NetworkNode} NetworkNode */
 /* eslint-enable max-len */
 
 /**
@@ -204,7 +205,7 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
   return simulatedTimes;
 }
 
-module.exports = {
+export {
   getTagEndTime,
   getImpressionStartTime,
   getAdStartTime,
