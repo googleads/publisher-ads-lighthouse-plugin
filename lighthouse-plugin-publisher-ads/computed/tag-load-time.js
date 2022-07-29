@@ -54,7 +54,6 @@ class TagLoadTime extends ComputedMetric {
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Artifacts.LanternMetric>}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static async computeSimulatedMetric(data, context) {
     // @ts-ignore request does not exist on LanternTagLoadTime
@@ -65,7 +64,6 @@ class TagLoadTime extends ComputedMetric {
    * @param {LH.Artifacts.MetricComputationData} data
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Artifacts.Metric>}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static async computeObservedMetric(data, context) {
     const {networkRecords} = data;

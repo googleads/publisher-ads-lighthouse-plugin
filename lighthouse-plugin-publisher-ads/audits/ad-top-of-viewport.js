@@ -49,7 +49,6 @@ const HEADINGS = [
 class AdTopOfViewport extends Audit {
   /**
    * @return {AuditMetadata}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {

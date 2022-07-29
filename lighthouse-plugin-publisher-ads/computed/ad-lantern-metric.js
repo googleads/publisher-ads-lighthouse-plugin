@@ -141,7 +141,6 @@ function addEdges(graph) {
 class AdLanternMetric extends LanternMetric {
   /**
    * @return {LH.Gatherer.Simulation.MetricCoefficients}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get COEFFICIENTS() {
     return {
@@ -156,7 +155,6 @@ class AdLanternMetric extends LanternMetric {
    * @param {BaseNode} graph Root of the dependency graph, i.e. the
    *     document node.
    * @return {BaseNode}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static getPessimisticGraph(graph) {
     // The pessimistic graph is the whole graph.
@@ -169,7 +167,6 @@ class AdLanternMetric extends LanternMetric {
    * @param {BaseNode} graph Root of the dependency graph, i.e. the
    *     document node.
    * @return {BaseNode}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static getOptimisticGraph(graph) {
     // @ts-ignore
@@ -197,7 +194,6 @@ class AdLanternMetric extends LanternMetric {
    * @param {LH.Gatherer.Simulation.Result} simulationResult
    * @param {Object} extras
    * @return {LH.Gatherer.Simulation.Result}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static getEstimateFromSimulation(simulationResult, extras) {
     throw new Error(

@@ -119,7 +119,6 @@ function computeIdleTimes(blockingRequests) {
 class AdRequestCriticalPath extends Audit {
   /**
    * @return {LH.Audit.Meta}
-   * /override This member cannot have a JSDoc comment with an '@override' tag because its containing class ... does not extend another class.
    */
   static get meta() {
     return {
