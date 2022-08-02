@@ -41,7 +41,7 @@ const UIStrings = {
   columnLoadTime: 'Load Time',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /**
  * Table headings for audits details sections.

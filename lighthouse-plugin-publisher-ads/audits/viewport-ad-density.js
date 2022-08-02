@@ -28,7 +28,7 @@ const UIStrings = {
   displayValue: '{adDensity, number, percent} ads to page-height ratio',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /**
  * @param {LH.Artifacts.IFrameElement[]} slots

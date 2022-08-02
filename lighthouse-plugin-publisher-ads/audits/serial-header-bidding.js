@@ -43,7 +43,7 @@ const UIStrings = {
   columnDuration: 'Duration',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 // Min record duration (s) to be considered a bid.
 const MIN_BID_DURATION = .05;

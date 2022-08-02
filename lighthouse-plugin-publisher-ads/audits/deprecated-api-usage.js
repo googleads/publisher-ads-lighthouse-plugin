@@ -29,7 +29,7 @@ const UIStrings = {
   displayValue: '{numErrors, plural, =1 {1 error} other {# errors}} found',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /**
  * Audit that checks for the presence of warning and error messages which

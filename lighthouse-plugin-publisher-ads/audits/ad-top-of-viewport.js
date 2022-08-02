@@ -31,7 +31,7 @@ const UIStrings = {
   columnSlot: 'Top Slot ID',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 
 const SCROLL_PX_THRESHOLD = 100;

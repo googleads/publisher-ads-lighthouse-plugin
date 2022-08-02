@@ -105,5 +105,5 @@ declare module 'lighthouse/core/computed/main-thread-tasks.js' {
 }
 
 declare module 'lighthouse/core/lib/i18n/i18n.js'; {
-  export function createMessageInstanceIdFn(filename: string, fileStrings: Record<string, string>);
+  export function createIcuMessageFn(filename: string, fileStrings: Record<string, string>);
 }
