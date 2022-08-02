@@ -15,7 +15,7 @@
 import chai from 'chai';
 
 import FullWidthSlots from '../../audits/full-width-slots.js';
-import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import NetworkRecords from 'lighthouse/core/computed/network-records.js';
 import sinon from 'sinon';
 
 const {expect} = chai;

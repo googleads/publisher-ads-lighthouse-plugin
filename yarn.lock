@@ -2510,10 +2510,10 @@ lighthouse@7.3.0:
     yargs "^16.1.1"
     yargs-parser "^20.2.4"
 
-lighthouse@9.5.0-dev.20220728:
-  version "9.5.0-dev.20220728"
-  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-9.5.0-dev.20220728.tgz#c804147020ab9b067f5ae4959617d5d5b2e35777"
-  integrity sha512-3n+fF/8CJ1D1VGaIsQqPGCFQb+RZQmphMOoD8lDtGXDk95hvr0HWcCCpLlxKqxr7uCASrySM1w5ZvfNw7FeT1g==
+lighthouse@9.5.0-dev.20220801:
+  version "9.5.0-dev.20220801"
+  resolved "https://registry.yarnpkg.com/lighthouse/-/lighthouse-9.5.0-dev.20220801.tgz#5290e1060d26956bfaa5f076ff7101a9e0748a16"
+  integrity sha512-8D1Fdco/2YE003PHGkZXv5pMYAKgOPeWHkaLus4XmyH3L55T/YTp9y8SKTaAWo6aqeNSq8CIk042NPRsYarASw==
   dependencies:
     "@sentry/node" "^6.17.4"
     axe-core "4.4.1"

@@ -14,7 +14,7 @@
 
 import ComputedAdRequestTime from '../computed/ad-request-time.js';
 
-import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 import {auditNotApplicable, runWarning} from '../messages/common-strings.js';
 import {Audit} from 'lighthouse';
 

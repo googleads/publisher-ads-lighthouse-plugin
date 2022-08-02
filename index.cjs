@@ -39,7 +39,7 @@ async function main() {
   }
 
   // @ts-ignore let LH handle the CLI
-  const {begin} = await import('lighthouse/lighthouse-cli/bin.js');
+  const {begin} = await import('lighthouse/cli/bin.js');
   await begin();
 }
 

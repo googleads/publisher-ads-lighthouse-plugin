@@ -15,7 +15,7 @@
 import {auditNotApplicable} from '../messages/common-strings.js';
 
 import {Audit} from 'lighthouse';
-import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 import {isBoxInViewport} from '../utils/geometry.js';
 import {isGptIframe} from '../utils/resource-classification.js';
 

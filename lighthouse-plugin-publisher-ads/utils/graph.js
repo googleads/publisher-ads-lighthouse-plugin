@@ -12,18 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {BaseNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/base-node.js';
+import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
 
 // eslint-disable-next-line no-unused-vars
-import {CPUNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js';
+import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
 
 // eslint-disable-next-line no-unused-vars
-import {NetworkNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/network-node.js';
+import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
 
-import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import NetworkRecords from 'lighthouse/core/computed/network-records.js';
 import {assert} from './asserts.js';
 import {getNameOrTld, trimUrl} from '../utils/resource-classification.js';
-import PageDependencyGraph from 'lighthouse/lighthouse-core/computed/page-dependency-graph.js';
+import PageDependencyGraph from 'lighthouse/core/computed/page-dependency-graph.js';
 import {getTimingsByRecord} from '../utils/network-timing.js';
 import {isAdRequest, isAdSense, isGpt, isBidRequest, isAdRelated} from './resource-classification.js';
 
@@ -31,7 +31,7 @@ import {isAdRequest, isAdSense, isGpt, isBidRequest, isAdRelated} from './resour
 /** @typedef {LH.TraceEvent} TraceEvent */
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
 // eslint-disable-next-line max-len
-/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
+/** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
 
 /**
  * @typedef {Object} NetworkSummary

@@ -14,12 +14,12 @@
 
 import * as array from '../utils/array.js';
 
-import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
 // @ts-ignore
-import MainResource from 'lighthouse/lighthouse-core/computed/main-resource.js';
+import MainResource from 'lighthouse/core/computed/main-resource.js';
 
-import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import NetworkRecords from 'lighthouse/core/computed/network-records.js';
 import {auditNotApplicable} from '../messages/common-strings.js';
 import {Audit} from 'lighthouse';
 import {isAdTag, isStaticRequest} from '../utils/resource-classification.js';

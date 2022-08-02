@@ -17,7 +17,7 @@
  * For the possible types, see
  * https://github.com/GoogleChrome/lighthouse/blob/master/typings/config.d.ts.
  * and
- * https://github.com/GoogleChrome/lighthouse/tree/master/lighthouse-core/config
+ * https://github.com/GoogleChrome/lighthouse/tree/master/core/config
  * @const {LH.Config}
  */
 const config = {

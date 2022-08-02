@@ -64,7 +64,7 @@ declare module 'lighthouse' {
         loadData: LH.Gatherer.LoadData): PhaseResult;
     }
 
-    // Alias used inside lighthouse/lighthouse-core/gatherers/gatherer.js
+    // Alias used inside lighthouse/core/gatherers/gatherer.js
     type PhaseResult = void | LH.GathererArtifacts[keyof LH.GathererArtifacts];
   }
 }
@@ -80,30 +80,30 @@ declare module 'lighthouse-logger' {
   }
 }
 
-declare module 'lighthouse/lighthouse-core/computed/network-records.js' {
+declare module 'lighthouse/core/computed/network-records.js' {
   export default {
     request(devToolsLog: LH.DevtoolsLog, context: LH.Audit.Context): Promise<Array<LH.Artifacts.NetworkRequest>>;
   }
 }
 
-declare module 'lighthouse/lighthouse-core/computed/main-resource.js' {
+declare module 'lighthouse/core/computed/main-resource.js' {
   export default {
     request(data: {URL: LH.Artifacts['URL'], devtoolsLog: LH.DevtoolsLog}, context: LH.Audit.Context): Promise<LH.Artifacts.NetworkRequest>;
   }
 }
 
-declare module 'lighthouse/lighthouse-core/computed/page-dependency-graph.js' {
+declare module 'lighthouse/core/computed/page-dependency-graph.js' {
   export default {
     getNetworkInitiators(record: LH.Artifacts.NetworkRequest): Array<string>;
   }
 }
 
-declare module 'lighthouse/lighthouse-core/computed/main-thread-tasks.js' {
+declare module 'lighthouse/core/computed/main-thread-tasks.js' {
   export default {
     request(trace: LH.Trace, context: LH.Audit.Context): Promise<Array<TaskNode>>;
   }
 }
 
-declare module 'lighthouse/lighthouse-core/lib/i18n/i18n.js'; {
+declare module 'lighthouse/core/lib/i18n/i18n.js'; {
   export function createMessageInstanceIdFn(filename: string, fileStrings: Record<string, string>);
 }

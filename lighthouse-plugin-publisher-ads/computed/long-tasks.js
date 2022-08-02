@@ -14,29 +14,29 @@
 
 import AdLanternMetric from '../computed/ad-lantern-metric.js';
 
-import {BaseNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/base-node.js';
+import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
 
 // @ts-ignore
-import ComputedMetric from 'lighthouse/lighthouse-core/computed/metrics/metric.js';
+import ComputedMetric from 'lighthouse/core/computed/metrics/metric.js';
 
 // eslint-disable-next-line no-unused-vars
-import {CPUNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js';
+import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
 
 import {getAttributableUrl} from '../utils/tasks.js';
 
 // @ts-ignore
-import LoadSimulator from 'lighthouse/lighthouse-core/computed/load-simulator.js';
+import LoadSimulator from 'lighthouse/core/computed/load-simulator.js';
 
-import MainThreadTasks from 'lighthouse/lighthouse-core/computed/main-thread-tasks.js';
+import MainThreadTasks from 'lighthouse/core/computed/main-thread-tasks.js';
 
 // @ts-ignore
-import {makeComputedArtifact} from 'lighthouse/lighthouse-core/computed/computed-artifact.js';
+import {makeComputedArtifact} from 'lighthouse/core/computed/computed-artifact.js';
 
 // eslint-disable-next-line no-unused-vars
-import {NetworkNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/network-node.js';
+import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
 
-import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
-import PageDependencyGraph from 'lighthouse/lighthouse-core/computed/page-dependency-graph.js';
+import NetworkRecords from 'lighthouse/core/computed/network-records.js';
+import PageDependencyGraph from 'lighthouse/core/computed/page-dependency-graph.js';
 
 const PROVIDED_LONG_TASK_THRESHOLD_MS = 50;
 const SIMULATED_LONG_TASK_THRESHOLD_MS = 100;
