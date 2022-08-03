@@ -14,8 +14,8 @@
 
 import AsyncAdTags from '../../audits/async-ad-tags.js';
 
-import MainResource from 'lighthouse/lighthouse-core/computed/main-resource.js';
-import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import MainResource from 'lighthouse/core/computed/main-resource.js';
+import NetworkRecords from 'lighthouse/core/computed/network-records.js';
 import sinon from 'sinon';
 import chai from 'chai';
 

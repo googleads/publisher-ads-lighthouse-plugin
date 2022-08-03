@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
 import {auditNotApplicable, auditError} from '../messages/common-strings.js';
 import {Audit} from 'lighthouse';

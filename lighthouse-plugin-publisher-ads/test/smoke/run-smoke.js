@@ -67,7 +67,7 @@ async function run() {
   });
   execAsync(
     'cd node_modules/lighthouse && ' +
-    'node lighthouse-cli/test/smokehouse/frontends/smokehouse-bin.js --tests-path ../../lighthouse-plugin-publisher-ads/test/smoke/smoke-test-dfns.js --retries 3',
+    'node cli/test/smokehouse/frontends/smokehouse-bin.js --tests-path ../../lighthouse-plugin-publisher-ads/test/smoke/smoke-test-dfns.js --retries 3',
   )
       .then((result) => {
         process.stdout.write(result.stdout);

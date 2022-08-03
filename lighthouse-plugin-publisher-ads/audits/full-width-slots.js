@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as i18n from 'lighthouse/lighthouse-core/lib/i18n/i18n.js';
+import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
-import NetworkRecords from 'lighthouse/lighthouse-core/computed/network-records.js';
+import NetworkRecords from 'lighthouse/core/computed/network-records.js';
 import {auditNotApplicable} from '../messages/common-strings.js';
 import {Audit} from 'lighthouse';
 import {isAdRequest} from '../utils/resource-classification.js';

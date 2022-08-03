@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import bidderPatterns from './bidder-patterns.js';
-import thirdPartyWeb from 'lighthouse/lighthouse-core/lib/third-party-web.js';
+import thirdPartyWeb from 'lighthouse/core/lib/third-party-web.js';
 import {isCacheable} from '../utils/network.js';
 
 /**

@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {BaseNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/base-node.js';
+import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
 
 // eslint-disable-next-line no-unused-vars
-import {CPUNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/cpu-node.js';
+import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
 
 // @ts-ignore Remove request() below after importing the type.
-import LanternMetric from 'lighthouse/lighthouse-core/computed/metrics/lantern-metric.js';
+import LanternMetric from 'lighthouse/core/computed/metrics/lantern-metric.js';
 
 // eslint-disable-next-line no-unused-vars
-import {NetworkNode} from 'lighthouse/lighthouse-core/lib/dependency-graph/network-node.js';
+import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
 
 import {
   isBidRelatedRequest,

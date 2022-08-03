@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // @ts-ignore
-import CacheHeaders from 'lighthouse/lighthouse-core/audits/byte-efficiency/uses-long-cache-ttl.js';
+import CacheHeaders from 'lighthouse/core/audits/byte-efficiency/uses-long-cache-ttl.js';
 
 // @ts-ignore
 import {parse as parseCacheControl} from '@tusbar/cache-control';

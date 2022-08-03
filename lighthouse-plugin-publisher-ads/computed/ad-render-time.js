@@ -15,17 +15,17 @@
 import AdLanternMetric from './ad-lantern-metric.js';
 
 // @ts-ignore
-import ComputedMetric from 'lighthouse/lighthouse-core/computed/metrics/metric.js';
+import ComputedMetric from 'lighthouse/core/computed/metrics/metric.js';
 
 // @ts-ignore
-import {makeComputedArtifact} from 'lighthouse/lighthouse-core/computed/computed-artifact.js';
+import {makeComputedArtifact} from 'lighthouse/core/computed/computed-artifact.js';
 
 import {getPageStartTime, getImpressionStartTime} from '../utils/network-timing.js';
 import {isImpressionPing} from '../utils/resource-classification.js';
 
 // @ts-ignore
 // eslint-disable-next-line max-len
-/** @typedef {import('lighthouse/lighthouse-core/lib/dependency-graph/base-node.js').Node} Node */
+/** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
 
 /** Computes simulated first ad render time using Lantern. */
 class LanternAdRenderTime extends AdLanternMetric {
