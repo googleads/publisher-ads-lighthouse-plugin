@@ -30,7 +30,7 @@ const UIStrings = {
           '(https://developers.google.com/publisher-ads-audits/reference/audits/cumulative-ad-shift).',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /**
  * Audit to determine time for first ad request relative to page start.

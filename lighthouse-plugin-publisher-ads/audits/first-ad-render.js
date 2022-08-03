@@ -28,7 +28,7 @@ const UIStrings = {
   displayValue: '{timeInMs, number, seconds} s',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /**
  * Measures the first ad render time.

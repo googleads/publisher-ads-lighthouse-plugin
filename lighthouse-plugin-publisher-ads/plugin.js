@@ -22,7 +22,7 @@ const UIStrings = {
   categoryDescription: 'A Lighthouse plugin to improve ad speed and overall quality that is targeted at sites using GPT or AdSense tag. ' +
       '[Learn more](https://developers.google.com/publisher-ads-audits/reference)',
 };
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /** @type {LH.Config.Plugin} */
 export default {

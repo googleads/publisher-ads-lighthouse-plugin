@@ -44,7 +44,7 @@ const UIStrings = {
   WARNINGS__NO_TAG: 'The GPT tag was not requested.',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /**
  * Returns object for a notApplicable audit given a message string

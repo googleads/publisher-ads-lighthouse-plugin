@@ -52,7 +52,7 @@ const UIStrings = {
   causeOther: 'Other',
 };
 
-const str_ = i18n.createMessageInstanceIdFn(import.meta.url, UIStrings);
+const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
 /** @enum {string} */
 const Cause = {
