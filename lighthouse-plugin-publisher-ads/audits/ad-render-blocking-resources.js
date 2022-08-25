@@ -82,7 +82,7 @@ class AdRenderBlockingResources extends Audit {
       scoreDisplayMode: 'binary',
       description: str_(UIStrings.description),
       requiredArtifacts:
-          ['LinkElements', 'ScriptElements', 'devtoolsLogs', 'traces'],
+          ['TagsBlockingFirstPaint', 'devtoolsLogs', 'traces'],
     };
   }
 
@@ -104,24 +104,20 @@ class AdRenderBlockingResources extends Audit {
     const timingsByRecord =
       await getTimingsByRecord(trace, devtoolsLog, context);
 
-    // NOTE(warrengm): Ideally we would key be requestId here but LinkElements
-    // don't have request IDs.
+    // NOTE(warrengm): Ideally we would key be requestId here but
+    // TagsBlockingFirstPaint doesn't have request IDs.
     /** @type {Set<string>} */
     const blockingElementUrls = new Set();
-    for (const link of artifacts.LinkElements) {
-      // TODO(warrengm): Check for media queries? Or is the network filter below
-      // sufficient?
-      if (link.href && link.rel == 'stylesheet') {
-        // NOTE that href here is normalized to the URL that went over the wire.
-        blockingElementUrls.add(link.href);
-      }
-    }
-    for (const script of artifacts.ScriptElements) {
-      if (script.src && !script.defer && !script.async) {
-        blockingElementUrls.add(script.src);
-      }
+    for (const blockingTag of artifacts.TagsBlockingFirstPaint) {
+      blockingElementUrls.add(blockingTag.tag.url);
     }
 
+    // NOTE(cjamcl): Ideally this would filter the TagsBlockingFirstPaint
+    // artifact because it has a more accurate endTime for stylesheets
+    // that are only considered blocking due to changes in media styles during
+    // the load of the page. But I'm not certain that dropping the initiator
+    // checks below will be equivalent (it may be, I just haven't reasoned
+    // about it fully).
     const blockingNetworkRecords = networkRecords
         // Don't fail on sync resources loaded after the tag. This includes sync
         // resources loaded inside of iframes.
@@ -130,7 +126,7 @@ class AdRenderBlockingResources extends Audit {
         // Sanity check to filter out duplicate requests which were async. If
         // type != parser then the resource was dynamically added and is
         // therefore async (non-blocking).
-        .filter((r) => r.initiator.type = 'parser')
+        .filter((r) => r.initiator.type === 'parser')
         .filter((r) => blockingElementUrls.has(r.url));
 
     const tableView = blockingNetworkRecords
