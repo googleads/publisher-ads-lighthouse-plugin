@@ -18,7 +18,6 @@ import NetworkRecords from 'lighthouse/core/computed/network-records.js';
 import {auditNotApplicable} from '../messages/common-strings.js';
 import {Audit} from 'lighthouse';
 import {isGptTag} from '../utils/resource-classification.js';
-import {URL} from 'url';
 
 const UIStrings = {
   title: 'GPT tag is loaded from an official source',
