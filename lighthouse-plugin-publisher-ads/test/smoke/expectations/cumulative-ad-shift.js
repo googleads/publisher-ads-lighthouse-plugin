@@ -23,7 +23,7 @@ export default [
       finalUrl: 'http://localhost:8081/layout-shift.html',
       audits: {
         'cumulative-ad-shift': {
-          numericValue: '0.4 +/- 0.1',
+          numericValue: '0.3 +/- 0.1',
           details: {
             numShifts: 4,
             numAdShifts: '3 +/- 1',
