@@ -18,7 +18,7 @@ import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
 import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
 
 // @ts-ignore Remove request() below after importing the type.
-import LanternMetric from 'lighthouse/core/computed/metrics/lantern-metric.js';
+import {LanternMetric} from 'lighthouse/core/computed/metrics/lantern-metric.js';
 
 // eslint-disable-next-line no-unused-vars
 import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
