@@ -14,7 +14,7 @@
 
 import LoadsAdTagOverHttps from '../../audits/loads-ad-tag-over-https.js';
 
-import NetworkRecords from 'lighthouse/core/computed/network-records.js';
+import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
 import sinon from 'sinon';
 import chai from 'chai';
 

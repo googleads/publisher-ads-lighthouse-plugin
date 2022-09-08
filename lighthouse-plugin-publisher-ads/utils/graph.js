@@ -20,10 +20,10 @@ import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
 // eslint-disable-next-line no-unused-vars
 import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
 
-import NetworkRecords from 'lighthouse/core/computed/network-records.js';
+import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
 import {assert} from './asserts.js';
 import {getNameOrTld, trimUrl} from '../utils/resource-classification.js';
-import PageDependencyGraph from 'lighthouse/core/computed/page-dependency-graph.js';
+import {PageDependencyGraph} from 'lighthouse/core/computed/page-dependency-graph.js';
 import {getTimingsByRecord} from '../utils/network-timing.js';
 import {isAdRequest, isAdSense, isGpt, isBidRequest, isAdRelated} from './resource-classification.js';
 

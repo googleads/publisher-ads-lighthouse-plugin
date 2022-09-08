@@ -17,9 +17,9 @@ import ComputedAdRequestTime from '../computed/ad-request-time.js';
 import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
 // @ts-ignore
-import MainResource from 'lighthouse/core/computed/main-resource.js';
+import {MainResource} from 'lighthouse/core/computed/main-resource.js';
 
-import NetworkRecords from 'lighthouse/core/computed/network-records.js';
+import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
 import {auditNotApplicable} from '../messages/common-strings.js';
 import {Audit} from 'lighthouse';
 import {bucket} from '../utils/array.js';

@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import NetworkRecords from 'lighthouse/core/computed/network-records.js';
+import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
 
 import {assert} from '../utils/asserts.js';
 import {auditNotApplicable} from '../messages/common-strings.js';

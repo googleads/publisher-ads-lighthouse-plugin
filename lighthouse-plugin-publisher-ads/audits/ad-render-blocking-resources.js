@@ -14,7 +14,7 @@
 
 import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
-import NetworkRecords from 'lighthouse/core/computed/network-records.js';
+import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
 
 // @ts-ignore
 import {auditNotApplicable} from '../messages/common-strings.js';

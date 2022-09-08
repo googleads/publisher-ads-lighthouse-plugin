@@ -81,26 +81,26 @@ declare module 'lighthouse-logger' {
 }
 
 declare module 'lighthouse/core/computed/network-records.js' {
-  export default {
-    request(devToolsLog: LH.DevtoolsLog, context: LH.Audit.Context): Promise<Array<LH.Artifacts.NetworkRequest>>;
+  export class NetworkRecords {
+    static request(devToolsLog: LH.DevtoolsLog, context: LH.Audit.Context): Promise<Array<LH.Artifacts.NetworkRequest>>;
   }
 }
 
 declare module 'lighthouse/core/computed/main-resource.js' {
-  export default {
-    request(data: {URL: LH.Artifacts['URL'], devtoolsLog: LH.DevtoolsLog}, context: LH.Audit.Context): Promise<LH.Artifacts.NetworkRequest>;
+  export class MainResource {
+    static request(data: {URL: LH.Artifacts['URL'], devtoolsLog: LH.DevtoolsLog}, context: LH.Audit.Context): Promise<LH.Artifacts.NetworkRequest>;
   }
 }
 
 declare module 'lighthouse/core/computed/page-dependency-graph.js' {
-  export default {
-    getNetworkInitiators(record: LH.Artifacts.NetworkRequest): Array<string>;
+  export class PageDependencyGraph {
+    static getNetworkInitiators(record: LH.Artifacts.NetworkRequest): Array<string>;
   }
 }
 
 declare module 'lighthouse/core/computed/main-thread-tasks.js' {
-  export default {
-    request(trace: LH.Trace, context: LH.Audit.Context): Promise<Array<TaskNode>>;
+  export class MainThreadTasks {
+    static request(trace: LH.Trace, context: LH.Audit.Context): Promise<Array<TaskNode>>;
   }
 }
 

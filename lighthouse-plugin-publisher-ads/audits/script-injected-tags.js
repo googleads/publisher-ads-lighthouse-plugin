@@ -15,7 +15,7 @@
 import * as array from '../utils/array.js';
 
 import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
-import PageDependencyGraph from 'lighthouse/core/computed/page-dependency-graph.js';
+import {PageDependencyGraph} from 'lighthouse/core/computed/page-dependency-graph.js';
 import {auditNotApplicable} from '../messages/common-strings.js';
 import {Audit} from 'lighthouse';
 import {computeAdRequestWaterfall} from '../utils/graph.js';

@@ -15,10 +15,10 @@
 import AdLanternMetric from '../computed/ad-lantern-metric.js';
 
 // @ts-ignore
-import LoadSimulator from 'lighthouse/core/computed/load-simulator.js';
+import {LoadSimulator} from 'lighthouse/core/computed/load-simulator.js';
 
-import NetworkRecords from 'lighthouse/core/computed/network-records.js';
-import PageDependencyGraph from 'lighthouse/core/computed/page-dependency-graph.js';
+import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
+import {PageDependencyGraph} from 'lighthouse/core/computed/page-dependency-graph.js';
 import {isAdRequest, isBidRequest, isImplTag, isImpressionPing} from './resource-classification.js';
 
 /** @typedef {LH.Artifacts.NetworkRequest} NetworkRequest */
