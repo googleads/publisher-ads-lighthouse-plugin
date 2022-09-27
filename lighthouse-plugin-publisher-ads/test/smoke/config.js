@@ -15,9 +15,9 @@
 /**
  * Config for running lighthouse audits.
  * For the possible types, see
- * https://github.com/GoogleChrome/lighthouse/blob/master/typings/config.d.ts.
+ * https://github.com/GoogleChrome/lighthouse/blob/main/types/config.d.ts
  * and
- * https://github.com/GoogleChrome/lighthouse/tree/master/core/config
+ * https://github.com/GoogleChrome/lighthouse/tree/main/core/config
  * @const {LH.Config}
  */
 // TODO(jburger): Make Chrome run in headless mode.
