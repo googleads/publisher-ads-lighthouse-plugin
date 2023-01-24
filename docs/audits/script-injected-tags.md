@@ -105,4 +105,5 @@ to load statically. The current list is:
 </table>
 
 [Intervening against document.write()](https://developers.google.com/web/updates/2016/08/removing-document-write)  
-[Script-injected "async scripts" considered harmful](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)
+[Script-injected "async scripts" considered harmful](https://www.igvita.com/2014/05/20/script-injected-async-scripts-considered-harmful/)  
+[Speeding Up Async Snippets](https://csswizardry.com/2022/10/speeding-up-async-snippets/)
