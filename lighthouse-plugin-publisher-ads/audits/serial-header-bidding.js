@@ -153,7 +153,7 @@ class SerialHeaderBidding extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
 
@@ -192,7 +192,13 @@ class SerialHeaderBidding extends Audit {
       return auditNotApplicable.NoBids;
     }
 
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
     const {timing: adRequestTime} =
       await ComputedAdRequestTime.request(metricData, context);
 

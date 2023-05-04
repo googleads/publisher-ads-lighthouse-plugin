@@ -279,6 +279,7 @@ class IdleNetworkTimes extends Audit {
 
     const pageStartTime = getPageStartTime(networkRecords);
     const blockingRequests =
+      // eslint-disable-next-line max-len
       await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context);
     if (!blockingRequests.length) {
       return auditNotApplicable.NoAdRelatedReq;

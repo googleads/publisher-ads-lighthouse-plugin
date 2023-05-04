@@ -96,7 +96,9 @@ class GptBidsInParallel extends Audit {
     /** @type {Set<string>} */ const seen = new Set();
     for (const bid of bids) {
       if (getCriticalGraph(network, trace.traceEvents, bid).has(pubadsImpl)) {
-        const {startTime, endTime} = timingsByRecord.get(bid) || {startTime: bid.networkRequestTime, endTime: bid.networkEndTime};
+        const {startTime, endTime} =
+          timingsByRecord.get(bid) ||
+          {startTime: bid.networkRequestTime, endTime: bid.networkEndTime};
         const bidder = assert(getHeaderBidder(bid.url));
         if (seen.has(bidder)) {
           // Don't include multiple requests from the same bidder in the results

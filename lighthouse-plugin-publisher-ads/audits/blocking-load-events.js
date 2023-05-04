@@ -186,6 +186,7 @@ class BlockingLoadEvents extends Audit {
       await getTimingsByRecord(trace, devtoolsLog, artifacts.URL, context);
 
     const criticalRequests =
+      // eslint-disable-next-line max-len
       (await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context))
           // Sort by start time so we process the earliest requests first.
           .sort((a, b) => a.startTime - b.startTime);

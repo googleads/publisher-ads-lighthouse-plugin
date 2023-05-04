@@ -27,56 +27,56 @@ import config from './config.js';
 /** @type {Array<Smokehouse.TestDfn>} */
 const smokeTests = [
   // TODO(jburger): Add back `gpt-error-overall` case once fix reaches prod.
-  // {
-  //   id: 'deprecated-api-usage',
-  //   expectations: deprecatedApiUsage,
-  //   config,
-  // },
-  // {
-  //   id: 'duplicate-tags',
-  //   expectations: duplicateTags,
-  //   config,
-  // },
-  // {
-  //   id: 'lazy-load',
-  //   expectations: lazyLoad,
-  //   config,
-  // },
-  // {
-  //   id: 'long-tasks',
-  //   expectations: longTasks,
-  //   config,
-  // },
-  // {
-  //   id: 'render-blocking-tasks',
-  //   expectations: renderBlockingTags,
-  //   config,
-  // },
-  // {
-  //   id: 'script-injected',
-  //   expectations: scriptInjected,
-  //   config,
-  // },
+  {
+    id: 'deprecated-api-usage',
+    expectations: deprecatedApiUsage,
+    config,
+  },
+  {
+    id: 'duplicate-tags',
+    expectations: duplicateTags,
+    config,
+  },
+  {
+    id: 'lazy-load',
+    expectations: lazyLoad,
+    config,
+  },
+  {
+    id: 'long-tasks',
+    expectations: longTasks,
+    config,
+  },
+  {
+    id: 'render-blocking-tasks',
+    expectations: renderBlockingTags,
+    config,
+  },
+  {
+    id: 'script-injected',
+    expectations: scriptInjected,
+    config,
+  },
   {
     id: 'top-of-viewport',
     expectations: topOfViewport,
     config,
   },
-  // {
-  //   id: 'not-applicable',
-  //   expectations: notApplicable,
-  //   config,
-  // },
-  // {
-  //   id: 'limited-ads-dynamic-loading',
-  //   expectations: limitedAdsDynamicLoading,
-  //   config,
-  // },
-  // {
-  //   id: 'cumulative-ad-shift',
-  //   expectations: cumulativeAdShift,
-  //   config,
-  // },
+  {
+    id: 'not-applicable',
+    expectations: notApplicable,
+    config,
+  },
+  {
+    id: 'limited-ads-dynamic-loading',
+    expectations: limitedAdsDynamicLoading,
+    config,
+  },
+  {
+    id: 'cumulative-ad-shift',
+    expectations: cumulativeAdShift,
+    config,
+  },
 ];
 
 export default smokeTests;

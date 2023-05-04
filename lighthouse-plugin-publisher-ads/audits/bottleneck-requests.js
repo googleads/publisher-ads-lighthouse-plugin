@@ -93,7 +93,8 @@ class BottleneckRequests extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
 
     const waterfall =
-      (await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context))
+      (await computeAdRequestWaterfall(
+        trace, devtoolsLog, artifacts.URL, context))
           .filter((r) => r.startTime > 0);
     if (!waterfall.length) {
       return auditNotApplicable.NoAdRelatedReq;
@@ -103,6 +104,7 @@ class BottleneckRequests extends Audit {
     /** @param {SimpleRequest} r @return {boolean} */
     const isBottleneck = (r) =>
       !isAdScript(toURL(r.url)) &&
+      // eslint-disable-next-line max-len
       (r.selfTime > CRITICAL_SELF_TIME_MS || r.duration > CRITICAL_DURATION_MS);
     // selfTime is more costly than duration so weigh it more than duration.
     /** @param {SimpleRequest} r @return {number} */

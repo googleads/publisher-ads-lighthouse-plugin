@@ -152,8 +152,8 @@ class StaticAdTags extends Audit {
 
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
-    const scriptTimes =
-      await getScriptEvaluationTimes(trace, devtoolsLog, artifacts.URL, context);
+    const scriptTimes = await getScriptEvaluationTimes(
+      trace, devtoolsLog, artifacts.URL, context);
     for (const tag of tagReqs) {
       if (seenUrls.has(tag.url)) continue;
       seenUrls.add(tag.url);

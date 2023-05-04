@@ -13,17 +13,12 @@
 // limitations under the License.
 
 import AdLanternMetric from './ad-lantern-metric.js';
-
-// @ts-ignore
 import ComputedMetric from 'lighthouse/core/computed/metrics/metric.js';
-
-// @ts-ignore
 import {makeComputedArtifact} from 'lighthouse/core/computed/computed-artifact.js';
 
 import {getAdStartTime, getBidStartTime, getPageStartTime} from '../utils/network-timing.js';
 import {isAdRequest, isBidRequest} from '../utils/resource-classification.js';
 
-// @ts-ignore
 // eslint-disable-next-line max-len
 /** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
 
@@ -49,9 +44,7 @@ class LanternBidRequestTime extends AdLanternMetric {
 }
 
 // Decorate the class.
-// @ts-ignore Allow reassignment for decoration.
-// eslint-disable-next-line no-class-assign
-LanternBidRequestTime = makeComputedArtifact(LanternBidRequestTime);
+const ComputedLanternBidRequestTime = makeComputedArtifact(LanternBidRequestTime, ['devtoolsLog', 'gatherContext', 'settings', 'simulator', 'trace', 'URL']);
 
 /** Computes time to the first ad request. */
 class BidRequestTime extends ComputedMetric {
@@ -61,8 +54,7 @@ class BidRequestTime extends ComputedMetric {
    * @return {Promise<LH.Artifacts.LanternMetric>}
    */
   static async computeSimulatedMetric(data, context) {
-    // @ts-ignore request does not exist on LanternBidRequestTime
-    return LanternBidRequestTime.request(data, context);
+    return ComputedLanternBidRequestTime.request(data, context);
   }
 
   /**
@@ -80,23 +72,9 @@ class BidRequestTime extends ComputedMetric {
     const bidRequestTimeMs = (bidStartTime - pageStartTime) * 1000;
     return {timing: bidRequestTimeMs};
   }
-
-  /**
-   * @param {unknown} artifacts
-   * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.Metric>}
-   */
-  static async request(artifacts, context) {
-    // Implement request() to make the compiler happy. It will be implemented
-    // below with decoration. Long term we should find a good way to have the
-    // compiler infer this.
-    throw Error('Not implemented -- class not decorated');
-  }
 }
 
 // Decorate the class.
-// @ts-ignore Allow reassignment for decoration.
-// eslint-disable-next-line no-class-assign
-BidRequestTime = makeComputedArtifact(BidRequestTime);
+const ComputedBidRequestTime = makeComputedArtifact(BidRequestTime, ['devtoolsLog', 'gatherContext', 'settings', 'simulator', 'trace', 'URL']);
 
-export default BidRequestTime;
+export default ComputedBidRequestTime;

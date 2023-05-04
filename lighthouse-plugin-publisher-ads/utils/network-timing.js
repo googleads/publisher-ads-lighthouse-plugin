@@ -79,7 +79,9 @@ function getImpressionStartTime(networkRecords) {
 function getPageStartTime(networkRecords, defaultValue = -1) {
   const firstSuccessRecord = networkRecords.find(
     (record) => record.statusCode == 200);
-  return firstSuccessRecord ? firstSuccessRecord.networkRequestTime : defaultValue;
+  return firstSuccessRecord ?
+    firstSuccessRecord.networkRequestTime :
+    defaultValue;
 }
 
 /**
@@ -181,7 +183,8 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, URL, context) {
     return rawTimes;
   }
   // Offset each timing by network timings to account for simulation.
-  const timingsByRecord = await getTimingsByRecord(trace, devtoolsLog, URL, context);
+  const timingsByRecord =
+    await getTimingsByRecord(trace, devtoolsLog, URL, context);
   /** @type {Map<string, number>} */
   const simulatedTimes = new Map();
   for (const [req, timing] of timingsByRecord.entries()) {
@@ -192,7 +195,8 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, URL, context) {
     if (simulatedTimes.has(req.url)) {
       continue;
     }
-    const unsimulatedNetworkTime = req.networkRequestTime * 1000 - pageStartTime;
+    const unsimulatedNetworkTime =
+      req.networkRequestTime * 1000 - pageStartTime;
     const simulatedNetworkTime = timing.endTime;
 
     const cpuFactor = context.settings.throttling.cpuSlowdownMultiplier;

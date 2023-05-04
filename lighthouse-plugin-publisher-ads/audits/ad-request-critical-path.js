@@ -141,6 +141,7 @@ class AdRequestCriticalPath extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
 
     const tableView =
+      // eslint-disable-next-line max-len
       (await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context))
           .filter((r) => r.startTime > 0 && r.startTime < r.endTime);
     if (!tableView.length) {
