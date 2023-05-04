@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/duplicate-tags.html',
-      finalUrl: 'http://localhost:8081/duplicate-tags.html',
+      finalDisplayedUrl: 'http://localhost:8081/duplicate-tags.html',
       audits: {
         'duplicate-tags': {
           score: 0,

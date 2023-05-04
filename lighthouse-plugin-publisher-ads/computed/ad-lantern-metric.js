@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
+
 import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
 
 // eslint-disable-next-line no-unused-vars
@@ -94,7 +96,7 @@ function addEdge(a, b) {
 
 /**
  * Inserts edges between bid requests and ad requests.
- * @param {BaseNode} graph
+ * @param {Node} graph
  */
 function addEdges(graph) {
   /** @type {NetworkNode[]} */ const adRequestNodes = [];
@@ -152,9 +154,9 @@ class AdLanternMetric extends LanternMetric {
   }
 
   /**
-   * @param {BaseNode} graph Root of the dependency graph, i.e. the
+   * @param {Node} graph Root of the dependency graph, i.e. the
    *     document node.
-   * @return {BaseNode}
+   * @return {Node}
    */
   static getPessimisticGraph(graph) {
     // The pessimistic graph is the whole graph.
@@ -164,9 +166,9 @@ class AdLanternMetric extends LanternMetric {
   }
 
   /**
-   * @param {BaseNode} graph Root of the dependency graph, i.e. the
+   * @param {Node} graph Root of the dependency graph, i.e. the
    *     document node.
-   * @return {BaseNode}
+   * @return {Node}
    */
   static getOptimisticGraph(graph) {
     // @ts-ignore

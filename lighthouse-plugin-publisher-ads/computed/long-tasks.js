@@ -38,6 +38,8 @@ import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js'
 import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
 import {PageDependencyGraph} from 'lighthouse/core/computed/page-dependency-graph.js';
 
+/** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
+
 const PROVIDED_LONG_TASK_THRESHOLD_MS = 50;
 const SIMULATED_LONG_TASK_THRESHOLD_MS = 100;
 
@@ -64,15 +66,15 @@ function isLong(task, knownScripts) {
 }
 
 /** Finds long tasks, with support for simulation. */
+// @ts-expect-error TODO why is this a ComputedMetric? Should it just be a Computed artifact? It returns task nodes, no Metric/LanternMetric.
 class LongTasks extends ComputedMetric {
   /**
    * @param {LH.Trace} trace
    * @param {LH.DevtoolsLog} devtoolsLog
    * @param {LH.Audit.Context} context
-   * @return {Promise<BaseNode>} networkRecords
+   * @return {Promise<Node>} networkRecords
    */
   static async getSimulationGraph(trace, devtoolsLog, context) {
-    /** @type {NetworkNode} */
     const documentNode =
       // @ts-ignore Property 'request' does not appear on PageDependencyGraph
       await PageDependencyGraph.request({trace, devtoolsLog}, context);
@@ -105,9 +107,13 @@ class LongTasks extends ComputedMetric {
         selfTime: timing.duration, // TODO: subtract child time
         attributableURLs: Array.from(node.getEvaluateScriptURLs()),
         children: [],
+        // @ts-expect-error TODO Nodes do not have this information though?
         parent: node.parent,
+        // @ts-expect-error TODO Nodes do not have this information though?
         unbounded: node.unbounded,
+        // @ts-expect-error TODO Nodes do not have this information though?
         group: node.group,
+        endEvent: undefined,
       });
     }
     return tasks;

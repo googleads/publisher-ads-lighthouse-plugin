@@ -45,24 +45,24 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 const HEADINGS = [
   {
     key: 'nameOrTld',
-    itemType: 'text',
-    text: str_(UIStrings.columnType),
+    valueType: 'text',
+    label: str_(UIStrings.columnType),
   },
   {
     key: 'url',
-    itemType: 'url',
-    text: str_(UIStrings.columnUrl),
+    valueType: 'url',
+    label: str_(UIStrings.columnUrl),
   },
   {
     key: 'startTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnStartTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'endTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnEndTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnEndTime),
     granularity: 1,
   },
 ];
@@ -127,7 +127,7 @@ class AdRequestCriticalPath extends Audit {
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
       scoreDisplayMode: 'informative',
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL'],
     };
   }
 
@@ -141,7 +141,7 @@ class AdRequestCriticalPath extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
 
     const tableView =
-      (await computeAdRequestWaterfall(trace, devtoolsLog, context))
+      (await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context))
           .filter((r) => r.startTime > 0 && r.startTime < r.endTime);
     if (!tableView.length) {
       return auditNotApplicable.NoAds;
@@ -163,10 +163,12 @@ class AdRequestCriticalPath extends Audit {
       score: failed ? 0 : 1,
       displayValue: str_(UIStrings.displayValue, {serialResources: depth}),
       details: {
+        // @ts-expect-error
         size: tableView.length,
         depth,
         maxIdleTime,
         totalIdleTime,
+        // @ts-expect-error
         ...AdRequestCriticalPath.makeTableDetails(HEADINGS, tableView),
       },
     };

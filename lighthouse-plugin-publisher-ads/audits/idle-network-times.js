@@ -16,11 +16,7 @@ import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
 import {MainThreadTasks} from 'lighthouse/core/computed/main-thread-tasks.js';
 import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
-
-// @ts-expect-error
 import {ProcessedTrace} from 'lighthouse/core/computed/processed-trace.js';
-
-// @ts-expect-error
 import {ProcessedNavigation} from 'lighthouse/core/computed/processed-navigation.js';
 
 import {auditNotApplicable} from '../messages/common-strings.js';
@@ -54,7 +50,7 @@ const UIStrings = {
 
 const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 
-/** @enum {string} */
+/** @enum {LH.IcuMessage} */
 const Cause = {
   DOM_CONTENT_LOADED: str_(UIStrings.causeDomContentLoaded),
   LOAD_EVENT: str_(UIStrings.causeLoadEvent),
@@ -70,7 +66,7 @@ const Cause = {
  * @property {number} endTime
  * @property {number} duration
  * @property {string} url The attributable url
- * @property {string} cause
+ * @property {string|LH.IcuMessage} cause
  */
 
 /**
@@ -80,24 +76,24 @@ const Cause = {
 const HEADINGS = [
   {
     key: 'cause',
-    itemType: 'text',
-    text: str_(UIStrings.columnCause),
+    valueType: 'text',
+    label: str_(UIStrings.columnCause),
   },
   {
     key: 'url',
-    itemType: 'url',
-    text: str_(UIStrings.columnUrl),
+    valueType: 'url',
+    label: str_(UIStrings.columnUrl),
   },
   {
     key: 'startTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnStartTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'duration',
-    itemType: 'ms',
-    text: str_(UIStrings.columnDuration),
+    valueType: 'ms',
+    label: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -255,7 +251,7 @@ class IdleNetworkTimes extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs', 'traces', 'TagsBlockingFirstPaint'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'TagsBlockingFirstPaint', 'URL'],
     };
   }
 
@@ -283,7 +279,7 @@ class IdleNetworkTimes extends Audit {
 
     const pageStartTime = getPageStartTime(networkRecords);
     const blockingRequests =
-      await computeAdRequestWaterfall(trace, devtoolsLog, context);
+      await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context);
     if (!blockingRequests.length) {
       return auditNotApplicable.NoAdRelatedReq;
     }

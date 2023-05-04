@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/layout-shift.html',
-      finalUrl: 'http://localhost:8081/layout-shift.html',
+      finalDisplayedUrl: 'http://localhost:8081/layout-shift.html',
       audits: {
         'cumulative-ad-shift': {
           numericValue: '0.3 +/- 0.1',

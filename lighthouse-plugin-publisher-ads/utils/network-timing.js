@@ -36,7 +36,7 @@ import {isAdRequest, isBidRequest, isImplTag, isImpressionPing} from './resource
 function getTagEndTime(networkRecords) {
   const tagRecord = networkRecords.find(
     (record) => isImplTag(new URL(record.url)));
-  return tagRecord ? tagRecord.endTime : -1;
+  return tagRecord ? tagRecord.networkEndTime : -1;
 }
 
 /**
@@ -46,7 +46,7 @@ function getTagEndTime(networkRecords) {
  */
 function getAdStartTime(networkRecords) {
   const firstAdRecord = networkRecords.find(isAdRequest);
-  return firstAdRecord ? firstAdRecord.startTime : -1;
+  return firstAdRecord ? firstAdRecord.networkRequestTime : -1;
 }
 
 /**
@@ -56,7 +56,7 @@ function getAdStartTime(networkRecords) {
  */
 function getBidStartTime(networkRecords) {
   const firstBidRecord = networkRecords.find(isBidRequest);
-  return firstBidRecord ? firstBidRecord.startTime : -1;
+  return firstBidRecord ? firstBidRecord.networkRequestTime : -1;
 }
 
 /**
@@ -67,7 +67,7 @@ function getBidStartTime(networkRecords) {
 function getImpressionStartTime(networkRecords) {
   const firstImpressionRecord = networkRecords.find(
     (record) => isImpressionPing(record.url));
-  return firstImpressionRecord ? firstImpressionRecord.startTime : -1;
+  return firstImpressionRecord ? firstImpressionRecord.networkRequestTime : -1;
 }
 
 /**
@@ -79,7 +79,7 @@ function getImpressionStartTime(networkRecords) {
 function getPageStartTime(networkRecords, defaultValue = -1) {
   const firstSuccessRecord = networkRecords.find(
     (record) => record.statusCode == 200);
-  return firstSuccessRecord ? firstSuccessRecord.startTime : defaultValue;
+  return firstSuccessRecord ? firstSuccessRecord.networkRequestTime : defaultValue;
 }
 
 /**
@@ -92,39 +92,38 @@ function getPageResponseTime(networkRecords, defaultValue = -1) {
   const firstSuccessRecord = networkRecords.find(
     (record) => record.statusCode == 200);
   return firstSuccessRecord ?
-    firstSuccessRecord.responseReceivedTime : defaultValue;
+    firstSuccessRecord.responseHeadersEndTime : defaultValue;
 }
 
 /**
  * @param {LH.Trace} trace
  * @param {LH.DevtoolsLog} devtoolsLog
+ * @param {LH.Artifacts.URL} URL
  * @param {LH.Audit.Context} context
  * @return {Promise<Map<NetworkRequest, NodeTiming>>}
  */
-async function getTimingsByRecord(trace, devtoolsLog, context) {
+async function getTimingsByRecord(trace, devtoolsLog, URL, context) {
   /** @type {Map<NetworkRequest, NodeTiming>} */
   const timingsByRecord = new Map();
   const networkRecords = await NetworkRecords.request(devtoolsLog, context);
   if (context.settings.throttlingMethod == 'simulate') {
-    /** @type {NetworkNode} */
     const documentNode =
-      // @ts-ignore Property 'request' does not appear on PageDependencyGraph
-      await PageDependencyGraph.request({trace, devtoolsLog}, context);
+      await PageDependencyGraph.request({trace, devtoolsLog, URL}, context);
     const releventGraph = AdLanternMetric.getOptimisticGraph(documentNode);
     const simulator = await LoadSimulator.request(
       {devtoolsLog, settings: context.settings}, context);
     const {nodeTimings} = simulator.simulate(releventGraph, {});
-    for (const [{record}, timing] of nodeTimings.entries()) {
-      if (!record) continue;
-      timingsByRecord.set(record, timing);
+    for (const [node, timing] of nodeTimings.entries()) {
+      if (node.type !== 'network') continue;
+      timingsByRecord.set(node.record, timing);
     }
   } else {
     const pageStartTime = getPageStartTime(networkRecords);
     for (const record of networkRecords) {
       timingsByRecord.set(record, {
-        startTime: (record.startTime - pageStartTime) * 1000,
-        endTime: (record.endTime - pageStartTime) * 1000,
-        duration: (record.endTime - record.startTime) * 1000,
+        startTime: (record.networkRequestTime - pageStartTime) * 1000,
+        endTime: (record.networkEndTime - pageStartTime) * 1000,
+        duration: (record.networkEndTime - record.networkRequestTime) * 1000,
       });
     }
   }
@@ -157,11 +156,12 @@ function getScriptUrl(e) {
  * time (for example if the script was preloaded).
  * @param {LH.Trace} trace
  * @param {LH.DevtoolsLog} devtoolsLog
+ * @param {LH.Artifacts.URL} URL
  * @param {LH.Audit.Context} context
  * @return {Promise<Map<string, number>>} A map from script URL to evaluation
  *   time.
  */
-async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
+async function getScriptEvaluationTimes(trace, devtoolsLog, URL, context) {
   const networkRecords = await NetworkRecords.request(devtoolsLog, context);
   const pageStartTime = getPageStartTime(networkRecords) * 1000;
   /** @type {Map<string, number>} */
@@ -181,7 +181,7 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
     return rawTimes;
   }
   // Offset each timing by network timings to account for simulation.
-  const timingsByRecord = await getTimingsByRecord(trace, devtoolsLog, context);
+  const timingsByRecord = await getTimingsByRecord(trace, devtoolsLog, URL, context);
   /** @type {Map<string, number>} */
   const simulatedTimes = new Map();
   for (const [req, timing] of timingsByRecord.entries()) {
@@ -192,7 +192,7 @@ async function getScriptEvaluationTimes(trace, devtoolsLog, context) {
     if (simulatedTimes.has(req.url)) {
       continue;
     }
-    const unsimulatedNetworkTime = req.startTime * 1000 - pageStartTime;
+    const unsimulatedNetworkTime = req.networkRequestTime * 1000 - pageStartTime;
     const simulatedNetworkTime = timing.endTime;
 
     const cpuFactor = context.settings.throttling.cpuSlowdownMultiplier;

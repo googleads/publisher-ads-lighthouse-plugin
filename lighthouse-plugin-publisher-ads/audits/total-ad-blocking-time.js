@@ -44,13 +44,13 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 const HEADINGS = [
   {
     key: 'name',
-    itemType: 'text',
-    text: str_(UIStrings.columnName),
+    valueType: 'text',
+    label: str_(UIStrings.columnName),
   },
   {
     key: 'blockingTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnBlockingTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnBlockingTime),
     granularity: 1,
   },
 ];

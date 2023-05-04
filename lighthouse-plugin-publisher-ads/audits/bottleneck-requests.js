@@ -48,19 +48,19 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 const HEADINGS = [
   {
     key: 'url',
-    itemType: 'url',
-    text: str_(UIStrings.columnUrl),
+    valueType: 'url',
+    label: str_(UIStrings.columnUrl),
   },
   {
     key: 'selfTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnSelfTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnSelfTime),
     granularity: 1,
   },
   {
     key: 'duration',
-    itemType: 'ms',
-    text: str_(UIStrings.columnDuration),
+    valueType: 'ms',
+    label: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -79,7 +79,7 @@ class BottleneckRequests extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL'],
     };
   }
 
@@ -93,7 +93,7 @@ class BottleneckRequests extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
 
     const waterfall =
-      (await computeAdRequestWaterfall(trace, devtoolsLog, context))
+      (await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context))
           .filter((r) => r.startTime > 0);
     if (!waterfall.length) {
       return auditNotApplicable.NoAdRelatedReq;
@@ -126,6 +126,7 @@ class BottleneckRequests extends Audit {
       score: failed ? 0 : 1,
       displayValue: failed ? str_(UIStrings.displayValue, {blockedTime}) : '',
       details:
+        // @ts-expect-error
         BottleneckRequests.makeTableDetails(HEADINGS, criticalRequests),
     };
   }

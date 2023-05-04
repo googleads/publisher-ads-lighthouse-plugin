@@ -62,10 +62,10 @@ const MIN_BID_DURATION = .05;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'bidder', itemType: 'text', text: str_(UIStrings.columnBidder)},
-  {key: 'url', itemType: 'url', text: str_(UIStrings.columnUrl)},
-  {key: 'startTime', itemType: 'ms', text: str_(UIStrings.columnStartTime)},
-  {key: 'duration', itemType: 'ms', text: str_(UIStrings.columnDuration)},
+  {key: 'bidder', valueType: 'text', label: str_(UIStrings.columnBidder)},
+  {key: 'url', valueType: 'url', label: str_(UIStrings.columnUrl)},
+  {key: 'startTime', valueType: 'ms', label: str_(UIStrings.columnStartTime)},
+  {key: 'duration', valueType: 'ms', label: str_(UIStrings.columnDuration)},
 ];
 
 /**
@@ -124,7 +124,7 @@ function checkRecordType(record) {
 function isPossibleBid(rec) {
   return (rec.resourceSize == null || rec.resourceSize > 0) &&
       (rec.resourceType != 'Image') &&
-      (rec.endTime - rec.startTime >= MIN_BID_DURATION) &&
+      (rec.networkEndTime - rec.networkRequestTime >= MIN_BID_DURATION) &&
       !isCacheable(rec);
 }
 
@@ -198,7 +198,7 @@ class SerialHeaderBidding extends Audit {
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord = await getTimingsByRecord(
-      trace, devtoolsLog, context);
+      trace, devtoolsLog, artifacts.URL, context);
 
     const headerBiddingRecords = constructRecords(
       recordsByType.get(RequestType.BID) || [], RequestType.BID,
@@ -239,6 +239,7 @@ class SerialHeaderBidding extends Audit {
       numericUnit: 'unitless',
       score: hasSerialHeaderBidding ? 0 : 1,
       details: hasSerialHeaderBidding ?
+        // @ts-expect-error
         SerialHeaderBidding.makeTableDetails(HEADINGS, serialBids) : undefined,
     };
   }

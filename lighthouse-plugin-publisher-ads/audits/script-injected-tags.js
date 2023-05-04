@@ -50,14 +50,14 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 const HEADINGS = [
   {
     key: 'url',
-    itemType: 'url',
-    text: str_(UIStrings.columnUrl),
+    valueType: 'url',
+    label: str_(UIStrings.columnUrl),
   },
   {
     key: 'loadTime',
-    itemType: 'ms',
+    valueType: 'ms',
     granularity: 1,
-    text: str_(UIStrings.columnLoadTime),
+    label: str_(UIStrings.columnLoadTime),
   },
 ];
 
@@ -107,7 +107,7 @@ async function findStaticallyLoadableTags(artifacts, context) {
   // Next add any scripts that appear that they can be loaded statically based
   // on page analysis.
   const criticalRequests =
-    await computeAdRequestWaterfall(trace, devtoolsLog, context);
+    await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context);
   for (const {record} of criticalRequests) {
     if (!record || record.resourceType !== 'Script') {
       // Don't count resources that aren't scripts.
@@ -132,7 +132,7 @@ class StaticAdTags extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL'],
     };
   }
 
@@ -153,7 +153,7 @@ class StaticAdTags extends Audit {
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const scriptTimes =
-      await getScriptEvaluationTimes(trace, devtoolsLog, context);
+      await getScriptEvaluationTimes(trace, devtoolsLog, artifacts.URL, context);
     for (const tag of tagReqs) {
       if (seenUrls.has(tag.url)) continue;
       seenUrls.add(tag.url);

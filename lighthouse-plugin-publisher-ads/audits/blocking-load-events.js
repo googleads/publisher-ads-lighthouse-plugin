@@ -13,13 +13,8 @@
 // limitations under the License.
 
 import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
-
 import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
-
-// @ts-expect-error
 import {ProcessedTrace} from 'lighthouse/core/computed/processed-trace.js';
-
-// @ts-expect-error
 import {ProcessedNavigation} from 'lighthouse/core/computed/processed-navigation.js';
 
 import {auditNotApplicable} from '../messages/common-strings.js';
@@ -53,10 +48,10 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'eventName', itemType: 'text', text: str_(UIStrings.columnEvent)},
-  {key: 'time', itemType: 'ms', text: str_(UIStrings.columnTime), granularity: 1},
-  {key: 'url', itemType: 'url', text: str_(UIStrings.columnScript)},
-  {key: 'functionName', itemType: 'text', text: str_(UIStrings.columnFunctionName)},
+  {key: 'eventName', valueType: 'text', label: str_(UIStrings.columnEvent)},
+  {key: 'time', valueType: 'ms', label: str_(UIStrings.columnTime), granularity: 1},
+  {key: 'url', valueType: 'url', label: str_(UIStrings.columnScript)},
+  {key: 'functionName', valueType: 'text', label: str_(UIStrings.columnFunctionName)},
 ];
 
 /** @typedef {import('../utils/graph.js').SimpleRequest} SimpleRequest */
@@ -169,7 +164,7 @@ class BlockingLoadEvents extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL'],
     };
   }
 
@@ -188,10 +183,10 @@ class BlockingLoadEvents extends Audit {
     const {processEvents} = processedTrace;
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =
-      await getTimingsByRecord(trace, devtoolsLog, context);
+      await getTimingsByRecord(trace, devtoolsLog, artifacts.URL, context);
 
     const criticalRequests =
-      (await computeAdRequestWaterfall(trace, devtoolsLog, context))
+      (await computeAdRequestWaterfall(trace, devtoolsLog, artifacts.URL, context))
           // Sort by start time so we process the earliest requests first.
           .sort((a, b) => a.startTime - b.startTime);
 
@@ -229,6 +224,7 @@ class BlockingLoadEvents extends Audit {
         const blockingEvent = Object.assign({
           eventName: interval.eventName,
           blockedUrl: r.url,
+          // @ts-expect-error
           time: timings[interval.eventName],
           blockedTime: Infinity,
         }, callFrame);
@@ -250,6 +246,7 @@ class BlockingLoadEvents extends Audit {
       displayValue: failed && blockedTime ?
         str_(UIStrings.displayValue, {timeInMs: blockedTime}) :
         '',
+      // @ts-expect-error
       details: BlockingLoadEvents.makeTableDetails(HEADINGS, blockingEvents),
     };
   }

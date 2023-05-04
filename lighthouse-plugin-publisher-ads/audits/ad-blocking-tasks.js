@@ -50,19 +50,19 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 const HEADINGS = [
   {
     key: 'script',
-    itemType: 'url',
-    text: str_(UIStrings.columnScript),
+    valueType: 'url',
+    label: str_(UIStrings.columnScript),
   },
   {
     key: 'startTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnStartTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'duration',
-    itemType: 'ms',
-    text: str_(UIStrings.columnDuration),
+    valueType: 'ms',
+    label: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
