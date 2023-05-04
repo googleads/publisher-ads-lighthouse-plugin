@@ -15,7 +15,6 @@
 import AdLanternMetric from '../computed/ad-lantern-metric.js';
 
 import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
-import ComputedMetric from 'lighthouse/core/computed/metrics/metric.js';
 import {getAttributableUrl} from '../utils/tasks.js';
 import {LoadSimulator} from 'lighthouse/core/computed/load-simulator.js';
 import {MainThreadTasks} from 'lighthouse/core/computed/main-thread-tasks.js';
@@ -52,16 +51,14 @@ function isLong(task, knownScripts) {
 }
 
 /** Finds long tasks, with support for simulation. */
-// eslint-disable-next-line max-len
-// @ts-expect-error TODO why is this a ComputedMetric? Should it just be a Computed artifact? It returns task nodes, no Metric/LanternMetric.
 // eslint-disable-next-line require-jsdoc
-class LongTasks extends ComputedMetric {
+class LongTasks {
   /**
    * @param {LH.Trace} trace
    * @param {LH.DevtoolsLog} devtoolsLog
    * @param {LH.Artifacts.URL} URL
    * @param {LH.Audit.Context} context
-   * @return {Promise<Node>} networkRecords
+   * @return {Promise<Node>}
    */
   static async getSimulationGraph(trace, devtoolsLog, URL, context) {
     const documentNode =
@@ -74,7 +71,7 @@ class LongTasks extends ComputedMetric {
    * @param {LH.DevtoolsLog} devtoolsLog
    * @param {LH.Artifacts.URL} URL
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.TaskNode[]>} networkRecords
+   * @return {Promise<LH.Artifacts.TaskNode[]>}
    */
   static async computeSimulatedResult(trace, devtoolsLog, URL, context) {
     const graph =
