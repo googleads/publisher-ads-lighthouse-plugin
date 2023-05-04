@@ -179,7 +179,7 @@ class BlockingLoadEvents extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const processedTrace = await ProcessedTrace.request(trace, context);
     const {timings} = await ProcessedNavigation
-        .request(processedTrace, context);
+        .request(trace, context);
     const {processEvents} = processedTrace;
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =

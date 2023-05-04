@@ -16,7 +16,6 @@ import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
 import {MainThreadTasks} from 'lighthouse/core/computed/main-thread-tasks.js';
 import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
-import {ProcessedTrace} from 'lighthouse/core/computed/processed-trace.js';
 import {ProcessedNavigation} from 'lighthouse/core/computed/processed-navigation.js';
 
 import {auditNotApplicable} from '../messages/common-strings.js';
@@ -270,9 +269,8 @@ class IdleNetworkTimes extends Audit {
     } catch (e) {
       // Ignore tracing errors.
     }
-    const processedTrace = await ProcessedTrace.request(trace, context);
     const {timings} = await ProcessedNavigation
-        .request(processedTrace, context);
+        .request(trace, context);
 
     const timerEvents =
         trace.traceEvents.filter((t) => t.name.startsWith('Timer'));
