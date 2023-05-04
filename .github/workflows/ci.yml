@@ -10,10 +10,10 @@ jobs:
     steps:
       - name: git clone
         uses: actions/checkout@v2
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: yarn install --frozen-lockfile --network-timeout 1000000
       - run: yarn lint
 
@@ -23,10 +23,10 @@ jobs:
     steps:
       - name: git clone
         uses: actions/checkout@v2
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: yarn install --frozen-lockfile --network-timeout 1000000
       - run: yarn type-check
 
@@ -36,10 +36,10 @@ jobs:
     steps:
       - name: git clone
         uses: actions/checkout@v2
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: yarn install --frozen-lockfile --network-timeout 1000000
       - run: yarn test
 
@@ -49,10 +49,10 @@ jobs:
     steps:
       - name: git clone
         uses: actions/checkout@v2
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - run: yarn install --frozen-lockfile --network-timeout 1000000
       - run: sudo apt-get install xvfb
       - name: Run smoke tests
@@ -64,10 +64,10 @@ jobs:
     steps:
       - name: git clone
         uses: actions/checkout@v2
-      - name: Use Node.js 14.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v1
         with:
-          node-version: 14.x
+          node-version: 16.x
       - name: npm install
         run: npm install
       - name: Install Lighthouse CI
