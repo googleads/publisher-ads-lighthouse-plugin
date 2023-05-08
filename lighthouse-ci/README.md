@@ -112,8 +112,8 @@ module.exports = {
 ## Example
 
 There is an
-[example LHCI configuration](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/master/lighthouserc.js)
+[example LHCI configuration](https://github.com/googleads/publisher-ads-lighthouse-plugin/blob/main/lighthouserc.cjs)
 in this repository that checks 2 mock pages. It utilizes GitHub Actions and the 
  Lighthouse CI GitHub app to demonstrate a simple setup. However, the same 
  assertions can be integrated with 
- [many other popular CI providers](https://github.com/GoogleChrome/lighthouse-ci/blob/master/docs/getting-started.md#configure-your-ci-provider).
+ [many other popular CI providers](https://github.com/GoogleChrome/lighthouse-ci/blob/main/docs/getting-started.md#configure-your-ci-provider).
