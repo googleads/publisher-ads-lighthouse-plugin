@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/gpt-errors-overall.html',
-      finalUrl: 'http://localhost:8081/gpt-errors-overall.html',
+      finalDisplayedUrl: 'http://localhost:8081/gpt-errors-overall.html',
       audits: {
         'gpt-errors-overall': {
           score: null,

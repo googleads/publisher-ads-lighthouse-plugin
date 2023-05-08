@@ -38,16 +38,13 @@ class FirstAdRender extends Audit {
    * @return {LH.Audit.Meta}
    */
   static get meta() {
-    // @ts-ignore
     return {
       id: 'first-ad-render',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      // @ts-ignore
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
 
@@ -79,9 +76,11 @@ class FirstAdRender extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const metricData = {
-      devtoolsLog,
       trace,
+      devtoolsLog,
       settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
     };
     const {timing} = await ComputedAdRenderTime.request(metricData, context);
 

@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/long-tasks.html',
-      finalUrl: 'http://localhost:8081/long-tasks.html',
+      finalDisplayedUrl: 'http://localhost:8081/long-tasks.html',
       audits: {
         'tag-load-time': {
           numericValue: '6800 +/- 1000',

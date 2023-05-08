@@ -16,23 +16,6 @@ import './lh-externs';
 
 declare global {
   export interface Artifacts extends LH.Artifacts {
-    IFrameElement: {
-      /** The `id` attribute of the iframe. */
-      id: string,
-      /** The `src` attribute of the iframe. */
-      src: string,
-      /** The iframe's ClientRect. @see https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect */
-      clientRect: {
-        top: number;
-        bottom: number;
-        left: number;
-        right: number;
-        width: number;
-        height: number;
-      },
-      /** If the iframe or an ancestor of the iframe is fixed in position. */
-      isPositionFixed: boolean,
-    };
     StaticAdTags: Array<LH.Crdp.DOM.Node>;
   }
 }

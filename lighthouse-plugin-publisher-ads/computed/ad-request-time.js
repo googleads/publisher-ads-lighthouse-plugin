@@ -14,16 +14,12 @@
 
 import AdLanternMetric from './ad-lantern-metric.js';
 
-// @ts-ignore
 import ComputedMetric from 'lighthouse/core/computed/metrics/metric.js';
-
-// @ts-ignore
 import {makeComputedArtifact} from 'lighthouse/core/computed/computed-artifact.js';
 
 import {getAdStartTime, getPageStartTime} from '../utils/network-timing.js';
 import {isAdRequest} from '../utils/resource-classification.js';
 
-// @ts-ignore
 // eslint-disable-next-line max-len
 /** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
 
@@ -44,9 +40,7 @@ class LanternAdRequestTime extends AdLanternMetric {
 }
 
 // Decorate the class.
-// @ts-ignore Allow reassignment for decoration.
-// eslint-disable-next-line no-class-assign
-LanternAdRequestTime = makeComputedArtifact(LanternAdRequestTime);
+const ComputedLanternAdRequestTime = makeComputedArtifact(LanternAdRequestTime, ['devtoolsLog', 'gatherContext', 'settings', 'simulator', 'trace', 'URL']);
 
 /** Computes time to the first ad request. */
 class AdRequestTime extends ComputedMetric {
@@ -56,8 +50,7 @@ class AdRequestTime extends ComputedMetric {
    * @return {Promise<LH.Artifacts.LanternMetric>}
    */
   static async computeSimulatedMetric(data, context) {
-    // @ts-ignore request does not exist on LanternAdRequestTime
-    return LanternAdRequestTime.request(data, context);
+    return ComputedLanternAdRequestTime.request(data, context);
   }
 
   /**
@@ -71,23 +64,9 @@ class AdRequestTime extends ComputedMetric {
     const adRequestTimeMs = (adStartTime - pageStartTime) * 1000;
     return Promise.resolve({timing: adRequestTimeMs});
   }
-
-  /**
-   * @param {unknown} artifacts
-   * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.Metric>}
-   */
-  static async request(artifacts, context) {
-    // Implement request() to make the compiler happy. It will be implemented
-    // below with decoration. Long term we should find a good way to have the
-    // compiler infer this.
-    throw Error('Not implemented -- class not decorated');
-  }
 }
 
 // Decorate the class.
-// @ts-ignore Allow reassignment for decoration.
-// eslint-disable-next-line no-class-assign
-AdRequestTime = makeComputedArtifact(AdRequestTime);
+const ComputedAdRequestTime = makeComputedArtifact(AdRequestTime, ['devtoolsLog', 'gatherContext', 'settings', 'simulator', 'trace', 'URL']);
 
-export default AdRequestTime;
+export default ComputedAdRequestTime;

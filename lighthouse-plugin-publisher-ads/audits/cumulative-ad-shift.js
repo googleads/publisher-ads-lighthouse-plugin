@@ -64,7 +64,7 @@ class CumulativeAdShift extends Audit {
 
   /**
    * @param {LH.TraceEvent} shiftEvent
-   * @param {Artifacts['IFrameElement'][]} ads
+   * @param {LH.Artifacts.IFrameElement[]} ads
    * @return {boolean}
    */
   static isAdExpansion(shiftEvent, ads) {
@@ -113,7 +113,7 @@ class CumulativeAdShift extends Audit {
    * Computes the ad shift score for the page.
    * @param {LH.TraceEvent[]} shiftEvents
    * @param {LH.TraceEvent[]} scriptEvents
-   * @param {Artifacts['IFrameElement'][]} ads
+   * @param {LH.Artifacts.IFrameElement[]} ads
    * @param {number} tagLoadTs
    */
   static compute(shiftEvents, scriptEvents, ads, tagLoadTs) {

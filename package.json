@@ -22,12 +22,12 @@
   "dependencies": {
     "@tusbar/cache-control": "^0.3.1",
     "@types/esprima": "^4.0.2",
-    "lighthouse": "9.5.0-dev.20220907-2",
+    "lighthouse": "10.1.1",
     "lodash.clonedeep": "^4.5.0",
     "yargs": "16.1.1"
   },
   "devDependencies": {
-    "@lhci/cli": "0.7.x",
+    "@lhci/cli": "0.12.x",
     "@types/lodash": "^4.14.178",
     "@types/yargs": "^15.0.11",
     "@typescript-eslint/parser": "^5.31.0",

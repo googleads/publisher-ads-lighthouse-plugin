@@ -99,7 +99,7 @@ function isAdSenseAdRequest(request) {
 }
 
 /**
- * @param {Artifacts['IFrameElement']} iframe
+ * @param {LH.Artifacts.IFrameElement} iframe
  * @return {boolean}
  */
 function isAdSenseIframe(iframe) {
@@ -226,7 +226,7 @@ function isAMPAdRequest(request) {
 }
 
 /**
- * @param {Artifacts['IFrameElement']} iframe
+ * @param {LH.Artifacts.IFrameElement} iframe
  * @return {boolean}
  */
 function isGptIframe(iframe) {
@@ -264,7 +264,7 @@ function isAdRequest(request) {
 
 /**
  * Checks if an iframe is an AdSense or GPT iframe.
- * @param {Artifacts['IFrameElement']} iframe
+ * @param {LH.Artifacts.IFrameElement} iframe
  * @return {boolean}
  */
 function isAdIframe(iframe) {

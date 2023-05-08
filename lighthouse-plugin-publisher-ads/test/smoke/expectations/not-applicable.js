@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/not-applicable.html',
-      finalUrl: 'http://localhost:8081/not-applicable.html',
+      finalDisplayedUrl: 'http://localhost:8081/not-applicable.html',
       runWarnings: [
         'No ads were requested when fetching this page.',
         'No ads were rendered when rendering this page.',

@@ -41,13 +41,13 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'slot', itemType: 'text', text: str_(UIStrings.columnSlot)},
+  {key: 'slot', valueType: 'text', label: str_(UIStrings.columnSlot)},
 ];
 
 /** @inheritDoc */
 class AdsInViewport extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    */
   static get meta() {
     return {

@@ -46,7 +46,7 @@ class TagLoadTime extends Audit {
       description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
 
@@ -76,7 +76,13 @@ class TagLoadTime extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
     const scoreOptions = context.options[
         context.settings.throttlingMethod == 'provided' ?
           'provided' :

@@ -45,10 +45,10 @@ const UIStrings = {
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'bidder', itemType: 'text', text: UIStrings.columnBidder},
-  {key: 'url', itemType: 'url', text: UIStrings.columnUrl},
-  {key: 'startTime', itemType: 'ms', text: UIStrings.columnStartTime},
-  {key: 'duration', itemType: 'ms', text: UIStrings.columnDuration},
+  {key: 'bidder', valueType: 'text', label: UIStrings.columnBidder},
+  {key: 'url', valueType: 'url', label: UIStrings.columnUrl},
+  {key: 'startTime', valueType: 'ms', label: UIStrings.columnStartTime},
+  {key: 'duration', valueType: 'ms', label: UIStrings.columnDuration},
 ];
 
 /**
@@ -64,7 +64,7 @@ class GptBidsInParallel extends Audit {
       title: UIStrings.title,
       failureTitle: UIStrings.failureTitle,
       description: UIStrings.description,
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL'],
     };
   }
 
@@ -91,12 +91,14 @@ class GptBidsInParallel extends Audit {
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord = await getTimingsByRecord(
-      trace, devtoolsLog, context);
+      trace, devtoolsLog, artifacts.URL, context);
     const tableView = [];
     /** @type {Set<string>} */ const seen = new Set();
     for (const bid of bids) {
       if (getCriticalGraph(network, trace.traceEvents, bid).has(pubadsImpl)) {
-        const {startTime, endTime} = timingsByRecord.get(bid) || bid;
+        const {startTime, endTime} =
+          timingsByRecord.get(bid) ||
+          {startTime: bid.networkRequestTime, endTime: bid.networkEndTime};
         const bidder = assert(getHeaderBidder(bid.url));
         if (seen.has(bidder)) {
           // Don't include multiple requests from the same bidder in the results
