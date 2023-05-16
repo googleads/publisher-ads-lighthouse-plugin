@@ -51,6 +51,7 @@ export default {
     {path: `${PLUGIN_PATH}/audits/deprecated-api-usage`},
     {path: `${PLUGIN_PATH}/audits/gpt-errors-overall`},
     {path: `${PLUGIN_PATH}/audits/total-ad-blocking-time`},
+    {path: `${PLUGIN_PATH}/audits/ad-lcp`},
   ],
   groups: {
     'metrics': {
@@ -83,6 +84,7 @@ export default {
       {id: 'ad-render-blocking-resources', weight: 1, group: 'ads-performance'},
       {id: 'ad-blocking-tasks', weight: 1, group: 'ads-performance'},
       {id: 'ad-request-critical-path', weight: 0, group: 'ads-performance'},
+      {id: 'ad-lcp', weight: 0, group: 'ads-performance'},
       // Best Practices group.
       {id: 'ads-in-viewport', weight: 4, group: 'ads-best-practices'},
       {id: 'async-ad-tags', weight: 2, group: 'ads-best-practices'},
