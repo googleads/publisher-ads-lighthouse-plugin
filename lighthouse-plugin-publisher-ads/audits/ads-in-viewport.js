@@ -21,7 +21,7 @@ import {isGptIframe} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'Few or no ads loaded outside viewport',
-  failureTitle: 'Avoid loading ads until they are nearly on-screen',
+  failureTitle: 'Lazily load ads below the fold',
   description: 'Too many ads loaded outside the viewport lowers viewability ' +
   'rates and impacts user experience. Consider loading ads below the fold ' +
   'lazily as the user scrolls down. Consider using GPT\'s [Lazy Loading API](' +
@@ -41,13 +41,13 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'slot', itemType: 'text', text: str_(UIStrings.columnSlot)},
+  {key: 'slot', valueType: 'text', label: str_(UIStrings.columnSlot)},
 ];
 
 /** @inheritDoc */
 class AdsInViewport extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    */
   static get meta() {
     return {

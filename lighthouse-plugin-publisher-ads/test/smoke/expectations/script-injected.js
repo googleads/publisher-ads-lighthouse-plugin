@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/script-injected.html',
-      finalUrl: 'http://localhost:8081/script-injected.html',
+      finalDisplayedUrl: 'http://localhost:8081/script-injected.html',
       audits: {
         'script-injected-tags': {
           score: 0,

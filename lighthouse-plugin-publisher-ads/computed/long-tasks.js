@@ -15,28 +15,15 @@
 import AdLanternMetric from '../computed/ad-lantern-metric.js';
 
 import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
-
-// @ts-ignore
-import ComputedMetric from 'lighthouse/core/computed/metrics/metric.js';
-
-// eslint-disable-next-line no-unused-vars
-import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
-
 import {getAttributableUrl} from '../utils/tasks.js';
-
-// @ts-ignore
 import {LoadSimulator} from 'lighthouse/core/computed/load-simulator.js';
-
 import {MainThreadTasks} from 'lighthouse/core/computed/main-thread-tasks.js';
-
-// @ts-ignore
 import {makeComputedArtifact} from 'lighthouse/core/computed/computed-artifact.js';
-
-// eslint-disable-next-line no-unused-vars
-import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
-
 import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
 import {PageDependencyGraph} from 'lighthouse/core/computed/page-dependency-graph.js';
+
+// eslint-disable-next-line max-len
+/** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
 
 const PROVIDED_LONG_TASK_THRESHOLD_MS = 50;
 const SIMULATED_LONG_TASK_THRESHOLD_MS = 100;
@@ -64,29 +51,31 @@ function isLong(task, knownScripts) {
 }
 
 /** Finds long tasks, with support for simulation. */
-class LongTasks extends ComputedMetric {
+// eslint-disable-next-line require-jsdoc
+class LongTasks {
   /**
    * @param {LH.Trace} trace
    * @param {LH.DevtoolsLog} devtoolsLog
+   * @param {LH.Artifacts.URL} URL
    * @param {LH.Audit.Context} context
-   * @return {Promise<BaseNode>} networkRecords
+   * @return {Promise<Node>}
    */
-  static async getSimulationGraph(trace, devtoolsLog, context) {
-    /** @type {NetworkNode} */
+  static async getSimulationGraph(trace, devtoolsLog, URL, context) {
     const documentNode =
-      // @ts-ignore Property 'request' does not appear on PageDependencyGraph
-      await PageDependencyGraph.request({trace, devtoolsLog}, context);
+      await PageDependencyGraph.request({trace, devtoolsLog, URL}, context);
     return AdLanternMetric.getOptimisticGraph(documentNode);
   }
 
   /**
    * @param {LH.Trace} trace
    * @param {LH.DevtoolsLog} devtoolsLog
+   * @param {LH.Artifacts.URL} URL
    * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.TaskNode[]>} networkRecords
+   * @return {Promise<LH.Artifacts.TaskNode[]>}
    */
-  static async computeSimulatedResult(trace, devtoolsLog, context) {
-    const graph = await this.getSimulationGraph(trace, devtoolsLog, context);
+  static async computeSimulatedResult(trace, devtoolsLog, URL, context) {
+    const graph =
+      await this.getSimulationGraph(trace, devtoolsLog, URL, context);
     const simulator = await LoadSimulator.request(
       {devtoolsLog, settings: context.settings}, context);
     const {nodeTimings} = simulator.simulate(graph, {});
@@ -105,9 +94,13 @@ class LongTasks extends ComputedMetric {
         selfTime: timing.duration, // TODO: subtract child time
         attributableURLs: Array.from(node.getEvaluateScriptURLs()),
         children: [],
+        // @ts-expect-error TODO Nodes do not have this information though?
         parent: node.parent,
+        // @ts-expect-error TODO Nodes do not have this information though?
         unbounded: node.unbounded,
+        // @ts-expect-error TODO Nodes do not have this information though?
         group: node.group,
+        endEvent: undefined,
       });
     }
     return tasks;
@@ -130,32 +123,20 @@ class LongTasks extends ComputedMetric {
   }
 
   /**
-   * @param {{devtoolsLog: LH.DevtoolsLog, trace: LH.Trace}} data
+   * @param {{devtoolsLog: LH.DevtoolsLog,
+   * trace: LH.Trace, URL: LH.Artifacts.URL}} data
    * @param {LH.Audit.Context} context
    * @return {Promise<LH.Artifacts.TaskNode[]>}
    */
-  static async compute_({trace, devtoolsLog}, context) {
+  static async compute_({trace, devtoolsLog, URL}, context) {
     return context.settings.throttlingMethod == 'simulate' ?
-      this.computeSimulatedResult(trace, devtoolsLog, context) :
+      this.computeSimulatedResult(trace, devtoolsLog, URL, context) :
       this.computeObservedResult(trace, devtoolsLog, context);
-  }
-
-  /**
-   * @param {unknown} artifacts
-   * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.TaskNode[]>}
-   */
-  static async request(artifacts, context) {
-    // Implement request() to make the compiler happy. It will be implemented
-    // below with decoration. Long term we should find a good way to have the
-    // compiler infer this.
-    throw Error('Not implemented -- class not decorated');
   }
 }
 
 // Decorate the class.
-// @ts-ignore Allow reassignment for decoration.
-// eslint-disable-next-line no-class-assign
-LongTasks = makeComputedArtifact(LongTasks);
+const ComputedLongTasks = makeComputedArtifact(LongTasks,
+  ['devtoolsLog', 'trace', 'URL']);
 
-export default LongTasks;
+export default ComputedLongTasks;

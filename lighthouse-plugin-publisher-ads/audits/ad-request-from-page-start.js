@@ -47,7 +47,7 @@ class AdRequestFromPageStart extends Audit {
       description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
   /**
@@ -58,12 +58,12 @@ class AdRequestFromPageStart extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        p10: 6500,
-        median: 10000,
+        scorePODR: 3500,
+        scoreMedian: 8000,
       },
       provided: {
-        p10: 1900,
-        median: 3500,
+        scorePODR: 1500,
+        scoreMedian: 3500,
       },
     };
   }
@@ -76,7 +76,13 @@ class AdRequestFromPageStart extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
     const scoreOptions = context.options[
         context.settings.throttlingMethod == 'provided' ?
           'provided' :
@@ -91,11 +97,11 @@ class AdRequestFromPageStart extends Audit {
     }
 
     return {
-      numericValue: timing,
-      numericUnit: 'millisecond',
+      numericValue: timing * 1e-3,
       score: Audit.computeLogNormalScore(
-        scoreOptions,
         timing,
+        scoreOptions.scorePODR,
+        scoreOptions.scoreMedian
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };

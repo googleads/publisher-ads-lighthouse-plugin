@@ -13,7 +13,7 @@
 // limitations under the License.
 
 // Forked from Lighthouse:
-//   https://github.com/GoogleChrome/lighthouse/blob/master/core/scripts/i18n/collect-strings.js
+//   https://github.com/GoogleChrome/lighthouse/blob/main/core/scripts/i18n/collect-strings.js
 'use strict';
 
 /* eslint-disable no-console, max-len */
