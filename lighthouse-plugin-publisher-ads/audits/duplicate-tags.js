@@ -51,8 +51,8 @@ const tags = [
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'script', itemType: 'url', text: str_(UIStrings.columnScript)},
-  {key: 'numReqs', itemType: 'text', text: str_(UIStrings.columnNumReqs)},
+  {key: 'script', valueType: 'url', label: str_(UIStrings.columnScript)},
+  {key: 'numReqs', valueType: 'text', label: str_(UIStrings.columnNumReqs)},
 ];
 /**
  * Simple audit that checks if any specified tags are duplicated within the same

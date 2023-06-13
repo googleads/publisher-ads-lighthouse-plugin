@@ -52,19 +52,19 @@ const THRESHOLD_MS = 100;
 const HEADINGS = [
   {
     key: 'url',
-    itemType: 'url',
-    text: str_(UIStrings.columnUrl),
+    valueType: 'url',
+    label: str_(UIStrings.columnUrl),
   },
   {
     key: 'startTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnStartTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'duration',
-    itemType: 'ms',
-    text: str_(UIStrings.columnDuration),
+    valueType: 'ms',
+    label: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -82,7 +82,7 @@ class AdRenderBlockingResources extends Audit {
       scoreDisplayMode: 'binary',
       description: str_(UIStrings.description),
       requiredArtifacts:
-          ['LinkElements', 'ScriptElements', 'devtoolsLogs', 'traces'],
+          ['LinkElements', 'ScriptElements', 'devtoolsLogs', 'traces', 'URL'],
     };
   }
 
@@ -102,7 +102,7 @@ class AdRenderBlockingResources extends Audit {
 
     /** @type {Map<NetworkRequest, NodeTiming>} */
     const timingsByRecord =
-      await getTimingsByRecord(trace, devtoolsLog, context);
+      await getTimingsByRecord(trace, devtoolsLog, artifacts.URL, context);
 
     // NOTE(warrengm): Ideally we would key be requestId here but LinkElements
     // don't have request IDs.
@@ -125,7 +125,7 @@ class AdRenderBlockingResources extends Audit {
     const blockingNetworkRecords = networkRecords
         // Don't fail on sync resources loaded after the tag. This includes sync
         // resources loaded inside of iframes.
-        .filter((r) => r.endTime < tag.startTime)
+        .filter((r) => r.networkEndTime < tag.networkRequestTime)
         .filter((r) => r != tag.initiatorRequest)
         // Sanity check to filter out duplicate requests which were async. If
         // type != parser then the resource was dynamically added and is
@@ -147,11 +147,9 @@ class AdRenderBlockingResources extends Audit {
     const blockingStart = Math.min(...startTimes);
     const blockingEnd = Math.min(Math.max(...endTimes), tagTime.startTime);
     const opportunity = blockingEnd - blockingStart;
-    let displayValue = '';
-    if (tableView.length > 0 && opportunity > 0) {
-      displayValue = str_(
-        UIStrings.failureDisplayValue, {timeInMs: opportunity});
-    }
+    const displayValue = tableView.length > 0 && opportunity > 0 ?
+      str_(UIStrings.failureDisplayValue, {timeInMs: opportunity}) :
+      '';
 
     const failed = tableView.length > 0 && opportunity > THRESHOLD_MS;
     return {
@@ -160,7 +158,9 @@ class AdRenderBlockingResources extends Audit {
       numericUnit: 'unitless',
       displayValue,
       details: {
+        // @ts-expect-error
         opportunity,
+        // @ts-expect-error
         ...AdRenderBlockingResources.makeTableDetails(HEADINGS, tableView),
       },
     };

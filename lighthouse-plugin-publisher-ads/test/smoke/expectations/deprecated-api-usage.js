@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/deprecated-api-usage.html',
-      finalUrl: 'http://localhost:8081/deprecated-api-usage.html',
+      finalDisplayedUrl: 'http://localhost:8081/deprecated-api-usage.html',
       audits: {
         'deprecated-gpt-api-usage': {
           score: null,

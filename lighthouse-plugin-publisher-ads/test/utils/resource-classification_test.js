@@ -230,13 +230,23 @@ describe('resource-classification.js', () => {
   describe('#isGptImplTag', () => {
     const testCases = [
       {
-        description: 'Standard tag matches',
+        description: 'Legacy tag matches',
         url: new URL('https://securepubads.g.doubleclick.net/gpt/pubads_impl_19700101.js?1234'),
         expectation: true,
       },
       {
-        description: 'Standard tag matches on pagead2',
+        description: 'Legacy tag matches on pagead2',
         url: new URL('https://pagead2.googlesyndication.com/gpt/pubads_impl_19700101.js?1234'),
+        expectation: true,
+      },
+      {
+        description: 'Standard tag matches',
+        url: new URL('https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m123/pubads_impl.js'),
+        expectation: true,
+      },
+      {
+        description: 'Suffixed tag matches',
+        url: new URL('https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m123/pubads_impl_t123.js'),
         expectation: true,
       },
       {

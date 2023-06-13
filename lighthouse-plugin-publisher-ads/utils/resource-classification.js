@@ -99,7 +99,7 @@ function isAdSenseAdRequest(request) {
 }
 
 /**
- * @param {Artifacts['IFrameElement']} iframe
+ * @param {LH.Artifacts.IFrameElement} iframe
  * @return {boolean}
  */
 function isAdSenseIframe(iframe) {
@@ -159,8 +159,8 @@ function isAMPTag(url) {
  */
 function isGptImplTag(url) {
   return isGoogleAds(url) &&
-    /(^\/gpt\/pubads_impl([a-z_]*)((?<!rendering)_)\d+\.js)/
-        .test(toURL(url).pathname);
+    new RegExp('(^(\\/pagead\\/managed\/js)?\\/gpt\/(m\\d+\\/)?pubads_impl' +
+    '([a-z_]*)(?<!rendering_)\\d*\\.js)').test(toURL(url).pathname);
 }
 
 /**
@@ -226,7 +226,7 @@ function isAMPAdRequest(request) {
 }
 
 /**
- * @param {Artifacts['IFrameElement']} iframe
+ * @param {LH.Artifacts.IFrameElement} iframe
  * @return {boolean}
  */
 function isGptIframe(iframe) {
@@ -264,7 +264,7 @@ function isAdRequest(request) {
 
 /**
  * Checks if an iframe is an AdSense or GPT iframe.
- * @param {Artifacts['IFrameElement']} iframe
+ * @param {LH.Artifacts.IFrameElement} iframe
  * @return {boolean}
  */
 function isAdIframe(iframe) {

@@ -50,19 +50,19 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 const HEADINGS = [
   {
     key: 'script',
-    itemType: 'url',
-    text: str_(UIStrings.columnScript),
+    valueType: 'url',
+    label: str_(UIStrings.columnScript),
   },
   {
     key: 'startTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnStartTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnStartTime),
     granularity: 1,
   },
   {
     key: 'duration',
-    itemType: 'ms',
-    text: str_(UIStrings.columnDuration),
+    valueType: 'ms',
+    label: str_(UIStrings.columnDuration),
     granularity: 1,
   },
 ];
@@ -78,7 +78,7 @@ class AdBlockingTasks extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['traces', 'devtoolsLogs'],
+      requiredArtifacts: ['traces', 'devtoolsLogs', 'URL', 'GatherContext'],
     };
   }
 
@@ -97,7 +97,13 @@ class AdBlockingTasks extends Audit {
       context.settings.throttlingMethod == 'simulate' ? 200 : 100;
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
     let longTasks = [];
     try {
       longTasks = await LongTasks.request(metricData, context);

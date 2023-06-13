@@ -41,14 +41,14 @@ const SCROLL_PX_THRESHOLD = 100;
  * @type {LH.Audit.Details.Table['headings']}
  */
 const HEADINGS = [
-  {key: 'slot', itemType: 'text', text: str_(UIStrings.columnSlot)},
+  {key: 'slot', valueType: 'text', label: str_(UIStrings.columnSlot)},
 ];
 
 
 /** @inheritDoc */
 class AdTopOfViewport extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    */
   static get meta() {
     return {

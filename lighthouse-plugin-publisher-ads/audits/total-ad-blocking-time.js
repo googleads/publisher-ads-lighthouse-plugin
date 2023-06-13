@@ -44,13 +44,13 @@ const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
 const HEADINGS = [
   {
     key: 'name',
-    itemType: 'text',
-    text: str_(UIStrings.columnName),
+    valueType: 'text',
+    label: str_(UIStrings.columnName),
   },
   {
     key: 'blockingTime',
-    itemType: 'ms',
-    text: str_(UIStrings.columnBlockingTime),
+    valueType: 'ms',
+    label: str_(UIStrings.columnBlockingTime),
     granularity: 1,
   },
 ];
@@ -66,7 +66,7 @@ class TotalAdBlockingTime extends Audit {
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      requiredArtifacts: ['traces', 'devtoolsLogs'],
+      requiredArtifacts: ['traces', 'devtoolsLogs', 'URL', 'GatherContext'],
     };
   }
 
@@ -102,7 +102,13 @@ class TotalAdBlockingTime extends Audit {
     if (!networkRecords.find((r) => isAdRelated(r.url))) {
       return auditNotApplicable.NoAdRelatedReq;
     }
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
     let longTasks = [];
     try {
       longTasks = await LongTasks.request(metricData, context);

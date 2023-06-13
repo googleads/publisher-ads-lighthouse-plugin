@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/lazy-load.html',
-      finalUrl: 'http://localhost:8081/lazy-load.html',
+      finalDisplayedUrl: 'http://localhost:8081/lazy-load.html',
       audits: {
         'ad-top-of-viewport': {
           score: 0,

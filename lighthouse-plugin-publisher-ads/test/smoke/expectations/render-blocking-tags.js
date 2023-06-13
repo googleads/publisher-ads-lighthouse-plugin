@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/render-blocking-tags.html',
-      finalUrl: 'http://localhost:8081/render-blocking-tags.html',
+      finalDisplayedUrl: 'http://localhost:8081/render-blocking-tags.html',
       audits: {
         'ad-render-blocking-resources': {
           scoreDisplayMode: 'binary',
