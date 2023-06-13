@@ -21,7 +21,7 @@ import {isGptIframe} from '../utils/resource-classification.js';
 
 const UIStrings = {
   title: 'Few or no ads loaded outside viewport',
-  failureTitle: 'Avoid loading ads until they are nearly on-screen',
+  failureTitle: 'Lazily load ads below the fold',
   description: 'Too many ads loaded outside the viewport lowers viewability ' +
   'rates and impacts user experience. Consider loading ads below the fold ' +
   'lazily as the user scrolls down. Consider using GPT\'s [Lazy Loading API](' +
