@@ -159,8 +159,8 @@ function isAMPTag(url) {
  */
 function isGptImplTag(url) {
   return isGoogleAds(url) &&
-    /(^\/gpt\/pubads_impl([a-z_]*)((?<!rendering)_)\d+\.js)/
-        .test(toURL(url).pathname);
+    new RegExp('(^(\\/pagead\\/managed\/js)?\\/gpt\/(m\\d+\\/)?pubads_impl' +
+    '([a-z_]*)(?<!rendering_)\\d*\\.js)').test(toURL(url).pathname);
 }
 
 /**
