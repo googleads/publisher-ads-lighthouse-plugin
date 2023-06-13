@@ -85,8 +85,8 @@ class GptErrorsOverall extends Audit {
 
     /** @type {LH.Audit.Details.Table['headings']} */
     const headings = [
-      {key: 'url', itemType: 'url', text: str_(i18n.UIStrings.columnURL)},
-      {key: 'description', itemType: 'code', text: str_(i18n.UIStrings.columnDescription)},
+      {key: 'url', valueType: 'url', label: str_(i18n.UIStrings.columnURL)},
+      {key: 'description', valueType: 'code', label: str_(i18n.UIStrings.columnDescription)},
     ];
 
     const details = Audit.makeTableDetails(headings, tableRows);

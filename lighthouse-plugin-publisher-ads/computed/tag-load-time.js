@@ -44,9 +44,7 @@ class LanternTagLoadTime extends AdLanternMetric {
 }
 
 // Decorate the class.
-// @ts-ignore Allow reassignment for decoration.
-// eslint-disable-next-line no-class-assign
-LanternTagLoadTime = makeComputedArtifact(LanternTagLoadTime);
+const ComputedLanternTagLoadTime = makeComputedArtifact(LanternTagLoadTime, ['devtoolsLog', 'gatherContext', 'settings', 'simulator', 'trace', 'URL']);
 
 /** Computes the tag load time metric. */
 class TagLoadTime extends ComputedMetric {
@@ -56,8 +54,7 @@ class TagLoadTime extends ComputedMetric {
    * @return {Promise<LH.Artifacts.LanternMetric>}
    */
   static async computeSimulatedMetric(data, context) {
-    // @ts-ignore request does not exist on LanternTagLoadTime
-    return LanternTagLoadTime.request(data, context);
+    return ComputedLanternTagLoadTime.request(data, context);
   }
 
   /**
@@ -72,24 +69,8 @@ class TagLoadTime extends ComputedMetric {
     const tagLoadMs = (tagEndTime - pageStartTime) * 1000;
     return Promise.resolve({timing: tagLoadMs});
   }
-
-  /**
-   * @param {unknown} artifacts
-   * @param {LH.Audit.Context} context
-   * @return {Promise<LH.Artifacts.Metric>}
-   */
-  static async request(artifacts, context) {
-    // Implement request() to make the compiler happy. It will be implemented
-    // below with decoration. Long term we should find a good way to have the
-    // compiler infer this.
-    throw Error('Not implemented -- class not decorated');
-  }
 }
 
-// Decorate the class.
-// @ts-ignore Allow reassignment for decoration.
-// eslint-disable-next-line no-class-assign
-TagLoadTime = makeComputedArtifact(TagLoadTime);
+const ComputedTagLoadTime = makeComputedArtifact(TagLoadTime, ['devtoolsLog', 'gatherContext', 'settings', 'simulator', 'trace', 'URL']);
 
-export default TagLoadTime;
-
+export default ComputedTagLoadTime;

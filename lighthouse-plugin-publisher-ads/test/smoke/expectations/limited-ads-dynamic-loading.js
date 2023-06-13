@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/limited-ads-dynamic-loading.html',
-      finalUrl: 'http://localhost:8081/limited-ads-dynamic-loading.html',
+      finalDisplayedUrl: 'http://localhost:8081/limited-ads-dynamic-loading.html',
       audits: {
         'loads-gpt-from-official-source': {
           score: 1,

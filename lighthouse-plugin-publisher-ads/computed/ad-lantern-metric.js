@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
+// eslint-disable-next-line max-len
+/** @typedef {import('lighthouse/core/lib/dependency-graph/base-node.js').Node} Node */
 
+import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
 // eslint-disable-next-line no-unused-vars
 import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
-
-// @ts-ignore Remove request() below after importing the type.
+// eslint-disable-next-line max-len
 import {LanternMetric} from 'lighthouse/core/computed/metrics/lantern-metric.js';
-
-// eslint-disable-next-line no-unused-vars
+// eslint-disable-next-line max-len, no-unused-vars
 import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
 
 import {
@@ -94,7 +94,7 @@ function addEdge(a, b) {
 
 /**
  * Inserts edges between bid requests and ad requests.
- * @param {BaseNode} graph
+ * @param {Node} graph
  */
 function addEdges(graph) {
   /** @type {NetworkNode[]} */ const adRequestNodes = [];
@@ -152,9 +152,9 @@ class AdLanternMetric extends LanternMetric {
   }
 
   /**
-   * @param {BaseNode} graph Root of the dependency graph, i.e. the
+   * @param {Node} graph Root of the dependency graph, i.e. the
    *     document node.
-   * @return {BaseNode}
+   * @return {Node}
    */
   static getPessimisticGraph(graph) {
     // The pessimistic graph is the whole graph.
@@ -164,9 +164,9 @@ class AdLanternMetric extends LanternMetric {
   }
 
   /**
-   * @param {BaseNode} graph Root of the dependency graph, i.e. the
+   * @param {Node} graph Root of the dependency graph, i.e. the
    *     document node.
-   * @return {BaseNode}
+   * @return {Node}
    */
   static getOptimisticGraph(graph) {
     // @ts-ignore
@@ -224,8 +224,8 @@ class AdLanternMetric extends LanternMetric {
   static findNetworkTiming(nodeTimings, isTargetRequest) {
     return this.findTiming(
       nodeTimings,
-      (node) =>
-        node.type === BaseNode.TYPES.NETWORK && isTargetRequest(node.record));
+      (node) => node.type === BaseNode.TYPES.NETWORK &&
+        isTargetRequest(node.record));
   }
 }
 

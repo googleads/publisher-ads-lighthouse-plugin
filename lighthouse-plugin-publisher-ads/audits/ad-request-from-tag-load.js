@@ -29,7 +29,10 @@ const UIStrings = {
   displayValue: '{timeInMs, number, seconds} s',
 };
 
-const str_ = i18n.createIcuMessageFn(import.meta.url, UIStrings);
+const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+// Point of diminishing returns.
+const PODR = 300; // ms
+const MEDIAN = 1000; // ms
 
 /**
  * Audit to determine time for first ad request relative to tag load.
@@ -46,7 +49,7 @@ class AdRequestFromTagLoad extends Audit {
       description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
 
@@ -77,7 +80,13 @@ class AdRequestFromTagLoad extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
 
     const {timing: tagEndTime} =
         await ComputedTagLoadTime.request(metricData, context);
@@ -98,8 +107,7 @@ class AdRequestFromTagLoad extends Audit {
 
     return {
       numericValue: adReqTimeMs * 1e-3,
-      numericUnit: 'unitless',
-      score: Audit.computeLogNormalScore(scoreOptions, adReqTimeMs),
+      score: Audit.computeLogNormalScore(adReqTimeMs, PODR, MEDIAN),
       displayValue: str_(UIStrings.displayValue, {timeInMs: adReqTimeMs}),
     };
   }

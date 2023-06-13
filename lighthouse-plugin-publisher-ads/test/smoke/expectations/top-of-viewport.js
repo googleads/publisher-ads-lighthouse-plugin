@@ -20,7 +20,7 @@ export default [
   {
     lhr: {
       requestedUrl: 'http://localhost:8081/top-of-viewport.html',
-      finalUrl: 'http://localhost:8081/top-of-viewport.html',
+      finalDisplayedUrl: 'http://localhost:8081/top-of-viewport.html',
       audits: {
         'ad-top-of-viewport': {
           score: 0,

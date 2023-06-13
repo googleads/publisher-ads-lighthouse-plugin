@@ -46,7 +46,7 @@ class TagLoadTime extends Audit {
       description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
 
@@ -58,12 +58,13 @@ class TagLoadTime extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        p10: 4350,
-        median: 8000,
+        // 75th & 95th percentile with simulation.
+        scorePODR: 6000,
+        scoreMedian: 10000,
       },
       provided: {
-        p10: 1200,
-        median: 2000,
+        scorePODR: 1000,
+        scoreMedian: 2000,
       },
     };
   }
@@ -76,7 +77,13 @@ class TagLoadTime extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
     const scoreOptions = context.options[
         context.settings.throttlingMethod == 'provided' ?
           'provided' :
@@ -93,11 +100,11 @@ class TagLoadTime extends Audit {
     // NOTE: score is relative to page response time to avoid counting time for
     // first party rendering.
     return {
-      numericValue: timing,
-      numericUnit: 'millisecond',
+      numericValue: timing * 1e-3, // seconds
       score: Audit.computeLogNormalScore(
-        scoreOptions,
         timing,
+        scoreOptions.scorePODR,
+        scoreOptions.scoreMedian
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };

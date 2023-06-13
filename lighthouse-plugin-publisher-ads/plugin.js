@@ -16,7 +16,7 @@ import * as i18n from 'lighthouse/core/lib/i18n/i18n.js';
 
 import {group} from './messages/common-strings.js';
 
-const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads';
+const PLUGIN_PATH = 'lighthouse-plugin-publisher-ads-alphaignore';
 
 const UIStrings = {
   categoryDescription: 'A Lighthouse plugin to improve ad speed and overall quality that is targeted at sites using GPT or AdSense tag. ' +

@@ -47,7 +47,7 @@ class BidRequestFromPageStart extends Audit {
       description: str_(UIStrings.description),
       // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
 
@@ -59,12 +59,13 @@ class BidRequestFromPageStart extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        p10: 4350,
-        median: 8000,
+        // 75th & 95th percentile with simulation.
+        scorePODR: 7500,
+        scoreMedian: 15500,
       },
       provided: {
-        p10: 1200,
-        median: 2000,
+        scorePODR: 1500,
+        scoreMedian: 3500,
       },
     };
   }
@@ -77,7 +78,13 @@ class BidRequestFromPageStart extends Audit {
   static async audit(artifacts, context) {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
-    const metricData = {trace, devtoolsLog, settings: context.settings};
+    const metricData = {
+      trace,
+      devtoolsLog,
+      settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
+    };
     const scoreOptions = context.options[
         context.settings.throttlingMethod == 'provided' ?
           'provided' :
@@ -93,8 +100,9 @@ class BidRequestFromPageStart extends Audit {
       numericValue: timing,
       numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
-        scoreOptions,
         timing,
+        scoreOptions.scorePODR,
+        scoreOptions.scoreMedian
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };

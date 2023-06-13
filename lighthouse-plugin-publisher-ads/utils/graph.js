@@ -15,9 +15,6 @@
 import {BaseNode} from 'lighthouse/core/lib/dependency-graph/base-node.js';
 
 // eslint-disable-next-line no-unused-vars
-import {CPUNode} from 'lighthouse/core/lib/dependency-graph/cpu-node.js';
-
-// eslint-disable-next-line no-unused-vars
 import {NetworkNode} from 'lighthouse/core/lib/dependency-graph/network-node.js';
 
 import {NetworkRecords} from 'lighthouse/core/computed/network-records.js';
@@ -159,7 +156,7 @@ function addInitiatedRequests(
   const initiatedRequests = networkSummary.allRecords
       .filter((r) => r.resourceType != undefined)
       .filter((r) => ['Script', 'XHR'].includes(r.resourceType || '') &&
-          r.endTime < parentReq.startTime)
+          r.networkEndTime < parentReq.networkRequestTime)
       .filter((r) => r.initiatorRequest == scriptReq ||
         PageDependencyGraph.getNetworkInitiators(r).includes(scriptReq.url));
 
@@ -368,10 +365,11 @@ function computeSelfTimes(requests) {
  * set if no ad requests are present.
  * @param {LH.Trace} trace
  * @param {LH.DevtoolsLog} devtoolsLog
+ * @param {LH.Artifacts.URL} URL
  * @param {LH.Audit.Context} context
  * @return {Promise<SimpleRequest[]>}
  */
-async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
+async function computeAdRequestWaterfall(trace, devtoolsLog, URL, context) {
   const networkRecords = await NetworkRecords.request(devtoolsLog, context);
 
   const maybeFirstAdRequest =
@@ -386,7 +384,7 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
   const tagRequests = networkRecords.filter((r) =>
     isGpt(r.url) || isAdSense(r.url));
   const bidRequests = networkRecords.filter((r) =>
-    isBidRequest(r) && r.endTime <= firstAdRequest.startTime);
+    isBidRequest(r) && r.networkEndTime <= firstAdRequest.networkRequestTime);
   const summary = buildNetworkSummary(networkRecords, trace.traceEvents);
   for (const req of [firstAdRequest, ...bidRequests, ...tagRequests]) {
     linkGraph(summary, req, criticalRequests);
@@ -395,13 +393,13 @@ async function computeAdRequestWaterfall(trace, devtoolsLog, context) {
   const REQUEST_TYPES = new Set([
     'Script', 'XHR', 'Fetch', 'EventStream', 'Document', undefined]);
   const waterfall = Array.from(criticalRequests)
-      .filter((r) => r.endTime < firstAdRequest.startTime)
+      .filter((r) => r.endTime < firstAdRequest.networkRequestTime)
       .filter((r) => REQUEST_TYPES.has(r.resourceType))
       .filter((r) => r.mimeType != 'text/css');
 
   /** @type {Map<NetworkRequest, NodeTiming>} */
   const timingsByRecord =
-      await getTimingsByRecord(trace, devtoolsLog, context);
+      await getTimingsByRecord(trace, devtoolsLog, URL, context);
   const timedWaterfall = waterfall.map((req) => {
     const {startTime, endTime} = timingsByRecord.get(req) || req;
     return {

@@ -82,7 +82,7 @@ function computeAdLength(slots, viewport) {
 /** @inheritDoc */
 class ViewportAdDensity extends Audit {
   /**
-   * @return {AuditMetadata}
+   * @return {LH.Audit.Meta}
    */
   static get meta() {
     return {
@@ -110,6 +110,7 @@ class ViewportAdDensity extends Audit {
     }
 
     if (viewport.innerHeight <= 0) {
+      // @ts-expect-error
       throw new Error(auditError.ViewportAreaZero);
     }
 

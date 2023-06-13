@@ -38,16 +38,13 @@ class FirstAdRender extends Audit {
    * @return {LH.Audit.Meta}
    */
   static get meta() {
-    // @ts-ignore
     return {
       id: 'first-ad-render',
       title: str_(UIStrings.title),
       failureTitle: str_(UIStrings.failureTitle),
       description: str_(UIStrings.description),
-      // @ts-ignore
       scoreDisplayMode: Audit.SCORING_MODES.NUMERIC,
-      // @ts-ignore
-      requiredArtifacts: ['devtoolsLogs', 'traces'],
+      requiredArtifacts: ['devtoolsLogs', 'traces', 'URL', 'GatherContext'],
     };
   }
 
@@ -60,12 +57,22 @@ class FirstAdRender extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        p10: 12900,
-        median: 22000,
+        default: {
+          scorePODR: 8500,
+          scoreMedian: 15000,
+        },
+        // 75th & 95th percentile with simulation.
+        // Specific to LR due to patch of
+        // https://github.com/GoogleChrome/lighthouse/pull/9910. Will update
+        // values after next LH release.
+        lightrider: {
+          scorePODR: 11000,
+          scoreMedian: 22000,
+        },
       },
       provided: {
-        p10: 2750,
-        median: 3700,
+        scorePODR: 2700,
+        scoreMedian: 3700,
       },
 
     };
@@ -79,9 +86,11 @@ class FirstAdRender extends Audit {
     const trace = artifacts.traces[Audit.DEFAULT_PASS];
     const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
     const metricData = {
-      devtoolsLog,
       trace,
+      devtoolsLog,
       settings: context.settings,
+      URL: artifacts.URL,
+      gatherContext: artifacts.GatherContext,
     };
     const {timing} = await ComputedAdRenderTime.request(metricData, context);
 
@@ -98,11 +107,11 @@ class FirstAdRender extends Audit {
     ];
 
     return {
-      numericValue: timing,
-      numericUnit: 'millisecond',
+      numericValue: timing * 1e-3,
       score: Audit.computeLogNormalScore(
-        scoreOptions,
         timing,
+        scoreOptions.scorePODR,
+        scoreOptions.scoreMedian
       ),
       displayValue:
       str_(UIStrings.displayValue, {timeInMs: timing}),
