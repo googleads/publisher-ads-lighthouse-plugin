@@ -57,22 +57,12 @@ class FirstAdRender extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        default: {
-          scorePODR: 8500,
-          scoreMedian: 15000,
-        },
-        // 75th & 95th percentile with simulation.
-        // Specific to LR due to patch of
-        // https://github.com/GoogleChrome/lighthouse/pull/9910. Will update
-        // values after next LH release.
-        lightrider: {
-          scorePODR: 11000,
-          scoreMedian: 22000,
-        },
+        p10: 12900,
+        median: 22000,
       },
       provided: {
-        scorePODR: 2700,
-        scoreMedian: 3700,
+        p10: 2750,
+        median: 3700,
       },
 
     };
@@ -107,11 +97,11 @@ class FirstAdRender extends Audit {
     ];
 
     return {
-      numericValue: timing * 1e-3,
+      numericValue: timing,
+      numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
+        scoreOptions,
         timing,
-        scoreOptions.scorePODR,
-        scoreOptions.scoreMedian
       ),
       displayValue:
       str_(UIStrings.displayValue, {timeInMs: timing}),

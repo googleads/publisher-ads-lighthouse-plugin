@@ -58,12 +58,12 @@ class AdRequestFromPageStart extends Audit {
   static get defaultOptions() {
     return {
       simulate: {
-        scorePODR: 3500,
-        scoreMedian: 8000,
+        p10: 6500,
+        median: 10000,
       },
       provided: {
-        scorePODR: 1500,
-        scoreMedian: 3500,
+        p10: 1900,
+        median: 3500,
       },
     };
   }
@@ -97,11 +97,11 @@ class AdRequestFromPageStart extends Audit {
     }
 
     return {
-      numericValue: timing * 1e-3,
+      numericValue: timing,
+      numericUnit: 'millisecond',
       score: Audit.computeLogNormalScore(
+        scoreOptions,
         timing,
-        scoreOptions.scorePODR,
-        scoreOptions.scoreMedian
       ),
       displayValue: str_(UIStrings.displayValue, {timeInMs: timing}),
     };
