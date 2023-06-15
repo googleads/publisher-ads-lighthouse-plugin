@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "C:/Users/bombo/vscode-marquee"
+		},
+		{
+			"name": "vscode-marquee-1",
+			"path": "C:/Users/bombo/vscode-marquee-1"
+		}
+	],
+	"settings": {
+		"typescript.tsc.autoDetect": "off",
+		"githubPullRequests.ignoredPullRequestBranches": [
+			"main"
+		],
+		"jest.disabledWorkspaceFolders": [
+			"vscode-marquee-1"
+		],
+		"files.autoSave": "afterDelay"
+	}
+}
